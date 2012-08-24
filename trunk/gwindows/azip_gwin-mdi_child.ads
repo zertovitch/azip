@@ -14,6 +14,7 @@ with GWindows.Menus;
 with GWindows.Windows.MDI;
 
 with GWindows.Types;
+with AZip_Common;
 
 package AZip_GWin.MDI_Child is
 
@@ -55,7 +56,7 @@ package AZip_GWin.MDI_Child is
         Directory_List   : List_View_Control_Type;
         Folder_Tree      : Tree_View_Control_Type;
         zif              : Zip.Zip_info;
-        current_options  : Option_Pack_Type;
+        current_options  : AZip_Common.Option_Pack_Type;
         Status_deamon    : Daemons.Status_display;
       end record;
 
@@ -68,6 +69,10 @@ package AZip_GWin.MDI_Child is
   -- This would be abstract in a 'generic' Office framework.
 
   procedure Update_display(Window : in out MDI_Child_Type);
+
+  procedure On_Size (Window : in out MDI_Child_Type;
+                     Width  : in     Integer;
+                     Height : in     Integer);
 
   procedure On_Close (Window    : in out MDI_Child_Type;
                       Can_Close :    out Boolean);

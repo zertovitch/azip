@@ -1,6 +1,5 @@
 with AZip_GWin.MDI_Child; use AZip_GWin.MDI_Child;
 
-with GWindows;
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Menus;                    use GWindows.Menus;
@@ -279,6 +278,11 @@ package body AZip_GWin.MDI_Main is
                                       My_Close_Win'Unrestricted_Access);
   end My_MDI_Close_All;
 
+  procedure On_About(Window : in out MDI_Main_Type) is
+  begin
+    Message_Box("AZip", "AZip v.0.001");
+  end On_About;
+
   --------------------
   -- On_Menu_Select --
   --------------------
@@ -292,11 +296,10 @@ package body AZip_GWin.MDI_Main is
         On_File_New (Window, extra_first_doc => False);
       when IDM_OPEN_FILE =>
         On_File_Open (Window);
---      when Id_App_About =>
---        On_About (Window);
+      when IDM_ABOUT =>
+        On_About (Window);
       when IDM_QUIT  =>
         Close (Window);
-
       when IDM_Window_Cascade   =>
         MDI_Cascade (Window);
       when IDM_Window_Tile_Horizontal =>

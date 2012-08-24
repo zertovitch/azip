@@ -1,0 +1,75 @@
+-- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
+-- for the Zip-Ada project ( http://unzip-ada.sf.net/ )
+-- Build me with "gnatmake -P zipada.gpr", or open me with GPS
+--
+project AZip_GWindows is
+
+   type Build_Mode_Type is
+      ("Debug", "Fast", "Profiling");
+   Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
+   for Source_Dirs use ("../zip_lib", ".", "frameworks");
+   for Exec_Dir use ".";
+   for Main use ("azip.adb");
+
+   case Build_Mode is
+
+      when "Debug" =>
+         for Object_Dir use "..\obj_dbg";
+
+      when "Fast" =>
+         for Object_Dir use "..\obj_opt";
+
+      when "Profiling" =>
+         for Object_Dir use "..\obj_pro";
+   end case;
+
+   package Binder is
+
+      case Build_Mode is
+
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-E");
+
+         when "Fast" =>
+
+         when "Profiling" =>
+
+      end case;
+   end Binder;
+
+   package Linker is
+
+      case Build_Mode is
+
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-g");
+
+         when "Fast" =>
+            for Default_Switches ("ada") use ("-s", "-Wl,--gc-sections");
+
+         when "Profiling" =>
+            for Default_Switches ("ada") use ("-pg");
+      end case;
+   end Linker;
+
+   package Compiler is
+
+      case Build_Mode is
+
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-gnat05", "-gnatf", "-gnato", "-fstack-check", "-g", "-gnatwa", "-gnatVa", "-gnatecdebug.pra");
+
+         when "Fast" =>
+            for Default_Switches ("ada") use ("-gnat05", "-O2", "-gnatpn", "-funroll-loops", "-fpeel-loops", "-funswitch-loops", "-ftracer", "-fweb", "-frename-registers", "-ffunction-sections");
+
+         when "Profiling" =>
+            for Default_Switches ("ada") use ("-gnat05", "-O2", "-gnatp",  "-funroll-loops", "-fpeel-loops", "-funswitch-loops", "-ftracer", "-fweb", "-frename-registers", "-g", "-pg");
+      end case;
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-j2", "-C");
+   end Builder;
+   
+end AZip_GWindows;
+

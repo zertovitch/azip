@@ -2,16 +2,10 @@
 
 with GWindows.Application;        use GWindows.Application;
 with GWindows.Base;               use GWindows.Base;
-with GWindows.Edit_Boxes;         use GWindows.Edit_Boxes;
 with GWindows.GStrings;           use GWindows.GStrings;
-with GWindows.Windows;            use GWindows.Windows;
 with GWindows.Message_Boxes;      use GWindows.Message_Boxes;
 
-with AZip_Resource_GUI;
- use AZip_Resource_GUI;
-
 with AZip_GWin.MDI_Main; use AZip_GWin.MDI_Main;
-with AZip_GWin.MDI_Child;
 
 with Ada.Exceptions;
 with GNAT.Traceback.Symbolic;

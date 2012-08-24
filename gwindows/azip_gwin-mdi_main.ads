@@ -1,11 +1,17 @@
 -- To do: make a generic "Office Classic" application framework
 
+with AZip_Common;
+
+with AZip_Resource_GUI;                 use AZip_Resource_GUI;
+
+with GWindows;                          use GWindows;
 with GWindows.Base;
 with GWindows.Windows.MDI;
 with GWindows.Common_Controls;
+with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Image_Lists;
 with GWindows.Menus;
-with AZip_Resource_GUI; use AZip_Resource_GUI;
+with GWindows.Constants;
 
 package AZip_GWin.MDI_Main is
 
@@ -46,7 +52,7 @@ package AZip_GWin.MDI_Main is
         -- record_dimensions      : Boolean:= False; -- in On_Move, On_Size
         User_maximize_restore  : Boolean:= True;
         -- ^ Detect user-triggered max/restore commands
-        latest_options         : Option_Pack_Type;
+        latest_options         : AZip_Common.Option_Pack_Type;
       end record;
 
   type MDI_Main_Access is access all MDI_Main_Type;

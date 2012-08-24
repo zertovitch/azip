@@ -7,7 +7,7 @@ project AZip_GWindows is
    type Build_Mode_Type is
       ("Debug", "Fast", "Profiling");
    Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
-   for Source_Dirs use ("../zip_lib", ".", "frameworks");
+   for Source_Dirs use ("../common", "../zip_lib", ".", "frameworks");
    for Exec_Dir use ".";
    for Main use ("azip.adb");
 
@@ -42,13 +42,13 @@ project AZip_GWindows is
       case Build_Mode is
 
          when "Debug" =>
-            for Default_Switches ("ada") use ("-g");
+            for Default_Switches ("ada") use ("-g", "azip.rbj");
 
          when "Fast" =>
-            for Default_Switches ("ada") use ("-s", "-Wl,--gc-sections");
+            for Default_Switches ("ada") use ("-s", "-Wl,--gc-sections", "azip.rbj");
 
          when "Profiling" =>
-            for Default_Switches ("ada") use ("-pg");
+            for Default_Switches ("ada") use ("-pg", "azip.rbj");
       end case;
    end Linker;
 

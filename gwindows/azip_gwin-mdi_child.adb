@@ -1,6 +1,9 @@
 with Zip;                               use Zip;
+with AZip_Common;                       use AZip_Common;
 
+with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Interfaces;
 
@@ -31,22 +34,15 @@ package body AZip_GWin.MDI_Child is
     case Window.current_options.view_mode is
       when Flat =>
         Window.Folder_Tree.Hide;
-        Window.Directory_List.Location(
-            GWindows.Types.Rectangle_Type'
-            (Left => 0, Right => Window.Client_Area_Width,
-             Top => 0,  Bottom => Window.Client_Area_Height)
-        );
         Window.Directory_List.Clear;
-        Window.Directory_List.Insert_Column("Name",0,100);
-        Window.Directory_List.Insert_Column("Type",1,100);
-        Window.Directory_List.Insert_Column("Modified",2,100);
-        Window.Directory_List.Insert_Column("Attributes",3,100);
-        Window.Directory_List.Insert_Column("Size",4,100);
-        Window.Directory_List.Insert_Column("Packed",5,100);
-        Window.Directory_List.Insert_Column("Ratio",6,100);
-        Window.Directory_List.Insert_Column("Format",7,100);
-        Window.Directory_List.Insert_Column("Path",8,100);
-        If Is_Loaded(Window.zif) then
+        for topic in Entry_topic loop
+          Window.Directory_List.Insert_Column(
+            To_GString_from_String(Image(topic)),
+            Entry_topic'Pos(topic),
+            Window.current_options.column_width(topic)
+          );
+        end loop;
+        if Is_Loaded(Window.zif) then
           Traverse(Window.zif);
         end if;
       when Tree =>
@@ -146,6 +142,33 @@ package body AZip_GWin.MDI_Child is
   begin
     Update_Common_Menus( Window.parent.all, top_entry );
   end Update_Common_Menus;
+
+  procedure On_Size (Window : in out MDI_Child_Type;
+                     Width  : in     Integer;
+                     Height : in     Integer) is
+    pragma Warnings (Off, Width);   -- only client area is considered
+    pragma Warnings (Off, Height);  -- only client area is considered
+    w: Natural:= Window.Client_Area_Width;
+    h: Natural:= Window.Client_Area_Height;
+  begin
+    case Window.current_options.view_mode is
+      when Flat =>
+        Window.Directory_List.Location(
+            GWindows.Types.Rectangle_Type'
+            (0, 0, w, h)
+        );
+      when Tree =>
+        Window.Folder_Tree.Location(
+            GWindows.Types.Rectangle_Type'
+            (0, 0, w/2, h)
+        );
+        Window.Directory_List.Location(
+            GWindows.Types.Rectangle_Type'
+            (w/2+1, 0, w, h)
+        );
+        null;
+    end case;
+  end On_Size;
 
   procedure On_Close (Window    : in out MDI_Child_Type;
                       Can_Close :    out Boolean) is

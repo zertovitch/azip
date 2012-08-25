@@ -1,5 +1,6 @@
 with Zip;                               use Zip;
 with AZip_Common;                       use AZip_Common;
+with Time_Display;
 
 with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
@@ -9,7 +10,13 @@ with Interfaces;
 
 package body AZip_GWin.MDI_Child is
 
-  procedure Update_display(Window : in out MDI_Child_Type) is
+  function S2G (Value : String) return GString renames To_GString_From_String;
+
+  procedure Update_display(
+    Window : in out MDI_Child_Type;
+    need   :        Update_need
+  )
+  is
     row: Natural:= 0;
     procedure Action(
       name             : String; -- 'name' is compressed entry's name
@@ -23,8 +30,9 @@ package body AZip_GWin.MDI_Child is
     )
     is
     begin
-      Window.Directory_List.Insert_Item(To_GString_From_String(name), row);
-      Window.Directory_List.Set_Sub_Item(To_GString_From_String(To_Lower(PKZip_method'Image(method))), row, 7);
+      Window.Directory_List.Insert_Item(S2G(name), row);
+      Window.Directory_List.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
+      Window.Directory_List.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
       row:= row + 1; -- more subtle with our sorting
     end Action;
 
@@ -36,13 +44,21 @@ package body AZip_GWin.MDI_Child is
         Window.Folder_Tree.Hide;
         Window.Directory_List.Clear;
         for topic in Entry_topic loop
-          Window.Directory_List.Insert_Column(
-            To_GString_from_String(Image(topic)),
-            Entry_topic'Pos(topic),
-            Window.current_options.column_width(topic)
-          );
+          if need = first_display then
+            Window.Directory_List.Insert_Column(
+              S2G(Image(topic)),
+              Entry_topic'Pos(topic),
+              Window.current_options.column_width(topic)
+            );
+          else
+            Window.Directory_List.Set_Column(
+              S2G(Image(topic)),
+              Entry_topic'Pos(topic),
+              Window.current_options.column_width(topic)
+            );
+          end if;
         end loop;
-        if Is_Loaded(Window.zif) then
+        if Is_Loaded(Window.zif) and need <= archive_changed then
           Traverse(Window.zif);
         end if;
       when Tree =>
@@ -121,7 +137,7 @@ package body AZip_GWin.MDI_Child is
 
     Window.Status_deamon.Start;
     Window.Status_deamon.Display(Window'Unchecked_Access);
-    Update_display(Window);
+    Update_display(Window, first_display);
     Window.Use_Mouse_Wheel;
   end On_Create;
 
@@ -142,6 +158,12 @@ package body AZip_GWin.MDI_Child is
   begin
     Update_Common_Menus( Window.parent.all, top_entry );
   end Update_Common_Menus;
+
+  procedure Reload_archive (Window : in out MDI_Child_Type) is
+  begin
+    Zip.Load(Window.zif, GWindows.GStrings.To_String(To_GString_From_Unbounded(Window.File_Name)));
+    Update_display(Window, archive_changed);
+  end Reload_archive;
 
   procedure On_Size (Window : in out MDI_Child_Type;
                      Width  : in     Integer;

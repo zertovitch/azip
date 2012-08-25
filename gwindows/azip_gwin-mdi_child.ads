@@ -68,7 +68,17 @@ package AZip_GWin.MDI_Child is
   function Is_file_saved (Window : in MDI_Child_Type) return Boolean;
   -- This would be abstract in a 'generic' Office framework.
 
-  procedure Update_display(Window : in out MDI_Child_Type);
+  type Update_need is
+    (first_display,
+     archive_changed,
+     simple_refresh);
+
+  procedure Update_display (
+    Window : in out MDI_Child_Type;
+    need   :        Update_need
+  );
+
+  procedure Reload_archive (Window : in out MDI_Child_Type);
 
   procedure On_Size (Window : in out MDI_Child_Type;
                      Width  : in     Integer;

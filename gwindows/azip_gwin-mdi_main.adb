@@ -9,7 +9,6 @@ with GWindows.Windows;                  use GWindows.Windows;
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
 with Ada.Text_IO;
-with Zip;
 
 package body AZip_GWin.MDI_Main is
 
@@ -118,9 +117,7 @@ package body AZip_GWin.MDI_Main is
       New_Window.Short_Name:= File_Title;
       MDI_Active_Window (Window, New_Window.all);
       Update_Common_Menus(Window, To_GString_from_Unbounded(New_Window.File_Name));
-      -- \/ this should be in a Reload_archive_directory !!
-      Zip.Load(New_Window.zif, To_String(To_GString_From_Unbounded(File_Name)));
-      Update_display(New_Window.all);
+      Reload_archive(New_Window.all);
       Finish_subwindow_opening(Window, New_Window.all);
     end;
   exception

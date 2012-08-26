@@ -6,6 +6,8 @@ with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
+with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
+with Ada.Text_IO;
 with Interfaces;
 
 package body AZip_GWin.MDI_Child is
@@ -17,52 +19,65 @@ package body AZip_GWin.MDI_Child is
     need   :        Update_need
   )
   is
-    row: Natural:= 0;
-    procedure Action(
-      name             : String; -- 'name' is compressed entry's name
-      file_index       : Positive;
-      comp_size        : File_size_type;
-      uncomp_size      : File_size_type;
-      crc_32           : Interfaces.Unsigned_32;
-      date_time        : Time;
-      method           : PKZip_method;
-      unicode_file_name: Boolean
-    )
-    is
-    begin
-      Window.Directory_List.Insert_Item(S2G(name), row);
-      Window.Directory_List.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
-      Window.Directory_List.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
-      row:= row + 1; -- more subtle with our sorting
-    end Action;
 
-    procedure Traverse is new Zip.Traverse_verbose(Action);
+    procedure Feed_directory_list(prefix_path: String) is
+      row: Natural:= 0;
+      Lst: List_View_Control_Type renames Window.Directory_List;
+      procedure Action(
+        name             : String; -- 'name' is compressed entry's name
+        file_index       : Positive;
+        comp_size        : File_size_type;
+        uncomp_size      : File_size_type;
+        crc_32           : Interfaces.Unsigned_32;
+        date_time        : Time;
+        method           : PKZip_method;
+        unicode_file_name: Boolean
+      )
+      is
+        pragma Unreferenced (file_index);
+      begin
+        Lst.Insert_Item(S2G(name), row);
+        Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
+        Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, 4);
+        Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, 5);
+        Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
+        Lst.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
+        Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
+        row:= row + 1; -- more subtle with our sorting
+      end Action;
+
+      procedure Traverse is new Zip.Traverse_verbose(Action);
+
+    begin
+      Lst.Clear;
+      for topic in Entry_topic loop
+        if need = first_display then
+          Lst.Insert_Column(
+            S2G(Image(topic)),
+            Entry_topic'Pos(topic),
+            Window.current_options.column_width(topic)
+          );
+        else
+          Lst.Set_Column(
+            S2G(Image(topic)),
+            Entry_topic'Pos(topic),
+            Window.current_options.column_width(topic)
+          );
+        end if;
+      end loop;
+      if Is_Loaded(Window.zif) and need <= archive_changed then
+        Traverse(Window.zif);
+      end if;
+    end Feed_directory_list;
 
   begin
     case Window.current_options.view_mode is
       when Flat =>
         Window.Folder_Tree.Hide;
-        Window.Directory_List.Clear;
-        for topic in Entry_topic loop
-          if need = first_display then
-            Window.Directory_List.Insert_Column(
-              S2G(Image(topic)),
-              Entry_topic'Pos(topic),
-              Window.current_options.column_width(topic)
-            );
-          else
-            Window.Directory_List.Set_Column(
-              S2G(Image(topic)),
-              Entry_topic'Pos(topic),
-              Window.current_options.column_width(topic)
-            );
-          end if;
-        end loop;
-        if Is_Loaded(Window.zif) and need <= archive_changed then
-          Traverse(Window.zif);
-        end if;
+        Feed_directory_list("");
       when Tree =>
         -- all stuff
+        -- Feed_directory_list([selected path]);
         Window.Folder_Tree.Show;
     end case;
   end Update_display;
@@ -170,8 +185,8 @@ package body AZip_GWin.MDI_Child is
                      Height : in     Integer) is
     pragma Warnings (Off, Width);   -- only client area is considered
     pragma Warnings (Off, Height);  -- only client area is considered
-    w: Natural:= Window.Client_Area_Width;
-    h: Natural:= Window.Client_Area_Height;
+    w: constant Natural:= Window.Client_Area_Width;
+    h: constant Natural:= Window.Client_Area_Height;
   begin
     case Window.current_options.view_mode is
       when Flat =>

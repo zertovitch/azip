@@ -18,8 +18,8 @@ Menu_MDI_Child MENU
 {
     POPUP "&File"
     {
-        MENUITEM "&New archive", IDM__NEW_FILE
-        MENUITEM "&Open archive", IDM__OPEN_FILE
+        MENUITEM "&New archive\tCtrl+N", IDM__NEW_FILE
+        MENUITEM "&Open archive\tCtrl+O", IDM__OPEN_FILE
         MENUITEM SEPARATOR
         POPUP "&Recent"
         {
@@ -34,7 +34,7 @@ Menu_MDI_Child MENU
             MENUITEM "mru_9", IDM_MRU_9
         }
         MENUITEM SEPARATOR
-        MENUITEM "&Quit", IDM__QUIT
+        MENUITEM "&Quit\tAlt+F4", IDM__QUIT
     }
     POPUP "&Edit"
     {
@@ -46,7 +46,8 @@ Menu_MDI_Child MENU
         MENUITEM "&Find files in archive", IDM__FIND_FILE_IN_ARCHIVE
         MENUITEM SEPARATOR
         MENUITEM "Find &contents in archive", IDM_FIND__CONTENTS_IN_ARCHIVE
-        MENUITEM "Comp&are archives", IDM_COMP_ARE_TWO_ARCHIVES
+        MENUITEM "&Compare archives", IDM_COMPARE_ARCHIVES
+        MENUITEM "&Merge archives", IDM_MERGE_ARCHIVES
     }
     POPUP "&View"
     {
@@ -62,7 +63,7 @@ Menu_MDI_Child MENU
     }
     POPUP "&Help"
     {
-        MENUITEM "&About", IDM__ABOUT
+        MENUITEM "&About AZip", IDM__ABOUT
     }
 }
 
@@ -73,8 +74,8 @@ Menu_MDI_Main MENU
 {
     POPUP "&File"
     {
-        MENUITEM "&New archive", IDM__NEW_FILE
-        MENUITEM "&Open archive", IDM__OPEN_FILE
+        MENUITEM "&New archive\tCtrl+N", IDM__NEW_FILE
+        MENUITEM "&Open archive\tCtrl+O", IDM__OPEN_FILE
         MENUITEM "&Save archive as...", IDM__SAVE_FILE_AS
         MENUITEM SEPARATOR
         POPUP "&Recent"
@@ -90,7 +91,7 @@ Menu_MDI_Main MENU
             MENUITEM "mru_9", IDM_MRU_9
         }
         MENUITEM SEPARATOR
-        MENUITEM "&Quit", IDM__QUIT
+        MENUITEM "&Quit\tAlt+F4", IDM__QUIT
     }
     POPUP "&Window"
     {
@@ -101,10 +102,19 @@ Menu_MDI_Main MENU
     }
     POPUP "&Help"
     {
-        MENUITEM "&About", IDM__ABOUT
+        MENUITEM "&About AZip", IDM__ABOUT
     }
 }
 
+//
+// Accelerator resources
+//
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Main_Menu ACCELERATORS
+{
+    "N",            IDM__NEW_FILE, VIRTKEY, CONTROL
+    "O",            IDM__OPEN_FILE, VIRTKEY, CONTROL
+}
 
 
 //

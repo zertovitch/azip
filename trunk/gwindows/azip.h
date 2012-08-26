@@ -14,7 +14,7 @@
 #define IDM__RECOMPRESS_ARCHIVE                 40006
 #define IDM__FIND_FILE_IN_ARCHIVE               40007
 #define IDM_FIND__CONTENTS_IN_ARCHIVE           40008
-#define IDM_COMP_ARE_TWO_ARCHIVES               40009
+#define IDM_COMPARE_ARCHIVES                    40009
 #define IDM__FLAT_VIEW                          40010
 #define IDM__TREE_VIEW                          40011
 #define IDM_MRU_2                               40012
@@ -29,3 +29,4 @@
 #define IDM_WINDOW_TILE_HORIZONTAL              40021
 #define IDM_WINDOW_TILE_VERTICAL                40022
 #define IDM_WINDOW_CLOSE_ALL                    40023
+#define IDM_MERGE_ARCHIVES                      40024

@@ -1,18 +1,19 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/08/23  22:13:22
+-- Transcription time: 2012/08/26   13:03:46
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 23-May-2012
+-- RC Grammar version: 26-Aug-2012
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
 with GWindows.Drawing;                  use GWindows.Drawing;
 with GWindows.Drawing_Objects;
+with GWindows.GStrings;                 use GWindows.GStrings;
 with System;
 
 package body azip_Resource_GUI is
@@ -28,8 +29,8 @@ package body azip_Resource_GUI is
     Menu.Main:= Create_Menu;
     Menu.Popup_0001:= Create_Popup;
     Append_Menu(Menu.Main, "&File", Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&New archive", IDM_NEW_FILE);
-    Append_Item(Menu.Popup_0001, "&Open archive", IDM_OPEN_FILE);
+    Append_Item(Menu.Popup_0001, "&New archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+N", IDM_NEW_FILE);
+    Append_Item(Menu.Popup_0001, "&Open archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+O", IDM_OPEN_FILE);
     Append_Separator(Menu.Popup_0001);
     Menu.Popup_0002:= Create_Popup;
     Append_Menu(Menu.Popup_0001, "&Recent", Menu.Popup_0002);
@@ -43,7 +44,7 @@ package body azip_Resource_GUI is
     Append_Item(Menu.Popup_0002, "mru_8", IDM_MRU_8);
     Append_Item(Menu.Popup_0002, "mru_9", IDM_MRU_9);
     Append_Separator(Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&Quit", IDM_QUIT);
+    Append_Item(Menu.Popup_0001, "&Quit" & To_GString_from_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
     Menu.Popup_0003:= Create_Popup;
     Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
     Menu.Popup_0004:= Create_Popup;
@@ -53,7 +54,8 @@ package body azip_Resource_GUI is
     Append_Item(Menu.Popup_0004, "&Find files in archive", IDM_FIND_FILE_IN_ARCHIVE);
     Append_Separator(Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "Find &contents in archive", IDM_FIND_CONTENTS_IN_ARCHIVE);
-    Append_Item(Menu.Popup_0004, "Comp&are archives", IDM_COMP_ARE_TWO_ARCHIVES);
+    Append_Item(Menu.Popup_0004, "&Compare archives", IDM_COMPARE_ARCHIVES);
+    Append_Item(Menu.Popup_0004, "&Merge archives", IDM_MERGE_ARCHIVES);
     Menu.Popup_0005:= Create_Popup;
     Append_Menu(Menu.Main, "&View", Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "&Flat view", IDM_FLAT_VIEW);
@@ -66,11 +68,11 @@ package body azip_Resource_GUI is
     Append_Item(Menu.Popup_0006, "&Close All", IDM_WINDOW_CLOSE_ALL);
     Menu.Popup_0007:= Create_Popup;
     Append_Menu(Menu.Main, "&Help", Menu.Popup_0007);
-    Append_Item(Menu.Popup_0007, "&About", IDM_ABOUT);
+    Append_Item(Menu.Popup_0007, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu; -- Menu_MDI_Child_Type
 
 
-  -- Menu at line 72
+  -- Menu at line 73
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -78,8 +80,8 @@ package body azip_Resource_GUI is
     Menu.Main:= Create_Menu;
     Menu.Popup_0001:= Create_Popup;
     Append_Menu(Menu.Main, "&File", Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&New archive", IDM_NEW_FILE);
-    Append_Item(Menu.Popup_0001, "&Open archive", IDM_OPEN_FILE);
+    Append_Item(Menu.Popup_0001, "&New archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+N", IDM_NEW_FILE);
+    Append_Item(Menu.Popup_0001, "&Open archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+O", IDM_OPEN_FILE);
     Append_Item(Menu.Popup_0001, "&Save archive as...", IDM_SAVE_FILE_AS);
     Append_Separator(Menu.Popup_0001);
     Menu.Popup_0002:= Create_Popup;
@@ -94,7 +96,7 @@ package body azip_Resource_GUI is
     Append_Item(Menu.Popup_0002, "mru_8", IDM_MRU_8);
     Append_Item(Menu.Popup_0002, "mru_9", IDM_MRU_9);
     Append_Separator(Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&Quit", IDM_QUIT);
+    Append_Item(Menu.Popup_0001, "&Quit" & To_GString_from_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
     Menu.Popup_0003:= Create_Popup;
     Append_Menu(Menu.Main, "&Window", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "&Cascade", IDM_WINDOW_CASCADE);
@@ -103,7 +105,7 @@ package body azip_Resource_GUI is
     Append_Item(Menu.Popup_0003, "&Close All", IDM_WINDOW_CLOSE_ALL);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Help", Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&About", IDM_ABOUT);
+    Append_Item(Menu.Popup_0004, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu; -- Menu_MDI_Main_Type
 
 
@@ -217,6 +219,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 139
+  -- Last line of resource script file: 149
 
 end azip_Resource_GUI;

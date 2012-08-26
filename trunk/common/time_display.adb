@@ -1,5 +1,7 @@
---  Returns date & time for a log file, e.g. "2010/10/21   16:29:51"
---  This is Ada 83 compatible. Format accepted by SQL queries
+--  Time_display returns date & time, current or given.
+--  E.g.: "2012/10/21  16:29:51"
+--  Useful for a log file or a display of a lengthy operation.
+--  This is Ada 83 compatible. Format accepted by SQL queries.
 --
 --    32- or 64-bit: DEC/Compaq/HP Ada (83), GNAT (95/2005), ObjectAda (95)
 --    16-bit:        Meridian (83) -> Long_Integer is 32-bit

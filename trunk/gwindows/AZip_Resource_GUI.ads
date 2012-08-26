@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/08/23  22:13:22
+-- Transcription time: 2012/08/26   13:03:46
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 23-May-2012
+-- RC Grammar version: 26-Aug-2012
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -39,7 +39,7 @@ package azip_Resource_GUI is
     Popup_0007: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Child_Type
 
-  -- Menu at line 66
+  -- Menu at line 67
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -51,7 +51,7 @@ package azip_Resource_GUI is
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Main_Type
 
-  -- Menu at line 105
+  -- Menu at line 106
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -85,7 +85,7 @@ package azip_Resource_GUI is
   IDM_RECOMPRESS_ARCHIVE      : constant:=  40006;
   IDM_FIND_FILE_IN_ARCHIVE    : constant:=  40007;
   IDM_FIND_CONTENTS_IN_ARCHIVE: constant:=  40008;
-  IDM_COMP_ARE_TWO_ARCHIVES   : constant:=  40009;
+  IDM_COMPARE_ARCHIVES        : constant:=  40009;
   IDM_FLAT_VIEW               : constant:=  40010;
   IDM_TREE_VIEW               : constant:=  40011;
   IDM_MRU_2                   : constant:=  40012;
@@ -100,6 +100,7 @@ package azip_Resource_GUI is
   IDM_WINDOW_TILE_HORIZONTAL  : constant:=  40021;
   IDM_WINDOW_TILE_VERTICAL    : constant:=  40022;
   IDM_WINDOW_CLOSE_ALL        : constant:=  40023;
+  IDM_MERGE_ARCHIVES          : constant:=  40024;
 
   -- ** Some helper utilities (spec).
 
@@ -112,6 +113,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return String;
 
 
-  -- Last line of resource script file: 139
+  -- Last line of resource script file: 149
 
 end azip_Resource_GUI;

@@ -1,4 +1,4 @@
-with AZip_GWin.MDI_Child; use AZip_GWin.MDI_Child;
+with AZip_GWin.MDI_Child;                use AZip_GWin.MDI_Child;
 
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;

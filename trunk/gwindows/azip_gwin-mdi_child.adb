@@ -35,14 +35,22 @@ package body AZip_GWin.MDI_Child is
       )
       is
         pragma Unreferenced (file_index);
+        simple_name_idx: Positive:= name'First;
       begin
-        Lst.Insert_Item(S2G(name), row);
+        for i in name'Range loop
+          if name(i) ='/' or name(i)='\' then
+            -- directory separator, ok with Unicode UTF-8 names
+            simple_name_idx:= i + 1;
+          end if;
+        end loop;
+        Lst.Insert_Item(S2G(name(simple_name_idx..name'Last)), row);
         Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
         Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, 4);
         Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, 5);
         Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
         Lst.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
         Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
+        Lst.Set_Sub_Item(S2G(name(name'First..simple_name_idx-2)), row, 9);
         row:= row + 1; -- more subtle with our sorting
       end Action;
 

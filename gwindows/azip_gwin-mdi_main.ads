@@ -1,7 +1,6 @@
 -- To do: make a generic "Office Classic" application framework
 
 with AZip_Common;
-
 with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
 with GWindows;                          use GWindows;

@@ -43,15 +43,17 @@ package body AZip_GWin.MDI_Child is
             simple_name_idx:= i + 1;
           end if;
         end loop;
-        Lst.Insert_Item(S2G(name(simple_name_idx..name'Last)), row);
-        Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
-        Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, 4);
-        Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, 5);
-        Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
-        Lst.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
-        Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
-        Lst.Set_Sub_Item(S2G(name(name'First..simple_name_idx-2)), row, 9);
-        row:= row + 1; -- more subtle with our sorting
+        if simple_name_idx <= name'Last then -- skip directory entries
+          Lst.Insert_Item(S2G(name(simple_name_idx..name'Last)), row);
+          Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
+          Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, 4);
+          Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, 5);
+          Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
+          Lst.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
+          Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
+          Lst.Set_Sub_Item(S2G(name(name'First..simple_name_idx-2)), row, 9);
+          row:= row + 1; -- more subtle with our sorting
+        end if;
       end Action;
 
       procedure Traverse is new Zip.Traverse_verbose(Action);
@@ -103,6 +105,10 @@ package body AZip_GWin.MDI_Child is
 
     Create(Window.Directory_List, Window, 50,1,20,20, Multiple, Report_View);
     Create(Window.Folder_Tree, Window, 1,1,20,20);
+
+    Create(Window.Status_Bar, Window, "No archive");
+    Parts(Window.Status_Bar, (200, -1));
+    Dock (Window.Status_Bar, GWindows.Base.At_Bottom);
 
     -- Window.Draw_Control.parent:=
     --   MDI_Picture_Child_Access(Controlling_Parent(Window.Draw_Control));
@@ -159,7 +165,6 @@ package body AZip_GWin.MDI_Child is
     --Adjust_Draw_Control_Position(Window);
 
     Window.Status_deamon.Start;
-    Window.Status_deamon.Display(Window'Unchecked_Access);
     Update_display(Window, first_display);
     Window.Use_Mouse_Wheel;
   end On_Create;
@@ -186,6 +191,7 @@ package body AZip_GWin.MDI_Child is
   begin
     Zip.Load(Window.zif, GWindows.GStrings.To_String(To_GString_From_Unbounded(Window.File_Name)));
     Update_display(Window, archive_changed);
+    Window.Status_deamon.Display(Window'Unchecked_Access);
   end Reload_archive;
 
   procedure On_Size (Window : in out MDI_Child_Type;
@@ -194,7 +200,7 @@ package body AZip_GWin.MDI_Child is
     pragma Warnings (Off, Width);   -- only client area is considered
     pragma Warnings (Off, Height);  -- only client area is considered
     w: constant Natural:= Window.Client_Area_Width;
-    h: constant Natural:= Window.Client_Area_Height;
+    h: constant Natural:= Window.Client_Area_Height - Window.Status_Bar.Height;
   begin
     case Window.current_options.view_mode is
       when Flat =>
@@ -213,6 +219,7 @@ package body AZip_GWin.MDI_Child is
         );
         null;
     end case;
+    Dock_Children (Window);
   end On_Size;
 
   procedure On_Close (Window    : in out MDI_Child_Type;
@@ -262,7 +269,18 @@ package body AZip_GWin.MDI_Child is
                accept Display(w: AZip_GWin.MDI_Child.MDI_Child_Access) do
                   current_child_window:= w;
                end Display;
-               -- Update_status_display(current_main_window.all);
+               if Is_Loaded(current_child_window.zif) then
+                 Text(
+                   current_child_window.Status_Bar,
+                   S2G(
+                     Integer'Image(Entries(current_child_window.zif)) &
+                     " files"
+                   ),
+                   0
+                 );
+               else
+                 Text(current_child_window.Status_Bar,"No archive loaded",0);
+               end if;
             or
                delay 0.05; -- relax
             end select;

@@ -43,6 +43,12 @@ package AZip_GWin.MDI_Child is
       end;
    end Daemons;
 
+  type MDI_Child_Status_bar_part is ( directory_info, task_message );
+
+  type MDI_Child_Status_Bar_Type is
+    new GWindows.Common_Controls.Status_Bar_Type with null record;
+
+
   type MDI_Child_Type is
     new GWindows.Windows.MDI.MDI_Child_Window_Type with
       record
@@ -58,6 +64,7 @@ package AZip_GWin.MDI_Child is
         zif              : Zip.Zip_info;
         current_options  : AZip_Common.Option_Pack_Type;
         Status_deamon    : Daemons.Status_display;
+        Status_Bar       : MDI_Child_Status_Bar_Type;
       end record;
 
   procedure On_Create (Window : in out MDI_Child_Type);

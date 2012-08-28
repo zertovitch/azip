@@ -14,12 +14,6 @@ with GWindows.Constants;
 
 package AZip_GWin.MDI_Main is
 
-  -- type MDI_Status_bar_part is
-  --   ( modified, command, comment, coords, zoom, stat_objects );
-
-  type MDI_Status_Bar_Type is
-    new GWindows.Common_Controls.Status_Bar_Type with null record;
-
   -- type MDI_Toolbar_Type is
   --   new GWindows.Common_Controls.Toolbar_Control_Type with null record;
 
@@ -46,7 +40,6 @@ package AZip_GWin.MDI_Main is
         mru: MRU_List:= (others=> To_GString_Unbounded(""));
         -- Tool_Bar               : MDI_Toolbar_Type;
         -- Images                 : GWindows.Image_Lists.Image_List_Type;
-        Status_Bar             : MDI_Status_Bar_Type;
         Menu                   : Menu_MDI_Main_Type;
         -- record_dimensions      : Boolean:= False; -- in On_Move, On_Size
         User_maximize_restore  : Boolean:= True;

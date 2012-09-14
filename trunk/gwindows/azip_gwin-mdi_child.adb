@@ -31,11 +31,13 @@ package body AZip_GWin.MDI_Child is
         crc_32           : Interfaces.Unsigned_32;
         date_time        : Time;
         method           : PKZip_method;
-        unicode_file_name: Boolean
+        unicode_file_name: Boolean;
+        read_only        : Boolean
       )
       is
         pragma Unreferenced (file_index);
         simple_name_idx: Positive:= name'First;
+        R_mark: array (Boolean) of Character:= (' ', 'R');
       begin
         for i in name'Range loop
           if name(i) ='/' or name(i)='\' then
@@ -46,6 +48,7 @@ package body AZip_GWin.MDI_Child is
         if simple_name_idx <= name'Last then -- skip directory entries
           Lst.Insert_Item(S2G(name(simple_name_idx..name'Last)), row);
           Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
+          Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, 3);
           Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, 4);
           Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, 5);
           Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);

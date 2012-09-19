@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/08/26   13:03:46
+-- Transcription time: 2012/09/19   23:47:29
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -55,6 +55,48 @@ package azip_Resource_GUI is
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
+  type About_box_Type is new Window_type with record
+
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    -- Label: IDC_STATIC
+    -- Label: IDC_STATIC
+    -- Label: IDC_STATIC
+    -- Label: IDC_STATIC
+    AZip_URL: Label_Type;
+    Static_0005: Group_Box_Type;
+    GNAT_URL: Label_Type;
+    GNAT_Version: Label_Type;
+    GNAVI_URL: Label_Type;
+    ResEdit_URL: Label_Type;
+    ZipAda_URL: Label_Type;
+    ZipAda_Version: Label_Type;
+  end record; -- About_box_Type
+
+  -- Dialog at resource line 132
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out About_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "About AZip";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out About_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     );
+
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip user interface";
@@ -75,6 +117,11 @@ package azip_Resource_GUI is
   IDC_STATIC                  : constant:=     -1;
   Menu_MDI_Main               : constant:=    102;
   Menu_MDI_Child              : constant:=    104;
+  About_box                   : constant:=    107;
+  GNAT_URL                    : constant:=   1000;
+  GNAT_Version                : constant:=   1001;
+  GNAVI_URL                   : constant:=   1002;
+  ResEdit_URL                 : constant:=   1004;
   IDM_NEW_FILE                : constant:=  40000;
   IDM_OPEN_FILE               : constant:=  40001;
   IDM_MRU_1                   : constant:=  40002;
@@ -101,6 +148,9 @@ package azip_Resource_GUI is
   IDM_WINDOW_TILE_VERTICAL    : constant:=  40022;
   IDM_WINDOW_CLOSE_ALL        : constant:=  40023;
   IDM_MERGE_ARCHIVES          : constant:=  40024;
+  AZip_URL                    : constant:=  40025;
+  ZipAda_Version              : constant:=  40028;
+  ZipAda_URL                  : constant:=  40029;
 
   -- ** Some helper utilities (spec).
 
@@ -113,6 +163,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return String;
 
 
-  -- Last line of resource script file: 149
+  -- Last line of resource script file: 178
 
 end azip_Resource_GUI;

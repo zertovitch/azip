@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/08/26   13:03:46
+-- Transcription time: 2012/09/19   23:47:29
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -52,8 +52,8 @@ package body azip_Resource_GUI is
     Append_Item(Menu.Popup_0004, "&Test archive", IDM_TEST_ARCHIVE);
     Append_Item(Menu.Popup_0004, "&Recompress archive", IDM_RECOMPRESS_ARCHIVE);
     Append_Item(Menu.Popup_0004, "&Find files in archive", IDM_FIND_FILE_IN_ARCHIVE);
-    Append_Separator(Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "Find &contents in archive", IDM_FIND_CONTENTS_IN_ARCHIVE);
+    Append_Separator(Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Compare archives", IDM_COMPARE_ARCHIVES);
     Append_Item(Menu.Popup_0004, "&Merge archives", IDM_MERGE_ARCHIVES);
     Menu.Popup_0005:= Create_Popup;
@@ -107,6 +107,100 @@ package body azip_Resource_GUI is
     Append_Menu(Menu.Main, "&Help", Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu; -- Menu_MDI_Main_Type
+
+
+  -- Dialog at resource line 118
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out About_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "About AZip";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 256, 210, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- About_box_Type
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out About_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 256, 210, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  103, 188, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDOK, Window, "Close", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "Close", x,y,w,h, ID => IDOK);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDOK_permanent);
+    else -- hide the closing button
+      Hide(Window.IDOK);
+    end if;
+    Dlg_to_Scn(  47, 10, 165, 8, x,y,w,h);
+    Create_label( Window, "AZip - a portable Zip user interface", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  47, 25, 151, 8, x,y,w,h);
+    Create_label( Window, "Copyright © Gautier de Montmollin 2012", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  47, 40, 100, 8, x,y,w,h);
+    Create_label( Window, "MIT Open Source License", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  10, 66, 30, 8, x,y,w,h);
+    Create_label( Window, "Internet:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  57, 66, 132, 8, x,y,w,h);
+    Create( Window.AZip_URL, Window, "http://sf.net/projects/azip", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => AZip_URL);
+    Dlg_to_Scn(  5, 105, 247, 81, x,y,w,h);
+    Create( Window.Static_0005, Window, "Software made with the following free, open source components:", x,y,w,h);
+    Dlg_to_Scn(  23, 119, 100, 8, x,y,w,h);
+    Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAT_URL);
+    Dlg_to_Scn(  133, 119, 113, 8, x,y,w,h);
+    Create( Window.GNAT_Version, Window, "GNAT_Version", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAT_Version);
+    Dlg_to_Scn(  23, 134, 118, 8, x,y,w,h);
+    Create( Window.GNAVI_URL, Window, "GNAVI / GWindows", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAVI_URL);
+    Dlg_to_Scn(  23, 149, 170, 8, x,y,w,h);
+    Create( Window.ResEdit_URL, Window, "ResEdit", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ResEdit_URL);
+    Dlg_to_Scn(  23, 164, 75, 8, x,y,w,h);
+    Create( Window.ZipAda_URL, Window, "Zip-Ada", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ZipAda_URL);
+    Dlg_to_Scn(  133, 164, 113, 8, x,y,w,h);
+    Create( Window.ZipAda_Version, Window, "ZA_Version", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ZipAda_Version);
+  end Create_Contents; -- About_box_Type
 
 
   -- ** Generated code ends here /\ /\ /\.
@@ -219,6 +313,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 149
+  -- Last line of resource script file: 178
 
 end azip_Resource_GUI;

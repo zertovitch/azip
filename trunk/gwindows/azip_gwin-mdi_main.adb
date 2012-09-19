@@ -1,16 +1,25 @@
-with AZip_GWin.MDI_Child;                use AZip_GWin.MDI_Child;
+with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
+with Zip;
 
+with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
+with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Static_Controls;          use GWindows.Static_Controls;
+with GWindows.Static_Controls.Web;      use GWindows.Static_Controls.Web;
 with GWindows.Windows;                  use GWindows.Windows;
 
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
 with Ada.Text_IO;
 
+with GNAT.Compiler_Version;
+
 package body AZip_GWin.MDI_Main is
+
+  function S2G (Value : String) return GString renames To_GString_From_String;
 
   procedure Focus_an_already_opened_window(
     Window    : MDI_Main_Type;
@@ -276,8 +285,22 @@ package body AZip_GWin.MDI_Main is
   end My_MDI_Close_All;
 
   procedure On_About(Window : in out MDI_Main_Type) is
+    box: About_Box_Type;
+    url_azip, url_gnat, url_gnavi, url_resedit, url_zipada: URL_Type;
+    package CVer is new GNAT.Compiler_Version;
   begin
-    Message_Box("AZip", "AZip v.0.001");
+    box.Create_Full_Dialog(Window);
+    Create_and_Swap(url_azip, box.AZip_URL, box, "http://sf.net/projects/azip");
+    Create_and_Swap(url_gnat, box.GNAT_URL, box, "http://libre.adacore.com");
+    Text(box.GNAT_Version, S2G("version " & CVer.Version));
+    Create_and_Swap(url_gnavi, box.GNAVI_URL, box, "http://sf.net/projects/gnavi");
+    Create_and_Swap(url_resedit, box.ResEdit_URL, box, "http://resedit.net");
+    Create_and_Swap(url_zipada, box.ZipAda_URL, box, S2G(Zip.web));
+    Text(box.ZipAda_Version, S2G("version " & Zip.version & ", ref. " & Zip.reference));
+    box.Center;
+    if Show_Dialog (box, Window) = IDOK then
+      null;
+    end if;
   end On_About;
 
   --------------------

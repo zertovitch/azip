@@ -4,6 +4,11 @@
 
 #define Menu_MDI_Main                           102
 #define Menu_MDI_Child                          104
+#define About_box                               107
+#define GNAT_URL                                1000
+#define GNAT_Version                            1001
+#define GNAVI_URL                               1002
+#define ResEdit_URL                             1004
 #define IDM__NEW_FILE                           40000
 #define IDM__OPEN_FILE                          40001
 #define IDM_MRU_1                               40002
@@ -30,3 +35,6 @@
 #define IDM_WINDOW_TILE_VERTICAL                40022
 #define IDM_WINDOW_CLOSE_ALL                    40023
 #define IDM_MERGE_ARCHIVES                      40024
+#define AZip_URL                                40025
+#define ZipAda_Version                          40028
+#define ZipAda_URL                              40029

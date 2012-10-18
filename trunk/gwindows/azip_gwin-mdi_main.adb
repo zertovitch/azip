@@ -9,7 +9,6 @@ with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Static_Controls;          use GWindows.Static_Controls;
 with GWindows.Static_Controls.Web;      use GWindows.Static_Controls.Web;
-with GWindows.Windows;                  use GWindows.Windows;
 
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
@@ -126,7 +125,7 @@ package body AZip_GWin.MDI_Main is
       New_Window.Short_Name:= File_Title;
       MDI_Active_Window (Window, New_Window.all);
       Update_Common_Menus(Window, To_GString_from_Unbounded(New_Window.File_Name));
-      Reload_archive(New_Window.all);
+      Load_archive_catalogue(New_Window.all);
       Finish_subwindow_opening(Window, New_Window.all);
     end;
   exception
@@ -193,8 +192,8 @@ package body AZip_GWin.MDI_Main is
         To_Gstring_Unbounded(To_GString_from_String(Argument(I)))
       );
     end loop;
-    Accept_File_Drag_And_Drop(Window);
-
+    Window.Accept_File_Drag_And_Drop;
+    -- Dropping files on the background will trigger creating an archive
   end On_Create;
 
   -----------------
@@ -263,6 +262,20 @@ package body AZip_GWin.MDI_Main is
       Open_Child_Window_And_Load( Window, File_Name, File_Title );
     end if;
   end On_File_Open;
+
+  procedure On_File_Drop (Window     : in out MDI_Main_Type;
+                          File_Names : in     Array_Of_File_Names) is
+  begin
+    if Message_Box(
+      Window,
+      "Files dropped",
+      "Create new archive with dropped files?",
+      Yes_No_Box,
+      Question_Icon) = Yes
+    then
+      null; -- !!
+    end if;
+  end On_File_Drop;
 
   ----------------------
   -- My_MDI_Close_All --

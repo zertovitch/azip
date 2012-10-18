@@ -1,3 +1,4 @@
+with AZip_Common;
 with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
 with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
@@ -11,10 +12,10 @@ with GWindows.Drawing;                  use GWindows.Drawing;
 with GWindows.Drawing_Objects;          use GWindows.Drawing_Objects;
 with GWindows.Drawing_Panels;
 with GWindows.Menus;
-with GWindows.Windows.MDI;
-
 with GWindows.Types;
-with AZip_Common;
+with GWindows.Windows.MDI;
+with GWindows.Windows;                  use GWindows.Windows;
+
 
 package AZip_GWin.MDI_Child is
 
@@ -75,6 +76,9 @@ package AZip_GWin.MDI_Child is
   function Is_file_saved (Window : in MDI_Child_Type) return Boolean;
   -- This would be abstract in a 'generic' Office framework.
 
+  procedure On_File_Drop (Window     : in out MDI_Child_Type;
+                          File_Names : in     Array_Of_File_Names);
+
   type Update_need is
     (first_display,
      archive_changed,
@@ -85,7 +89,7 @@ package AZip_GWin.MDI_Child is
     need   :        Update_need
   );
 
-  procedure Reload_archive (Window : in out MDI_Child_Type);
+  procedure Load_archive_catalogue (Window : in out MDI_Child_Type);
 
   procedure On_Size (Window : in out MDI_Child_Type;
                      Width  : in     Integer;

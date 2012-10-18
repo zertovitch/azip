@@ -13,6 +13,7 @@ with Interfaces;
 package body AZip_GWin.MDI_Child is
 
   function S2G (Value : String) return GString renames To_GString_From_String;
+  function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
 
   procedure Update_display(
     Window : in out MDI_Child_Type;
@@ -170,6 +171,7 @@ package body AZip_GWin.MDI_Child is
     Window.Status_deamon.Start;
     Update_display(Window, first_display);
     Window.Use_Mouse_Wheel;
+    Window.Accept_File_Drag_And_Drop;
   end On_Create;
 
   procedure On_Save (Window : in out MDI_Child_Type) is
@@ -183,6 +185,32 @@ package body AZip_GWin.MDI_Child is
     return True;
   end Is_file_saved;
 
+  procedure On_File_Drop (Window     : in out MDI_Child_Type;
+                          File_Names : in     Array_Of_File_Names) is
+  begin
+    if Is_Loaded(Window.zif) then
+      if Message_Box(
+        Window,
+        "Files dropped",
+        "Add dropped files to archive """ & GU2G(Window.Short_Name) & """ ?",
+        Yes_No_Box,
+        Question_Icon) = Yes
+      then
+        null; -- !!
+      end if;
+    else
+      if Message_Box(
+        Window,
+        "Files dropped",
+        "Add dropped files to new archive (" & GU2G(Window.Short_Name) & ") ?",
+        Yes_No_Box,
+        Question_Icon) = Yes
+      then
+        null; -- !!
+      end if;
+    end if;
+  end On_File_Drop;
+
   -- This will update File menu of parent, itself, and all brothers and sisters
   procedure Update_Common_Menus(Window : MDI_Child_Type;
                                 top_entry : GString:= "" ) is
@@ -190,12 +218,12 @@ package body AZip_GWin.MDI_Child is
     Update_Common_Menus( Window.parent.all, top_entry );
   end Update_Common_Menus;
 
-  procedure Reload_archive (Window : in out MDI_Child_Type) is
+  procedure Load_archive_catalogue (Window : in out MDI_Child_Type) is
   begin
     Zip.Load(Window.zif, GWindows.GStrings.To_String(To_GString_From_Unbounded(Window.File_Name)));
     Update_display(Window, archive_changed);
     Window.Status_deamon.Display(Window'Unchecked_Access);
-  end Reload_archive;
+  end Load_archive_catalogue;
 
   procedure On_Size (Window : in out MDI_Child_Type;
                      Width  : in     Integer;

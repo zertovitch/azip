@@ -11,6 +11,7 @@ with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Image_Lists;
 with GWindows.Menus;
 with GWindows.Constants;
+with GWindows.Windows;                  use GWindows.Windows;
 
 package AZip_GWin.MDI_Main is
 
@@ -54,6 +55,9 @@ package AZip_GWin.MDI_Main is
 
   procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean);
   --  File|New event
+
+  procedure On_File_Drop (Window     : in out MDI_Main_Type;
+                          File_Names : in     Array_Of_File_Names);
 
   procedure On_Menu_Select (
         Window : in out MDI_Main_Type;

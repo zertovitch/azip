@@ -40,8 +40,8 @@ package AZip_Common is
     Append,  -- file is not in original archive and has to be added to new one
     Replace, -- file replaces an entry in original archive
     -- Operations related to "Remove"
-    Skip,    -- file is in original archive but
-    -- Neutral
+    Skip,    -- file is in original archive but won't be copied (-> "deleted")
+    -- Neutral (happens with both "Add" and "Remove")
     Copy     -- file is in original archive and copied into new one
   );
 
@@ -50,7 +50,7 @@ package AZip_Common is
     utf_8: Boolean;
   end record;
 
-  type Name_list is array(Positive range <>) of Zip_entry_name;
+  type Name_list is array(Natural range <>) of Zip_entry_name;
   -- !! should use hashed maps for quick search
 
   generic

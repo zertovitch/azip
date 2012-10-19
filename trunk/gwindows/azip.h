@@ -36,5 +36,7 @@
 #define IDM_WINDOW_CLOSE_ALL                    40023
 #define IDM_MERGE_ARCHIVES                      40024
 #define AZip_URL                                40025
+#define IDM_Select_all                          40025
+#define IDM_Delete_Selected                     40026
 #define ZipAda_Version                          40028
 #define ZipAda_URL                              40029

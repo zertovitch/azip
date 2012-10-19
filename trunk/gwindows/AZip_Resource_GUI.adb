@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/09/19   23:47:29
+-- Transcription time: 2012/10/19   10:48:52
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -47,6 +47,8 @@ package body azip_Resource_GUI is
     Append_Item(Menu.Popup_0001, "&Quit" & To_GString_from_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
     Menu.Popup_0003:= Create_Popup;
     Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
+    Append_Item(Menu.Popup_0003, "Select &All" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
+    Append_Item(Menu.Popup_0003, "Delete selected" & To_GString_from_String((1=>ASCII.HT)) & "Del", IDM_Delete_Selected);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Action", Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Test archive", IDM_TEST_ARCHIVE);
@@ -72,7 +74,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Child_Type
 
 
-  -- Menu at line 73
+  -- Menu at line 75
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -109,7 +111,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Main_Type
 
 
-  -- Dialog at resource line 118
+  -- Dialog at resource line 120
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -313,6 +315,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 178
+  -- Last line of resource script file: 182
 
 end azip_Resource_GUI;

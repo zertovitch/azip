@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/09/19   23:47:29
+-- Transcription time: 2012/10/19   10:48:52
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -39,7 +39,7 @@ package azip_Resource_GUI is
     Popup_0007: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Child_Type
 
-  -- Menu at line 67
+  -- Menu at line 69
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -51,7 +51,7 @@ package azip_Resource_GUI is
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Main_Type
 
-  -- Menu at line 106
+  -- Menu at line 108
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -73,7 +73,7 @@ package azip_Resource_GUI is
     ZipAda_Version: Label_Type;
   end record; -- About_box_Type
 
-  -- Dialog at resource line 132
+  -- Dialog at resource line 134
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -149,6 +149,8 @@ package azip_Resource_GUI is
   IDM_WINDOW_CLOSE_ALL        : constant:=  40023;
   IDM_MERGE_ARCHIVES          : constant:=  40024;
   AZip_URL                    : constant:=  40025;
+  IDM_Select_all              : constant:=  40025;
+  IDM_Delete_Selected         : constant:=  40026;
   ZipAda_Version              : constant:=  40028;
   ZipAda_URL                  : constant:=  40029;
 
@@ -163,6 +165,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return String;
 
 
-  -- Last line of resource script file: 178
+  -- Last line of resource script file: 182
 
 end azip_Resource_GUI;

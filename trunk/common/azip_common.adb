@@ -1,13 +1,15 @@
+with Zip.Create, Zip_Streams;
+
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
-with Ada.Strings; use Ada.Strings;
+with Ada.Strings;                       use Ada.Strings;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 with Ada.Text_IO;
 
 package body AZip_Common is
 
   function Image(topic: Entry_topic) return String is
-  u: constant String:= Entry_topic'Image(topic);
-  l: constant String:= To_Lower(u);
+    u: constant String:= Entry_topic'Image(topic);
+    l: constant String:= To_Lower(u);
   begin
     case topic is
       when FType =>
@@ -51,5 +53,84 @@ package body AZip_Common is
       return Trim(Integer'Image(Integer(100.0 * Float(n) / Float(d))), Left) & '%';
     end if;
   end Ratio_pct;
+
+  -- Add or remove entries to an archive
+
+  procedure Modify_Archive(
+    zif         : Zip.Zip_Info;
+    operation   : Archive_Operation;
+    file_names  : Name_list;
+    base_folder : String
+  )
+  is
+    new_zip: Zip.Create.Zip_Create_info;
+    fzs: aliased Zip_Streams.File_Zipstream;
+    percents_done: Natural:= 0;
+    --
+    use Zip.Create;
+    --
+    procedure Action(
+      name             : String; -- 'name' is compressed entry's name
+      file_index       : Positive;
+      comp_size        : Zip.File_size_type;
+      uncomp_size      : Zip.File_size_type;
+      crc_32           : Interfaces.Unsigned_32;
+      date_time        : Zip.Time;
+      method           : Zip.PKZip_method;
+      unicode_file_name: Boolean;
+      read_only        : Boolean
+    )
+    is
+      match: Boolean:= False;
+    begin
+      for i in file_names'Range loop -- !! use hashed maps either
+        if file_names(i).name = name and
+           file_names(i).utf_8 = unicode_file_name
+        then
+          match:= True;
+        end if;
+      end loop;
+      if match then
+        case operation is
+          when Add =>
+            Feedback(percents_done, name, unicode_file_name, Replace);
+            Add_File(new_zip, name, Name_UTF_8_encoded => unicode_file_name);
+          when Remove =>
+            Feedback(percents_done, name, unicode_file_name, Skip);
+        end case;
+      else
+        Feedback(percents_done, name, unicode_file_name, Copy);
+        null; -- !! copy compressed entry (preserve) !!
+      end if;
+    end Action;
+
+  procedure Morph_archive is new Zip.Traverse_verbose(Action);
+
+  begin
+    Create(new_zip, fzs'Unchecked_Access, "!!temp!!.zip");
+    Morph_archive(zif);
+    -- Almost done...
+    case operation is
+      when Add =>
+        for i in file_names'Range loop -- !! use hashed maps either
+          if not Zip.Exists(
+            zif,
+            To_String(file_names(i).name),
+            case_sensitive => True -- !! system-dependent!...
+          )
+          then
+            Add_File(new_zip, To_String(file_names(i).name), Name_UTF_8_encoded => file_names(i).utf_8);
+          end if;
+        end loop;
+        null; -- append non-replaced files!!
+      when Remove =>
+        null;
+        -- There should be no file to be removed which is not in original
+        -- archive.
+    end case;
+    Finish(new_zip);
+    -- !! replaced old archive file by new one
+  end Modify_Archive;
+
 
 end AZip_Common;

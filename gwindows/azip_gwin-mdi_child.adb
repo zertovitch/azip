@@ -7,6 +7,7 @@ with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 with Ada.Text_IO;
 with Interfaces;
 
@@ -185,6 +186,44 @@ package body AZip_GWin.MDI_Child is
     return True;
   end Is_file_saved;
 
+  procedure Modify_Archive_GWin(
+    Window      : in out MDI_Child_Type;
+    operation   : Archive_Operation;
+    file_names  : Array_Of_File_Names;
+    base_folder : String
+  )
+  is
+    az_names: Name_list(File_Names'Range);
+    --
+    procedure Boxed_Feedback(
+      percents_done         : Natural;
+      entry_being_processed : String;
+      is_UTF_8              : Boolean;
+      operation             : Entry_Operation
+    )
+    is
+    begin
+      Message_Box(
+        Window, "Feedback",
+        S2G(entry_being_processed & ASCII.LF & Entry_Operation'Image(operation))
+      );
+      null; -- !!
+    end Boxed_Feedback;
+    --
+    procedure Perform_Modification is new Modify_Archive(Boxed_Feedback);
+  begin
+    -- Convert GStrings (UTF-16) to Strings with UTF-8
+    for i in az_names'Range loop
+      az_names(i):=
+        (name => To_Unbounded_String(
+                   GWindows.GStrings.To_String(GU2G(File_Names(i)))
+                 ), -- !!
+         utf_8 => False -- !!
+        );
+    end loop;
+    Perform_Modification(Window.zif, operation, az_names, base_folder);
+  end Modify_Archive_GWin;
+
   procedure On_File_Drop (Window     : in out MDI_Child_Type;
                           File_Names : in     Array_Of_File_Names) is
   begin
@@ -196,7 +235,10 @@ package body AZip_GWin.MDI_Child is
         Yes_No_Box,
         Question_Icon) = Yes
       then
-        null; -- !!
+        Modify_Archive_GWin(
+          Window, Add, File_Names,
+          "" -- !! only for flat view
+        );
       end if;
     else
       if Message_Box(

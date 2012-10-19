@@ -119,6 +119,7 @@ package body AZip_Common is
             case_sensitive => True -- !! system-dependent!...
           )
           then
+            Feedback(percents_done, To_String(file_names(i).name), file_names(i).utf_8, Append);
             Add_File(new_zip, To_String(file_names(i).name), Name_UTF_8_encoded => file_names(i).utf_8);
           end if;
         end loop;
@@ -129,7 +130,7 @@ package body AZip_Common is
         -- archive.
     end case;
     Finish(new_zip);
-    -- !! replaced old archive file by new one
+    -- !! replace old archive file by new one
   end Modify_Archive;
 
 

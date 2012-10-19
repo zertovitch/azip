@@ -38,6 +38,8 @@ Menu_MDI_Child MENU
     }
     POPUP "&Edit"
     {
+        MENUITEM "Select &All\tCtrl+A", IDM_Select_all
+        MENUITEM "Delete selected\tDel", IDM_Delete_Selected
     }
     POPUP "&Action"
     {
@@ -142,6 +144,8 @@ Main_Menu ACCELERATORS
 {
     "N",            IDM__NEW_FILE, VIRTKEY, CONTROL
     "O",            IDM__OPEN_FILE, VIRTKEY, CONTROL
+    "A",            IDM_Select_all, VIRTKEY, CONTROL
+    VK_DELETE,     IDM_Delete_Selected, VIRTKEY
 }
 
 

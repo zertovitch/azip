@@ -54,6 +54,22 @@ package body AZip_Common is
     end if;
   end Ratio_pct;
 
+  function Remove_path(s: String) return String is
+    i: Positive;
+  begin
+    if s = "" then
+      return "";
+    else
+      i:= s'First;
+      for j in s'Range loop
+        if s(j)= '/' or s(j)= '\' then
+          i:= j+1;
+        end if;
+      end loop;
+    end if;
+    return s(i..s'Last);
+  end Remove_path;
+
   -- Add or remove entries to an archive
 
   procedure Modify_Archive(
@@ -94,7 +110,13 @@ package body AZip_Common is
         case operation is
           when Add =>
             Feedback(percents_done, name, unicode_file_name, Replace);
-            Add_File(new_zip, name, Name_UTF_8_encoded => unicode_file_name);
+            Add_File(
+              Info               => new_zip,
+              Name               => name,
+              Name_in_archive    => Remove_path(name),
+              Delete_file_after  => False,
+              Name_UTF_8_encoded => unicode_file_name
+            );
           when Remove =>
             Feedback(percents_done, name, unicode_file_name, Skip);
         end case;
@@ -120,14 +142,19 @@ package body AZip_Common is
           )
           then
             Feedback(percents_done, To_String(file_names(i).name), file_names(i).utf_8, Append);
-            Add_File(new_zip, To_String(file_names(i).name), Name_UTF_8_encoded => file_names(i).utf_8);
+            Add_File(
+              Info               => new_zip,
+              Name               => To_String(file_names(i).name),
+              Name_in_archive    => Remove_path(To_String(file_names(i).name)),
+              Delete_file_after  => False,
+              Name_UTF_8_encoded => file_names(i).utf_8
+            );
           end if;
         end loop;
-        null; -- append non-replaced files!!
       when Remove =>
         null;
-        -- There should be no file to be removed which is not in original
-        -- archive.
+        -- There should be no file to be removed which is
+        -- not in original archive.
     end case;
     Finish(new_zip);
     -- !! replace old archive file by new one

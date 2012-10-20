@@ -203,10 +203,12 @@ package body AZip_GWin.MDI_Child is
     )
     is
     begin
+      if operation /= copy then
       Message_Box(
         Window, "Feedback",
         S2G(entry_being_processed & ASCII.LF & Entry_Operation'Image(operation))
       );
+      end if;
       null; -- !!
     end Boxed_Feedback;
     --

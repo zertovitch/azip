@@ -269,7 +269,7 @@ package body AZip_GWin.MDI_Main is
     if Message_Box(
       Window,
       "Files dropped",
-      "Create new archive with dropped files?",
+      "Create new archive with dropped files ?",
       Yes_No_Box,
       Question_Icon) = Yes
     then

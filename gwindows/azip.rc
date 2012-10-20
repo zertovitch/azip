@@ -136,6 +136,21 @@ FONT 8, "Ms Shell Dlg"
 
 
 
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Progress_box DIALOG 0, 0, 242, 116
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+CAPTION "AZip is working"
+FONT 8, "Ms Shell Dlg"
+{
+    PUSHBUTTON      "Cancel", IDCANCEL, 95, 96, 50, 14
+    CONTROL         "", Archive_Progress, PROGRESS_CLASS, 0, 7, 74, 227, 17
+    LTEXT           "Adding...", Entry_operation_name, 9, 12, 63, 8, SS_LEFT
+    LTEXT           "Some file", Entry_name, 9, 30, 170, 8, SS_LEFT
+    CONTROL         "", File_Progress, PROGRESS_CLASS, 0, 7, 52, 227, 9
+}
+
+
+
 //
 // Accelerator resources
 //

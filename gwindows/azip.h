@@ -5,10 +5,15 @@
 #define Menu_MDI_Main                           102
 #define Menu_MDI_Child                          104
 #define About_box                               107
+#define Progress_box                            109
+#define Archive_Progress                        1000
 #define GNAT_URL                                1000
+#define Entry_operation_name                    1001
 #define GNAT_Version                            1001
+#define File_Progress                           1002
 #define GNAVI_URL                               1002
 #define ResEdit_URL                             1004
+#define Entry_name                              1005
 #define IDM__NEW_FILE                           40000
 #define IDM__OPEN_FILE                          40001
 #define IDM_MRU_1                               40002

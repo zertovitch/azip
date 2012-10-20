@@ -2,13 +2,12 @@ with Zip;                               use Zip;
 with AZip_Common;                       use AZip_Common;
 with Time_Display;
 
+with GWindows.Application;              use GWindows.Application;
 with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
-with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
-with Ada.Text_IO;
 with Interfaces;
 
 package body AZip_GWin.MDI_Child is
@@ -39,7 +38,7 @@ package body AZip_GWin.MDI_Child is
       is
         pragma Unreferenced (file_index);
         simple_name_idx: Positive:= name'First;
-        R_mark: array (Boolean) of Character:= (' ', 'R');
+        R_mark: constant array (Boolean) of Character:= (' ', 'R');
       begin
         for i in name'Range loop
           if name(i) ='/' or name(i)='\' then
@@ -127,7 +126,6 @@ package body AZip_GWin.MDI_Child is
     -- On_Left_Mouse_Button_Up_Handler(Window.Draw_Control, Do_Mouse_Up'Access);
     -- On_Right_Mouse_Button_Up_Handler(Window.Draw_Control, Do_Mouse_Up'Access);
     -- On_Mouse_Move_Handler (Window.Draw_Control, Do_Mouse_Move'Access);
-    -- On_Mouse_Wheel_Handler (Window, Do_Mouse_Wheel'Access);
     --
     -- On_Character_Down_Handler (Window, Do_Key_Down'Access); -- 14-Oct-2005
 
@@ -149,8 +147,7 @@ package body AZip_GWin.MDI_Child is
     AZip_Resource_GUI.Create_Full_Menu(Window.Menu);
     MDI_Menu (Window, Window.Menu.Main, Window_Menu => 5);
 
-    -- 2007: Maximize-demaximize (non-maximized case) to
-    -- avoid invisible windows...
+    -- Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare
       memo_unmaximized_children: constant Boolean:= not Window.parent.MDI_childen_maximized;
     begin
@@ -171,7 +168,6 @@ package body AZip_GWin.MDI_Child is
 
     Window.Status_deamon.Start;
     Update_display(Window, first_display);
-    Window.Use_Mouse_Wheel;
     Window.Accept_File_Drag_And_Drop;
   end On_Create;
 
@@ -194,25 +190,35 @@ package body AZip_GWin.MDI_Child is
   )
   is
     az_names: Name_list(File_Names'Range);
+    box: Progress_Box_Type;
     --
     procedure Boxed_Feedback(
-      percents_done         : Natural;
+      file_percents_done    : Natural;
+      archive_percents_done : Natural;
       entry_being_processed : String;
       is_UTF_8              : Boolean;
       operation             : Entry_Operation
     )
     is
     begin
-      if operation /= copy then
-      Message_Box(
-        Window, "Feedback",
-        S2G(entry_being_processed & ASCII.LF & Entry_Operation'Image(operation))
-      );
-      end if;
-      null; -- !!
+      box.File_Progress.Position(file_percents_done);
+      box.Archive_Progress.Position(archive_percents_done);
+      box.Entry_name.Text(S2G(entry_being_processed)); -- !! UTF-8
+      case operation is
+        when Append =>
+          box.Entry_operation_name.Text("Appending...");
+        when Replace =>
+          box.Entry_operation_name.Text("Replacing...");
+        when Copy =>
+          box.Entry_operation_name.Text("Copying...");
+        when Skip =>
+          box.Entry_operation_name.Text("Skipping...");
+      end case;
+      Message_Check;
     end Boxed_Feedback;
     --
     procedure Perform_Modification is new Modify_Archive(Boxed_Feedback);
+    --
   begin
     -- Convert GStrings (UTF-16) to Strings with UTF-8
     for i in az_names'Range loop
@@ -223,6 +229,11 @@ package body AZip_GWin.MDI_Child is
          utf_8 => False -- !!
         );
     end loop;
+    box.Create_Full_Dialog(Window);
+    box.File_Progress.Position(0);
+    box.Archive_Progress.Position(0);
+    box.Center;
+    box.Show;
     Perform_Modification(Window.zif, operation, az_names, base_folder);
   end Modify_Archive_GWin;
 

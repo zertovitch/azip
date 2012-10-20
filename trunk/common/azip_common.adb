@@ -81,7 +81,8 @@ package body AZip_Common is
   is
     new_zip: Zip.Create.Zip_Create_info;
     fzs: aliased Zip_Streams.File_Zipstream;
-    percents_done: Natural:= 0;
+    file_percents_done: Natural:= 0;
+    archive_percents_done: Natural:= 0;
     --
     use Zip.Create;
     --
@@ -98,6 +99,7 @@ package body AZip_Common is
     )
     is
       match: Boolean:= False;
+      short_name: String:= Remove_path(name);
     begin
       for i in file_names'Range loop -- !! use hashed maps either
         if file_names(i).name = name and
@@ -109,19 +111,19 @@ package body AZip_Common is
       if match then
         case operation is
           when Add =>
-            Feedback(percents_done, name, unicode_file_name, Replace);
+            Feedback(file_percents_done, archive_percents_done, short_name, unicode_file_name, Replace);
             Add_File(
               Info               => new_zip,
               Name               => name,
-              Name_in_archive    => Remove_path(name),
+              Name_in_archive    => short_name,
               Delete_file_after  => False,
               Name_UTF_8_encoded => unicode_file_name
             );
           when Remove =>
-            Feedback(percents_done, name, unicode_file_name, Skip);
+            Feedback(file_percents_done, archive_percents_done, short_name, unicode_file_name, Skip);
         end case;
       else
-        Feedback(percents_done, name, unicode_file_name, Copy);
+        Feedback(file_percents_done, archive_percents_done, short_name, unicode_file_name, Copy);
         null; -- !! copy compressed entry (preserve) !!
       end if;
     end Action;
@@ -141,7 +143,13 @@ package body AZip_Common is
             case_sensitive => True -- !! system-dependent!...
           )
           then
-            Feedback(percents_done, To_String(file_names(i).name), file_names(i).utf_8, Append);
+            Feedback(
+              file_percents_done,
+              archive_percents_done,
+              Remove_path(To_String(file_names(i).name)),
+              file_names(i).utf_8,
+              Append
+            );
             Add_File(
               Info               => new_zip,
               Name               => To_String(file_names(i).name),

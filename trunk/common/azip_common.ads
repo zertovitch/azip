@@ -55,7 +55,8 @@ package AZip_Common is
 
   generic
     with procedure Feedback(
-      percents_done         : Natural;
+      file_percents_done    : Natural;
+      archive_percents_done : Natural;
       entry_being_processed : String;
       is_UTF_8              : Boolean;
       operation             : Entry_Operation

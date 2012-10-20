@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/10/19   10:48:52
+-- Transcription time: 2012/10/20   14:00:49
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -97,6 +97,40 @@ package azip_Resource_GUI is
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      );
 
+  type Progress_box_Type is new Window_type with record
+
+    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
+    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    Archive_Progress: Progress_Control_Type;
+    Entry_operation_name: Label_Type;
+    Entry_name: Label_Type;
+    File_Progress: Progress_Control_Type;
+  end record; -- Progress_box_Type
+
+  -- Dialog at resource line 149
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Progress_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "AZip is working";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Progress_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     );
+
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip user interface";
@@ -118,10 +152,15 @@ package azip_Resource_GUI is
   Menu_MDI_Main               : constant:=    102;
   Menu_MDI_Child              : constant:=    104;
   About_box                   : constant:=    107;
+  Progress_box                : constant:=    109;
+  Archive_Progress            : constant:=   1000;
   GNAT_URL                    : constant:=   1000;
+  Entry_operation_name        : constant:=   1001;
   GNAT_Version                : constant:=   1001;
+  File_Progress               : constant:=   1002;
   GNAVI_URL                   : constant:=   1002;
   ResEdit_URL                 : constant:=   1004;
+  Entry_name                  : constant:=   1005;
   IDM_NEW_FILE                : constant:=  40000;
   IDM_OPEN_FILE               : constant:=  40001;
   IDM_MRU_1                   : constant:=  40002;
@@ -165,6 +204,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return String;
 
 
-  -- Last line of resource script file: 182
+  -- Last line of resource script file: 197
 
 end azip_Resource_GUI;

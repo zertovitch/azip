@@ -70,9 +70,9 @@ package body AZip_Common is
     return s(i..s'Last);
   end Remove_path;
 
-  -- Add or remove entries to an archive
+  -- Blocking, visible processing of an archive
 
-  procedure Modify_Archive(
+  procedure Process_archive(
     zif         : Zip.Zip_Info;
     operation   : Archive_Operation;
     file_names  : Name_list;
@@ -83,6 +83,7 @@ package body AZip_Common is
     fzs: aliased Zip_Streams.File_Zipstream;
     file_percents_done: Natural:= 0;
     archive_percents_done: Natural:= 0;
+    processed_entries, total_entries: Natural:= 0;
     --
     use Zip.Create;
     --
@@ -101,17 +102,28 @@ package body AZip_Common is
       match: Boolean:= False;
       short_name: String:= Remove_path(name);
     begin
-      for i in file_names'Range loop -- !! use hashed maps either
+      processed_entries:= processed_entries + 1;
+      archive_percents_done:= (100 * processed_entries) / total_entries;
+      file_percents_done:= 0;
+      --
+      for i in file_names'Range loop -- !! use hashed maps either for searching
         if file_names(i).name = name and
            file_names(i).utf_8 = unicode_file_name
         then
           match:= True;
         end if;
       end loop;
+      --
       if match then
         case operation is
           when Add =>
-            Feedback(file_percents_done, archive_percents_done, short_name, unicode_file_name, Replace);
+            Feedback(
+              file_percents_done,
+              archive_percents_done,
+              short_name,
+              unicode_file_name,
+              Replace
+            );
             Add_File(
               Info               => new_zip,
               Name               => name,
@@ -120,19 +132,37 @@ package body AZip_Common is
               Name_UTF_8_encoded => unicode_file_name
             );
           when Remove =>
-            Feedback(file_percents_done, archive_percents_done, short_name, unicode_file_name, Skip);
+            Feedback(
+              file_percents_done,
+              archive_percents_done,
+              short_name,
+              unicode_file_name,
+              Skip
+            );
         end case;
       else
-        Feedback(file_percents_done, archive_percents_done, short_name, unicode_file_name, Copy);
+        Feedback(
+          file_percents_done,
+          archive_percents_done,
+          short_name,
+          unicode_file_name,
+          Copy
+        );
         null; -- !! copy compressed entry (preserve) !!
       end if;
     end Action;
 
-  procedure Morph_archive is new Zip.Traverse_verbose(Action);
+  procedure Traverse_archive is new Zip.Traverse_verbose(Action);
 
   begin
+    case operation is
+      when Add =>
+        total_entries:= Zip.Entries(zif) + file_names'Length;
+      when Remove =>
+        total_entries:= Zip.Entries(zif);
+    end case;
     Create(new_zip, fzs'Unchecked_Access, "!!temp!!.zip");
-    Morph_archive(zif);
+    Traverse_archive(zif);
     -- Almost done...
     case operation is
       when Add =>
@@ -166,7 +196,7 @@ package body AZip_Common is
     end case;
     Finish(new_zip);
     -- !! replace old archive file by new one
-  end Modify_Archive;
+  end Process_archive;
 
 
 end AZip_Common;

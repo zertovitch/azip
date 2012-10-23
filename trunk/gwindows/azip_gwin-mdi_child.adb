@@ -182,7 +182,7 @@ package body AZip_GWin.MDI_Child is
     return True;
   end Is_file_saved;
 
-  procedure Modify_Archive_GWin(
+  procedure Process_archive_GWin(
     Window      : in out MDI_Child_Type;
     operation   : Archive_Operation;
     file_names  : Array_Of_File_Names;
@@ -217,7 +217,7 @@ package body AZip_GWin.MDI_Child is
       Message_Check;
     end Boxed_Feedback;
     --
-    procedure Perform_Modification is new Modify_Archive(Boxed_Feedback);
+    procedure Perform_Modification is new Process_archive(Boxed_Feedback);
     --
   begin
     -- Convert GStrings (UTF-16) to Strings with UTF-8
@@ -235,7 +235,7 @@ package body AZip_GWin.MDI_Child is
     box.Center;
     box.Show;
     Perform_Modification(Window.zif, operation, az_names, base_folder);
-  end Modify_Archive_GWin;
+  end Process_archive_GWin;
 
   procedure On_File_Drop (Window     : in out MDI_Child_Type;
                           File_Names : in     Array_Of_File_Names) is
@@ -248,7 +248,7 @@ package body AZip_GWin.MDI_Child is
         Yes_No_Box,
         Question_Icon) = Yes
       then
-        Modify_Archive_GWin(
+        Process_archive_GWin(
           Window, Add, File_Names,
           "" -- !! only for flat view
         );

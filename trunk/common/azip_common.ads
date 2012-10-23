@@ -32,7 +32,7 @@ package AZip_Common is
       (Name => 150, Modified => 120, others => 70);
   end record;
 
-  -- Add or remove entries to an archive
+  -- Blocking, visible processing of an archive
 
   type Archive_Operation is (Add, Remove);
   type Entry_Operation is (
@@ -61,7 +61,7 @@ package AZip_Common is
       is_UTF_8              : Boolean;
       operation             : Entry_Operation
     );
-  procedure Modify_Archive(
+  procedure Process_archive(
     zif         : Zip.Zip_Info;
     operation   : Archive_Operation;
     file_names  : Name_list;

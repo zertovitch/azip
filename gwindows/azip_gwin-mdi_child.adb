@@ -24,7 +24,8 @@ package body AZip_GWin.MDI_Child is
     procedure Feed_directory_list(prefix_path: String) is
       row: Natural:= 0;
       Lst: List_View_Control_Type renames Window.Directory_List;
-      procedure Action(
+      --
+      procedure Insert_row(
         name             : String; -- 'name' is compressed entry's name
         file_index       : Positive;
         comp_size        : File_size_type;
@@ -58,9 +59,9 @@ package body AZip_GWin.MDI_Child is
           Lst.Set_Sub_Item(S2G(name(name'First..simple_name_idx-2)), row, 9);
           row:= row + 1; -- more subtle with our sorting
         end if;
-      end Action;
+      end Insert_row;
 
-      procedure Traverse is new Zip.Traverse_verbose(Action);
+      procedure Traverse is new Zip.Traverse_verbose(Insert_row);
 
     begin
       Lst.Clear;
@@ -217,7 +218,7 @@ package body AZip_GWin.MDI_Child is
       Message_Check;
     end Boxed_Feedback;
     --
-    procedure Perform_Modification is new Process_archive(Boxed_Feedback);
+    procedure Archive_processing is new Process_archive(Boxed_Feedback);
     --
   begin
     -- Convert GStrings (UTF-16) to Strings with UTF-8
@@ -232,9 +233,12 @@ package body AZip_GWin.MDI_Child is
     box.Create_Full_Dialog(Window);
     box.File_Progress.Position(0);
     box.Archive_Progress.Position(0);
+    box.Cancel_button.Hide;
+    box.Cancel_button_permanent.Show;
+    box.Cancel_button_permanent.Disable; -- !!
     box.Center;
     box.Show;
-    Perform_Modification(Window.zif, operation, az_names, base_folder);
+    Archive_processing(Window.zif, operation, az_names, base_folder);
   end Process_archive_GWin;
 
   procedure On_File_Drop (Window     : in out MDI_Child_Type;

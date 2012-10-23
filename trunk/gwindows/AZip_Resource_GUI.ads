@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/10/20   14:00:49
+-- Transcription time: 2012/10/23   11:29:00
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -99,8 +99,8 @@ package azip_Resource_GUI is
 
   type Progress_box_Type is new Window_type with record
 
-    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
-    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    Cancel_button: Dialog_Button_Type;    -- closes parent window after click
+    Cancel_button_permanent: Button_Type; -- doesn't close parent window after click
     Archive_Progress: Progress_Control_Type;
     Entry_operation_name: Label_Type;
     Entry_name: Label_Type;
@@ -159,6 +159,7 @@ package azip_Resource_GUI is
   GNAT_Version                : constant:=   1001;
   File_Progress               : constant:=   1002;
   GNAVI_URL                   : constant:=   1002;
+  Cancel_button               : constant:=   1003;
   ResEdit_URL                 : constant:=   1004;
   Entry_name                  : constant:=   1005;
   IDM_NEW_FILE                : constant:=  40000;
@@ -189,7 +190,7 @@ package azip_Resource_GUI is
   IDM_MERGE_ARCHIVES          : constant:=  40024;
   AZip_URL                    : constant:=  40025;
   IDM_Select_all              : constant:=  40025;
-  IDM_Delete_Selected         : constant:=  40026;
+  IDM_Delete_selected         : constant:=  40026;
   ZipAda_Version              : constant:=  40028;
   ZipAda_URL                  : constant:=  40029;
 

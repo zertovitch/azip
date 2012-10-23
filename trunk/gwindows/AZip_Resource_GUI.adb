@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/10/20   14:00:49
+-- Transcription time: 2012/10/23   11:29:00
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -48,7 +48,7 @@ package body azip_Resource_GUI is
     Menu.Popup_0003:= Create_Popup;
     Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Select &All" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
-    Append_Item(Menu.Popup_0003, "Delete selected" & To_GString_from_String((1=>ASCII.HT)) & "Del", IDM_Delete_Selected);
+    Append_Item(Menu.Popup_0003, "Delete selected" & To_GString_from_String((1=>ASCII.HT)) & "Del", IDM_Delete_selected);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Action", Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Test archive", IDM_TEST_ARCHIVE);
@@ -265,12 +265,12 @@ package body azip_Resource_GUI is
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
-    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    Create( Window.Cancel_button, Window, "Cancel", x,y,w,h, ID => Cancel_button);
+    Create( Window.Cancel_button_permanent, Window, "Cancel", x,y,w,h, ID => Cancel_button);
     if for_dialog then -- hide the non-closing button
-      Hide(Window.IDCANCEL_permanent);
+      Hide(Window.Cancel_button_permanent);
     else -- hide the closing button
-      Hide(Window.IDCANCEL);
+      Hide(Window.Cancel_button);
     end if;
     Dlg_to_Scn(  7, 74, 227, 17, x,y,w,h);
     Create( Window.Archive_Progress, Window, x,y,w,h, HORIZONTAL, FALSE);

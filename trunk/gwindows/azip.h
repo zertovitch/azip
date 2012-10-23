@@ -12,6 +12,7 @@
 #define GNAT_Version                            1001
 #define File_Progress                           1002
 #define GNAVI_URL                               1002
+#define Cancel_button                           1003
 #define ResEdit_URL                             1004
 #define Entry_name                              1005
 #define IDM__NEW_FILE                           40000
@@ -42,6 +43,6 @@
 #define IDM_MERGE_ARCHIVES                      40024
 #define AZip_URL                                40025
 #define IDM_Select_all                          40025
-#define IDM_Delete_Selected                     40026
+#define IDM_Delete_selected                     40026
 #define ZipAda_Version                          40028
 #define ZipAda_URL                              40029

@@ -70,6 +70,12 @@ package body AZip_Common is
     return s(i..s'Last);
   end Remove_path;
 
+  function S(Source: Unbounded_String) return String
+    renames Ada.Strings.Unbounded.To_String;
+  function U(Source: String) return Unbounded_String
+    renames Ada.Strings.Unbounded.To_Unbounded_String;
+
+
   -- Blocking, visible processing of an archive
 
   procedure Process_archive(
@@ -84,6 +90,32 @@ package body AZip_Common is
     file_percents_done: Natural:= 0;
     archive_percents_done: Natural:= 0;
     processed_entries, total_entries: Natural:= 0;
+    current_entry_name: Unbounded_String;
+    is_unicode: Boolean;
+    current_operation: Entry_operation;
+    --
+    procedure Entry_feedback(
+      percents_done:  in Natural;  -- %'s completed
+      entry_skipped:  in Boolean;  -- indicates one can show "skipped", no %'s
+      user_abort   : out Boolean   -- e.g. transmit a "click on Cancel" here
+    )
+    is
+    begin
+      if entry_skipped then
+        file_percents_done:= 0;
+      else
+        file_percents_done:= percents_done;
+      end if;
+      Feedback(
+        file_percents_done,
+        archive_percents_done,
+        S(current_entry_name),
+        is_unicode,
+        current_operation
+      );
+      user_abort:= False; -- !!
+    end Entry_feedback;
+
     --
     use Zip.Create;
     --
@@ -100,7 +132,7 @@ package body AZip_Common is
     )
     is
       match: Boolean:= False;
-      short_name: String:= Remove_path(name);
+      short_name: constant String:= Remove_path(name);
     begin
       processed_entries:= processed_entries + 1;
       archive_percents_done:= (100 * processed_entries) / total_entries;
@@ -117,19 +149,16 @@ package body AZip_Common is
       if match then
         case operation is
           when Add =>
-            Feedback(
-              file_percents_done,
-              archive_percents_done,
-              short_name,
-              unicode_file_name,
-              Replace
-            );
+            current_operation:= Replace;
+            current_entry_name:= U(short_Name);
+            is_unicode:= unicode_file_name;
             Add_File(
               Info               => new_zip,
               Name               => name,
               Name_in_archive    => short_name,
               Delete_file_after  => False,
-              Name_UTF_8_encoded => unicode_file_name
+              Name_UTF_8_encoded => unicode_file_name,
+              Feedback           => Entry_feedback'Unrestricted_Access
             );
           when Remove =>
             Feedback(
@@ -167,25 +196,24 @@ package body AZip_Common is
     case operation is
       when Add =>
         for i in file_names'Range loop -- !! use hashed maps either
+          processed_entries:= processed_entries + 1;
+          archive_percents_done:= (100 * processed_entries) / total_entries;
           if not Zip.Exists(
             zif,
             To_String(file_names(i).name),
             case_sensitive => True -- !! system-dependent!...
           )
           then
-            Feedback(
-              file_percents_done,
-              archive_percents_done,
-              Remove_path(To_String(file_names(i).name)),
-              file_names(i).utf_8,
-              Append
-            );
+            current_operation:= Append;
+            current_entry_name:= U(Remove_path(To_String(file_names(i).name)));
+            is_unicode:= file_names(i).utf_8;
             Add_File(
               Info               => new_zip,
               Name               => To_String(file_names(i).name),
               Name_in_archive    => Remove_path(To_String(file_names(i).name)),
               Delete_file_after  => False,
-              Name_UTF_8_encoded => file_names(i).utf_8
+              Name_UTF_8_encoded => file_names(i).utf_8,
+              Feedback           => Entry_feedback'Unrestricted_Access
             );
           end if;
         end loop;

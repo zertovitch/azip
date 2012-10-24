@@ -4,6 +4,8 @@ with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Strings;                       use Ada.Strings;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 with Ada.Text_IO;
+with Ada.Streams.Stream_IO;
+with Zip.Headers;
 
 package body AZip_Common is
 
@@ -86,7 +88,8 @@ package body AZip_Common is
   )
   is
     new_zip: Zip.Create.Zip_Create_info;
-    fzs: aliased Zip_Streams.File_Zipstream;
+    new_fzs: aliased Zip_Streams.File_Zipstream;
+    old_fzs: aliased Zip_Streams.File_Zipstream;
     file_percents_done: Natural:= 0;
     archive_percents_done: Natural:= 0;
     processed_entries, total_entries: Natural:= 0;
@@ -131,8 +134,10 @@ package body AZip_Common is
       read_only        : Boolean
     )
     is
+      pragma Unreferenced (method, read_only);
       match: Boolean:= False;
       short_name: constant String:= Remove_path(name);
+      local_header: Zip.Headers.Local_File_Header;
     begin
       processed_entries:= processed_entries + 1;
       archive_percents_done:= (100 * processed_entries) / total_entries;
@@ -170,14 +175,40 @@ package body AZip_Common is
             );
         end case;
       else
-        Feedback(
-          file_percents_done,
-          archive_percents_done,
-          short_name,
-          unicode_file_name,
-          Copy
-        );
-        null; -- !! copy compressed entry (preserve) !!
+        case operation is
+          when Add | Remove =>
+            Feedback(
+              file_percents_done,
+              archive_percents_done,
+              short_name,
+              unicode_file_name,
+              Copy
+            );
+            return; -- !! we need to update new_zip (catalogue) -> move
+            -- the following to Add_compressed_stream in Zip.Create
+            --
+            -- Copy compressed entry (preserve)
+            --
+            Zip_Streams.Set_Index(old_fzs'Access, file_index);
+            Zip.Headers.Read_and_check(old_fzs'Unchecked_Access, local_header);
+            -- Skip name and extra field
+            Zip_Streams.Set_Index(old_fzs'Access,
+              Zip_Streams.Index(old_fzs'Access) +
+                Positive(local_header.extra_field_length) +
+                Positive(local_header.filename_length)
+             );
+            -- We correct eventually wrong or missing data in local header
+            local_header.extra_field_length:= 0;
+            local_header.filename_length:= name'Length;
+            local_header.file_timedate:= date_time;
+            local_header.dd.compressed_size:= comp_size;
+            local_header.dd.uncompressed_size:= uncomp_size;
+            local_header.dd.crc_32:= crc_32;
+            Zip.Headers.Write(new_fzs'Unchecked_Access, local_header);
+            String'Write(new_fzs'Access, name);
+            -- 3/ Copy the compressed data
+            Zip.Copy_Chunk(old_fzs'Unchecked_Access, new_fzs, Integer(comp_size), 1024*1024);
+        end case;
       end if;
     end Action;
 
@@ -190,7 +221,13 @@ package body AZip_Common is
       when Remove =>
         total_entries:= Zip.Entries(zif);
     end case;
-    Create(new_zip, fzs'Unchecked_Access, "!!temp!!.zip");
+    Zip_Streams.Set_Name(old_fzs'Access, Zip.Zip_Name(zif));
+    Zip_Streams.Open(old_fzs, Ada.Streams.Stream_IO.In_File);
+    case operation is
+      when Add | Remove =>
+        Create(new_zip, new_fzs'Unchecked_Access, "!!.zip");
+    end case;
+    -- Main job:
     Traverse_archive(zif);
     -- Almost done...
     case operation is
@@ -222,8 +259,12 @@ package body AZip_Common is
         -- There should be no file to be removed which is
         -- not in original archive.
     end case;
-    Finish(new_zip);
-    -- !! replace old archive file by new one
+    Zip_Streams.Close(old_fzs);
+    case operation is
+      when Add | Remove =>
+        Finish(new_zip);
+        -- !! replace old archive file by new one
+    end case;
   end Process_archive;
 
 

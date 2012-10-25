@@ -189,11 +189,11 @@ package body AZip_Common is
             --
             -- Copy compressed entry (preserve)
             --
-            Zip_Streams.Set_Index(old_fzs'Access, file_index);
-            Zip.Headers.Read_and_check(old_fzs'Unchecked_Access, local_header);
+            Zip_Streams.Set_Index(old_fzs, file_index);
+            Zip.Headers.Read_and_check(old_fzs, local_header);
             -- Skip name and extra field
-            Zip_Streams.Set_Index(old_fzs'Access,
-              Zip_Streams.Index(old_fzs'Access) +
+            Zip_Streams.Set_Index(old_fzs,
+              Zip_Streams.Index(old_fzs) +
                 Positive(local_header.extra_field_length) +
                 Positive(local_header.filename_length)
              );
@@ -204,10 +204,10 @@ package body AZip_Common is
             local_header.dd.compressed_size:= comp_size;
             local_header.dd.uncompressed_size:= uncomp_size;
             local_header.dd.crc_32:= crc_32;
-            Zip.Headers.Write(new_fzs'Unchecked_Access, local_header);
+            Zip.Headers.Write(new_fzs, local_header);
             String'Write(new_fzs'Access, name);
             -- 3/ Copy the compressed data
-            Zip.Copy_Chunk(old_fzs'Unchecked_Access, new_fzs, Integer(comp_size), 1024*1024);
+            Zip.Copy_Chunk(old_fzs, new_fzs, Integer(comp_size), 1024*1024);
         end case;
       end if;
     end Action;
@@ -221,7 +221,7 @@ package body AZip_Common is
       when Remove =>
         total_entries:= Zip.Entries(zif);
     end case;
-    Zip_Streams.Set_Name(old_fzs'Access, Zip.Zip_Name(zif));
+    Zip_Streams.Set_Name(old_fzs, Zip.Zip_Name(zif));
     Zip_Streams.Open(old_fzs, Ada.Streams.Stream_IO.In_File);
     case operation is
       when Add | Remove =>

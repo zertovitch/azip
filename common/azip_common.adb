@@ -177,37 +177,14 @@ package body AZip_Common is
       else
         case operation is
           when Add | Remove =>
-            Feedback(
-              file_percents_done,
-              archive_percents_done,
-              short_name,
-              unicode_file_name,
-              Copy
+            current_operation:= Copy;
+            current_entry_name:= U(short_Name);
+            is_unicode:= unicode_file_name;
+            Zip.Create.Add_Compressed_Stream(
+              Info     => new_zip,
+              Stream   => old_fzs,
+              Feedback => Entry_feedback'Unrestricted_Access
             );
-            return; -- !! we need to update new_zip (catalogue) -> move
-            -- the following to Add_compressed_stream in Zip.Create
-            --
-            -- Copy compressed entry (preserve)
-            --
-            Zip_Streams.Set_Index(old_fzs, file_index);
-            Zip.Headers.Read_and_check(old_fzs, local_header);
-            -- Skip name and extra field
-            Zip_Streams.Set_Index(old_fzs,
-              Zip_Streams.Index(old_fzs) +
-                Positive(local_header.extra_field_length) +
-                Positive(local_header.filename_length)
-             );
-            -- We correct eventually wrong or missing data in local header
-            local_header.extra_field_length:= 0;
-            local_header.filename_length:= name'Length;
-            local_header.file_timedate:= date_time;
-            local_header.dd.compressed_size:= comp_size;
-            local_header.dd.uncompressed_size:= uncomp_size;
-            local_header.dd.crc_32:= crc_32;
-            Zip.Headers.Write(new_fzs, local_header);
-            String'Write(new_fzs'Access, name);
-            -- 3/ Copy the compressed data
-            Zip.Copy_Chunk(old_fzs, new_fzs, Integer(comp_size), 1024*1024);
         end case;
       end if;
     end Action;

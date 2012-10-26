@@ -775,7 +775,7 @@ package body Zip is
     into       : in out Ada.Streams.Root_Stream_Type'Class;
     bytes      : Natural;
     buffer_size: Positive:= 1024*1024;
-    feedback   : Feedback_proc:= null
+    Feedback   : Feedback_proc:= null
   )
   is
     buf: Zip.Byte_Buffer(1..buffer_size);
@@ -784,8 +784,12 @@ package body Zip is
   begin
     remains:= bytes;
     while remains > 0 loop
-      if feedback /= null then
-        feedback(100 - (100 * remains) / bytes, False, user_abort);
+      if Feedback /= null then
+        Feedback(
+          100 - Integer(100.0 * Float(remains) / Float(bytes)),
+          False,
+          user_abort
+        );
         -- !! do something if user_abort = True !!
       end if;
       Zip.BlockRead(from, buf(1..Integer'Min(remains, buf'Last)), actually_read);

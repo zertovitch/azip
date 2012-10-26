@@ -298,8 +298,9 @@ package Zip is
     from       : in out Zip_Streams.Root_Zipstream_Type'Class;
     into       : in out Ada.Streams.Root_Stream_Type'Class;
     bytes      : Natural;
-    buffer_size: Positive:= 1024*1024
-    );
+    buffer_size: Positive:= 1024*1024;
+    feedback   : Feedback_proc:= null
+  );
 
   -- Copy a whole file into a stream, using a temporary buffer
   procedure Copy_file(

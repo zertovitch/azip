@@ -1,11 +1,11 @@
 with Zip.Create, Zip_Streams;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
+with Ada.Directories;                   use Ada.Directories;
 with Ada.Strings;                       use Ada.Strings;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 with Ada.Text_IO;
 with Ada.Streams.Stream_IO;
-with Zip.Headers;
 
 package body AZip_Common is
 
@@ -137,7 +137,6 @@ package body AZip_Common is
       pragma Unreferenced (method, read_only);
       match: Boolean:= False;
       short_name: constant String:= Remove_path(name);
-      local_header: Zip.Headers.Local_File_Header;
     begin
       processed_entries:= processed_entries + 1;
       archive_percents_done:= (100 * processed_entries) / total_entries;
@@ -163,6 +162,7 @@ package body AZip_Common is
               Name_in_archive    => short_name,
               Delete_file_after  => False,
               Name_UTF_8_encoded => unicode_file_name,
+              Modification_time  => Zip.Convert(Modification_Time(name)),
               Feedback           => Entry_feedback'Unrestricted_Access
             );
           when Remove =>
@@ -227,6 +227,7 @@ package body AZip_Common is
               Name_in_archive    => Remove_path(To_String(file_names(i).name)),
               Delete_file_after  => False,
               Name_UTF_8_encoded => file_names(i).utf_8,
+              Modification_time  => Zip.Convert(Modification_Time(To_String(file_names(i).name))),
               Feedback           => Entry_feedback'Unrestricted_Access
             );
           end if;

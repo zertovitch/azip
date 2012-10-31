@@ -134,7 +134,9 @@ package body AZip_Common is
       read_only        : Boolean
     )
     is
-      pragma Unreferenced (method, read_only);
+      pragma Unreferenced
+        (file_index, comp_size, uncomp_size,
+         crc_32, date_time, method, read_only);
       match: Boolean:= False;
       short_name: constant String:= Remove_path(name);
     begin
@@ -163,6 +165,7 @@ package body AZip_Common is
               Delete_file_after  => False,
               Name_UTF_8_encoded => unicode_file_name,
               Modification_time  => Zip.Convert(Modification_Time(name)),
+              Is_read_only       => False, -- !!
               Feedback           => Entry_feedback'Unrestricted_Access
             );
           when Remove =>
@@ -174,7 +177,7 @@ package body AZip_Common is
               Skip
             );
         end case;
-      else
+      else -- archive entry name is not matched by a file name in the list
         case operation is
           when Add | Remove =>
             current_operation:= Copy;
@@ -228,6 +231,7 @@ package body AZip_Common is
               Delete_file_after  => False,
               Name_UTF_8_encoded => file_names(i).utf_8,
               Modification_time  => Zip.Convert(Modification_Time(To_String(file_names(i).name))),
+              Is_read_only       => False, -- !!
               Feedback           => Entry_feedback'Unrestricted_Access
             );
           end if;

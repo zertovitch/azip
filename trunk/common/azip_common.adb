@@ -135,8 +135,7 @@ package body AZip_Common is
     )
     is
       pragma Unreferenced
-        (file_index, comp_size, uncomp_size,
-         crc_32, date_time, method, read_only);
+        (comp_size, uncomp_size, crc_32, date_time, method, read_only);
       match: Boolean:= False;
       short_name: constant String:= Remove_path(name);
     begin
@@ -183,6 +182,7 @@ package body AZip_Common is
             current_operation:= Copy;
             current_entry_name:= U(short_Name);
             is_unicode:= unicode_file_name;
+            Zip_Streams.Set_Index(old_fzs, file_index);
             Zip.Create.Add_Compressed_Stream(
               Info     => new_zip,
               Stream   => old_fzs,

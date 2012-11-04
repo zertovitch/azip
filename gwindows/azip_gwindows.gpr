@@ -14,13 +14,13 @@ project AZip_GWindows is
    case Build_Mode is
 
       when "Debug" =>
-         for Object_Dir use "..\obj_dbg";
+         for Object_Dir use "../obj_dbg";
 
       when "Fast" =>
-         for Object_Dir use "..\obj_opt";
+         for Object_Dir use "../obj_opt";
 
       when "Profiling" =>
-         for Object_Dir use "..\obj_pro";
+         for Object_Dir use "../obj_pro";
    end case;
 
    package Binder is

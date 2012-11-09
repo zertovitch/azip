@@ -4,6 +4,7 @@ with Time_Display;
 
 with GWindows.Application;              use GWindows.Application;
 with GWindows.GStrings;                 use GWindows.GStrings;
+with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
@@ -90,10 +91,14 @@ package body AZip_GWin.MDI_Child is
       when Flat =>
         Window.Folder_Tree.Hide;
         Feed_directory_list("");
+        Check(Window.Menu.Main, Command, IDM_FLAT_VIEW, True);
+        Check(Window.Menu.Main, Command, IDM_TREE_VIEW, False);
       when Tree =>
         -- all stuff
         -- Feed_directory_list([selected path]);
         Window.Folder_Tree.Show;
+        Check(Window.Menu.Main, Command, IDM_FLAT_VIEW, False);
+        Check(Window.Menu.Main, Command, IDM_TREE_VIEW, True);
     end case;
   end Update_display;
 

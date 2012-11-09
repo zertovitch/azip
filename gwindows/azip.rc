@@ -40,10 +40,12 @@ Menu_MDI_Child MENU
     {
         MENUITEM "Select &All\tCtrl+A", IDM_Select_all
         MENUITEM "Delete selected\tDel", IDM_Delete_selected
+        MENUITEM "A&dd files...", IDM_A_DD_FILES___1
     }
-    POPUP "&Action"
+    POPUP "&Tools"
     {
         MENUITEM "&Test archive", IDM__TEST_ARCHIVE
+        MENUITEM "Fre&shen archive", IDM_FRESHEN_ARCHIVE
         MENUITEM "&Recompress archive", IDM__RECOMPRESS_ARCHIVE
         MENUITEM "&Find files in archive", IDM__FIND_FILE_IN_ARCHIVE
         MENUITEM "Find &contents in archive", IDM_FIND__CONTENTS_IN_ARCHIVE

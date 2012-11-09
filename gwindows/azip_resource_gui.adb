@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/10/23   11:29:00
+-- Transcription time: 2012/11/09   22:44:07
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -49,9 +49,11 @@ package body azip_Resource_GUI is
     Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Select &All" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
     Append_Item(Menu.Popup_0003, "Delete selected" & To_GString_from_String((1=>ASCII.HT)) & "Del", IDM_Delete_selected);
+    Append_Item(Menu.Popup_0003, "A&dd files...", IDM_A_DD_FILES_1);
     Menu.Popup_0004:= Create_Popup;
-    Append_Menu(Menu.Main, "&Action", Menu.Popup_0004);
+    Append_Menu(Menu.Main, "&Tools", Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Test archive", IDM_TEST_ARCHIVE);
+    Append_Item(Menu.Popup_0004, "Fre&shen archive", IDM_FRESHEN_ARCHIVE);
     Append_Item(Menu.Popup_0004, "&Recompress archive", IDM_RECOMPRESS_ARCHIVE);
     Append_Item(Menu.Popup_0004, "&Find files in archive", IDM_FIND_FILE_IN_ARCHIVE);
     Append_Item(Menu.Popup_0004, "Find &contents in archive", IDM_FIND_CONTENTS_IN_ARCHIVE);
@@ -74,7 +76,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Child_Type
 
 
-  -- Menu at line 75
+  -- Menu at line 77
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -111,7 +113,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Main_Type
 
 
-  -- Dialog at resource line 120
+  -- Dialog at resource line 122
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -205,7 +207,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- About_box_Type
 
 
-  -- Dialog at resource line 143
+  -- Dialog at resource line 145
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -393,6 +395,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 197
+  -- Last line of resource script file: 199
 
 end azip_Resource_GUI;

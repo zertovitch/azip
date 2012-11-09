@@ -44,5 +44,7 @@
 #define AZip_URL                                40025
 #define IDM_Select_all                          40025
 #define IDM_Delete_selected                     40026
+#define IDM_A_DD_FILES___1                      40027
+#define IDM_FRESHEN_ARCHIVE                     40028
 #define ZipAda_Version                          40028
 #define ZipAda_URL                              40029

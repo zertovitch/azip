@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/10/23   11:29:00
+-- Transcription time: 2012/11/09   22:44:07
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -33,13 +33,13 @@ package azip_Resource_GUI is
     Popup_0001: Menu_Type;  -- level 1; title: "&File"
     Popup_0002: Menu_Type;  -- level 2; title: "&Recent"
     Popup_0003: Menu_Type;  -- level 1; title: "&Edit"
-    Popup_0004: Menu_Type;  -- level 1; title: "&Action"
+    Popup_0004: Menu_Type;  -- level 1; title: "&Tools"
     Popup_0005: Menu_Type;  -- level 1; title: "&View"
     Popup_0006: Menu_Type;  -- level 1; title: "&Window"
     Popup_0007: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Child_Type
 
-  -- Menu at line 69
+  -- Menu at line 71
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -51,7 +51,7 @@ package azip_Resource_GUI is
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Main_Type
 
-  -- Menu at line 108
+  -- Menu at line 110
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -73,7 +73,7 @@ package azip_Resource_GUI is
     ZipAda_Version: Label_Type;
   end record; -- About_box_Type
 
-  -- Dialog at resource line 134
+  -- Dialog at resource line 136
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -107,7 +107,7 @@ package azip_Resource_GUI is
     File_Progress: Progress_Control_Type;
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 149
+  -- Dialog at resource line 151
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -191,6 +191,8 @@ package azip_Resource_GUI is
   AZip_URL                    : constant:=  40025;
   IDM_Select_all              : constant:=  40025;
   IDM_Delete_selected         : constant:=  40026;
+  IDM_A_DD_FILES_1            : constant:=  40027;
+  IDM_FRESHEN_ARCHIVE         : constant:=  40028;
   ZipAda_Version              : constant:=  40028;
   ZipAda_URL                  : constant:=  40029;
 
@@ -205,6 +207,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return String;
 
 
-  -- Last line of resource script file: 197
+  -- Last line of resource script file: 199
 
 end azip_Resource_GUI;

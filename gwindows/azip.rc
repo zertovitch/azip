@@ -18,8 +18,10 @@ Menu_MDI_Child MENU
 {
     POPUP "&File"
     {
-        MENUITEM "&New archive\tCtrl+N", IDM__NEW_FILE
-        MENUITEM "&Open archive\tCtrl+O", IDM__OPEN_FILE
+        MENUITEM "&New archive\tCtrl+N", IDM__NEW_ARCHIVE
+        MENUITEM "&Open archive...\tCtrl+O", IDM__OPEN_ARCHIVE
+        MENUITEM "&Save archive as...\tF12", IDM__SAVE_ARCHIVE_AS
+        MENUITEM "&Close archive\tCtrl+W / Ctrl+F4", IDM__CLOSE_ARCHIVE
         MENUITEM SEPARATOR
         POPUP "&Recent"
         {
@@ -39,6 +41,7 @@ Menu_MDI_Child MENU
     POPUP "&Edit"
     {
         MENUITEM "Select &All\tCtrl+A", IDM_Select_all
+        MENUITEM "&Extract selected or whole archive", IDM_EXTRACT1
         MENUITEM "Delete selected\tDel", IDM_Delete_selected
         MENUITEM "A&dd files...", IDM_A_DD_FILES___1
     }
@@ -78,9 +81,8 @@ Menu_MDI_Main MENU
 {
     POPUP "&File"
     {
-        MENUITEM "&New archive\tCtrl+N", IDM__NEW_FILE
-        MENUITEM "&Open archive\tCtrl+O", IDM__OPEN_FILE
-        MENUITEM "&Save archive as...", IDM__SAVE_FILE_AS
+        MENUITEM "&New archive\tCtrl+N", IDM__NEW_ARCHIVE
+        MENUITEM "&Open archive...\tCtrl+O", IDM__OPEN_ARCHIVE
         MENUITEM SEPARATOR
         POPUP "&Recent"
         {
@@ -144,11 +146,11 @@ STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VIS
 CAPTION "AZip is working"
 FONT 8, "Ms Shell Dlg"
 {
-    PUSHBUTTON      "Cancel", Cancel_button, 95, 96, 50, 14
-    CONTROL         "", Archive_Progress, PROGRESS_CLASS, 0, 7, 74, 227, 17
-    LTEXT           "Adding...", Entry_operation_name, 9, 12, 63, 8, SS_LEFT
-    LTEXT           "Some file", Entry_name, 9, 30, 170, 8, SS_LEFT
+    LTEXT           "Adding...", Entry_operation_name, 7, 12, 218, 10, SS_LEFT
+    LTEXT           "Some file", Entry_name, 7, 30, 228, 10, SS_LEFT
     CONTROL         "", File_Progress, PROGRESS_CLASS, 0, 7, 52, 227, 9
+    CONTROL         "", Archive_Progress, PROGRESS_CLASS, 0, 7, 74, 227, 17
+    PUSHBUTTON      "Cancel", Cancel_button, 95, 96, 50, 14
 }
 
 
@@ -159,9 +161,10 @@ FONT 8, "Ms Shell Dlg"
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Main_Menu ACCELERATORS
 {
-    "N",            IDM__NEW_FILE, VIRTKEY, CONTROL
-    "O",            IDM__OPEN_FILE, VIRTKEY, CONTROL
+    "N",            IDM__NEW_ARCHIVE, VIRTKEY, CONTROL
+    "O",            IDM__OPEN_ARCHIVE, VIRTKEY, CONTROL
     "A",            IDM_Select_all, VIRTKEY, CONTROL
+    "W",            IDM__CLOSE_ARCHIVE, VIRTKEY, CONTROL
     VK_DELETE,     IDM_Delete_selected, VIRTKEY
 }
 

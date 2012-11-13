@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/09   22:44:07
+-- Transcription time: 2012/11/13   23:58:46
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -39,7 +39,7 @@ package azip_Resource_GUI is
     Popup_0007: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Child_Type
 
-  -- Menu at line 71
+  -- Menu at line 74
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -51,7 +51,7 @@ package azip_Resource_GUI is
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Main_Type
 
-  -- Menu at line 110
+  -- Menu at line 112
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -73,7 +73,7 @@ package azip_Resource_GUI is
     ZipAda_Version: Label_Type;
   end record; -- About_box_Type
 
-  -- Dialog at resource line 136
+  -- Dialog at resource line 138
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -99,15 +99,15 @@ package azip_Resource_GUI is
 
   type Progress_box_Type is new Window_type with record
 
-    Cancel_button: Dialog_Button_Type;    -- closes parent window after click
-    Cancel_button_permanent: Button_Type; -- doesn't close parent window after click
-    Archive_Progress: Progress_Control_Type;
     Entry_operation_name: Label_Type;
     Entry_name: Label_Type;
     File_Progress: Progress_Control_Type;
+    Archive_Progress: Progress_Control_Type;
+    Cancel_button: Dialog_Button_Type;    -- closes parent window after click
+    Cancel_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 151
+  -- Dialog at resource line 153
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -162,11 +162,10 @@ package azip_Resource_GUI is
   Cancel_button               : constant:=   1003;
   ResEdit_URL                 : constant:=   1004;
   Entry_name                  : constant:=   1005;
-  IDM_NEW_FILE                : constant:=  40000;
-  IDM_OPEN_FILE               : constant:=  40001;
+  IDM_NEW_ARCHIVE             : constant:=  40000;
+  IDM_OPEN_ARCHIVE            : constant:=  40001;
   IDM_MRU_1                   : constant:=  40002;
   IDM_ABOUT                   : constant:=  40003;
-  IDM_SAVE_FILE_AS            : constant:=  40004;
   IDM_TEST_ARCHIVE            : constant:=  40004;
   IDM_QUIT                    : constant:=  40005;
   IDM_RECOMPRESS_ARCHIVE      : constant:=  40006;
@@ -194,7 +193,10 @@ package azip_Resource_GUI is
   IDM_A_DD_FILES_1            : constant:=  40027;
   IDM_FRESHEN_ARCHIVE         : constant:=  40028;
   ZipAda_Version              : constant:=  40028;
+  IDM_CLOSE_ARCHIVE           : constant:=  40029;
   ZipAda_URL                  : constant:=  40029;
+  IDM_EXTRACT1                : constant:=  40030;
+  IDM_SAVE_ARCHIVE_AS         : constant:=  40031;
 
   -- ** Some helper utilities (spec).
 
@@ -207,6 +209,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return String;
 
 
-  -- Last line of resource script file: 199
+  -- Last line of resource script file: 202
 
 end azip_Resource_GUI;

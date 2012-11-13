@@ -1,4 +1,4 @@
-with Zip.Create, Zip_Streams;
+with Zip.Create, UnZip, Zip_Streams;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;                   use Ada.Directories;
@@ -118,7 +118,6 @@ package body AZip_Common is
       );
       user_abort:= False; -- !!
     end Entry_feedback;
-
     --
     use Zip.Create;
     --
@@ -150,12 +149,15 @@ package body AZip_Common is
           match:= True;
         end if;
       end loop;
+      if operation in Test .. Extract and then file_names'Length = 0 then
+        match:= True; -- empty name list -> we test or extract the whole archive
+      end if;
       --
       if match then
         case operation is
           when Add =>
             current_operation:= Replace;
-            current_entry_name:= U(short_Name);
+            current_entry_name:= U(short_name);
             is_unicode:= unicode_file_name;
             Add_File(
               Info               => new_zip,
@@ -175,6 +177,21 @@ package body AZip_Common is
               unicode_file_name,
               Skip
             );
+          when Test =>
+            current_operation:= Test;
+            current_entry_name:= U(short_name);
+            is_unicode:= unicode_file_name;
+            UnZip.Extract(
+              from                 => zif,
+              what                 => name,
+              feedback             => Entry_feedback'Unrestricted_Access,
+              help_the_file_exists => null,
+              tell_data            => null,
+              get_pwd              => null, -- !!
+              options              => (UnZip.test_only => True, others => False)
+            );
+          when Extract =>
+            null; -- !!
         end case;
       else -- archive entry name is not matched by a file name in the list
         case operation is
@@ -188,6 +205,8 @@ package body AZip_Common is
               Stream   => old_fzs,
               Feedback => Entry_feedback'Unrestricted_Access
             );
+          when Test | Extract =>
+            null; -- Nothing to do here
         end case;
       end if;
     end Action;
@@ -198,14 +217,18 @@ package body AZip_Common is
     case operation is
       when Add =>
         total_entries:= Zip.Entries(zif) + file_names'Length;
-      when Remove =>
+      when Remove | Test | Extract =>
         total_entries:= Zip.Entries(zif);
     end case;
-    Zip_Streams.Set_Name(old_fzs, Zip.Zip_Name(zif));
-    Zip_Streams.Open(old_fzs, Ada.Streams.Stream_IO.In_File);
     case operation is
       when Add | Remove =>
+        Zip_Streams.Set_Name(old_fzs, Zip.Zip_Name(zif));
+        Zip_Streams.Open(old_fzs, Ada.Streams.Stream_IO.In_File);
         Create(new_zip, new_fzs'Unchecked_Access, "!!.zip");
+      when Test | Extract =>
+        null;
+        -- Read-only operation, doesn't need a new archive file;
+        -- current archive opened only at entry testing / extracting
     end case;
     -- Main job:
     Traverse_archive(zif);
@@ -240,12 +263,17 @@ package body AZip_Common is
         null;
         -- There should be no file to be removed which is
         -- not in original archive.
+      when Test | Extract =>
+        null;
+        -- Nothing to do
     end case;
-    Zip_Streams.Close(old_fzs);
     case operation is
       when Add | Remove =>
+        Zip_Streams.Close(old_fzs);
         Finish(new_zip);
         -- !! replace old archive file by new one
+      when Test | Extract =>
+        null;
     end case;
   end Process_archive;
 

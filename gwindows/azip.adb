@@ -12,8 +12,6 @@ with GNAT.Traceback.Symbolic;
 
 procedure AZip is
 
-  pragma Linker_Options ("-mwindows");
-
   Top: AZip_GWin.MDI_Main.MDI_Main_Type;
 
   procedure Interactive_crash(

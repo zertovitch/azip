@@ -325,9 +325,9 @@ package body AZip_GWin.MDI_Main is
         Item   : in     Integer        ) is
   begin
     case Item is
-      when IDM_NEW_FILE =>
+      when IDM_NEW_ARCHIVE =>
         On_File_New (Window, extra_first_doc => False);
-      when IDM_OPEN_FILE =>
+      when IDM_OPEN_ARCHIVE =>
         On_File_Open (Window);
       when IDM_ABOUT =>
         On_About (Window);

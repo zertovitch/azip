@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/09   22:44:07
+-- Transcription time: 2012/11/13   23:58:46
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -29,8 +29,10 @@ package body azip_Resource_GUI is
     Menu.Main:= Create_Menu;
     Menu.Popup_0001:= Create_Popup;
     Append_Menu(Menu.Main, "&File", Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&New archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+N", IDM_NEW_FILE);
-    Append_Item(Menu.Popup_0001, "&Open archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+O", IDM_OPEN_FILE);
+    Append_Item(Menu.Popup_0001, "&New archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+N", IDM_NEW_ARCHIVE);
+    Append_Item(Menu.Popup_0001, "&Open archive..." & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+O", IDM_OPEN_ARCHIVE);
+    Append_Item(Menu.Popup_0001, "&Save archive as..." & To_GString_from_String((1=>ASCII.HT)) & "F12", IDM_SAVE_ARCHIVE_AS);
+    Append_Item(Menu.Popup_0001, "&Close archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+W / Ctrl+F4", IDM_CLOSE_ARCHIVE);
     Append_Separator(Menu.Popup_0001);
     Menu.Popup_0002:= Create_Popup;
     Append_Menu(Menu.Popup_0001, "&Recent", Menu.Popup_0002);
@@ -48,6 +50,7 @@ package body azip_Resource_GUI is
     Menu.Popup_0003:= Create_Popup;
     Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Select &All" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
+    Append_Item(Menu.Popup_0003, "&Extract selected or whole archive", IDM_EXTRACT1);
     Append_Item(Menu.Popup_0003, "Delete selected" & To_GString_from_String((1=>ASCII.HT)) & "Del", IDM_Delete_selected);
     Append_Item(Menu.Popup_0003, "A&dd files...", IDM_A_DD_FILES_1);
     Menu.Popup_0004:= Create_Popup;
@@ -76,7 +79,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Child_Type
 
 
-  -- Menu at line 77
+  -- Menu at line 80
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -84,9 +87,8 @@ package body azip_Resource_GUI is
     Menu.Main:= Create_Menu;
     Menu.Popup_0001:= Create_Popup;
     Append_Menu(Menu.Main, "&File", Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&New archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+N", IDM_NEW_FILE);
-    Append_Item(Menu.Popup_0001, "&Open archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+O", IDM_OPEN_FILE);
-    Append_Item(Menu.Popup_0001, "&Save archive as...", IDM_SAVE_FILE_AS);
+    Append_Item(Menu.Popup_0001, "&New archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+N", IDM_NEW_ARCHIVE);
+    Append_Item(Menu.Popup_0001, "&Open archive..." & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+O", IDM_OPEN_ARCHIVE);
     Append_Separator(Menu.Popup_0001);
     Menu.Popup_0002:= Create_Popup;
     Append_Menu(Menu.Popup_0001, "&Recent", Menu.Popup_0002);
@@ -113,7 +115,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Main_Type
 
 
-  -- Dialog at resource line 122
+  -- Dialog at resource line 124
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -207,7 +209,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- About_box_Type
 
 
-  -- Dialog at resource line 145
+  -- Dialog at resource line 147
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -263,6 +265,14 @@ package body azip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
+    Dlg_to_Scn(  7, 12, 218, 10, x,y,w,h);
+    Create( Window.Entry_operation_name, Window, "Adding...", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Entry_operation_name);
+    Dlg_to_Scn(  7, 30, 228, 10, x,y,w,h);
+    Create( Window.Entry_name, Window, "Some file", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Entry_name);
+    Dlg_to_Scn(  7, 52, 227, 9, x,y,w,h);
+    Create( Window.File_Progress, Window, x,y,w,h, HORIZONTAL, FALSE);
+    Dlg_to_Scn(  7, 74, 227, 17, x,y,w,h);
+    Create( Window.Archive_Progress, Window, x,y,w,h, HORIZONTAL, FALSE);
     Dlg_to_Scn(  95, 96, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -274,14 +284,6 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Cancel_button);
     end if;
-    Dlg_to_Scn(  7, 74, 227, 17, x,y,w,h);
-    Create( Window.Archive_Progress, Window, x,y,w,h, HORIZONTAL, FALSE);
-    Dlg_to_Scn(  9, 12, 63, 8, x,y,w,h);
-    Create( Window.Entry_operation_name, Window, "Adding...", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Entry_operation_name);
-    Dlg_to_Scn(  9, 30, 170, 8, x,y,w,h);
-    Create( Window.Entry_name, Window, "Some file", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Entry_name);
-    Dlg_to_Scn(  7, 52, 227, 9, x,y,w,h);
-    Create( Window.File_Progress, Window, x,y,w,h, HORIZONTAL, FALSE);
   end Create_Contents; -- Progress_box_Type
 
 
@@ -395,6 +397,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 199
+  -- Last line of resource script file: 202
 
 end azip_Resource_GUI;

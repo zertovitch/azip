@@ -1,6 +1,6 @@
 -- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
--- for the Zip-Ada project ( http://unzip-ada.sf.net/ )
--- Build me with "gnatmake -P zipada.gpr", or open me with GPS
+-- for the AZip project ( http://azip.sf.net/ ), version using GWindows.
+-- Build me with "gnatmake -P azip_gwindows.gpr", or open me with GPS
 --
 project AZip_GWindows is
 
@@ -45,10 +45,10 @@ project AZip_GWindows is
             for Default_Switches ("ada") use ("-g", "azip.rbj");
 
          when "Fast" =>
-            for Default_Switches ("ada") use ("-s", "-Wl,--gc-sections", "azip.rbj");
+            for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections", "azip.rbj");
 
          when "Profiling" =>
-            for Default_Switches ("ada") use ("-pg", "azip.rbj");
+            for Default_Switches ("ada") use ("-mwindows", "-pg", "azip.rbj");
       end case;
    end Linker;
 

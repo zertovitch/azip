@@ -95,6 +95,10 @@ package AZip_GWin.MDI_Child is
                      Width  : in     Integer;
                      Height : in     Integer);
 
+  procedure On_Menu_Select (
+        Window : in out MDI_Child_Type;
+        Item   : in     Integer        );
+
   procedure On_Close (Window    : in out MDI_Child_Type;
                       Can_Close :    out Boolean);
 

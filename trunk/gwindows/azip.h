@@ -15,11 +15,10 @@
 #define Cancel_button                           1003
 #define ResEdit_URL                             1004
 #define Entry_name                              1005
-#define IDM__NEW_FILE                           40000
-#define IDM__OPEN_FILE                          40001
+#define IDM__NEW_ARCHIVE                        40000
+#define IDM__OPEN_ARCHIVE                       40001
 #define IDM_MRU_1                               40002
 #define IDM__ABOUT                              40003
-#define IDM__SAVE_FILE_AS                       40004
 #define IDM__TEST_ARCHIVE                       40004
 #define IDM__QUIT                               40005
 #define IDM__RECOMPRESS_ARCHIVE                 40006
@@ -47,4 +46,7 @@
 #define IDM_A_DD_FILES___1                      40027
 #define IDM_FRESHEN_ARCHIVE                     40028
 #define ZipAda_Version                          40028
+#define IDM__CLOSE_ARCHIVE                      40029
 #define ZipAda_URL                              40029
+#define IDM_EXTRACT1                            40030
+#define IDM__SAVE_ARCHIVE_AS                    40031

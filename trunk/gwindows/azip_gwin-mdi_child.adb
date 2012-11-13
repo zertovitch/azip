@@ -219,6 +219,10 @@ package body AZip_GWin.MDI_Child is
           box.Entry_operation_name.Text("Copying...");
         when Skip =>
           box.Entry_operation_name.Text("Skipping...");
+        when Test =>
+          box.Entry_operation_name.Text("Testing...");
+        when Extract =>
+          box.Entry_operation_name.Text("Extracting...");
       end case;
       Message_Check;
     end Boxed_Feedback;
@@ -317,6 +321,22 @@ package body AZip_GWin.MDI_Child is
     Dock_Children (Window);
   end On_Size;
 
+  procedure On_Menu_Select (
+        Window : in out MDI_Child_Type;
+        Item   : in     Integer        ) is
+  begin
+    case Item is
+      when IDM_CLOSE_ARCHIVE =>
+        Window.Close;
+      when IDM_TEST_ARCHIVE =>
+        Process_archive_GWin(
+          Window, Test, (0..-1 => To_GString_Unbounded("")), ""
+        );
+      when others =>
+        On_Menu_Select (Window_Type (Window), Item);
+    end case;
+  end On_Menu_Select;
+
   procedure On_Close (Window    : in out MDI_Child_Type;
                       Can_Close :    out Boolean) is
   begin
@@ -347,65 +367,65 @@ package body AZip_GWin.MDI_Child is
   end On_Close;
 
   package body Daemons is
-      ---------------------------------------------------------------------------
-      -- This background task displays on demand (also from another task)      --
-      -- informations about archive and various status.                        --
-      ---------------------------------------------------------------------------
+    ---------------------------------------------------------------------------
+    -- This background task displays on demand (also from another task)      --
+    -- informations about archive and various status.                        --
+    ---------------------------------------------------------------------------
 
-      task body Status_display is
-         current_child_window: AZip_GWin.MDI_Child.MDI_Child_Access;
-      begin
-         accept Start;
-         loop
-            select
-               accept Stop;
-               exit;
-            or
-               accept Display(w: AZip_GWin.MDI_Child.MDI_Child_Access) do
-                  current_child_window:= w;
-               end Display;
-               if Is_Loaded(current_child_window.zif) then
-                 Text(
-                   current_child_window.Status_Bar,
-                   S2G(
-                     Integer'Image(Entries(current_child_window.zif)) &
-                     " files"
-                   ),
-                   0
-                 );
-               else
-                 Text(current_child_window.Status_Bar,"No archive loaded",0);
-               end if;
-            or
-               delay 0.05; -- relax
-            end select;
-         end loop;
-      end Status_display;
+    task body Status_display is
+      current_child_window: AZip_GWin.MDI_Child.MDI_Child_Access;
+    begin
+      accept Start;
+      loop
+        select
+          accept Stop;
+          exit;
+        or
+          accept Display(w: AZip_GWin.MDI_Child.MDI_Child_Access) do
+            current_child_window:= w;
+          end Display;
+          if Is_Loaded(current_child_window.zif) then
+            Text(
+              current_child_window.Status_Bar,
+              S2G(
+                Integer'Image(Entries(current_child_window.zif)) &
+                " files"
+               ),
+              0
+             );
+          else
+            Text(current_child_window.Status_Bar,"No archive loaded",0);
+          end if;
+        or
+          delay 0.05; -- relax
+        end select;
+      end loop;
+    end Status_display;
 
-      -----------------------------------------------------------------
-      -- This background task calls an archive test on demand        --
-      -- and ensures display of its progress.                        --
-      -----------------------------------------------------------------
+    -----------------------------------------------------------------
+    -- This background task calls an archive test on demand        --
+    -- and ensures display of its progress.                        --
+    -----------------------------------------------------------------
 
-      task body Testing_type is
-         current_child_window: AZip_GWin.MDI_Child.MDI_Child_Access;
-      begin
-         accept Start;
-         loop
-            select
-               accept Stop;
-               exit;
-            or
-               accept Test(w: AZip_GWin.MDI_Child.MDI_Child_Access) do
-                  current_child_window:= w;
-               end Test;
-               -- (perform test)
-            or
-               delay 0.05; -- relax
-            end select;
-         end loop;
-      end Testing_type;
+    task body Testing_type is
+      current_child_window: AZip_GWin.MDI_Child.MDI_Child_Access;
+    begin
+      accept Start;
+      loop
+        select
+          accept Stop;
+          exit;
+        or
+          accept Test(w: AZip_GWin.MDI_Child.MDI_Child_Access) do
+            current_child_window:= w;
+          end Test;
+          -- (perform test)
+        or
+          delay 0.05; -- relax
+        end select;
+      end loop;
+    end Testing_type;
 
-   end Daemons;
+  end Daemons;
 
 end AZip_GWin.MDI_Child;

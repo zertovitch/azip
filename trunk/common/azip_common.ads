@@ -34,7 +34,7 @@ package AZip_Common is
 
   -- Blocking, visible processing of an archive
 
-  type Archive_Operation is (Add, Remove);
+  type Archive_Operation is (Add, Remove, Test, Extract);
   type Entry_Operation is (
     -- Operations related to "Add"
     Append,  -- file is not in original archive and has to be added to new one
@@ -42,7 +42,10 @@ package AZip_Common is
     -- Operations related to "Remove"
     Skip,    -- file is in original archive but won't be copied (-> "deleted")
     -- Neutral (happens with both "Add" and "Remove")
-    Copy     -- file is in original archive and copied into new one
+    Copy,    -- file is in original archive and copied into new one
+    -- Read-Only operations
+    Test,
+    Extract
   );
 
   type Zip_entry_name is record

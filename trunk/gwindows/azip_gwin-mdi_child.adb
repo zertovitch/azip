@@ -24,7 +24,7 @@ package body AZip_GWin.MDI_Child is
 
     procedure Feed_directory_list(prefix_path: String) is
       row: Natural:= 0;
-      Lst: List_View_Control_Type renames Window.Directory_List;
+      Lst: MDI_Child_List_View_Control_Type renames Window.Directory_List;
       --
       procedure Insert_row(
         name             : String; -- 'name' is compressed entry's name
@@ -65,26 +65,32 @@ package body AZip_GWin.MDI_Child is
       procedure Traverse is new Zip.Traverse_verbose(Insert_row);
 
     begin
-      Lst.Clear;
       for topic in Entry_topic loop
-        if need = first_display then
-          Lst.Insert_Column(
-            S2G(Image(topic)),
-            Entry_topic'Pos(topic),
-            Window.current_options.column_width(topic)
-          );
-        else
-          Lst.Set_Column(
-            S2G(Image(topic)),
-            Entry_topic'Pos(topic),
-            Window.current_options.column_width(topic)
-          );
-        end if;
+        case need is
+          when first_display =>
+            Lst.Clear;
+            Lst.Insert_Column(
+              S2G(Image(topic)),
+              Entry_topic'Pos(topic),
+              Window.current_options.column_width(topic)
+            );
+          when archive_changed =>
+            Lst.Clear;
+            Lst.Set_Column(
+              S2G(Image(topic)),
+              Entry_topic'Pos(topic),
+              Window.current_options.column_width(topic)
+            );
+          when simple_refresh =>
+            null;
+        end case;
       end loop;
-      if Is_Loaded(Window.zif) and need <= archive_changed then
+      if Is_Loaded(Window.zif) and then need <= archive_changed then
         Traverse(Window.zif);
       end if;
     end Feed_directory_list;
+
+    sel: Natural;
 
   begin
     case Window.current_options.view_mode is
@@ -100,7 +106,29 @@ package body AZip_GWin.MDI_Child is
         Check(Window.Menu.Main, Command, IDM_FLAT_VIEW, False);
         Check(Window.Menu.Main, Command, IDM_TREE_VIEW, True);
     end case;
+    if Is_Loaded(Window.zif) then
+      sel:= Window.Directory_List.Selected_Item_Count;
+      if sel > 0 then
+        Text( Window.Status_Bar,
+          S2G(Integer'Image(Entries(Window.zif)) &
+            " files," & Integer'Image(sel) & " selected"), 0
+         );
+      else
+        Text( Window.Status_Bar,
+          S2G(Integer'Image(Entries(Window.zif)) &
+            " files, none selected"), 0
+         );
+      end if;
+    else
+      Text(Window.Status_Bar,"No archive loaded",0);
+    end if;
   end Update_display;
+
+  procedure On_Item_Changed (Control : in out MDI_Child_List_View_Control_Type) is
+    PW: MDI_Child_Type renames MDI_Child_Type(Control.Parent.all);
+  begin
+    Update_display(PW, simple_refresh);
+  end On_Item_Changed;
 
   ---------------
   -- On_Create --
@@ -290,7 +318,7 @@ package body AZip_GWin.MDI_Child is
   begin
     Zip.Load(Window.zif, GWindows.GStrings.To_String(To_GString_From_Unbounded(Window.File_Name)));
     Update_display(Window, archive_changed);
-    Window.Status_deamon.Display(Window'Unchecked_Access);
+    -- Window.Status_deamon.Display(Window'Unchecked_Access);
   end Load_archive_catalogue;
 
   procedure On_Size (Window : in out MDI_Child_Type;
@@ -382,27 +410,7 @@ package body AZip_GWin.MDI_Child is
           accept Display(w: AZip_GWin.MDI_Child.MDI_Child_Access) do
             current_child_window:= w;
           end Display;
-          if Is_Loaded(current_child_window.zif) then
-            declare
-              sel: Natural:= current_child_window.Directory_List.Selected_Item_Count;
-            begin
-              if sel > 0 then
-                Text(
-                  current_child_window.Status_Bar,
-                  S2G(Integer'Image(Entries(current_child_window.zif)) &
-                      " files," & Integer'Image(sel) & " selected"), 0
-                );
-              else
-                Text(
-                  current_child_window.Status_Bar,
-                  S2G(Integer'Image(Entries(current_child_window.zif)) &
-                      " files, none selected"), 0
-                );
-              end if;
-            end;
-          else
-            Text(current_child_window.Status_Bar,"No archive loaded",0);
-          end if;
+          Update_display(current_child_window.all, simple_refresh);
         or
           delay 0.05; -- relax
         end select;

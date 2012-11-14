@@ -329,9 +329,7 @@ package body AZip_GWin.MDI_Child is
       when IDM_CLOSE_ARCHIVE =>
         Window.Close;
       when IDM_TEST_ARCHIVE =>
-        Process_archive_GWin(
-          Window, Test, (0..-1 => To_GString_Unbounded("")), ""
-        );
+        Process_archive_GWin(Window, Test, Empty_Array_Of_File_Names, "");
       when others =>
         On_Menu_Select (Window_Type (Window), Item);
     end case;
@@ -385,14 +383,23 @@ package body AZip_GWin.MDI_Child is
             current_child_window:= w;
           end Display;
           if Is_Loaded(current_child_window.zif) then
-            Text(
-              current_child_window.Status_Bar,
-              S2G(
-                Integer'Image(Entries(current_child_window.zif)) &
-                " files"
-               ),
-              0
-             );
+            declare
+              sel: Natural:= current_child_window.Directory_List.Selected_Item_Count;
+            begin
+              if sel > 0 then
+                Text(
+                  current_child_window.Status_Bar,
+                  S2G(Integer'Image(Entries(current_child_window.zif)) &
+                      " files," & Integer'Image(sel) & " selected"), 0
+                );
+              else
+                Text(
+                  current_child_window.Status_Bar,
+                  S2G(Integer'Image(Entries(current_child_window.zif)) &
+                      " files, none selected"), 0
+                );
+              end if;
+            end;
           else
             Text(current_child_window.Status_Bar,"No archive loaded",0);
           end if;

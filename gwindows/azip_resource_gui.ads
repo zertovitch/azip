@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/13   23:58:46
+-- Transcription time: 2012/11/14   13:51:40
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -39,7 +39,7 @@ package azip_Resource_GUI is
     Popup_0007: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Child_Type
 
-  -- Menu at line 74
+  -- Menu at line 75
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -51,7 +51,7 @@ package azip_Resource_GUI is
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Main_Type
 
-  -- Menu at line 112
+  -- Menu at line 113
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -73,7 +73,7 @@ package azip_Resource_GUI is
     ZipAda_Version: Label_Type;
   end record; -- About_box_Type
 
-  -- Dialog at resource line 138
+  -- Dialog at resource line 139
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -107,14 +107,14 @@ package azip_Resource_GUI is
     Cancel_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 153
+  -- Dialog at resource line 154
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Progress_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "AZip is working";
+      Title       : in     GString := "AZip is busy";
       Left        : in     Integer := Use_Default; -- Default = as designed
       Top         : in     Integer := Use_Default; -- Default = as designed
       Width       : in     Integer := Use_Default; -- Default = as designed
@@ -209,6 +209,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return String;
 
 
-  -- Last line of resource script file: 202
+  -- Last line of resource script file: 203
 
 end azip_Resource_GUI;

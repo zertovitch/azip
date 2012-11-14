@@ -49,6 +49,8 @@ package AZip_GWin.MDI_Child is
   type MDI_Child_Status_Bar_Type is
     new GWindows.Common_Controls.Status_Bar_Type with null record;
 
+  type MDI_Child_List_View_Control_Type is new List_View_Control_Type with null record;
+  procedure On_Item_Changed (Control : in out MDI_Child_List_View_Control_Type);
 
   type MDI_Child_Type is
     new GWindows.Windows.MDI.MDI_Child_Window_Type with
@@ -60,7 +62,7 @@ package AZip_GWin.MDI_Child is
         Extra_first_doc  : Boolean:= False;
         -- ^ new file closed if kept virgin when opening another one (like blank Excel sheet).
         Menu             : Menu_MDI_Child_Type;
-        Directory_List   : List_View_Control_Type;
+        Directory_List   : MDI_Child_List_View_Control_Type;
         Folder_Tree      : Tree_View_Control_Type;
         zif              : Zip.Zip_info;
         current_options  : AZip_Common.Option_Pack_Type;
@@ -80,9 +82,10 @@ package AZip_GWin.MDI_Child is
                           File_Names : in     Array_Of_File_Names);
 
   type Update_need is
-    (first_display,
-     archive_changed,
-     simple_refresh);
+    (first_display,   -- first display ever, no columns set
+     archive_changed, -- directory needs a refresh
+     simple_refresh
+    );
 
   procedure Update_display (
     Window : in out MDI_Child_Type;

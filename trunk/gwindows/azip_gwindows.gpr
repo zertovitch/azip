@@ -7,61 +7,45 @@ project AZip_GWindows is
    type Build_Mode_Type is
       ("Debug", "Fast", "Profiling");
    Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
-   for Source_Dirs use ("../common", "../zip_lib", ".", "frameworks");
+   for Source_Dirs use ("../gui_common", "../zip_lib", ".", "frameworks");
    for Exec_Dir use ".";
    for Main use ("azip.adb");
 
    case Build_Mode is
-
       when "Debug" =>
-         for Object_Dir use "../obj_dbg";
-
+         for Object_Dir use "../obj/debug";
       when "Fast" =>
-         for Object_Dir use "../obj_opt";
-
+         for Object_Dir use "../obj/fast";
       when "Profiling" =>
-         for Object_Dir use "../obj_pro";
+         for Object_Dir use "../obj/profiling";
    end case;
 
    package Binder is
-
       case Build_Mode is
-
          when "Debug" =>
             for Default_Switches ("ada") use ("-E");
-
          when "Fast" =>
-
          when "Profiling" =>
-
       end case;
    end Binder;
 
    package Linker is
-
       case Build_Mode is
-
          when "Debug" =>
             for Default_Switches ("ada") use ("-g", "azip.rbj");
-
          when "Fast" =>
             for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections", "azip.rbj");
-
          when "Profiling" =>
             for Default_Switches ("ada") use ("-mwindows", "-pg", "azip.rbj");
       end case;
    end Linker;
 
    package Compiler is
-
       case Build_Mode is
-
          when "Debug" =>
             for Default_Switches ("ada") use ("-gnat05", "-gnatf", "-gnato", "-fstack-check", "-g", "-gnatwa", "-gnatVa", "-gnatecdebug.pra");
-
          when "Fast" =>
             for Default_Switches ("ada") use ("-gnat05", "-O2", "-gnatpn", "-funroll-loops", "-fpeel-loops", "-funswitch-loops", "-ftracer", "-fweb", "-frename-registers", "-ffunction-sections");
-
          when "Profiling" =>
             for Default_Switches ("ada") use ("-gnat05", "-O2", "-gnatp",  "-funroll-loops", "-fpeel-loops", "-funswitch-loops", "-ftracer", "-fweb", "-frename-registers", "-g", "-pg");
       end case;

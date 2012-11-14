@@ -186,13 +186,13 @@ package body AZip_GWin.MDI_Child is
       memo_unmaximized_children: constant Boolean:= not Window.parent.MDI_childen_maximized;
     begin
       if memo_unmaximized_children then
-        Freeze(Window.parent.all);
-        Zoom(Window);
+        Window.Parent.Freeze;
+        Window.Zoom;
       end if;
       On_Size(Window,Width(Window),Height(window));
       if memo_unmaximized_children then
-        Thaw(Window.parent.all); -- Before Zoom, otherwise uncomplete draw.
-        Zoom(Window, False);
+        Window.Parent.Thaw; -- Before Zoom, otherwise uncomplete draw.
+        Window.Zoom(False);
         -- Window.parent.Tool_Bar.Redraw;
       end if;
     end;
@@ -275,7 +275,9 @@ package body AZip_GWin.MDI_Child is
     box.Cancel_button_permanent.Disable; -- !!
     box.Center;
     box.Show;
+    Window.Parent.Disable;
     Archive_processing(Window.zif, operation, az_names, base_folder);
+    Window.Parent.Enable;
   end Process_archive_GWin;
 
   procedure On_File_Drop (Window     : in out MDI_Child_Type;

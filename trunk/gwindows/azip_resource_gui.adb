@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/13   23:58:46
+-- Transcription time: 2012/11/14   13:51:40
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -50,8 +50,9 @@ package body azip_Resource_GUI is
     Menu.Popup_0003:= Create_Popup;
     Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Select &All" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
-    Append_Item(Menu.Popup_0003, "&Extract selected or whole archive", IDM_EXTRACT1);
-    Append_Item(Menu.Popup_0003, "Delete selected" & To_GString_from_String((1=>ASCII.HT)) & "Del", IDM_Delete_selected);
+    Append_Item(Menu.Popup_0003, "&Extract...", IDM_EXTRACT1);
+    Append_Separator(Menu.Popup_0003);
+    Append_Item(Menu.Popup_0003, "Delete entries" & To_GString_from_String((1=>ASCII.HT)) & "Del", IDM_Delete_selected);
     Append_Item(Menu.Popup_0003, "A&dd files...", IDM_A_DD_FILES_1);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Tools", Menu.Popup_0004);
@@ -79,7 +80,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Child_Type
 
 
-  -- Menu at line 80
+  -- Menu at line 81
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -115,7 +116,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Main_Type
 
 
-  -- Dialog at resource line 124
+  -- Dialog at resource line 125
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -209,14 +210,14 @@ package body azip_Resource_GUI is
   end Create_Contents; -- About_box_Type
 
 
-  -- Dialog at resource line 147
+  -- Dialog at resource line 148
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Progress_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "AZip is working";
+      Title       : in     GString := "AZip is busy";
       Left        : in     Integer := Use_Default; -- Default = as designed
       Top         : in     Integer := Use_Default; -- Default = as designed
       Width       : in     Integer := Use_Default; -- Default = as designed
@@ -267,13 +268,13 @@ package body azip_Resource_GUI is
     Use_GUI_Font(Window);
     Dlg_to_Scn(  7, 12, 218, 10, x,y,w,h);
     Create( Window.Entry_operation_name, Window, "Adding...", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Entry_operation_name);
-    Dlg_to_Scn(  7, 30, 228, 10, x,y,w,h);
+    Dlg_to_Scn(  7, 30, 228, 8, x,y,w,h);
     Create( Window.Entry_name, Window, "Some file", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Entry_name);
     Dlg_to_Scn(  7, 52, 227, 9, x,y,w,h);
     Create( Window.File_Progress, Window, x,y,w,h, HORIZONTAL, FALSE);
     Dlg_to_Scn(  7, 74, 227, 17, x,y,w,h);
     Create( Window.Archive_Progress, Window, x,y,w,h, HORIZONTAL, FALSE);
-    Dlg_to_Scn(  95, 96, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  96, 96, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -397,6 +398,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 202
+  -- Last line of resource script file: 203
 
 end azip_Resource_GUI;

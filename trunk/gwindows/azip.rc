@@ -40,22 +40,22 @@ Menu_MDI_Child MENU
     }
     POPUP "&Edit"
     {
-        MENUITEM "Select &All\tCtrl+A", IDM_Select_all
+        MENUITEM "Select &all\tCtrl+A", IDM_Select_all
+        MENUITEM "&Unselect all\tCtrl+U", IDM_Unselect_all
         MENUITEM "&Extract...", IDM_EXTRACT1
         MENUITEM SEPARATOR
-        MENUITEM "Delete entries\tDel", IDM_Delete_selected
-        MENUITEM "A&dd files...", IDM_A_DD_FILES___1
+        MENUITEM "Delete entries\t- / Del", IDM_Delete_selected
+        MENUITEM "A&dd files...\t+", IDM_A_DD_FILES___1
     }
     POPUP "&Tools"
     {
-        MENUITEM "&Test archive", IDM__TEST_ARCHIVE
-        MENUITEM "Fre&shen archive", IDM_FRESHEN_ARCHIVE
-        MENUITEM "&Recompress archive", IDM__RECOMPRESS_ARCHIVE
-        MENUITEM "&Find files in archive", IDM__FIND_FILE_IN_ARCHIVE
-        MENUITEM "Find &contents in archive", IDM_FIND__CONTENTS_IN_ARCHIVE
+        MENUITEM "&Test archive\tShift+T", IDM__TEST_ARCHIVE
+        MENUITEM "Fre&shen archive", IDM_FRESHEN_ARCHIVE, GRAYED
+        MENUITEM "&Recompress archive", IDM__RECOMPRESS_ARCHIVE, GRAYED
+        MENUITEM "&Find in archive...\tCtrl+F", IDM_FIND_IN_ARCHIVE
         MENUITEM SEPARATOR
-        MENUITEM "&Compare archives", IDM_COMPARE_ARCHIVES
-        MENUITEM "&Merge archives", IDM_MERGE_ARCHIVES
+        MENUITEM "&Compare archives", IDM_COMPARE_ARCHIVES, GRAYED
+        MENUITEM "&Merge archives", IDM_MERGE_ARCHIVES, GRAYED
     }
     POPUP "&View"
     {
@@ -142,6 +142,22 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Find_box DIALOG 0, 0, 191, 95
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+CAPTION "Find"
+FONT 8, "Ms Shell Dlg"
+{
+    DEFPUSHBUTTON   "OK", IDOK, 76, 76, 50, 14
+    PUSHBUTTON      "Cancel", IDCANCEL, 129, 76, 50, 14
+    EDITTEXT        Name_to_be_searched, 9, 20, 172, 12, ES_AUTOHSCROLL
+    LTEXT           "Entry &name (empty: all)", IDC_STATIC, 9, 7, 127, 8, SS_LEFT
+    EDITTEXT        Content_to_be_searched, 9, 54, 171, 12, ES_AUTOHSCROLL
+    LTEXT           "&Content (empty: any)", IDC_STATIC, 9, 41, 129, 8, SS_LEFT
+}
+
+
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 Progress_box DIALOG 0, 0, 242, 116
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
 CAPTION "AZip is busy"
@@ -164,9 +180,12 @@ Main_Menu ACCELERATORS
 {
     "N",            IDM__NEW_ARCHIVE, VIRTKEY, CONTROL
     "O",            IDM__OPEN_ARCHIVE, VIRTKEY, CONTROL
-    "A",            IDM_Select_all, VIRTKEY, CONTROL
     "W",            IDM__CLOSE_ARCHIVE, VIRTKEY, CONTROL
+    "A",            IDM_Select_all, VIRTKEY, CONTROL
+    "U",            IDM_Unselect_all, VIRTKEY, CONTROL
     VK_DELETE,     IDM_Delete_selected, VIRTKEY
+    "T",            IDM__TEST_ARCHIVE, VIRTKEY, SHIFT
+    "F",            IDM_FIND_IN_ARCHIVE, VIRTKEY, CONTROL
 }
 
 

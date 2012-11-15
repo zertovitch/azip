@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/14   13:51:40
+-- Transcription time: 2012/11/15   12:58:44
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -97,6 +97,42 @@ package azip_Resource_GUI is
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      );
 
+  type Find_box_Type is new Window_type with record
+
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
+    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    Name_to_be_searched: Edit_Box_Type;
+    -- Label: IDC_STATIC
+    Content_to_be_searched: Edit_Box_Type;
+    -- Label: IDC_STATIC
+  end record; -- Find_box_Type
+
+  -- Dialog at resource line 155
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Find_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Find";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Find_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     );
+
   type Progress_box_Type is new Window_type with record
 
     Entry_operation_name: Label_Type;
@@ -107,7 +143,7 @@ package azip_Resource_GUI is
     Cancel_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 154
+  -- Dialog at resource line 170
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -148,55 +184,58 @@ package azip_Resource_GUI is
   -- NB: only items with a defined symbol get a constant here
   -- These constants are needed for getting button and menu feedbacks.
 
-  IDC_STATIC                  : constant:=     -1;
-  Menu_MDI_Main               : constant:=    102;
-  Menu_MDI_Child              : constant:=    104;
-  About_box                   : constant:=    107;
-  Progress_box                : constant:=    109;
-  Archive_Progress            : constant:=   1000;
-  GNAT_URL                    : constant:=   1000;
-  Entry_operation_name        : constant:=   1001;
-  GNAT_Version                : constant:=   1001;
-  File_Progress               : constant:=   1002;
-  GNAVI_URL                   : constant:=   1002;
-  Cancel_button               : constant:=   1003;
-  ResEdit_URL                 : constant:=   1004;
-  Entry_name                  : constant:=   1005;
-  IDM_NEW_ARCHIVE             : constant:=  40000;
-  IDM_OPEN_ARCHIVE            : constant:=  40001;
-  IDM_MRU_1                   : constant:=  40002;
-  IDM_ABOUT                   : constant:=  40003;
-  IDM_TEST_ARCHIVE            : constant:=  40004;
-  IDM_QUIT                    : constant:=  40005;
-  IDM_RECOMPRESS_ARCHIVE      : constant:=  40006;
-  IDM_FIND_FILE_IN_ARCHIVE    : constant:=  40007;
-  IDM_FIND_CONTENTS_IN_ARCHIVE: constant:=  40008;
-  IDM_COMPARE_ARCHIVES        : constant:=  40009;
-  IDM_FLAT_VIEW               : constant:=  40010;
-  IDM_TREE_VIEW               : constant:=  40011;
-  IDM_MRU_2                   : constant:=  40012;
-  IDM_MRU_3                   : constant:=  40013;
-  IDM_MRU_4                   : constant:=  40014;
-  IDM_MRU_5                   : constant:=  40015;
-  IDM_MRU_6                   : constant:=  40016;
-  IDM_MRU_7                   : constant:=  40017;
-  IDM_MRU_8                   : constant:=  40018;
-  IDM_MRU_9                   : constant:=  40019;
-  IDM_WINDOW_CASCADE          : constant:=  40020;
-  IDM_WINDOW_TILE_HORIZONTAL  : constant:=  40021;
-  IDM_WINDOW_TILE_VERTICAL    : constant:=  40022;
-  IDM_WINDOW_CLOSE_ALL        : constant:=  40023;
-  IDM_MERGE_ARCHIVES          : constant:=  40024;
-  AZip_URL                    : constant:=  40025;
-  IDM_Select_all              : constant:=  40025;
-  IDM_Delete_selected         : constant:=  40026;
-  IDM_A_DD_FILES_1            : constant:=  40027;
-  IDM_FRESHEN_ARCHIVE         : constant:=  40028;
-  ZipAda_Version              : constant:=  40028;
-  IDM_CLOSE_ARCHIVE           : constant:=  40029;
-  ZipAda_URL                  : constant:=  40029;
-  IDM_EXTRACT1                : constant:=  40030;
-  IDM_SAVE_ARCHIVE_AS         : constant:=  40031;
+  IDC_STATIC                : constant:=     -1;
+  Menu_MDI_Main             : constant:=    102;
+  Menu_MDI_Child            : constant:=    104;
+  About_box                 : constant:=    107;
+  Progress_box              : constant:=    109;
+  Find_box                  : constant:=    111;
+  Archive_Progress          : constant:=   1000;
+  GNAT_URL                  : constant:=   1000;
+  Entry_operation_name      : constant:=   1001;
+  GNAT_Version              : constant:=   1001;
+  File_Progress             : constant:=   1002;
+  GNAVI_URL                 : constant:=   1002;
+  Name_to_be_searched       : constant:=   1002;
+  Cancel_button             : constant:=   1003;
+  Content_to_be_searched    : constant:=   1004;
+  ResEdit_URL               : constant:=   1004;
+  Entry_name                : constant:=   1005;
+  IDM_NEW_ARCHIVE           : constant:=  40000;
+  IDM_OPEN_ARCHIVE          : constant:=  40001;
+  IDM_MRU_1                 : constant:=  40002;
+  IDM_Unselect_all          : constant:=  40002;
+  IDM_ABOUT                 : constant:=  40003;
+  IDM_TEST_ARCHIVE          : constant:=  40004;
+  IDM_QUIT                  : constant:=  40005;
+  IDM_RECOMPRESS_ARCHIVE    : constant:=  40006;
+  IDM_FIND_IN_ARCHIVE       : constant:=  40008;
+  IDM_COMPARE_ARCHIVES      : constant:=  40009;
+  IDM_FLAT_VIEW             : constant:=  40010;
+  IDM_TREE_VIEW             : constant:=  40011;
+  IDM_MRU_2                 : constant:=  40012;
+  IDM_MRU_3                 : constant:=  40013;
+  IDM_MRU_4                 : constant:=  40014;
+  IDM_MRU_5                 : constant:=  40015;
+  IDM_MRU_6                 : constant:=  40016;
+  IDM_MRU_7                 : constant:=  40017;
+  IDM_MRU_8                 : constant:=  40018;
+  IDM_MRU_9                 : constant:=  40019;
+  IDM_WINDOW_CASCADE        : constant:=  40020;
+  IDM_WINDOW_TILE_HORIZONTAL: constant:=  40021;
+  IDM_WINDOW_TILE_VERTICAL  : constant:=  40022;
+  IDM_WINDOW_CLOSE_ALL      : constant:=  40023;
+  IDM_MERGE_ARCHIVES        : constant:=  40024;
+  AZip_URL                  : constant:=  40025;
+  IDM_Select_all            : constant:=  40025;
+  IDM_Delete_selected       : constant:=  40026;
+  IDM_A_DD_FILES_1          : constant:=  40027;
+  IDM_FRESHEN_ARCHIVE       : constant:=  40028;
+  ZipAda_Version            : constant:=  40028;
+  IDM_CLOSE_ARCHIVE         : constant:=  40029;
+  ZipAda_URL                : constant:=  40029;
+  IDM_EXTRACT1              : constant:=  40030;
+  IDM_SAVE_ARCHIVE_AS       : constant:=  40031;
 
   -- ** Some helper utilities (spec).
 
@@ -209,6 +248,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return String;
 
 
-  -- Last line of resource script file: 203
+  -- Last line of resource script file: 222
 
 end azip_Resource_GUI;

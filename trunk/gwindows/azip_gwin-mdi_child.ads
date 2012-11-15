@@ -68,6 +68,8 @@ package AZip_GWin.MDI_Child is
         current_options  : AZip_Common.Option_Pack_Type;
         Status_deamon    : Daemons.Status_display;
         Status_Bar       : MDI_Child_Status_Bar_Type;
+        Name_search      : GString_Unbounded;
+        Content_search   : GString_Unbounded;
       end record;
 
   procedure On_Create (Window : in out MDI_Child_Type);

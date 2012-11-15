@@ -3,6 +3,7 @@ with AZip_Common;                       use AZip_Common;
 with Time_Display;
 
 with GWindows.Application;              use GWindows.Application;
+with GWindows.Constants;                use GWindows.Constants;
 with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
@@ -15,6 +16,7 @@ package body AZip_GWin.MDI_Child is
 
   function S2G (Value : String) return GString renames To_GString_From_String;
   function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
+  function G2UG (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
 
   procedure Update_display(
     Window : in out MDI_Child_Type;
@@ -217,10 +219,12 @@ package body AZip_GWin.MDI_Child is
   end Is_file_saved;
 
   procedure Process_archive_GWin(
-    Window      : in out MDI_Child_Type;
-    operation   : Archive_Operation;
-    file_names  : Array_Of_File_Names;
-    base_folder : String
+    Window         : in out MDI_Child_Type;
+    operation      : Archive_Operation;
+    file_names     : Array_Of_File_Names;
+    name_match     : Name_matching_mode;
+    base_folder    : String;
+    search_pattern : GString
   )
   is
     az_names: Name_list(File_Names'Range);
@@ -251,6 +255,8 @@ package body AZip_GWin.MDI_Child is
           box.Entry_operation_name.Text("Testing...");
         when Extract =>
           box.Entry_operation_name.Text("Extracting...");
+        when Search =>
+          box.Entry_operation_name.Text("Searching...");
       end case;
       Message_Check;
     end Boxed_Feedback;
@@ -264,7 +270,8 @@ package body AZip_GWin.MDI_Child is
         (name => To_Unbounded_String(
                    GWindows.GStrings.To_String(GU2G(File_Names(i)))
                  ), -- !!
-         utf_8 => False -- !!
+         utf_8 => False, -- !!
+         match => 0
         );
     end loop;
     box.Create_Full_Dialog(Window);
@@ -276,7 +283,15 @@ package body AZip_GWin.MDI_Child is
     box.Center;
     box.Show;
     Window.Parent.Disable;
-    Archive_processing(Window.zif, operation, az_names, base_folder);
+    Archive_processing(
+      zif            => Window.zif,
+      operation      => operation,
+      entry_name     => az_names,
+      name_match     => name_match,
+      base_folder    => base_folder,
+      search_pattern => search_pattern
+    );
+    -- !! after processing we should do something with the counts -> Results col.
     Window.Parent.Enable;
   end Process_archive_GWin;
 
@@ -292,8 +307,12 @@ package body AZip_GWin.MDI_Child is
         Question_Icon) = Yes
       then
         Process_archive_GWin(
-          Window, Add, File_Names,
-          "" -- !! only for flat view
+          Window         => Window,
+          operation      => Add,
+          file_names     => File_Names,
+          name_match     => Exact,
+          base_folder    => "",           -- !! only for flat view
+          search_pattern => ""
         );
       end if;
     else
@@ -351,6 +370,35 @@ package body AZip_GWin.MDI_Child is
     Dock_Children (Window);
   end On_Size;
 
+  procedure On_Find(Window : in out MDI_Child_Type) is
+    box: Find_box_Type;
+    --
+    procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
+      pragma Warnings(off, dummy);
+    begin
+      Window.Name_search:= G2UG(box.Name_to_be_searched.Text);
+      Window.Content_search:= G2UG(box.Content_to_be_searched.Text);
+    end Get_Data;
+    --
+    Entry_Names: Array_Of_File_Names(1..1):= (1 => Window.Name_search);
+  begin
+    box.Create_Full_Dialog(Window);
+    box.Name_to_be_searched.Text(GU2G(Window.Name_search));
+    box.Content_to_be_searched.Text(GU2G(Window.Content_search));
+    box.Center;
+    box.On_Destroy_Handler(Get_Data'Unrestricted_Access);
+    if Show_Dialog (box, Window) = IDOK then
+      Process_archive_GWin(
+        Window         => Window,
+        operation      => Search,
+        file_names     => Entry_Names,
+        name_match     => Substring,
+        base_folder    => "",
+        search_pattern => GU2G(Window.Content_search)
+      );
+    end if;
+  end On_Find;
+
   procedure On_Menu_Select (
         Window : in out MDI_Child_Type;
         Item   : in     Integer        ) is
@@ -358,8 +406,16 @@ package body AZip_GWin.MDI_Child is
     case Item is
       when IDM_CLOSE_ARCHIVE =>
         Window.Close;
+      when IDM_FIND_IN_ARCHIVE =>
+        On_Find(Window);
       when IDM_TEST_ARCHIVE =>
-        Process_archive_GWin(Window, Test, Empty_Array_Of_File_Names, "");
+        Process_archive_GWin(
+          Window         => Window,
+          operation      => Test,
+          file_names     => Empty_Array_Of_File_Names,
+          name_match     => Exact,
+          base_folder    => "",
+          search_pattern => "");
       when others =>
         On_Menu_Select (Window_Type (Window), Item);
     end case;

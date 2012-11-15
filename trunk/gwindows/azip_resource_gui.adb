@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/15   12:58:44
+-- Transcription time: 2012/11/15   15:07:02
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -176,7 +176,7 @@ package body azip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  103, 188, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  103, 190, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -294,12 +294,12 @@ package body azip_Resource_GUI is
     end if;
     Dlg_to_Scn(  9, 20, 172, 12, x,y,w,h);
     Create( Window.Name_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Name_to_be_searched);
-    Dlg_to_Scn(  9, 7, 127, 8, x,y,w,h);
-    Create_label( Window, "Entry &name (empty: all)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  9, 54, 171, 12, x,y,w,h);
+    Dlg_to_Scn(  9, 7, 172, 8, x,y,w,h);
+    Create_label( Window, "Entry &name ( if empty: all names )", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  9, 54, 172, 12, x,y,w,h);
     Create( Window.Content_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Content_to_be_searched);
-    Dlg_to_Scn(  9, 41, 129, 8, x,y,w,h);
-    Create_label( Window, "&Content (empty: any)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  9, 41, 172, 8, x,y,w,h);
+    Create_label( Window, "&Content ( if empty: any content )", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
   end Create_Contents; -- Find_box_Type
 
 

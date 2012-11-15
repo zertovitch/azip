@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/14   13:51:40
+-- Transcription time: 2012/11/15   12:58:44
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -49,21 +49,25 @@ package body azip_Resource_GUI is
     Append_Item(Menu.Popup_0001, "&Quit" & To_GString_from_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
     Menu.Popup_0003:= Create_Popup;
     Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "Select &All" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
+    Append_Item(Menu.Popup_0003, "Select &all" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
+    Append_Item(Menu.Popup_0003, "&Unselect all" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+U", IDM_Unselect_all);
     Append_Item(Menu.Popup_0003, "&Extract...", IDM_EXTRACT1);
     Append_Separator(Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "Delete entries" & To_GString_from_String((1=>ASCII.HT)) & "Del", IDM_Delete_selected);
-    Append_Item(Menu.Popup_0003, "A&dd files...", IDM_A_DD_FILES_1);
+    Append_Item(Menu.Popup_0003, "Delete entries" & To_GString_from_String((1=>ASCII.HT)) & "- / Del", IDM_Delete_selected);
+    Append_Item(Menu.Popup_0003, "A&dd files..." & To_GString_from_String((1=>ASCII.HT)) & "+", IDM_A_DD_FILES_1);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Tools", Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&Test archive", IDM_TEST_ARCHIVE);
+    Append_Item(Menu.Popup_0004, "&Test archive" & To_GString_from_String((1=>ASCII.HT)) & "Shift+T", IDM_TEST_ARCHIVE);
     Append_Item(Menu.Popup_0004, "Fre&shen archive", IDM_FRESHEN_ARCHIVE);
+    State(Menu.Popup_0004, Command, IDM_FRESHEN_ARCHIVE, Grayed);
     Append_Item(Menu.Popup_0004, "&Recompress archive", IDM_RECOMPRESS_ARCHIVE);
-    Append_Item(Menu.Popup_0004, "&Find files in archive", IDM_FIND_FILE_IN_ARCHIVE);
-    Append_Item(Menu.Popup_0004, "Find &contents in archive", IDM_FIND_CONTENTS_IN_ARCHIVE);
+    State(Menu.Popup_0004, Command, IDM_RECOMPRESS_ARCHIVE, Grayed);
+    Append_Item(Menu.Popup_0004, "&Find in archive..." & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+F", IDM_FIND_IN_ARCHIVE);
     Append_Separator(Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Compare archives", IDM_COMPARE_ARCHIVES);
+    State(Menu.Popup_0004, Command, IDM_COMPARE_ARCHIVES, Grayed);
     Append_Item(Menu.Popup_0004, "&Merge archives", IDM_MERGE_ARCHIVES);
+    State(Menu.Popup_0004, Command, IDM_MERGE_ARCHIVES, Grayed);
     Menu.Popup_0005:= Create_Popup;
     Append_Menu(Menu.Main, "&View", Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "&Flat view", IDM_FLAT_VIEW);
@@ -211,6 +215,95 @@ package body azip_Resource_GUI is
 
 
   -- Dialog at resource line 148
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Find_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Find";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 191, 95, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- Find_box_Type
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Find_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 191, 95, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  76, 76, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDOK, Window, "OK", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "OK", x,y,w,h, ID => IDOK);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDOK_permanent);
+    else -- hide the closing button
+      Hide(Window.IDOK);
+    end if;
+    Dlg_to_Scn(  129, 76, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDCANCEL_permanent);
+    else -- hide the closing button
+      Hide(Window.IDCANCEL);
+    end if;
+    Dlg_to_Scn(  9, 20, 172, 12, x,y,w,h);
+    Create( Window.Name_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Name_to_be_searched);
+    Dlg_to_Scn(  9, 7, 127, 8, x,y,w,h);
+    Create_label( Window, "Entry &name (empty: all)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  9, 54, 171, 12, x,y,w,h);
+    Create( Window.Content_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Content_to_be_searched);
+    Dlg_to_Scn(  9, 41, 129, 8, x,y,w,h);
+    Create_label( Window, "&Content (empty: any)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+  end Create_Contents; -- Find_box_Type
+
+
+  -- Dialog at resource line 164
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -398,6 +491,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 203
+  -- Last line of resource script file: 222
 
 end azip_Resource_GUI;

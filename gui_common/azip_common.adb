@@ -1,4 +1,4 @@
-with Zip.Create, UnZip, Zip_Streams;
+with Zip.Create, UnZip.Streams, Zip_Streams;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;                   use Ada.Directories;
@@ -77,14 +77,17 @@ package body AZip_Common is
   function U(Source: String) return Unbounded_String
     renames Ada.Strings.Unbounded.To_Unbounded_String;
 
-
-  -- Blocking, visible processing of an archive
+  ------------------------------------------------
+  -- Blocking, visible processing of an archive --
+  ------------------------------------------------
 
   procedure Process_archive(
-    zif         : Zip.Zip_Info;
-    operation   : Archive_Operation;
-    file_names  : Name_list;
-    base_folder : String
+    zif            :        Zip.Zip_Info;
+    operation      :        Archive_Operation;
+    entry_name     : in out Name_list;
+    name_match     :        Name_matching_mode;
+    base_folder    :        String;
+    search_pattern :        Wide_String
   )
   is
     new_zip: Zip.Create.Zip_Create_info;
@@ -109,6 +112,7 @@ package body AZip_Common is
       else
         file_percents_done:= percents_done;
       end if;
+      -- Call the given feedback (Windows GUI, Gtk, Lumen, iOS, console, ...)
       Feedback(
         file_percents_done,
         archive_percents_done,
@@ -118,6 +122,58 @@ package body AZip_Common is
       );
       user_abort:= False; -- !!
     end Entry_feedback;
+    --
+    -- Taken from Find_zip
+    --
+    procedure Search_1_file( name: String; occ: out Natural ) is
+      max: constant:= 2**10;
+      str: String(1..max);  -- str(1..stl) = string to search
+      stl: Natural; -- string length
+      l: Character; -- last character of the search string
+      use UnZip.Streams;
+      f: Zipped_File_Type;
+      s: Stream_Access;
+      c: Character;
+      -- Define a circular buffer
+      siz: constant:= max;
+      type Buffer_range is mod siz;
+      buf: array(Buffer_range) of Character:= (others => ' ');
+      i, bup: Buffer_range:= 0;
+      j: Natural;
+      ignore_case: constant Boolean:= True;
+    begin
+      stl:= 0;
+      for w in search_pattern'Range loop
+        str(stl):= To_Character(search_pattern(w)); -- !! lazy conversion
+        stl:= stl + 1;
+      end loop;
+      l:= str(stl);
+      occ:= 0;
+      Open( f, zif, name );
+      s:= Stream(f);
+      while not End_of_file(f) loop
+        Character'Read(s,c);
+        if ignore_case then
+          c:= To_Upper(c);
+        end if;
+        if c = l then -- last character do match, search further...
+          i:= bup;
+          j:= stl;
+          match: loop
+            i:= i-1;
+            j:= j-1;
+            if j = 0 then -- we survived the whole search string
+              occ:= occ+1;
+              exit match;
+            end if;
+            exit match when str(j) /= buf(i);
+          end loop match;
+        end if;
+        buf(bup):= c;
+        bup:= bup+1;
+      end loop;
+      Close(f);
+    end Search_1_file;
     --
     use Zip.Create;
     --
@@ -137,19 +193,34 @@ package body AZip_Common is
         (comp_size, uncomp_size, crc_32, date_time, method, read_only);
       match: Boolean:= False;
       short_name: constant String:= Remove_path(name);
+      idx: Positive;
     begin
       processed_entries:= processed_entries + 1;
       archive_percents_done:= (100 * processed_entries) / total_entries;
       file_percents_done:= 0;
       --
-      for i in file_names'Range loop -- !! use hashed maps either for searching
-        if file_names(i).name = name and
-           file_names(i).utf_8 = unicode_file_name
-        then
-          match:= True;
-        end if;
-      end loop;
-      if operation in Test .. Extract and then file_names'Length = 0 then
+      case name_match is
+        when Exact =>
+          -- !! use hashed maps either for searching !!
+          for i in entry_name'Range loop
+            if entry_name(i).name = name and then
+              entry_name(i).utf_8 = unicode_file_name
+            then
+              match:= True;
+              idx:= i;
+            end if;
+          end loop;
+        when Substring =>
+          for i in entry_name'Range loop
+            if Index(entry_name(i).name, name) > 0 and then
+              entry_name(i).utf_8 = unicode_file_name
+            then
+              match:= True;
+              idx:= i;
+            end if;
+          end loop;
+      end case;
+      if operation in Test .. Search and then entry_name'Length = 0 then
         match:= True; -- empty name list -> we test or extract the whole archive
       end if;
       --
@@ -169,6 +240,7 @@ package body AZip_Common is
               Is_read_only       => False, -- !!
               Feedback           => Entry_feedback'Unrestricted_Access
             );
+            entry_name(idx).match:= 1;
           when Remove =>
             Feedback(
               file_percents_done,
@@ -190,8 +262,17 @@ package body AZip_Common is
               get_pwd              => null, -- !!
               options              => (UnZip.test_only => True, others => False)
             );
+            entry_name(idx).match:= 1;
           when Extract =>
             null; -- !!
+            entry_name(idx).match:= 1;
+          when Search =>
+            if search_pattern = "" then -- just mark entries with matching names
+              entry_name(idx).match:= 1;
+            else
+              -- We need to search the string in the compressed entry...
+              Search_1_file(name => name, occ  => entry_name(idx).match);
+            end if;
         end case;
       else -- archive entry name is not matched by a file name in the list
         case operation is
@@ -205,7 +286,7 @@ package body AZip_Common is
               Stream   => old_fzs,
               Feedback => Entry_feedback'Unrestricted_Access
             );
-          when Test | Extract =>
+          when Test | Extract | Search =>
             null; -- Nothing to do here
         end case;
       end if;
@@ -213,11 +294,14 @@ package body AZip_Common is
 
   procedure Traverse_archive is new Zip.Traverse_verbose(Action);
 
-  begin
+  begin -- Process_archive
+    for i in entry_name'Range loop
+      entry_name(i).match:= 0;
+    end loop;
     case operation is
       when Add =>
-        total_entries:= Zip.Entries(zif) + file_names'Length;
-      when Remove | Test | Extract =>
+        total_entries:= Zip.Entries(zif) + entry_name'Length;
+      when Remove | Test | Extract | Search =>
         total_entries:= Zip.Entries(zif);
     end case;
     case operation is
@@ -225,7 +309,7 @@ package body AZip_Common is
         Zip_Streams.Set_Name(old_fzs, Zip.Zip_Name(zif));
         Zip_Streams.Open(old_fzs, Ada.Streams.Stream_IO.In_File);
         Create(new_zip, new_fzs'Unchecked_Access, "!!.zip");
-      when Test | Extract =>
+      when Test | Extract | Search =>
         null;
         -- Read-only operation, doesn't need a new archive file;
         -- current archive opened only at entry testing / extracting
@@ -235,25 +319,25 @@ package body AZip_Common is
     -- Almost done...
     case operation is
       when Add =>
-        for i in file_names'Range loop -- !! use hashed maps either
+        for i in entry_name'Range loop -- !! use hashed maps either
           processed_entries:= processed_entries + 1;
           archive_percents_done:= (100 * processed_entries) / total_entries;
           if not Zip.Exists(
             zif,
-            To_String(file_names(i).name),
+            To_String(entry_name(i).name),
             case_sensitive => True -- !! system-dependent!...
           )
           then
             current_operation:= Append;
-            current_entry_name:= U(Remove_path(To_String(file_names(i).name)));
-            is_unicode:= file_names(i).utf_8;
+            current_entry_name:= U(Remove_path(To_String(entry_name(i).name)));
+            is_unicode:= entry_name(i).utf_8;
             Add_File(
               Info               => new_zip,
-              Name               => To_String(file_names(i).name),
-              Name_in_archive    => Remove_path(To_String(file_names(i).name)),
+              Name               => To_String(entry_name(i).name),
+              Name_in_archive    => Remove_path(To_String(entry_name(i).name)),
               Delete_file_after  => False,
-              Name_UTF_8_encoded => file_names(i).utf_8,
-              Modification_time  => Zip.Convert(Modification_Time(To_String(file_names(i).name))),
+              Name_UTF_8_encoded => entry_name(i).utf_8,
+              Modification_time  => Zip.Convert(Modification_Time(To_String(entry_name(i).name))),
               Is_read_only       => False, -- !!
               Feedback           => Entry_feedback'Unrestricted_Access
             );
@@ -263,16 +347,17 @@ package body AZip_Common is
         null;
         -- There should be no file to be removed which is
         -- not in original archive.
-      when Test | Extract =>
+      when Test | Extract | Search =>
         null;
-        -- Nothing to do
+        -- Nothing to do after archive traversal.
     end case;
     case operation is
       when Add | Remove =>
         Zip_Streams.Close(old_fzs);
         Finish(new_zip);
         -- !! replace old archive file by new one
-      when Test | Extract =>
+      when Test | Extract | Search =>
+        -- Read-only operation
         null;
     end case;
   end Process_archive;

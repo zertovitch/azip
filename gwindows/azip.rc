@@ -124,7 +124,7 @@ STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VIS
 CAPTION "About AZip"
 FONT 8, "Ms Shell Dlg"
 {
-    DEFPUSHBUTTON   "Close", IDOK, 103, 188, 50, 14
+    DEFPUSHBUTTON   "Close", IDOK, 103, 190, 50, 14
     LTEXT           "AZip - a portable Zip user interface", IDC_STATIC, 47, 10, 165, 8, SS_LEFT
     LTEXT           "Copyright © Gautier de Montmollin 2012", IDC_STATIC, 47, 25, 151, 8, SS_LEFT
     LTEXT           "MIT Open Source License", IDC_STATIC, 47, 40, 100, 8, SS_LEFT
@@ -150,9 +150,9 @@ FONT 8, "Ms Shell Dlg"
     DEFPUSHBUTTON   "OK", IDOK, 76, 76, 50, 14
     PUSHBUTTON      "Cancel", IDCANCEL, 129, 76, 50, 14
     EDITTEXT        Name_to_be_searched, 9, 20, 172, 12, ES_AUTOHSCROLL
-    LTEXT           "Entry &name (empty: all)", IDC_STATIC, 9, 7, 127, 8, SS_LEFT
-    EDITTEXT        Content_to_be_searched, 9, 54, 171, 12, ES_AUTOHSCROLL
-    LTEXT           "&Content (empty: any)", IDC_STATIC, 9, 41, 129, 8, SS_LEFT
+    LTEXT           "Entry &name ( if empty: all names )", IDC_STATIC, 9, 7, 172, 8, SS_LEFT
+    EDITTEXT        Content_to_be_searched, 9, 54, 172, 12, ES_AUTOHSCROLL
+    LTEXT           "&Content ( if empty: any content )", IDC_STATIC, 9, 41, 172, 8, SS_LEFT
 }
 
 

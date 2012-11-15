@@ -52,7 +52,7 @@ project AZip_GWindows is
    end Compiler;
 
    package Builder is
-      for Default_Switches ("ada") use ("-j2", "-C");
+      for Default_Switches ("ada") use ("-j7", "-C");
    end Builder;
    
 end AZip_GWindows;

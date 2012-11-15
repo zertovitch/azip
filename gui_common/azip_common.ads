@@ -3,7 +3,9 @@ with Zip;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Interfaces;
 
--- AZip elements that are common to all GUI systems / toolkits.
+------------------------------------------------------------------
+-- AZip elements that are common to all GUI systems / toolkits. --
+------------------------------------------------------------------
 
 package AZip_Common is
 
@@ -11,10 +13,13 @@ package AZip_Common is
 
   type Entry_topic is (
     Name, FType, Modified, Attributes,
-    Size, Packed, Ratio, Format, CRC32, Path
+    Size, Packed, Ratio, Format, CRC32, Path,
+    Result -- Result of search, for instance
   );
 
-  -- Text display helpers
+  --------------------------
+  -- Text display helpers --
+  --------------------------
 
   function Image(topic: Entry_topic) return String;
   function Hexadecimal(x: Interfaces.Unsigned_32) return String;
@@ -32,9 +37,12 @@ package AZip_Common is
       (Name => 150, Modified => 120, others => 70);
   end record;
 
-  -- Blocking, visible processing of an archive
+  ------------------------------------------------
+  -- Blocking, visible processing of an archive --
+  ------------------------------------------------
 
-  type Archive_Operation is (Add, Remove, Test, Extract);
+  type Archive_Operation is (Add, Remove, Test, Extract, Search);
+
   type Entry_Operation is (
     -- Operations related to "Add"
     Append,  -- file is not in original archive and has to be added to new one
@@ -45,16 +53,21 @@ package AZip_Common is
     Copy,    -- file is in original archive and copied into new one
     -- Read-Only operations
     Test,
-    Extract
+    Extract,
+    Search
   );
 
   type Zip_entry_name is record
     name : Unbounded_String;
     utf_8: Boolean;
+    match: Natural;
+    -- Search: number of strings found;
+    -- Add / Update: 1 if entry was replaced, 0 otherwise
   end record;
 
-  type Name_list is array(Natural range <>) of Zip_entry_name;
-  -- !! should use hashed maps for quick search
+  type Name_list is array(Positive range <>) of Zip_entry_name;
+
+  type Name_matching_mode is (Exact, Substring);
 
   generic
     with procedure Feedback(
@@ -65,10 +78,12 @@ package AZip_Common is
       operation             : Entry_Operation
     );
   procedure Process_archive(
-    zif         : Zip.Zip_Info;
-    operation   : Archive_Operation;
-    file_names  : Name_list;
-    base_folder : String
+    zif            :        Zip.Zip_Info;
+    operation      :        Archive_Operation;
+    entry_name     : in out Name_list;
+    name_match     :        Name_matching_mode;
+    base_folder    :        String;
+    search_pattern :        Wide_String
   );
 
 end AZip_Common;

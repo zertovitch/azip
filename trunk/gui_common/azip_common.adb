@@ -193,7 +193,7 @@ package body AZip_Common is
         (comp_size, uncomp_size, crc_32, date_time, method, read_only);
       match: Boolean:= False;
       short_name: constant String:= Remove_path(name);
-      idx: Positive;
+      idx: Natural:= 0;
     begin
       processed_entries:= processed_entries + 1;
       archive_percents_done:= (100 * processed_entries) / total_entries;
@@ -240,7 +240,9 @@ package body AZip_Common is
               Is_read_only       => False, -- !!
               Feedback           => Entry_feedback'Unrestricted_Access
             );
-            entry_name(idx).match:= 1;
+            if idx > 0 then
+              entry_name(idx).match:= 1;
+            end if;
           when Remove =>
             Feedback(
               file_percents_done,
@@ -262,13 +264,19 @@ package body AZip_Common is
               get_pwd              => null, -- !!
               options              => (UnZip.test_only => True, others => False)
             );
-            entry_name(idx).match:= 1;
+            if idx > 0 then
+              entry_name(idx).match:= 1;
+            end if;
           when Extract =>
             null; -- !!
-            entry_name(idx).match:= 1;
+            if idx > 0 then
+              entry_name(idx).match:= 1;
+            end if;
           when Search =>
             if search_pattern = "" then -- just mark entries with matching names
-              entry_name(idx).match:= 1;
+              if idx > 0 then
+                entry_name(idx).match:= 1;
+              end if;
             else
               -- We need to search the string in the compressed entry...
               Search_1_file(name => name, occ  => entry_name(idx).match);

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/16   02:51:11
+-- Transcription time: 2012/11/16   21:42:37
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -230,7 +230,7 @@ package azip_Resource_GUI is
   AZip_URL                  : constant:=  40025;
   IDM_Select_all            : constant:=  40025;
   IDM_Delete_selected       : constant:=  40026;
-  IDM_A_DD_FILES_1          : constant:=  40027;
+  IDM_ADD_FILES             : constant:=  40027;
   IDM_FRESHEN_ARCHIVE       : constant:=  40028;
   ZipAda_Version            : constant:=  40028;
   IDM_CLOSE_ARCHIVE         : constant:=  40029;
@@ -248,6 +248,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return String;
 
 
-  -- Last line of resource script file: 222
+  -- Last line of resource script file: 223
 
 end azip_Resource_GUI;

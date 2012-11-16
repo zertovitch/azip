@@ -6,6 +6,7 @@ with Ada.Strings;                       use Ada.Strings;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 with Ada.Text_IO;
 with Ada.Streams.Stream_IO;
+with Zip;
 
 package body AZip_Common is
 
@@ -411,5 +412,15 @@ package body AZip_Common is
     end case;
   end Process_archive;
 
+  function Is_valid_Zip_archive(file_name: String) return Boolean is
+    info: Zip.Zip_info;
+  begin
+    Zip.Load(info, file_name);
+    Zip.Delete(info);
+    return True;
+  exception
+    when others =>
+      return False;
+  end Is_valid_Zip_archive;
 
 end AZip_Common;

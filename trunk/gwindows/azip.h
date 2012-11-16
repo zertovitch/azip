@@ -26,6 +26,7 @@
 #define IDM__TEST_ARCHIVE                       40004
 #define IDM__QUIT                               40005
 #define IDM__RECOMPRESS_ARCHIVE                 40006
+#define IDM_EXTRACT                             40007
 #define IDM_FIND_IN_ARCHIVE                     40008
 #define IDM_COMPARE_ARCHIVES                    40009
 #define IDM__FLAT_VIEW                          40010
@@ -51,5 +52,4 @@
 #define ZipAda_Version                          40028
 #define IDM__CLOSE_ARCHIVE                      40029
 #define ZipAda_URL                              40029
-#define IDM_EXTRACT1                            40030
 #define IDM__SAVE_ARCHIVE_AS                    40031

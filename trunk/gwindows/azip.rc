@@ -42,7 +42,7 @@ Menu_MDI_Child MENU
     {
         MENUITEM "Select &all\tCtrl+A", IDM_Select_all
         MENUITEM "&Unselect all\tCtrl+U", IDM_Unselect_all
-        MENUITEM "&Extract...", IDM_EXTRACT1
+        MENUITEM "&Extract...", IDM_EXTRACT
         MENUITEM SEPARATOR
         MENUITEM "Delete entries\t- / Del", IDM_Delete_selected
         MENUITEM "A&dd files...\t+", IDM_A_DD_FILES___1

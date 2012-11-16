@@ -1,4 +1,4 @@
-with Zip;
+with Zip, UnZip;
 
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Interfaces;
@@ -57,6 +57,8 @@ package AZip_Common is
     Search
   );
 
+  subtype Read_Only_Operation is Archive_Operation range Test .. Search;
+
   type Zip_entry_name is record
     name : Unbounded_String;
     utf_8: Boolean;
@@ -83,7 +85,9 @@ package AZip_Common is
     entry_name     : in out Name_list;
     name_match     :        Name_matching_mode;
     base_folder    :        String;
-    search_pattern :        Wide_String
+    search_pattern :        Wide_String;
+    output_folder  :        String;
+    Set_Time_Stamp :        UnZip.Set_Time_Stamp_proc
   );
 
 end AZip_Common;

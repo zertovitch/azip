@@ -87,7 +87,9 @@ package body AZip_Common is
     entry_name     : in out Name_list;
     name_match     :        Name_matching_mode;
     base_folder    :        String;
-    search_pattern :        Wide_String
+    search_pattern :        Wide_String;
+    output_folder  :        String;
+    Set_Time_Stamp :        UnZip.Set_Time_Stamp_proc
   )
   is
     new_zip: Zip.Create.Zip_Create_info;
@@ -175,6 +177,30 @@ package body AZip_Common is
       Close(f);
     end Search_1_file;
     --
+    -- Taken from UnZipAda
+    --
+    function Add_extract_directory(File_Name : String) return String is
+      Directory_Separator: constant Character:= '/';
+      -- '/' is also accepted by Windows
+    begin
+      if output_folder = "" then
+        return File_Name;
+      elsif output_folder(output_folder'Last) = '\' or
+            output_folder(output_folder'Last) = '/'
+      then
+        return output_folder & File_Name;
+      else
+        return output_folder & Directory_Separator & File_Name;
+      end if;
+    end Add_extract_directory;
+
+    Extract_FS_routines: constant UnZip.FS_routines_type:=
+      ( Create_Path         => Ada.Directories.Create_Path'Access,
+        Set_Time_Stamp      => Set_Time_Stamp,
+        Compose_File_Name   => Add_extract_directory'Unrestricted_Access,
+        others              => null
+    );
+    --
     use Zip.Create;
     --
     procedure Action(
@@ -220,8 +246,8 @@ package body AZip_Common is
             end if;
           end loop;
       end case;
-      if operation in Test .. Search and then entry_name'Length = 0 then
-        match:= True; -- empty name list -> we test or extract the whole archive
+      if operation in Read_Only_Operation and then entry_name'Length = 0 then
+        match:= True; -- empty name list -> we process the whole archive
       end if;
       --
       if match then
@@ -268,6 +294,22 @@ package body AZip_Common is
               entry_name(idx).match:= 1;
             end if;
           when Extract =>
+            current_operation:= Extract;
+            current_entry_name:= U(short_name);
+            is_unicode:= unicode_file_name;
+            UnZip.Extract(
+              from                 => zif,
+              what                 => name,
+              feedback             => Entry_feedback'Unrestricted_Access,
+              help_the_file_exists => null, -- !!
+              tell_data            => null,
+              get_pwd              => null, -- !!
+              options              => (others => False),
+              file_system_routines => Extract_FS_routines
+            );
+            if idx > 0 then
+              entry_name(idx).match:= 1;
+            end if;
             null; -- !!
             if idx > 0 then
               entry_name(idx).match:= 1;
@@ -294,7 +336,7 @@ package body AZip_Common is
               Stream   => old_fzs,
               Feedback => Entry_feedback'Unrestricted_Access
             );
-          when Test | Extract | Search =>
+          when Read_Only_Operation =>
             null; -- Nothing to do here
         end case;
       end if;
@@ -309,7 +351,7 @@ package body AZip_Common is
     case operation is
       when Add =>
         total_entries:= Zip.Entries(zif) + entry_name'Length;
-      when Remove | Test | Extract | Search =>
+      when Remove | Read_Only_Operation =>
         total_entries:= Zip.Entries(zif);
     end case;
     case operation is
@@ -317,7 +359,7 @@ package body AZip_Common is
         Zip_Streams.Set_Name(old_fzs, Zip.Zip_Name(zif));
         Zip_Streams.Open(old_fzs, Ada.Streams.Stream_IO.In_File);
         Create(new_zip, new_fzs'Unchecked_Access, "!!.zip");
-      when Test | Extract | Search =>
+      when Read_Only_Operation =>
         null;
         -- Read-only operation, doesn't need a new archive file;
         -- current archive opened only at entry testing / extracting
@@ -355,7 +397,7 @@ package body AZip_Common is
         null;
         -- There should be no file to be removed which is
         -- not in original archive.
-      when Test | Extract | Search =>
+      when Read_Only_Operation =>
         null;
         -- Nothing to do after archive traversal.
     end case;
@@ -364,8 +406,7 @@ package body AZip_Common is
         Zip_Streams.Close(old_fzs);
         Finish(new_zip);
         -- !! replace old archive file by new one
-      when Test | Extract | Search =>
-        -- Read-only operation
+      when Read_Only_Operation =>
         null;
     end case;
   end Process_archive;

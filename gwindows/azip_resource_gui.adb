@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/15   15:07:02
+-- Transcription time: 2012/11/16   02:51:11
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -51,7 +51,7 @@ package body azip_Resource_GUI is
     Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Select &all" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
     Append_Item(Menu.Popup_0003, "&Unselect all" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+U", IDM_Unselect_all);
-    Append_Item(Menu.Popup_0003, "&Extract...", IDM_EXTRACT1);
+    Append_Item(Menu.Popup_0003, "&Extract...", IDM_EXTRACT);
     Append_Separator(Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Delete entries" & To_GString_from_String((1=>ASCII.HT)) & "- / Del", IDM_Delete_selected);
     Append_Item(Menu.Popup_0003, "A&dd files..." & To_GString_from_String((1=>ASCII.HT)) & "+", IDM_A_DD_FILES_1);

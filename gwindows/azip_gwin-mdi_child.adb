@@ -3,6 +3,7 @@ with AZip_Common;                       use AZip_Common;
 with Time_Display;
 
 with GWindows.Application;              use GWindows.Application;
+with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
 with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Menus;                    use GWindows.Menus;
@@ -11,6 +12,8 @@ with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 with Interfaces;
+
+with Ada_Directories_Extensions;
 
 package body AZip_GWin.MDI_Child is
 
@@ -224,7 +227,8 @@ package body AZip_GWin.MDI_Child is
     file_names     : Array_Of_File_Names;
     name_match     : Name_matching_mode;
     base_folder    : String;
-    search_pattern : GString
+    search_pattern : GString;
+    output_folder  : String
   )
   is
     az_names: Name_list(File_Names'Range);
@@ -289,7 +293,9 @@ package body AZip_GWin.MDI_Child is
       entry_name     => az_names,
       name_match     => name_match,
       base_folder    => base_folder,
-      search_pattern => search_pattern
+      search_pattern => search_pattern,
+      output_folder  => output_folder,
+      Set_Time_Stamp => Ada_Directories_Extensions.Set_Modification_Time'Access
     );
     -- !! after processing we should do something with the counts -> Results col.
     Window.Parent.Enable;
@@ -312,7 +318,8 @@ package body AZip_GWin.MDI_Child is
           file_names     => File_Names,
           name_match     => Exact,
           base_folder    => "",           -- !! only for flat view
-          search_pattern => ""
+          search_pattern => "",
+          output_folder  => ""
         );
       end if;
     else
@@ -370,6 +377,22 @@ package body AZip_GWin.MDI_Child is
     Dock_Children (Window);
   end On_Size;
 
+  procedure On_Extract(Window : in out MDI_Child_Type) is
+    dir: constant GString:= Get_Directory(Window, "Extract to...");
+  begin
+    if dir /= "" then
+      Process_archive_GWin(
+        Window         => Window,
+        operation      => Extract,
+        file_names     => Empty_Array_Of_File_Names, -- !! only for whole archive !!
+        name_match     => Exact,
+        base_folder    => "",
+        search_pattern => "",
+        output_folder  => GWindows.GStrings.To_String(dir) -- !! lazy conversion
+      );
+    end if;
+  end On_Extract;
+
   procedure On_Find(Window : in out MDI_Child_Type) is
     box: Find_box_Type;
     --
@@ -380,7 +403,6 @@ package body AZip_GWin.MDI_Child is
       Window.Content_search:= G2UG(box.Content_to_be_searched.Text);
     end Get_Data;
     --
-    Entry_Names: Array_Of_File_Names(1..1):= (1 => Window.Name_search);
   begin
     box.Create_Full_Dialog(Window);
     box.Name_to_be_searched.Text(GU2G(Window.Name_search));
@@ -391,10 +413,11 @@ package body AZip_GWin.MDI_Child is
       Process_archive_GWin(
         Window         => Window,
         operation      => Search,
-        file_names     => Entry_Names,
+        file_names     => (1 => Window.Name_search),
         name_match     => Substring,
         base_folder    => "",
-        search_pattern => GU2G(Window.Content_search)
+        search_pattern => GU2G(Window.Content_search),
+        output_folder  => ""
       );
     end if;
   end On_Find;
@@ -406,6 +429,8 @@ package body AZip_GWin.MDI_Child is
     case Item is
       when IDM_CLOSE_ARCHIVE =>
         Window.Close;
+      when IDM_EXTRACT =>
+        On_Extract(Window);
       when IDM_FIND_IN_ARCHIVE =>
         On_Find(Window);
       when IDM_TEST_ARCHIVE =>
@@ -415,7 +440,9 @@ package body AZip_GWin.MDI_Child is
           file_names     => Empty_Array_Of_File_Names,
           name_match     => Exact,
           base_folder    => "",
-          search_pattern => "");
+          search_pattern => "",
+          output_folder  => ""
+        );
       when others =>
         On_Menu_Select (Window_Type (Window), Item);
     end case;

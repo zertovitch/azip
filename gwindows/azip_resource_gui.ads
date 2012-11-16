@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/15   15:07:02
+-- Transcription time: 2012/11/16   02:51:11
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -209,6 +209,7 @@ package azip_Resource_GUI is
   IDM_TEST_ARCHIVE          : constant:=  40004;
   IDM_QUIT                  : constant:=  40005;
   IDM_RECOMPRESS_ARCHIVE    : constant:=  40006;
+  IDM_EXTRACT               : constant:=  40007;
   IDM_FIND_IN_ARCHIVE       : constant:=  40008;
   IDM_COMPARE_ARCHIVES      : constant:=  40009;
   IDM_FLAT_VIEW             : constant:=  40010;
@@ -234,7 +235,6 @@ package azip_Resource_GUI is
   ZipAda_Version            : constant:=  40028;
   IDM_CLOSE_ARCHIVE         : constant:=  40029;
   ZipAda_URL                : constant:=  40029;
-  IDM_EXTRACT1              : constant:=  40030;
   IDM_SAVE_ARCHIVE_AS       : constant:=  40031;
 
   -- ** Some helper utilities (spec).

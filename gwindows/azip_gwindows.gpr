@@ -7,7 +7,7 @@ project AZip_GWindows is
    type Build_Mode_Type is
       ("Debug", "Fast", "Profiling");
    Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
-   for Source_Dirs use ("../gui_common", "../zip_lib", ".", "frameworks");
+   for Source_Dirs use ("../gui_common", "../zip_lib", ".", "frameworks", "win_special");
    for Exec_Dir use ".";
    for Main use ("azip.adb");
 

@@ -393,6 +393,30 @@ package body AZip_GWin.MDI_Child is
     end if;
   end On_Extract;
 
+  procedure On_Add_files(Window : in out MDI_Child_Type) is
+    Success: Boolean;
+    File_Name, File_Title : GString_Unbounded;
+  begin
+    Open_File (Window, "Add files to archive...",
+      File_Name,
+       ( 1=>(To_GString_Unbounded ("All files (*.*)"),
+             To_GString_Unbounded ("*.*"))),
+      "",
+      File_Title,
+      Success);
+    if Success then
+      Process_archive_GWin(
+        Window         => Window,
+        operation      => Add,
+        file_names     => (1 => File_Name), -- !! ok for 1 only
+        name_match     => Exact,
+        base_folder    => "",
+        search_pattern => "",
+        output_folder  => ""
+      );
+    end if;
+  end On_Add_files;
+
   procedure On_Find(Window : in out MDI_Child_Type) is
     box: Find_box_Type;
     --
@@ -431,6 +455,8 @@ package body AZip_GWin.MDI_Child is
         Window.Close;
       when IDM_EXTRACT =>
         On_Extract(Window);
+      when IDM_ADD_FILES =>
+        On_Add_files(Window);
       when IDM_FIND_IN_ARCHIVE =>
         On_Find(Window);
       when IDM_TEST_ARCHIVE =>

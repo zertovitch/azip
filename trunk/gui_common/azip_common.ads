@@ -90,4 +90,15 @@ package AZip_Common is
     Set_Time_Stamp :        UnZip.Set_Time_Stamp_proc
   );
 
+  ---------------------
+  -- Various helpers --
+  ---------------------
+
+  -- This function will tell if a file is actually a Zip file.
+  -- It is useful for instance when files are dropped onto AZip,
+  -- to determine whether AZip has to open the files as archives,
+  -- or it is meant to add the files into an archive.
+
+  function Is_valid_Zip_archive(file_name: String) return Boolean;
+
 end AZip_Common;

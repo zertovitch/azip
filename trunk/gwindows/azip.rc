@@ -45,7 +45,7 @@ Menu_MDI_Child MENU
         MENUITEM "&Extract...", IDM_EXTRACT
         MENUITEM SEPARATOR
         MENUITEM "Delete entries\t- / Del", IDM_Delete_selected
-        MENUITEM "A&dd files...\t+", IDM_A_DD_FILES___1
+        MENUITEM "A&dd files...\t+", IDM_ADD_FILES
     }
     POPUP "&Tools"
     {
@@ -186,6 +186,7 @@ Main_Menu ACCELERATORS
     VK_DELETE,     IDM_Delete_selected, VIRTKEY
     "T",            IDM__TEST_ARCHIVE, VIRTKEY, SHIFT
     "F",            IDM_FIND_IN_ARCHIVE, VIRTKEY, CONTROL
+    VK_ADD,        IDM_ADD_FILES, VIRTKEY
 }
 
 

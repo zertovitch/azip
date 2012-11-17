@@ -6,10 +6,7 @@ with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 with GWindows;                          use GWindows;
 with GWindows.Base;
 with GWindows.Windows.MDI;
-with GWindows.Common_Controls;
 with GWindows.GStrings;                 use GWindows.GStrings;
-with GWindows.Image_Lists;
-with GWindows.Menus;
 with GWindows.Constants;
 with GWindows.Windows;                  use GWindows.Windows;
 
@@ -50,7 +47,7 @@ package AZip_GWin.MDI_Main is
 
   type MDI_Main_Access is access all MDI_Main_Type;
 
-  procedure On_Create (Window : in out MDI_Main_Type);
+  overriding procedure On_Create (Window : in out MDI_Main_Type);
   --  Handles setting up icons, menus, etc.
 
   procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean);
@@ -59,15 +56,28 @@ package AZip_GWin.MDI_Main is
   procedure On_File_Drop (Window     : in out MDI_Main_Type;
                           File_Names : in     Array_Of_File_Names);
 
-  procedure On_Menu_Select (
+  procedure Open_Child_Window_And_Load (
+    Window     : in out MDI_Main_Type;
+    File_Name  :        GWindows.GString_Unbounded
+  );
+
+  overriding procedure On_Menu_Select (
         Window : in out MDI_Main_Type;
         Item   : in     Integer        );
 
-  procedure On_Close (
+  overriding procedure On_Close (
         Window    : in out MDI_Main_Type;
         Can_Close :    out Boolean        );
 
   procedure Update_Common_Menus(Window    : in out MDI_Main_Type;
                                 top_entry : GString:= "" );
+
+  function All_Zip_files(File_Names: Array_Of_File_Names) return Boolean;
+
+  function Confirm_archives_if_all_Zip_files(
+    Window: GWindows.Base.Base_Window_Type'Class;
+    File_Names: Array_Of_File_Names
+  )
+  return Boolean;
 
 end AZip_GWin.MDI_Main;

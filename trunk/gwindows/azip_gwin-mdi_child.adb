@@ -3,11 +3,13 @@ with AZip_Common;                       use AZip_Common;
 with Time_Display;
 
 with GWindows.Application;              use GWindows.Application;
+with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
 with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Types;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
@@ -304,7 +306,14 @@ package body AZip_GWin.MDI_Child is
   procedure On_File_Drop (Window     : in out MDI_Child_Type;
                           File_Names : in     Array_Of_File_Names) is
   begin
-    if Is_Loaded(Window.zif) then
+    if Confirm_archives_if_all_Zip_files(Window, File_Names) then
+      for i in File_Names'Range loop
+        Open_Child_Window_And_Load(
+          Window.Parent.all,
+          File_Names(i)
+        );
+      end loop;
+    elsif Is_Loaded(Window.zif) then
       if Message_Box(
         Window,
         "Files dropped",

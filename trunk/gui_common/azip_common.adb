@@ -6,7 +6,6 @@ with Ada.Strings;                       use Ada.Strings;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 with Ada.Text_IO;
 with Ada.Streams.Stream_IO;
-with Zip;
 
 package body AZip_Common is
 

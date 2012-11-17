@@ -19,6 +19,8 @@ with GNAT.Compiler_Version;
 package body AZip_GWin.MDI_Main is
 
   function S2G (Value : String) return GString renames To_GString_From_String;
+  function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
+  function G2UG (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
 
   procedure Focus_an_already_opened_window(
     Window    : MDI_Main_Type;
@@ -98,9 +100,11 @@ package body AZip_GWin.MDI_Main is
   end Finish_subwindow_opening;
 
   procedure Open_Child_Window_And_Load (
-        Window     : in out MDI_Main_Type;
-        File_Name,
-        File_Title :        Gwindows.Gstring_Unbounded ) is
+    Window     : in out MDI_Main_Type;
+    File_Name,
+    File_Title :        GWindows.GString_Unbounded
+  )
+  is
     -- Candidate              : TC.Archive;
     is_open: Boolean;
   begin
@@ -140,14 +144,28 @@ package body AZip_GWin.MDI_Main is
       Message_Box(Window, "Error", "Archive file not found", Icon => Exclamation_Icon);
   end Open_Child_Window_And_Load;
 
+  function Shorten_file_name( s: GString ) return GString is
+    max: constant:= 33;
+    beg: constant:= 6;
+  begin
+    if s'Length < max then
+      return s;
+    else
+      return
+        s(s'First .. s'First + beg-1) &       -- beg
+        "..." &                               -- 3
+        s(s'Last - max + beg + 1 .. s'Last);  -- max - beg - 3
+    end if;
+  end Shorten_file_name;
+
   procedure Open_Child_Window_And_Load (
         Window     : in out MDI_Main_Type;
-        File_Name  :        Gwindows.Gstring_Unbounded ) is
+        File_Name  :        GWindows.GString_Unbounded ) is
   begin
     Open_Child_Window_And_Load(
       Window,
       File_Name,
-      File_Name   -- file name used as title (could be nicer)
+      G2UG(Shorten_file_name(GU2G(File_Name)))
     );
   end Open_Child_Window_And_Load;
 
@@ -266,7 +284,14 @@ package body AZip_GWin.MDI_Main is
   procedure On_File_Drop (Window     : in out MDI_Main_Type;
                           File_Names : in     Array_Of_File_Names) is
   begin
-    if Message_Box(
+    if Confirm_archives_if_all_Zip_files(Window, File_Names) then
+      for i in File_Names'Range loop
+        Open_Child_Window_And_Load(
+          Window,
+          File_Names(i)
+        );
+      end loop;
+    elsif Message_Box(
       Window,
       "Files dropped",
       "Create new archive with dropped files ?",
@@ -432,20 +457,6 @@ package body AZip_GWin.MDI_Main is
 
   end Add_MRU;
 
-  function Shorten_filename( s: GString ) return GString is
-    max: constant:= 33;
-    beg: constant:= 6;
-  begin
-    if s'Length < max then
-      return s;
-    else
-      return
-        s(s'First .. s'First + beg-1) &       -- beg
-        "..." &                               -- 3
-        s(s'Last - max + beg + 1 .. s'Last);  -- max - beg - 3
-    end if;
-  end Shorten_filename;
-
   procedure Update_MRU_Menu(Window: in out MDI_Main_Type; m: in Menu_type) is
   begin
     for i in reverse Window.mru'Range loop
@@ -454,7 +465,7 @@ package body AZip_GWin.MDI_Main is
          '&' &
          To_GString_from_String(Ada.Strings.Fixed.Trim(Integer'Image(i),Ada.Strings.Left)) &
          ' ' &
-         Shorten_filename(To_GString_from_Unbounded(Window.mru(i)))
+         Shorten_file_name(To_GString_from_Unbounded(Window.mru(i)))
       );
       --State(m,command,cmd,Disabled);
     end loop;
@@ -486,5 +497,41 @@ package body AZip_GWin.MDI_Main is
       Update_Common_Menus_Child'Access
     );
   end Update_Common_Menus;
+
+  function All_Zip_files(File_Names: Array_Of_File_Names) return Boolean is
+    result, empty: Boolean:= True;
+  begin
+    for i in File_Names'Range loop
+      empty:= False;
+      result:= result and
+        AZip_Common.Is_valid_Zip_archive(To_String(GU2G(File_Names(i))));
+        -- !! lazy conversion of wide string to potential utf-8
+    end loop;
+    return result and not empty;
+  end All_Zip_files;
+
+  function Confirm_archives_if_all_Zip_files(
+    Window: GWindows.Base.Base_Window_Type'Class;
+    File_Names: Array_Of_File_Names
+  )
+  return Boolean
+  is
+  begin
+    if All_Zip_files(File_Names) then
+      if Message_Box(
+        Window,
+        "Files are Zip archives",
+        S2G("Should AZip open these Zip archives individually ?" & ASCII.LF &
+        "If not, they will be added as files into an archive."),
+        Yes_No_Box,
+        Question_Icon
+      )
+      = Yes
+      then
+        return True;
+      end if;
+    end if;
+    return False;
+  end Confirm_archives_if_all_Zip_files;
 
 end AZip_GWin.MDI_Main;

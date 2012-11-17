@@ -5,14 +5,7 @@ with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 with Zip;
 
 with GWindows;                          use GWindows;
-with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
-with GWindows.Cursors;
-with GWindows.Drawing;                  use GWindows.Drawing;
-with GWindows.Drawing_Objects;          use GWindows.Drawing_Objects;
-with GWindows.Drawing_Panels;
-with GWindows.Menus;
-with GWindows.Types;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 
@@ -72,7 +65,7 @@ package AZip_GWin.MDI_Child is
         Content_search   : GString_Unbounded;
       end record;
 
-  procedure On_Create (Window : in out MDI_Child_Type);
+  overriding procedure On_Create (Window : in out MDI_Child_Type);
 
   procedure On_Save (Window : in out MDI_Child_Type);
   -- This would be abstract in a 'generic' Office framework.
@@ -80,8 +73,10 @@ package AZip_GWin.MDI_Child is
   function Is_file_saved (Window : in MDI_Child_Type) return Boolean;
   -- This would be abstract in a 'generic' Office framework.
 
-  procedure On_File_Drop (Window     : in out MDI_Child_Type;
-                          File_Names : in     Array_Of_File_Names);
+  overriding procedure On_File_Drop (
+    Window     : in out MDI_Child_Type;
+    File_Names : in     Array_Of_File_Names
+  );
 
   type Update_need is
     (first_display,   -- first display ever, no columns set
@@ -96,16 +91,20 @@ package AZip_GWin.MDI_Child is
 
   procedure Load_archive_catalogue (Window : in out MDI_Child_Type);
 
-  procedure On_Size (Window : in out MDI_Child_Type;
-                     Width  : in     Integer;
-                     Height : in     Integer);
+  overriding procedure On_Size (
+    Window : in out MDI_Child_Type;
+    Width  : in     Integer;
+    Height : in     Integer
+  );
 
-  procedure On_Menu_Select (
-        Window : in out MDI_Child_Type;
-        Item   : in     Integer        );
+  overriding procedure On_Menu_Select (
+    Window : in out MDI_Child_Type;
+    Item   : in     Integer
+  );
 
-  procedure On_Close (Window    : in out MDI_Child_Type;
-                      Can_Close :    out Boolean);
-
+  overriding procedure On_Close (
+    Window    : in out MDI_Child_Type;
+    Can_Close :    out Boolean
+  );
 
 end AZip_GWin.MDI_Child;

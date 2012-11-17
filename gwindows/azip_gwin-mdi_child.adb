@@ -1,5 +1,7 @@
-with Zip;                               use Zip;
 with AZip_Common;                       use AZip_Common;
+
+with Zip;                               use Zip;
+with Zip_Streams;
 with Time_Display;
 
 with GWindows.Application;              use GWindows.Application;
@@ -57,7 +59,12 @@ package body AZip_GWin.MDI_Child is
         end loop;
         if simple_name_idx <= name'Last then -- skip directory entries
           Lst.Insert_Item(S2G(name(simple_name_idx..name'Last)), row);
-          Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
+          begin
+            Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
+          exception
+            when Zip_Streams.Calendar.Time_Error =>
+              Lst.Set_Sub_Item("(invalid)", row, 2);
+          end;
           Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, 3);
           Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, 4);
           Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, 5);

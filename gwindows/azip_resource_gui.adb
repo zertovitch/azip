@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/16   21:42:37
+-- Transcription time: 2012/11/18   20:53:18
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -491,6 +491,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 223
+  -- Last line of resource script file: 224
 
 end azip_Resource_GUI;

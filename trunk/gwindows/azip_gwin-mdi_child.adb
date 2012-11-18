@@ -17,6 +17,7 @@ with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 with Interfaces;
 
+with Ada.Directories;
 with Ada_Directories_Extensions;
 
 package body AZip_GWin.MDI_Child is
@@ -230,6 +231,74 @@ package body AZip_GWin.MDI_Child is
     return True;
   end Is_file_saved;
 
+  ----------------
+  -- On_Save_As --
+  ----------------
+
+  procedure On_Save_As (Window : in out MDI_Child_Type)
+  is
+     New_File_Name : GWindows.GString_Unbounded;
+     File_Title    : GWindows.GString_Unbounded;
+     Success       : Boolean;
+  begin
+    New_File_Name := Window.File_Name;
+    Save_File (
+      Window,
+      "Save as...",
+      New_File_Name,
+      ((To_GString_Unbounded ("Zip archive (*.zip)"),
+        To_GString_Unbounded ("*.zip" )),
+       (To_GString_Unbounded ("All files (*.*)"),
+        To_GString_Unbounded ("*.*"))),
+      ".zip",
+      File_Title,
+      Success
+    );
+    if not Success then
+      return;
+    end if;
+    if Exists(GWindows.GStrings.To_String (
+      To_GString_From_Unbounded (New_File_Name))
+    ) -- !! conv.
+    then
+      if Message_Box (
+        Window,
+        "Save as",
+        To_GString_From_Unbounded (New_File_Name) &
+        " already exists. Replace ?",
+        Yes_No_Box,
+        Exclamation_Icon
+      ) = No
+      then
+        return;
+      end if;
+    end if;
+
+    begin
+      Ada.Directories.Copy_File(
+        GWindows.GStrings.To_String (
+          To_GString_From_Unbounded (Window.File_Name)),
+        GWindows.GStrings.To_String (
+          To_GString_From_Unbounded (New_File_Name))
+      );
+    exception
+      when others =>
+        Message_Box(
+          Window,
+          "Save as failed",
+          "Copy of archive under new name failed.",
+          OK_Box,
+          Exclamation_Icon
+        );
+        return;
+    end;
+    Window.File_Name := New_File_Name;
+    Text (Window, To_GString_From_Unbounded (File_Title));
+    Window.Short_Name:= File_Title;
+    Update_Common_Menus(Window,To_GString_from_Unbounded(New_File_Name));
+    Window.Load_archive_catalogue;
+  end On_Save_As;
+
   procedure Process_archive_GWin(
     Window         : in out MDI_Child_Type;
     operation      : Archive_Operation;
@@ -360,6 +429,9 @@ package body AZip_GWin.MDI_Child is
 
   procedure Load_archive_catalogue (Window : in out MDI_Child_Type) is
   begin
+    if Zip.Is_loaded(Window.zif) then
+      Zip.Delete(Window.zif);
+    end if;
     Zip.Load(Window.zif, GWindows.GStrings.To_String(To_GString_From_Unbounded(Window.File_Name)));
     Update_display(Window, archive_changed);
     -- Window.Status_deamon.Display(Window'Unchecked_Access);
@@ -467,6 +539,8 @@ package body AZip_GWin.MDI_Child is
         Item   : in     Integer        ) is
   begin
     case Item is
+      when IDM_SAVE_ARCHIVE_AS =>
+        Window.On_Save_As;
       when IDM_CLOSE_ARCHIVE =>
         Window.Close;
       when IDM_EXTRACT =>

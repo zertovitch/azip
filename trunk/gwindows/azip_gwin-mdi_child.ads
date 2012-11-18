@@ -73,6 +73,8 @@ package AZip_GWin.MDI_Child is
   function Is_file_saved (Window : in MDI_Child_Type) return Boolean;
   -- This would be abstract in a 'generic' Office framework.
 
+  procedure On_Save_As (Window : in out MDI_Child_Type);
+
   overriding procedure On_File_Drop (
     Window     : in out MDI_Child_Type;
     File_Names : in     Array_Of_File_Names
@@ -106,5 +108,8 @@ package AZip_GWin.MDI_Child is
     Window    : in out MDI_Child_Type;
     Can_Close :    out Boolean
   );
+
+  procedure Update_Common_Menus(Window : MDI_Child_Type;
+                                top_entry : GString:= "" );
 
 end AZip_GWin.MDI_Child;

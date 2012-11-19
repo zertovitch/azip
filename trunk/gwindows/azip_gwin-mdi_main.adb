@@ -131,6 +131,7 @@ package body AZip_GWin.MDI_Main is
       Update_Common_Menus(Window, To_GString_from_Unbounded(New_Window.File_Name));
       Load_archive_catalogue(New_Window.all);
       Finish_subwindow_opening(Window, New_Window.all);
+      New_Window.Focus;
     end;
   exception
 --    when E : TC.Input.Load_Error =>

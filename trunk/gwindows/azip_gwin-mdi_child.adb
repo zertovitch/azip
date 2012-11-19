@@ -24,7 +24,7 @@ package body AZip_GWin.MDI_Child is
 
   function S2G (Value : String) return GString renames To_GString_From_String;
   function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
-  function G2UG (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
+  function G2GU (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
 
   procedure Update_display(
     Window : in out MDI_Child_Type;
@@ -50,16 +50,23 @@ package body AZip_GWin.MDI_Child is
       is
         pragma Unreferenced (file_index);
         simple_name_idx: Positive:= name'First;
+        extension_idx: Positive:= name'Last + 1;
         R_mark: constant array (Boolean) of Character:= (' ', 'R');
       begin
         for i in name'Range loop
-          if name(i) ='/' or name(i)='\' then
-            -- directory separator, ok with Unicode UTF-8 names
-            simple_name_idx:= i + 1;
-          end if;
+          case name(i) is
+            when '/' | '\' =>
+              -- directory separator, ok with Unicode UTF-8 names
+              simple_name_idx:= i + 1;
+            when '.' =>
+              extension_idx:= i + 1;
+            when others =>
+              null;
+          end case;
         end loop;
         if simple_name_idx <= name'Last then -- skip directory entries
           Lst.Insert_Item(S2G(name(simple_name_idx..name'Last)), row);
+          Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, 1);
           begin
             Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
           exception
@@ -72,7 +79,7 @@ package body AZip_GWin.MDI_Child is
           Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
           Lst.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
           Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
-          Lst.Set_Sub_Item(S2G(name(name'First..simple_name_idx-2)), row, 9);
+          Lst.Set_Sub_Item(S2G(name(name'First..simple_name_idx - 1)), row, 9);
           row:= row + 1; -- more subtle with our sorting
         end if;
       end Insert_row;
@@ -267,7 +274,7 @@ package body AZip_GWin.MDI_Child is
         To_GString_From_Unbounded (New_File_Name) &
         " already exists. Replace ?",
         Yes_No_Box,
-        Exclamation_Icon
+        Question_Icon
       ) = No
       then
         return;
@@ -465,21 +472,63 @@ package body AZip_GWin.MDI_Child is
     Dock_Children (Window);
   end On_Size;
 
+  function Get_selected_entry_list(Window: MDI_Child_Type)
+  return Array_Of_File_Names
+  is
+    items: constant Natural:= Window.Directory_List.Item_Count;
+    names: Array_Of_File_Names(1..items);
+    j: Natural:= 0;
+  begin
+    for i in 0..items - 1 loop -- 0-based
+      if Window.Directory_List.Is_Selected(i) then
+        j:= j + 1;
+        names(j):= G2GU(
+          Window.Directory_List.Text(i, subitem => 9) & -- path
+          Window.Directory_List.Text(i, subitem => 0)   -- simple name
+          );
+      end if;
+    end loop;
+    return names(1..j);
+  end Get_selected_entry_list;
+
   procedure On_Extract(Window : in out MDI_Child_Type) is
     dir: constant GString:= Get_Directory(Window, "Extract to...");
+    sdir: constant String:= GWindows.GStrings.To_String(dir); -- !! lazy conversion
   begin
     if dir /= "" then
       Process_archive_GWin(
         Window         => Window,
         operation      => Extract,
-        file_names     => Empty_Array_Of_File_Names, -- !! only for whole archive !!
+        file_names     => Get_selected_entry_list(Window),
         name_match     => Exact,
         base_folder    => "",
         search_pattern => "",
-        output_folder  => GWindows.GStrings.To_String(dir) -- !! lazy conversion
+        output_folder  => sdir
       );
     end if;
   end On_Extract;
+
+  procedure On_Delete(Window : in out MDI_Child_Type) is
+  begin
+    if Message_Box(
+        Window,
+        "Delete",
+        "Do you want to remove the selected item from the archive ?",
+        Yes_No_Box,
+        Question_Icon)
+      = Yes
+    then
+      Process_archive_GWin(
+        Window         => Window,
+        operation      => Remove,
+        file_names     => Get_selected_entry_list(Window),
+        name_match     => Exact,
+        base_folder    => "",
+        search_pattern => "",
+        output_folder  => ""
+      );
+    end if;
+  end On_Delete;
 
   procedure On_Add_files(Window : in out MDI_Child_Type) is
     Success: Boolean;
@@ -511,8 +560,8 @@ package body AZip_GWin.MDI_Child is
     procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
       pragma Warnings(off, dummy);
     begin
-      Window.Name_search:= G2UG(box.Name_to_be_searched.Text);
-      Window.Content_search:= G2UG(box.Content_to_be_searched.Text);
+      Window.Name_search:= G2GU(box.Name_to_be_searched.Text);
+      Window.Content_search:= G2GU(box.Content_to_be_searched.Text);
     end Get_Data;
     --
   begin
@@ -534,6 +583,14 @@ package body AZip_GWin.MDI_Child is
     end if;
   end On_Find;
 
+  procedure Full_Select(Window: in out MDI_Child_Type; as: Boolean) is
+  begin
+    for i in 1..Window.Directory_List.Item_Count loop
+      Window.Directory_List.Selected(i-1, as); -- Item seems 0-based...
+    end loop;
+    Window.Directory_List.Focus;
+  end Full_Select;
+
   procedure On_Menu_Select (
         Window : in out MDI_Child_Type;
         Item   : in     Integer        ) is
@@ -543,10 +600,16 @@ package body AZip_GWin.MDI_Child is
         Window.On_Save_As;
       when IDM_CLOSE_ARCHIVE =>
         Window.Close;
+      when IDM_Select_all =>
+        Full_Select(Window, True);
+      when IDM_Unselect_all =>
+        Full_Select(Window, False);
       when IDM_EXTRACT =>
         On_Extract(Window);
       when IDM_ADD_FILES =>
         On_Add_files(Window);
+      when IDM_Delete_selected =>
+        On_Delete(Window);
       when IDM_FIND_IN_ARCHIVE =>
         On_Find(Window);
       when IDM_TEST_ARCHIVE =>
@@ -579,7 +642,7 @@ package body AZip_GWin.MDI_Child is
                 "Do you want to save the changes you made to " &
                 To_GString_from_Unbounded(Window.Short_Name) & "' ?",
                 Yes_No_Cancel_Box,
-                Exclamation_Icon)
+                Question_Icon)
         is
           when Yes    => On_Save(Window);
                          exit when Is_file_saved(Window);

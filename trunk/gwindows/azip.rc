@@ -44,7 +44,7 @@ Menu_MDI_Child MENU
         MENUITEM "&Unselect all\tCtrl+U", IDM_Unselect_all
         MENUITEM "&Extract...", IDM_EXTRACT
         MENUITEM SEPARATOR
-        MENUITEM "Delete entries\t- / Del", IDM_Delete_selected
+        MENUITEM "Delete entries\tDel / -", IDM_Delete_selected
         MENUITEM "A&dd files...\t+", IDM_ADD_FILES
     }
     POPUP "&Tools"
@@ -60,7 +60,7 @@ Menu_MDI_Child MENU
     POPUP "&View"
     {
         MENUITEM "&Flat view", IDM__FLAT_VIEW
-        MENUITEM "&Tree view", IDM__TREE_VIEW
+        MENUITEM "&Tree view", IDM__TREE_VIEW, GRAYED
     }
     POPUP "&Window"
     {

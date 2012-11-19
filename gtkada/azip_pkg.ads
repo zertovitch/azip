@@ -49,7 +49,7 @@ package Azip_Pkg is
       Toolbar1 : Gtk_Toolbar;
       Scrolledwindow1 : Gtk_Scrolled_Window;
       Treeview1 : Gtk_Tree_View;
-      Statusbar1 : Gtk_Statusbar;
+      Statusbar1 : Gtk_Status_Bar;
    end record;
    type Azip_Access is access all Azip_Record'Class;
 

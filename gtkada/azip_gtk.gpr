@@ -1,22 +1,23 @@
 -- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
--- for the project AZip within Zip-Ada ( http://sf.net/projects/unzip-ada/ )
--- Build me with "gnatmake -P azip", or open me with GPS
+-- for the AZip project ( http://azip.sf.net/ ), version using GtkAda.
+-- Build me with "gnatmake -P azip_gtk", or open me with GPS
 --
 
-with "../../gtkada/lib/gnat/gtkada";
-with "../zipada";
+with "../../GtkAda/gtkada";
+-- svn checkout http://svn.eu.adacore.com/anonsvn/Dev/trunk/GtkAda
 
-project AZip is
+project AZip_Gtk is
 
    type AZBuild_Mode_Type is ("Debug", "Fast");
    AZBuild_Mode : AZBuild_Mode_Type := external ("Build_Mode", "Fast");
 
    for Main use ("azip.adb");
+   for Source_Dirs use ("../gui_common", "../zip_lib", ".");
    for Exec_Dir use ".";
 
    case AZBuild_Mode is
-      when "Debug" => for Object_Dir use "../obj_dbg";
-      when "Fast" =>  for Object_Dir use "../obj_opt";
+      when "Debug" => for Object_Dir use "../obj/debug";
+      when "Fast" =>  for Object_Dir use "../obj/fast";
    end case;
 
    package Compiler is
@@ -32,5 +33,5 @@ project AZip is
       for Default_Switches ("ada") use ("-static");
    end Binder;
 
-end AZip;
+end AZip_Gtk;
 

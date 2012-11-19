@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/18   20:53:18
+-- Transcription time: 2012/11/20   00:09:48
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -53,7 +53,7 @@ package body azip_Resource_GUI is
     Append_Item(Menu.Popup_0003, "&Unselect all" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+U", IDM_Unselect_all);
     Append_Item(Menu.Popup_0003, "&Extract...", IDM_EXTRACT);
     Append_Separator(Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "Delete entries" & To_GString_from_String((1=>ASCII.HT)) & "- / Del", IDM_Delete_selected);
+    Append_Item(Menu.Popup_0003, "Delete entries" & To_GString_from_String((1=>ASCII.HT)) & "Del / -", IDM_Delete_selected);
     Append_Item(Menu.Popup_0003, "A&dd files..." & To_GString_from_String((1=>ASCII.HT)) & "+", IDM_ADD_FILES);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Tools", Menu.Popup_0004);
@@ -72,6 +72,7 @@ package body azip_Resource_GUI is
     Append_Menu(Menu.Main, "&View", Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "&Flat view", IDM_FLAT_VIEW);
     Append_Item(Menu.Popup_0005, "&Tree view", IDM_TREE_VIEW);
+    State(Menu.Popup_0005, Command, IDM_TREE_VIEW, Grayed);
     Menu.Popup_0006:= Create_Popup;
     Append_Menu(Menu.Main, "&Window", Menu.Popup_0006);
     Append_Item(Menu.Popup_0006, "&Cascade", IDM_WINDOW_CASCADE);

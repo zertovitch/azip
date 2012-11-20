@@ -77,6 +77,11 @@ package AZip_GWin.MDI_Child is
 
   procedure On_Save_As (Window : in out MDI_Child_Type);
 
+  procedure Go_for_adding (
+    Window     : in out MDI_Child_Type;
+    File_Names : in     Array_Of_File_Names
+  );
+
   overriding procedure On_File_Drop (
     Window     : in out MDI_Child_Type;
     File_Names : in     Array_Of_File_Names

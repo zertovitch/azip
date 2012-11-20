@@ -269,7 +269,7 @@ package body AZip_GWin.MDI_Main is
   begin
     Open_File (Window, "Open",
       File_Name,
-      ((To_GString_Unbounded ("Zip archive (*.zip)"),
+      ((To_GString_Unbounded ("Zip archives (*.zip)"),
           To_GString_Unbounded ("*.zip" )),
         (To_GString_Unbounded ("All files (*.*)"),
           To_GString_Unbounded ("*.*"))),
@@ -521,9 +521,11 @@ package body AZip_GWin.MDI_Main is
     if All_Zip_files(File_Names) then
       if Message_Box(
         Window,
-        "Files are Zip archives",
-        S2G("Should AZip open these Zip archives individually ?" & ASCII.LF &
-        "If not, they will be added as files into an archive."),
+        "File(s) is/are Zip archive(s)",
+        S2G(
+        "Should AZip open this/these Zip archive(s)s individually," & ASCII.LF &
+        "in (a) separate window(s) ?" & ASCII.LF &
+        "If not, it/they will be added as (a) file(s) into an archive."),
         Yes_No_Box,
         Question_Icon
       )

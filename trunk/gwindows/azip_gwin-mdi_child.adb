@@ -18,8 +18,6 @@ with Ada.Directories;
 with Ada_Directories_Extensions;
 with Ada.Environment_Variables;         use Ada.Environment_Variables;
 with Ada.IO_Exceptions;
-with Ada.Numerics.Float_Random;
--- with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 with Interfaces;
 
@@ -68,24 +66,30 @@ package body AZip_GWin.MDI_Child is
               null;
           end case;
         end loop;
-        if simple_name_idx <= name'Last then -- skip directory entries
-          Lst.Insert_Item(S2G(name(simple_name_idx..name'Last)), row);
-          Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, 1);
-          begin
-            Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
-          exception
-            when Zip_Streams.Calendar.Time_Error =>
-              Lst.Set_Sub_Item("(invalid)", row, 2);
-          end;
-          Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, 3);
-          Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, 4);
-          Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, 5);
-          Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
-          Lst.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
-          Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
-          Lst.Set_Sub_Item(S2G(name(name'First..simple_name_idx - 1)), row, 9);
-          row:= row + 1; -- more subtle with our sorting
+        if simple_name_idx > name'Last then -- skip directory entries
+          return;
         end if;
+        if name'Length < prefix_path'Length or else
+          prefix_path /=  name(name'First..name'First+prefix_path'Length-1)
+        then
+          return;
+        end if;
+        Lst.Insert_Item(S2G(name(simple_name_idx..name'Last)), row);
+        Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, 1);
+        begin
+          Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
+        exception
+          when Zip_Streams.Calendar.Time_Error =>
+            Lst.Set_Sub_Item("(invalid)", row, 2);
+        end;
+        Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, 3);
+        Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, 4);
+        Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, 5);
+        Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
+        Lst.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
+        Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
+        Lst.Set_Sub_Item(S2G(name(name'First..simple_name_idx - 1)), row, 9);
+        row:= row + 1; -- more subtle with our sorting
       end Insert_row;
 
       procedure Traverse is new Zip.Traverse_verbose(Insert_row);
@@ -399,7 +403,7 @@ package body AZip_GWin.MDI_Child is
         Message_Box(
           Window,
           "Processing failed",
-          "Archive cannot be modified - probably read-only",
+          "Archive cannot be modified - probably it is read-only.",
           OK_Box,
           Exclamation_Icon
         );
@@ -437,8 +441,8 @@ package body AZip_GWin.MDI_Child is
     elsif Is_Loaded(Window.zif) then
       if Message_Box(
         Window,
-        "Files dropped",
-        "Add dropped files to archive """ & GU2G(Window.Short_Name) & """ ?",
+        "File(s) dropped",
+        "Add dropped file(s) to archive """ & GU2G(Window.Short_Name) & """ ?",
         Yes_No_Box,
         Question_Icon) = Yes
       then
@@ -456,8 +460,8 @@ package body AZip_GWin.MDI_Child is
     else
       if Message_Box(
         Window,
-        "Files dropped",
-        "Add dropped files to new archive (" & GU2G(Window.Short_Name) & ") ?",
+        "File(s) dropped",
+        "Add dropped file(s) to new archive (" & GU2G(Window.Short_Name) & ") ?",
         Yes_No_Box,
         Question_Icon) = Yes
       then

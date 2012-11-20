@@ -82,14 +82,15 @@ package body AZip_Common is
   ------------------------------------------------
 
   procedure Process_archive(
-    zif            :        Zip.Zip_Info;
+    zif            :        Zip.Zip_Info; -- preserved, even after modifying operation
     operation      :        Archive_Operation;
     entry_name     : in out Name_list;
     name_match     :        Name_matching_mode;
     base_folder    :        String;
     search_pattern :        Wide_String;
     output_folder  :        String;
-    Set_Time_Stamp :        UnZip.Set_Time_Stamp_proc
+    Set_Time_Stamp :        UnZip.Set_Time_Stamp_proc;
+    new_temp_name  :        String
   )
   is
     new_zip: Zip.Create.Zip_Create_info;
@@ -310,10 +311,6 @@ package body AZip_Common is
             if idx > 0 then
               entry_name(idx).match:= 1;
             end if;
-            null; -- !!
-            if idx > 0 then
-              entry_name(idx).match:= 1;
-            end if;
           when Search =>
             if search_pattern = "" then -- just mark entries with matching names
               if idx > 0 then
@@ -326,7 +323,7 @@ package body AZip_Common is
         end case;
       else -- archive entry name is not matched by a file name in the list
         case operation is
-          when Add | Remove =>
+          when Modifying_Operation =>
             current_operation:= Copy;
             current_entry_name:= U(short_Name);
             is_unicode:= unicode_file_name;
@@ -345,6 +342,9 @@ package body AZip_Common is
   procedure Traverse_archive is new Zip.Traverse_verbose(Action);
 
   begin -- Process_archive
+    if not Zip.Is_loaded(zif) then
+      return; -- we have an "null" archive (not even a file with 0 entries)
+    end if;
     for i in entry_name'Range loop
       entry_name(i).match:= 0;
     end loop;
@@ -355,18 +355,22 @@ package body AZip_Common is
         total_entries:= Zip.Entries(zif);
     end case;
     case operation is
-      when Add | Remove =>
+      when Modifying_Operation =>
         Zip_Streams.Set_Name(old_fzs, Zip.Zip_Name(zif));
         Zip_Streams.Open(old_fzs, Ada.Streams.Stream_IO.In_File);
-        Create(new_zip, new_fzs'Unchecked_Access, "!!.zip");
+        Create(new_zip, new_fzs'Unchecked_Access, new_temp_name);
       when Read_Only_Operation =>
         null;
         -- Read-only operation, doesn't need a new archive file;
         -- current archive opened only at entry testing / extracting
     end case;
-    -- Main job:
+    --------------------------------
+    -- The main job is done here: --
+    --------------------------------
     Traverse_archive(zif);
-    -- Almost done...
+    --
+    -- Almost done, we only need to process new entries
+    --
     case operation is
       when Add =>
         for i in entry_name'Range loop -- !! use hashed maps either
@@ -402,10 +406,11 @@ package body AZip_Common is
         -- Nothing to do after archive traversal.
     end case;
     case operation is
-      when Add | Remove =>
+      when Modifying_Operation =>
         Zip_Streams.Close(old_fzs);
         Finish(new_zip);
-        -- !! replace old archive file by new one
+        Delete_File(Zip.Zip_Name(zif));
+        Rename(new_temp_name, Zip.Zip_Name(zif));
       when Read_Only_Operation =>
         null;
     end case;

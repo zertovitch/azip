@@ -14,11 +14,14 @@ with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Types;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
-with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
-with Interfaces;
-
 with Ada.Directories;
 with Ada_Directories_Extensions;
+with Ada.Environment_Variables;         use Ada.Environment_Variables;
+with Ada.IO_Exceptions;
+with Ada.Numerics.Float_Random;
+-- with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
+with Interfaces;
 
 package body AZip_GWin.MDI_Child is
 
@@ -56,9 +59,10 @@ package body AZip_GWin.MDI_Child is
         for i in name'Range loop
           case name(i) is
             when '/' | '\' =>
-              -- directory separator, ok with Unicode UTF-8 names
+              -- Directory separator, ok with Unicode UTF-8 names
               simple_name_idx:= i + 1;
             when '.' =>
+              -- Last dot is the extension separator
               extension_idx:= i + 1;
             when others =>
               null;
@@ -225,6 +229,7 @@ package body AZip_GWin.MDI_Child is
     Window.Status_deamon.Start;
     Update_display(Window, first_display);
     Window.Accept_File_Drag_And_Drop;
+    Ada.Numerics.Float_Random.Reset(Window.Temp_name_gen);
   end On_Create;
 
   procedure On_Save (Window : in out MDI_Child_Type) is
@@ -264,14 +269,14 @@ package body AZip_GWin.MDI_Child is
     if not Success then
       return;
     end if;
-    if Exists(GWindows.GStrings.To_String (
+    if Zip.Exists(GWindows.GStrings.To_String (
       To_GString_From_Unbounded (New_File_Name))
     ) -- !! conv.
     then
       if Message_Box (
         Window,
         "Save as",
-        To_GString_From_Unbounded (New_File_Name) &
+        "The file " & To_GString_From_Unbounded (New_File_Name) &
         " already exists. Replace ?",
         Yes_No_Box,
         Question_Icon
@@ -292,7 +297,7 @@ package body AZip_GWin.MDI_Child is
       when others =>
         Message_Box(
           Window,
-          "Save as failed",
+          "'Save as' failed",
           "Copy of archive under new name failed.",
           OK_Box,
           Exclamation_Icon
@@ -313,7 +318,8 @@ package body AZip_GWin.MDI_Child is
     name_match     : Name_matching_mode;
     base_folder    : String;
     search_pattern : GString;
-    output_folder  : String
+    output_folder  : String;
+    new_temp_name  : String
   )
   is
     az_names: Name_list(File_Names'Range);
@@ -372,19 +378,51 @@ package body AZip_GWin.MDI_Child is
     box.Center;
     box.Show;
     Window.Parent.Disable;
-    Archive_processing(
-      zif            => Window.zif,
-      operation      => operation,
-      entry_name     => az_names,
-      name_match     => name_match,
-      base_folder    => base_folder,
-      search_pattern => search_pattern,
-      output_folder  => output_folder,
-      Set_Time_Stamp => Ada_Directories_Extensions.Set_Modification_Time'Access
-    );
-    -- !! after processing we should do something with the counts -> Results col.
+    begin
+      Archive_processing(
+        zif            => Window.zif,
+        operation      => operation,
+        entry_name     => az_names,
+        name_match     => name_match,
+        base_folder    => base_folder,
+        search_pattern => search_pattern,
+        output_folder  => output_folder,
+        Set_Time_Stamp => Ada_Directories_Extensions.Set_Modification_Time'Access,
+        new_temp_name  => new_temp_name
+      );
+      -- !! after processing we should do something with the counts -> Results col.
+      if operation in Modifying_Operation then
+        Window.Load_archive_catalogue;
+      end if;
+    exception
+      when Ada.IO_Exceptions.Use_Error =>
+        Message_Box(
+          Window,
+          "Processing failed",
+          "Archive cannot be modified - probably read-only",
+          OK_Box,
+          Exclamation_Icon
+        );
+    end;
     Window.Parent.Enable;
   end Process_archive_GWin;
+
+  function Temp_AZip_name(Window: MDI_Child_Type) return String is
+  begin
+    loop
+      declare
+        num0: constant String:=
+          Float'Image(Ada.Numerics.Float_Random.Random(Window.Temp_name_gen));
+        num: constant String:= num0(num0'First+1 .. num0'Last);
+        -- ^ Skip the @#*% leading space
+        test_name: constant String:= Value("TEMP") & "\AZip_Temp_" & num & ".zip";
+      begin
+        if not Zip.Exists(test_name) then
+          return test_name;
+        end if;
+      end;
+    end loop;
+  end Temp_AZip_name;
 
   procedure On_File_Drop (Window     : in out MDI_Child_Type;
                           File_Names : in     Array_Of_File_Names) is
@@ -411,7 +449,8 @@ package body AZip_GWin.MDI_Child is
           name_match     => Exact,
           base_folder    => "",           -- !! only for flat view
           search_pattern => "",
-          output_folder  => ""
+          output_folder  => "",
+          new_temp_name  => Temp_AZip_name(Window)
         );
       end if;
     else
@@ -503,17 +542,21 @@ package body AZip_GWin.MDI_Child is
         name_match     => Exact,
         base_folder    => "",
         search_pattern => "",
-        output_folder  => sdir
+        output_folder  => sdir,
+        new_temp_name  => ""
       );
     end if;
   end On_Extract;
 
   procedure On_Delete(Window : in out MDI_Child_Type) is
   begin
+    if Window.Directory_List.Selected_Item_Count = 0 then
+      return;
+    end if;
     if Message_Box(
         Window,
         "Delete",
-        "Do you want to remove the selected item from the archive ?",
+        "Do you want to remove the selected item(s) from the archive ?",
         Yes_No_Box,
         Question_Icon)
       = Yes
@@ -525,7 +568,8 @@ package body AZip_GWin.MDI_Child is
         name_match     => Exact,
         base_folder    => "",
         search_pattern => "",
-        output_folder  => ""
+        output_folder  => "",
+        new_temp_name  => Temp_AZip_name(Window)
       );
     end if;
   end On_Delete;
@@ -549,7 +593,8 @@ package body AZip_GWin.MDI_Child is
         name_match     => Exact,
         base_folder    => "",
         search_pattern => "",
-        output_folder  => ""
+        output_folder  => "",
+        new_temp_name  => Temp_AZip_name(Window)
       );
     end if;
   end On_Add_files;
@@ -578,7 +623,8 @@ package body AZip_GWin.MDI_Child is
         name_match     => Substring,
         base_folder    => "",
         search_pattern => GU2G(Window.Content_search),
-        output_folder  => ""
+        output_folder  => "",
+        new_temp_name  => ""
       );
     end if;
   end On_Find;
@@ -590,6 +636,22 @@ package body AZip_GWin.MDI_Child is
     end loop;
     Window.Directory_List.Focus;
   end Full_Select;
+
+  procedure On_Test(Window : in out MDI_Child_Type) is
+  begin
+    Process_archive_GWin(
+      Window         => Window,
+      operation      => Test,
+      file_names     => Empty_Array_Of_File_Names,
+      name_match     => Exact,
+      base_folder    => "",
+      search_pattern => "",
+      output_folder  => "",
+      new_temp_name  => ""
+    );
+    -- !! Message_Box: say something if failure
+    -- !! Display results (0 -> OK -> green; 1 -> KO -> red)
+  end On_Test;
 
   procedure On_Menu_Select (
         Window : in out MDI_Child_Type;
@@ -613,15 +675,7 @@ package body AZip_GWin.MDI_Child is
       when IDM_FIND_IN_ARCHIVE =>
         On_Find(Window);
       when IDM_TEST_ARCHIVE =>
-        Process_archive_GWin(
-          Window         => Window,
-          operation      => Test,
-          file_names     => Empty_Array_Of_File_Names,
-          name_match     => Exact,
-          base_folder    => "",
-          search_pattern => "",
-          output_folder  => ""
-        );
+        On_Test(Window);
       when others =>
         On_Menu_Select (Window_Type (Window), Item);
     end case;

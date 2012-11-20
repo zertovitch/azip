@@ -9,6 +9,7 @@ with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 
+with Ada.Numerics.Float_Random;
 
 package AZip_GWin.MDI_Child is
 
@@ -63,6 +64,7 @@ package AZip_GWin.MDI_Child is
         Status_Bar       : MDI_Child_Status_Bar_Type;
         Name_search      : GString_Unbounded;
         Content_search   : GString_Unbounded;
+        Temp_name_gen    : Ada.Numerics.Float_Random.Generator;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);

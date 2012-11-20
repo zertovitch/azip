@@ -43,6 +43,9 @@ package AZip_Common is
 
   type Archive_Operation is (Add, Remove, Test, Extract, Search);
 
+  subtype Modifying_Operation is Archive_Operation range Add .. Remove;
+  subtype Read_Only_Operation is Archive_Operation range Test .. Search;
+
   type Entry_Operation is (
     -- Operations related to "Add"
     Append,  -- file is not in original archive and has to be added to new one
@@ -56,8 +59,6 @@ package AZip_Common is
     Extract,
     Search
   );
-
-  subtype Read_Only_Operation is Archive_Operation range Test .. Search;
 
   type Zip_entry_name is record
     name : Unbounded_String;
@@ -80,14 +81,15 @@ package AZip_Common is
       operation             : Entry_Operation
     );
   procedure Process_archive(
-    zif            :        Zip.Zip_Info;
+    zif            :        Zip.Zip_Info; -- preserved, even after modifying operation
     operation      :        Archive_Operation;
     entry_name     : in out Name_list;
     name_match     :        Name_matching_mode;
     base_folder    :        String;
     search_pattern :        Wide_String;
     output_folder  :        String;
-    Set_Time_Stamp :        UnZip.Set_Time_Stamp_proc
+    Set_Time_Stamp :        UnZip.Set_Time_Stamp_proc;
+    new_temp_name  :        String
   );
 
   ---------------------

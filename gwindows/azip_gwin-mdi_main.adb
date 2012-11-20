@@ -221,9 +221,12 @@ package body AZip_GWin.MDI_Main is
 
   Current_MDI_Window : Natural := 0;
 
-  procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean)
+  procedure On_File_New (
+    Window          : in out MDI_Main_Type;
+    extra_first_doc : Boolean;
+    New_Window      : in     MDI_Child_Access
+  )
   is
-    New_Window : constant MDI_Child_Access := new MDI_Child_Type;
 
     function Suffix return GWindows.Gstring is
     begin
@@ -258,6 +261,12 @@ package body AZip_GWin.MDI_Main is
     Finish_subwindow_opening(Window, New_Window.all);
   end On_File_New;
 
+  procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean) is
+    New_Window : constant MDI_Child_Access := new MDI_Child_Type;
+  begin
+    On_File_New(Window, extra_first_doc, New_window);
+  end On_File_New;
+
   ------------------
   -- On_File_Open --
   ------------------
@@ -284,7 +293,9 @@ package body AZip_GWin.MDI_Main is
 
   procedure On_File_Drop (Window     : in out MDI_Main_Type;
                           File_Names : in     Array_Of_File_Names) is
+    New_Window : constant MDI_Child_Access := new MDI_Child_Type;
   begin
+    Window.Focus;
     if Confirm_archives_if_all_Zip_files(Window, File_Names) then
       for i in File_Names'Range loop
         Open_Child_Window_And_Load(
@@ -299,7 +310,9 @@ package body AZip_GWin.MDI_Main is
       Yes_No_Box,
       Question_Icon) = Yes
     then
-      null; -- !!
+      On_File_New (Window, extra_first_doc => False, New_Window => New_Window);
+      New_Window.On_Save_As;
+      New_Window.Go_for_adding(File_Names);
     end if;
   end On_File_Drop;
 

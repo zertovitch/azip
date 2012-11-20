@@ -17,7 +17,10 @@ with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;
 with Ada_Directories_Extensions;
 with Ada.Environment_Variables;         use Ada.Environment_Variables;
+with Ada.Exceptions;
 with Ada.IO_Exceptions;
+with Ada.Sequential_IO;
+with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 with Interfaces;
 
@@ -253,9 +256,16 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Save_As (Window : in out MDI_Child_Type)
   is
-     New_File_Name : GWindows.GString_Unbounded;
-     File_Title    : GWindows.GString_Unbounded;
-     Success       : Boolean;
+    New_File_Name : GWindows.GString_Unbounded;
+    File_Title    : GWindows.GString_Unbounded;
+    Success       : Boolean;
+    --
+    -- If needed, an empty Zip file is created with the contents below.
+    --
+    package CIO is new Ada.Sequential_IO(Character);
+    use CIO;
+    empty_zip: File_Type;
+    contents: constant String:= "PK" & ASCII.ENQ & ASCII.ACK & 18 * ASCII.NUL;
   begin
     New_File_Name := Window.File_Name;
     Save_File (
@@ -290,24 +300,33 @@ package body AZip_GWin.MDI_Child is
       end if;
     end if;
 
-    begin
-      Ada.Directories.Copy_File(
-        GWindows.GStrings.To_String (
-          To_GString_From_Unbounded (Window.File_Name)),
-        GWindows.GStrings.To_String (
-          To_GString_From_Unbounded (New_File_Name))
-      );
-    exception
-      when others =>
-        Message_Box(
-          Window,
-          "'Save as' failed",
-          "Copy of archive under new name failed.",
-          OK_Box,
-          Exclamation_Icon
+    if Is_loaded(Window.zif) then
+      begin
+        Ada.Directories.Copy_File(
+          GWindows.GStrings.To_String (
+            To_GString_From_Unbounded (Window.File_Name)),
+          GWindows.GStrings.To_String (
+            To_GString_From_Unbounded (New_File_Name))
         );
-        return;
-    end;
+      exception
+        when others =>
+          Message_Box(
+            Window,
+            "'Save as' failed",
+            "Copy of archive under new name failed.",
+            OK_Box,
+            Exclamation_Icon
+          );
+          return;
+      end;
+    else -- we don't have a file yet
+      Create(empty_zip, Out_File, GWindows.GStrings.To_String (
+               To_GString_From_Unbounded (New_File_Name)));
+      for i in contents'Range loop
+        Write(empty_zip, contents(i));
+      end loop;
+      Close(empty_zip);
+    end if;
     Window.File_Name := New_File_Name;
     Text (Window, To_GString_From_Unbounded (File_Title));
     Window.Short_Name:= File_Title;
@@ -398,12 +417,18 @@ package body AZip_GWin.MDI_Child is
       if operation in Modifying_Operation then
         Window.Load_archive_catalogue;
       end if;
-    exception
-      when Ada.IO_Exceptions.Use_Error =>
-        Message_Box(
+  exception
+    when E : Ada.IO_Exceptions.Use_Error =>
+      Message_Box(
           Window,
           "Processing failed",
-          "Archive cannot be modified - probably it is read-only.",
+          "Archive cannot be modified - probably it is read-only." &
+          S2G(
+            ASCII.LF & "-----" & ASCII.LF &
+            Ada.Exceptions.Exception_Name (E) & ASCII.LF &
+            Ada.Exceptions.Exception_Message (E)
+          )
+          ,
           OK_Box,
           Exclamation_Icon
         );
@@ -421,16 +446,32 @@ package body AZip_GWin.MDI_Child is
         -- ^ Skip the @#*% leading space
         test_name: constant String:= Value("TEMP") & "\AZip_Temp_" & num & ".zip";
       begin
-        if not Zip.Exists(test_name) then
+        if not Ada.Directories.Exists(test_name) then
           return test_name;
         end if;
       end;
     end loop;
   end Temp_AZip_name;
 
+  procedure Go_for_adding (Window     : in out MDI_Child_Type;
+                           File_Names : in     Array_Of_File_Names) is
+  begin
+    Process_archive_GWin(
+      Window         => Window,
+      operation      => Add,
+      file_names     => File_Names,
+      name_match     => Exact,
+      base_folder    => "",           -- !! only for flat view
+      search_pattern => "",
+      output_folder  => "",
+      new_temp_name  => Temp_AZip_name(Window)
+    );
+  end Go_for_adding;
+
   procedure On_File_Drop (Window     : in out MDI_Child_Type;
                           File_Names : in     Array_Of_File_Names) is
   begin
+    Window.Focus;
     if Confirm_archives_if_all_Zip_files(Window, File_Names) then
       for i in File_Names'Range loop
         Open_Child_Window_And_Load(
@@ -446,26 +487,24 @@ package body AZip_GWin.MDI_Child is
         Yes_No_Box,
         Question_Icon) = Yes
       then
-        Process_archive_GWin(
-          Window         => Window,
-          operation      => Add,
-          file_names     => File_Names,
-          name_match     => Exact,
-          base_folder    => "",           -- !! only for flat view
-          search_pattern => "",
-          output_folder  => "",
-          new_temp_name  => Temp_AZip_name(Window)
-        );
+        Window.Go_for_adding(File_Names);
       end if;
     else
       if Message_Box(
         Window,
         "File(s) dropped",
-        "Add dropped file(s) to new archive (" & GU2G(Window.Short_Name) & ") ?",
+          "Add dropped file(s) to new archive (" &
+          GU2G(Window.Short_Name) &
+          ") ?" &
+          S2G("" & ASCII.LF) &
+          "You'll be asked first under which name the archive will be created.",
         Yes_No_Box,
         Question_Icon) = Yes
       then
-        null; -- !!
+        Window.On_Save_As;
+        if Is_Loaded(Window.zif) then
+          Window.Go_for_adding(File_Names);
+        end if;
       end if;
     end if;
   end On_File_Drop;
@@ -588,18 +627,22 @@ package body AZip_GWin.MDI_Child is
              To_GString_Unbounded ("*.*"))),
       "",
       File_Title,
-      Success);
+      Success
+    );
     if Success then
-      Process_archive_GWin(
-        Window         => Window,
-        operation      => Add,
-        file_names     => (1 => File_Name), -- !! ok for 1 only
-        name_match     => Exact,
-        base_folder    => "",
-        search_pattern => "",
-        output_folder  => "",
-        new_temp_name  => Temp_AZip_name(Window)
-      );
+      if not Is_Loaded(Window.zif) then
+        Message_Box(
+          Window,
+          "New archive",
+          "You'll be asked under which name the archive will be created.",
+          OK_Box,
+          Information_Icon
+        );
+        Window.On_Save_As;
+      end if;
+      if Is_Loaded(Window.zif) then -- We test again (in case Save As failed)
+        Window.Go_for_adding((1 => File_Name)); -- !! ok for 1 only
+      end if;
     end if;
   end On_Add_files;
 

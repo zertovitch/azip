@@ -22,6 +22,7 @@ with Ada.IO_Exceptions;
 with Ada.Sequential_IO;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
+with Ada.Unchecked_Deallocation;
 with Interfaces;
 
 package body AZip_GWin.MDI_Child is
@@ -619,10 +620,17 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Add_files(Window : in out MDI_Child_Type) is
     Success: Boolean;
-    File_Name, File_Title : GString_Unbounded;
+    File_Title : GString_Unbounded;
+    File_Names: Array_Of_File_Names_Access;
+    procedure Dispose is new Ada.Unchecked_Deallocation(
+      Array_Of_File_Names,
+      Array_Of_File_Names_Access
+    );
   begin
-    Open_File (Window, "Add files to archive...",
-      File_Name,
+    Open_Files (
+      Window,
+      "Add files to archive...",
+      File_Names,
        ( 1=>(To_GString_Unbounded ("All files (*.*)"),
              To_GString_Unbounded ("*.*"))),
       "",
@@ -641,7 +649,8 @@ package body AZip_GWin.MDI_Child is
         Window.On_Save_As;
       end if;
       if Is_Loaded(Window.zif) then -- We test again (in case Save As failed)
-        Window.Go_for_adding((1 => File_Name)); -- !! ok for 1 only
+        Window.Go_for_adding(File_Names.all);
+        Dispose(File_Names);
       end if;
     end if;
   end On_Add_files;

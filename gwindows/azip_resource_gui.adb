@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/21   10:16:06
+-- Transcription time: 2012/11/21   16:59:32
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 26-Aug-2012
+-- RC Grammar version: 21-Nov-2012
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -123,6 +123,20 @@ package body azip_Resource_GUI is
 
   -- Dialog at resource line 125
 
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out About_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
@@ -177,29 +191,20 @@ package body azip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  103, 190, 50, 14, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDOK, Window, "Close", x,y,w,h, ID => IDOK);
-    Create( Window.IDOK_permanent, Window, "Close", x,y,w,h, ID => IDOK);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.IDOK_permanent);
-    else -- hide the closing button
-      Hide(Window.IDOK);
-    end if;
-    Dlg_to_Scn(  47, 10, 165, 8, x,y,w,h);
+    Dlg_to_Scn(  5, 12, 65, 65, x,y,w,h);
+    Create( Window.Static_0001, Window, Num_resource(AZip_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  76, 10, 165, 8, x,y,w,h);
     Create_label( Window, "AZip - a portable Zip user interface", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  47, 25, 151, 8, x,y,w,h);
+    Dlg_to_Scn(  76, 25, 151, 8, x,y,w,h);
     Create_label( Window, "Copyright © Gautier de Montmollin 2012", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  47, 40, 100, 8, x,y,w,h);
+    Dlg_to_Scn(  76, 40, 100, 8, x,y,w,h);
     Create_label( Window, "MIT Open Source License", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  10, 66, 30, 8, x,y,w,h);
+    Dlg_to_Scn(  10, 70, 30, 8, x,y,w,h);
     Create_label( Window, "Internet:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  57, 66, 132, 8, x,y,w,h);
+    Dlg_to_Scn(  57, 70, 132, 8, x,y,w,h);
     Create( Window.AZip_URL, Window, "http://sf.net/projects/azip", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => AZip_URL);
     Dlg_to_Scn(  5, 105, 247, 81, x,y,w,h);
-    Create( Window.Static_0005, Window, "Software made with the following free, open source components:", x,y,w,h);
+    Create( Window.Static_0006, Window, "Software made with the following free, open source components:", x,y,w,h);
     Dlg_to_Scn(  23, 119, 100, 8, x,y,w,h);
     Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAT_URL);
     Dlg_to_Scn(  133, 119, 113, 8, x,y,w,h);
@@ -212,10 +217,49 @@ package body azip_Resource_GUI is
     Create( Window.ZipAda_URL, Window, "Zip-Ada", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ZipAda_URL);
     Dlg_to_Scn(  133, 164, 113, 8, x,y,w,h);
     Create( Window.ZipAda_Version, Window, "ZA_Version", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ZipAda_Version);
+    Dlg_to_Scn(  103, 190, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDOK, Window, "Close", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "Close", x,y,w,h, ID => IDOK);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDOK_permanent);
+    else -- hide the closing button
+      Hide(Window.IDOK);
+    end if;
+    Dlg_to_Scn(  5, 190, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.Credits_button, Window, "Credits", x,y,w,h, ID => Credits_button);
+    Create( Window.Credits_button_permanent, Window, "Credits", x,y,w,h, ID => Credits_button);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.Credits_button_permanent);
+    else -- hide the closing button
+      Hide(Window.Credits_button);
+    end if;
+    Enabled(Window.Credits_button_permanent, False);
+    Enabled(Window.Credits_button, False);
+    Disable(Window.Credits_button_permanent);
   end Create_Contents; -- About_box_Type
 
 
-  -- Dialog at resource line 148
+  -- Dialog at resource line 150
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out Find_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -304,14 +348,28 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Find_box_Type
 
 
-  -- Dialog at resource line 164
+  -- Dialog at resource line 166
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out Progress_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Progress_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "AZip is busy";
+      Title       : in     GString := "AZip is busy.";
       Left        : in     Integer := Use_Default; -- Default = as designed
       Top         : in     Integer := Use_Default; -- Default = as designed
       Width       : in     Integer := Use_Default; -- Default = as designed
@@ -423,10 +481,10 @@ package body azip_Resource_GUI is
     GWindows.Base.Set_Font (Window, Common_Fonts.GUI_Font);
   end Use_GUI_Font;
 
-  function Num_resource(id: Natural) return String is
+  function Num_resource(id: Natural) return GString is
     img: constant String:= Integer'Image(id);
   begin
-    return '#' & img(img'first+1..img'Last);
+    return To_GString_from_String('#' & img(img'first+1..img'Last));
   end Num_resource;
 
   package body Common_Fonts is
@@ -492,6 +550,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 232
+  -- Last line of resource script file: 246
 
 end azip_Resource_GUI;

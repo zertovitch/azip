@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/21   10:16:06
+-- Transcription time: 2012/11/21   16:59:32
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 26-Aug-2012
+-- RC Grammar version: 21-Nov-2012
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -57,23 +57,33 @@ package azip_Resource_GUI is
 
   type About_box_Type is new Window_type with record
 
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    Static_0001: Icon_Type;
     -- Label: IDC_STATIC
     -- Label: IDC_STATIC
     -- Label: IDC_STATIC
     -- Label: IDC_STATIC
     AZip_URL: Label_Type;
-    Static_0005: Group_Box_Type;
+    Static_0006: Group_Box_Type;
     GNAT_URL: Label_Type;
     GNAT_Version: Label_Type;
     GNAVI_URL: Label_Type;
     ResEdit_URL: Label_Type;
     ZipAda_URL: Label_Type;
     ZipAda_Version: Label_Type;
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    Credits_button: Dialog_Button_Type;    -- closes parent window after click
+    Credits_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 139
+  -- Dialog at resource line 141
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out About_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -109,7 +119,14 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- Find_box_Type
 
-  -- Dialog at resource line 155
+  -- Dialog at resource line 157
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out Find_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -143,14 +160,21 @@ package azip_Resource_GUI is
     Cancel_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 170
+  -- Dialog at resource line 172
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out Progress_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Progress_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "AZip is busy";
+      Title       : in     GString := "AZip is busy.";
       Left        : in     Integer := Use_Default; -- Default = as designed
       Top         : in     Integer := Use_Default; -- Default = as designed
       Width       : in     Integer := Use_Default; -- Default = as designed
@@ -190,6 +214,8 @@ package azip_Resource_GUI is
   About_box                 : constant:=    107;
   Progress_box              : constant:=    109;
   Find_box                  : constant:=    111;
+  AZip_Doc_Icon             : constant:=    112;
+  AZip_Icon                 : constant:=    114;
   Archive_Progress          : constant:=   1000;
   GNAT_URL                  : constant:=   1000;
   Entry_operation_name      : constant:=   1001;
@@ -200,6 +226,7 @@ package azip_Resource_GUI is
   Cancel_button             : constant:=   1003;
   Content_to_be_searched    : constant:=   1004;
   ResEdit_URL               : constant:=   1004;
+  Credits_button            : constant:=   1005;
   Entry_name                : constant:=   1005;
   IDM_NEW_ARCHIVE           : constant:=  40000;
   IDM_OPEN_ARCHIVE          : constant:=  40001;
@@ -245,9 +272,9 @@ package azip_Resource_GUI is
 
   procedure Use_GUI_Font(Window: in out GWindows.Base.Base_Window_Type'Class);
 
-  function Num_resource(id: Natural) return String;
+  function Num_resource(id: Natural) return GString;
 
 
-  -- Last line of resource script file: 232
+  -- Last line of resource script file: 246
 
 end azip_Resource_GUI;

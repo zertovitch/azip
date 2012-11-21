@@ -170,7 +170,7 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Create (Window : in out MDI_Child_Type) is
   begin
-    Small_Icon (Window, "Picture_Icon");
+    Small_Icon (Window, "AZip_Doc_Icon");
 
     -- Filial feelings:
     Window.parent:= MDI_Main_Access(Controlling_Parent(Window));

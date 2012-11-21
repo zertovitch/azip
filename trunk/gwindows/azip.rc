@@ -190,7 +190,15 @@ Main_Menu ACCELERATORS
     VK_F12,        IDM__SAVE_ARCHIVE_AS, VIRTKEY
 }
 
+//
+// Icon resources
+//
 
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+AAA_Main_Icon      ICON           "icons/azip.ico"
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+AZip_Doc_Icon      ICON           "icons/azip_doc.ico"
 
 //
 // Version Information resources

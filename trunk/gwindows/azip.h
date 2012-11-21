@@ -7,6 +7,8 @@
 #define About_box                               107
 #define Progress_box                            109
 #define Find_box                                111
+#define AZip_Doc_Icon                           112
+#define AZip_Icon                               114
 #define Archive_Progress                        1000
 #define GNAT_URL                                1000
 #define Entry_operation_name                    1001
@@ -17,6 +19,7 @@
 #define Cancel_button                           1003
 #define Content_to_be_searched                  1004
 #define ResEdit_URL                             1004
+#define Credits_button                          1005
 #define Entry_name                              1005
 #define IDM__NEW_ARCHIVE                        40000
 #define IDM__OPEN_ARCHIVE                       40001

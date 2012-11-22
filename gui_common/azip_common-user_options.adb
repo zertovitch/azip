@@ -70,7 +70,7 @@ package body AZip_Common.User_options is
             when view_mode =>
               R(View_Mode_Type'Wide_Image(opt.view_mode));
             when col_width =>
-              R(""); -- dummy for having reading going well
+              R("(root)"); -- dummy for having reading going well
               for e in Entry_topic loop
                 Write_key(
                   ks & "_" & Entry_topic'Wide_Image(e),

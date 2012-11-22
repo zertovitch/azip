@@ -6,6 +6,7 @@ with Zip;
 
 with GWindows;                          use GWindows;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
+with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 
@@ -59,7 +60,7 @@ package AZip_GWin.MDI_Child is
         Directory_List   : MDI_Child_List_View_Control_Type;
         Folder_Tree      : Tree_View_Control_Type;
         zif              : Zip.Zip_info;
-        current_options  : AZip_Common.User_options.Option_Pack_Type;
+        opt              : AZip_Common.User_options.Option_Pack_Type;
         Status_deamon    : Daemons.Status_display;
         Status_Bar       : MDI_Child_Status_Bar_Type;
         Name_search      : GString_Unbounded;

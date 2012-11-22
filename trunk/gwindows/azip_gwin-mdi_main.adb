@@ -7,6 +7,7 @@ with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Registry;
 with GWindows.Static_Controls;          use GWindows.Static_Controls;
 with GWindows.Static_Controls.Web;      use GWindows.Static_Controls.Web;
 
@@ -19,6 +20,7 @@ with GNAT.Compiler_Version;
 package body AZip_GWin.MDI_Main is
 
   function S2G (Value : String) return GString renames To_GString_From_String;
+  function G2S (Value : GString) return String renames To_String;
   function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
   function G2UG (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
 
@@ -92,7 +94,7 @@ package body AZip_GWin.MDI_Main is
   is
   begin
     m.user_maximize_restore:= True;
-    if m.MDI_childen_maximized then
+    if m.opt.MDI_childen_maximized then
       Zoom(c);
       Redraw_all(m);
     end if;
@@ -112,7 +114,7 @@ package body AZip_GWin.MDI_Main is
     if is_open then
       return;        -- nothing to do, archive already in a window
     end if;
-    if not AZip_Common.Is_valid_Zip_archive(To_String(GU2G(File_Name))) then
+    if not AZip_Common.Is_valid_Zip_archive(G2S(GU2G(File_Name))) then
       -- !! lazy conversion of wide string to potential utf-8
       Message_Box(
         Window,
@@ -133,12 +135,12 @@ package body AZip_GWin.MDI_Main is
       New_Window.File_Name:= File_Name;
       Create_MDI_Child (New_Window.all,
         Window,
-        To_GString_from_Unbounded(File_Title),
+        GU2G(File_Title),
         Is_Dynamic => True
       );
       New_Window.Short_Name:= File_Title;
       MDI_Active_Window (Window, New_Window.all);
-      Update_Common_Menus(Window, To_GString_from_Unbounded(New_Window.File_Name));
+      Update_Common_Menus(Window, GU2G(New_Window.File_Name));
       Load_archive_catalogue(New_Window.all);
       Finish_subwindow_opening(Window, New_Window.all);
       New_Window.Focus;
@@ -180,6 +182,27 @@ package body AZip_GWin.MDI_Main is
     );
   end Open_Child_Window_And_Load;
 
+  -----------------
+  -- Persistence --
+  -----------------
+
+  kname: constant GString:= "Software\AZip";
+
+  function Read_key(topic: String) return String is
+    use GWindows.Registry;
+  begin
+    return G2S(Get_Value(kname, S2G(topic), HKEY_CURRENT_USER));
+  end Read_key;
+
+  procedure Write_key(topic: String; value: String) is
+    use GWindows.Registry;
+  begin
+    Register( kname, S2G(topic), S2G(value), HKEY_CURRENT_USER );
+  end Write_key;
+
+  package Windows_persistence is new
+    AZip_Common.User_options.Persistence(Read_key, Write_key);
+
   ---------------
   -- On_Create --
   ---------------
@@ -187,6 +210,8 @@ package body AZip_GWin.MDI_Main is
   procedure On_Create ( Window : in out MDI_Main_Type ) is
     use Ada.Command_Line;
   begin
+    Windows_persistence.Load(Window.opt);
+
     Small_Icon (Window, "AAA_Main_Icon");
     Large_Icon (Window, "AAA_Main_Icon");
 
@@ -206,6 +231,15 @@ package body AZip_GWin.MDI_Main is
        IDM_MRU_9);
 
     Accelerator_Table (Window, "Main_Menu");
+
+    -- ** Resize according to options:
+
+--      if Valid_Left_Top(Wleft, Wtop) then
+--        Left(Window, Wleft);
+--        Top( Window, Wtop);
+--      end if;
+    -- Size(Window, Integer'Max(400,Wwidth), Integer'Max(200,Wheight));
+    Zoom(Window,Window.opt.MDI_main_maximized);
 
     Dock_Children(Window);
     Show (Window);
@@ -417,8 +451,8 @@ package body AZip_GWin.MDI_Main is
         Window    : in out MDI_Main_Type;
         Can_Close :    out Boolean        ) is
   begin
-    Window.MDI_main_maximized:= Zoom(Window);
-    if not (Window.MDI_main_maximized or Minimized(Window)) then
+    Window.opt.MDI_main_maximized:= Zoom(Window);
+    if not (Window.opt.MDI_main_maximized or Minimized(Window)) then
       Window.Memorized_Left  := Left(Window);
       Window.Memorized_Top  := Top(Window);
       Window.Memorized_Width := Width(Window);
@@ -433,6 +467,7 @@ package body AZip_GWin.MDI_Main is
     Can_Close:= Window.success_in_enumerated_close;
     --
     if Can_Close then
+      Windows_persistence.Save(Window.opt);
       GWindows.Base.On_Exception_Handler (Handler => null);
       -- !! Trick to remove a strange crash on Destroy_Children
       -- !! on certain Windows platforms - 29-Jun-2012
@@ -452,7 +487,7 @@ package body AZip_GWin.MDI_Main is
     -- Search for name in the list
     for m in Window.mru'Range loop
       declare
-        up_mru_m: GString:= To_GString_From_Unbounded(Window.mru(m));
+        up_mru_m: GString:= GU2G(Window.mru(m));
       begin
         To_Upper(up_mru_m);
         if up_mru_m = up_name then -- case insensitive comparison (Jan-2007)
@@ -489,7 +524,7 @@ package body AZip_GWin.MDI_Main is
          '&' &
          To_GString_from_String(Ada.Strings.Fixed.Trim(Integer'Image(i),Ada.Strings.Left)) &
          ' ' &
-         Shorten_file_name(To_GString_from_Unbounded(Window.mru(i)))
+         Shorten_file_name(GU2G(Window.mru(i)))
       );
       --State(m,command,cmd,Disabled);
     end loop;
@@ -528,7 +563,7 @@ package body AZip_GWin.MDI_Main is
     for i in File_Names'Range loop
       empty:= False;
       result:= result and
-        AZip_Common.Is_valid_Zip_archive(To_String(GU2G(File_Names(i))));
+        AZip_Common.Is_valid_Zip_archive(G2S(GU2G(File_Names(i))));
         -- !! lazy conversion of wide string to potential utf-8
     end loop;
     return result and not empty;

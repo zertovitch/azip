@@ -1,4 +1,4 @@
-with AZip_Common;
+with AZip_Common.User_options;
 with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
 with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
@@ -59,7 +59,7 @@ package AZip_GWin.MDI_Child is
         Directory_List   : MDI_Child_List_View_Control_Type;
         Folder_Tree      : Tree_View_Control_Type;
         zif              : Zip.Zip_info;
-        current_options  : AZip_Common.Option_Pack_Type;
+        current_options  : AZip_Common.User_options.Option_Pack_Type;
         Status_deamon    : Daemons.Status_display;
         Status_Bar       : MDI_Child_Status_Bar_Type;
         Name_search      : GString_Unbounded;

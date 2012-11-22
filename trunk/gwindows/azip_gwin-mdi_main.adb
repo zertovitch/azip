@@ -112,7 +112,17 @@ package body AZip_GWin.MDI_Main is
     if is_open then
       return;        -- nothing to do, archive already in a window
     end if;
-    -- TC.Input.Load( Candidate, False, To_GString_From_Unbounded (File_Name));
+    if not AZip_Common.Is_valid_Zip_archive(To_String(GU2G(File_Name))) then
+      -- !! lazy conversion of wide string to potential utf-8
+      Message_Box(
+        Window,
+        "Invalid zip archive",
+        "File " & GU2G(File_Name) & " is not a valid zip archive.",
+        OK_Box,
+        Error_Icon
+      );
+      return;
+    end if;
     declare
       New_Window : constant MDI_Child_Access := new MDI_Child_Type;
     begin
@@ -530,20 +540,35 @@ package body AZip_GWin.MDI_Main is
   )
   return Boolean
   is
+    answer: Message_Box_Result;
   begin
     if All_Zip_files(File_Names) then
-      if Message_Box(
-        Window,
-        "File(s) is/are Zip archive(s)",
-        S2G(
-        "Should AZip open this/these Zip archive(s)s individually," & ASCII.LF &
-        "in (a) separate window(s) ?" & ASCII.LF &
-        "If not, it/they will be added as (a) file(s) into an archive."),
-        Yes_No_Box,
-        Question_Icon
-      )
-      = Yes
-      then
+      if File_Names'Length = 1 then
+        answer :=
+          Message_Box(
+            Window,
+            "File is a Zip archive",
+            S2G(
+            "Should AZip open this Zip archive individually," & NL &
+            "in a separate window ?" & NL &
+            "If not, it will be added as a file into an archive."),
+            Yes_No_Box,
+            Question_Icon
+          );
+      else
+        answer :=
+          Message_Box(
+            Window,
+            "Files are Zip archives",
+            S2G(
+            "Should AZip open these Zip archives individually," & NL &
+            "in separate windows ?" & NL &
+            "If not, they will be added as files into an archive."),
+            Yes_No_Box,
+            Question_Icon
+          );
+      end if;
+      if answer = Yes then
         return True;
       end if;
     end if;

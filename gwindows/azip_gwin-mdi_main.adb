@@ -10,6 +10,7 @@ with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Registry;
 with GWindows.Static_Controls;          use GWindows.Static_Controls;
 with GWindows.Static_Controls.Web;      use GWindows.Static_Controls.Web;
+with GWindows.GStrings;                 use GWindows.GStrings;
 
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
@@ -182,22 +183,30 @@ package body AZip_GWin.MDI_Main is
     );
   end Open_Child_Window_And_Load;
 
+  function Valid_Left_Top(Left, Top: Integer)
+    return Boolean
+  is
+  begin
+    return Left in -320 .. Desktop_Width  - 30 and
+           Top  in -320 .. Desktop_Height - 80;
+  end Valid_Left_Top;
+
   -----------------
   -- Persistence --
   -----------------
 
   kname: constant GString:= "Software\AZip";
 
-  function Read_key(topic: String) return String is
+  function Read_key(topic: Wide_String) return Wide_String is
     use GWindows.Registry;
   begin
-    return G2S(Get_Value(kname, S2G(topic), HKEY_CURRENT_USER));
+    return Get_Value(kname, topic, HKEY_CURRENT_USER);
   end Read_key;
 
-  procedure Write_key(topic: String; value: String) is
+  procedure Write_key(topic: Wide_String; value: Wide_String) is
     use GWindows.Registry;
   begin
-    Register( kname, S2G(topic), S2G(value), HKEY_CURRENT_USER );
+    Register( kname, topic, value, HKEY_CURRENT_USER );
   end Write_key;
 
   package Windows_persistence is new
@@ -209,8 +218,22 @@ package body AZip_GWin.MDI_Main is
 
   procedure On_Create ( Window : in out MDI_Main_Type ) is
     use Ada.Command_Line;
+    --
+    -- Replace default values by system-dependent ones
+    --
+    procedure Replace_default(x: in out Integer) is
+    begin
+      if x = AZip_Common.User_options.use_default then
+        x:= GWindows.Constants.Use_Default;
+      end if;
+    end Replace_default;
+    --
   begin
     Windows_persistence.Load(Window.opt);
+    Replace_default(Window.opt.win_left);
+    Replace_default(Window.opt.win_width);
+    Replace_default(Window.opt.win_top);
+    Replace_default(Window.opt.win_height);
 
     Small_Icon (Window, "AAA_Main_Icon");
     Large_Icon (Window, "AAA_Main_Icon");
@@ -219,26 +242,23 @@ package body AZip_GWin.MDI_Main is
 
     AZip_Resource_GUI.Create_Full_Menu(Window.Menu);
     MDI_Menu (Window, Window.Menu.Main, Window_Menu => 2);
-    Window.IDM_MRU:=
-      (IDM_MRU_1,
-       IDM_MRU_2,
-       IDM_MRU_3,
-       IDM_MRU_4,
-       IDM_MRU_5,
-       IDM_MRU_6,
-       IDM_MRU_7,
-       IDM_MRU_8,
-       IDM_MRU_9);
-
     Accelerator_Table (Window, "Main_Menu");
+    Window.IDM_MRU:=
+      (IDM_MRU_1,       IDM_MRU_2,       IDM_MRU_3,       IDM_MRU_4,
+       IDM_MRU_5,       IDM_MRU_6,       IDM_MRU_7,       IDM_MRU_8,
+       IDM_MRU_9
+      );
 
     -- ** Resize according to options:
 
---      if Valid_Left_Top(Wleft, Wtop) then
---        Left(Window, Wleft);
---        Top( Window, Wtop);
---      end if;
-    -- Size(Window, Integer'Max(400,Wwidth), Integer'Max(200,Wheight));
+    if Valid_Left_Top(Window.opt.win_left, Window.opt.win_top) then
+      Left(Window, Window.opt.win_left);
+      Top( Window, Window.opt.win_top);
+    end if;
+    Size(Window,
+      Integer'Max(400, Window.opt.win_width),
+      Integer'Max(200, Window.opt.win_height)
+    );
     Zoom(Window,Window.opt.MDI_main_maximized);
 
     Dock_Children(Window);
@@ -252,12 +272,49 @@ package body AZip_GWin.MDI_Main is
     for I in 1..Argument_Count loop
       Open_Child_Window_And_Load(
         Window,
-        To_Gstring_Unbounded(To_GString_from_String(Argument(I)))
+        G2UG(To_GString_from_String(Argument(I)))
       );
     end loop;
     Window.Accept_File_Drag_And_Drop;
     -- Dropping files on the background will trigger creating an archive
+    Window.record_dimensions:= True;
   end On_Create;
+
+  function Minimized(Window: GWindows.Base.Base_Window_Type'Class)
+    return Boolean
+  is
+  begin
+    return GWindows.Base.Left(Window) <= -32000;
+  end Minimized;
+
+  procedure On_Move (Window : in out MDI_Main_Type;
+                     Left   : in     Integer;
+                     Top    : in     Integer) is
+  begin
+    if Window.record_dimensions and
+       not (Zoom(Window) or Minimized(Window)) then
+      -- ^ Avoids recording dimensions before restoring them
+      --   from previous session.
+      Window.opt.win_left  := Left;
+      Window.opt.win_top   := Top;
+      -- Will remember position if moved, maximized and closed
+    end if;
+  end On_Move;
+
+  procedure On_Size (Window : in out MDI_Main_Type;
+                     Width  : in     Integer;
+                     Height : in     Integer) is
+  begin
+    Dock_Children(Window);
+    if Window.record_dimensions and
+       not (Zoom(Window) or Minimized(Window)) then
+      -- ^ Avoids recording dimensions before restoring them
+      --   from previous session.
+      Window.opt.win_width := Width;
+      Window.opt.win_height:= Height;
+      -- Will remember position if sized, maximized and closed
+    end if;
+  end On_Size;
 
   -----------------
   -- On_File_New --
@@ -287,7 +344,7 @@ package body AZip_GWin.MDI_Main is
     New_Window.extra_first_doc:= extra_first_doc;
     Window.user_maximize_restore:= False;
     Create_MDI_Child (New_Window.all, Window, File_Title, Is_Dynamic => True);
-    New_Window.Short_Name:= To_GString_Unbounded(File_Title);
+    New_Window.Short_Name:= G2UG(File_Title);
     MDI_Active_Window (Window, New_Window.all);
 
     -- Transfer user-defined default options:
@@ -322,10 +379,10 @@ package body AZip_GWin.MDI_Main is
   begin
     Open_File (Window, "Open",
       File_Name,
-      ((To_GString_Unbounded ("Zip archives (*.zip)"),
-          To_GString_Unbounded ("*.zip" )),
-        (To_GString_Unbounded ("All files (*.*)"),
-          To_GString_Unbounded ("*.*"))),
+      ((G2UG ("Zip archives (*.zip)"),
+          G2UG ("*.zip" )),
+        (G2UG ("All files (*.*)"),
+          G2UG ("*.*"))),
       ".zip",
       File_Title,
       Success);
@@ -429,7 +486,7 @@ package body AZip_GWin.MDI_Main is
           if Item = Window.IDM_MRU(i_mru) then
             Open_Child_Window_And_Load(
               Window,
-              Window.mru( i_mru )
+              Window.opt.mru( i_mru )
             );
             exit;
           end if;
@@ -440,23 +497,16 @@ package body AZip_GWin.MDI_Main is
 
   -------------
 
-  function Minimized(Window: GWindows.Base.Base_Window_Type'Class)
-    return Boolean
-  is
-  begin
-    return GWindows.Base.Left(Window) <= -32000;
-  end Minimized;
-
   procedure On_Close (
         Window    : in out MDI_Main_Type;
         Can_Close :    out Boolean        ) is
   begin
     Window.opt.MDI_main_maximized:= Zoom(Window);
     if not (Window.opt.MDI_main_maximized or Minimized(Window)) then
-      Window.Memorized_Left  := Left(Window);
-      Window.Memorized_Top  := Top(Window);
-      Window.Memorized_Width := Width(Window);
-      Window.Memorized_Height:= Height(Window);
+      Window.opt.win_left  := Left(Window);
+      Window.opt.win_top   := Top(Window);
+      Window.opt.win_width := Width(Window);
+      Window.opt.win_height:= Height(Window);
     end if;
 
     -- TC.GWin.Options.Save;
@@ -479,15 +529,15 @@ package body AZip_GWin.MDI_Main is
   -------------
 
   procedure Add_MRU (Window: in out MDI_Main_Type; name: GString) is
-    x: Integer:= Window.mru'First-1;
+    x: Integer:= Window.opt.mru'First-1;
     up_name: GString:= name;
   begin
     To_Upper(up_name);
 
     -- Search for name in the list
-    for m in Window.mru'Range loop
+    for m in Window.opt.mru'Range loop
       declare
-        up_mru_m: GString:= GU2G(Window.mru(m));
+        up_mru_m: GString:= GU2G(Window.opt.mru(m));
       begin
         To_Upper(up_mru_m);
         if up_mru_m = up_name then -- case insensitive comparison (Jan-2007)
@@ -500,33 +550,32 @@ package body AZip_GWin.MDI_Main is
     -- name exists in list ?
     if x /= 0 then
       -- roll up entries after it, erasing it
-      for i in x .. Window.mru'Last-1 loop
-        Window.mru(i):= Window.mru(i+1);
+      for i in x .. Window.opt.mru'Last-1 loop
+        Window.opt.mru(i):= Window.opt.mru(i+1);
       end loop;
-      Window.mru(Window.mru'Last):= To_GString_Unbounded("");
+      Window.opt.mru(Window.opt.mru'Last):= G2UG("");
     end if;
 
     -- roll down the full list
-    for i in reverse Window.mru'First .. Window.mru'Last-1 loop
-      Window.mru(i+1):= Window.mru(i);
+    for i in reverse Window.opt.mru'First .. Window.opt.mru'Last-1 loop
+      Window.opt.mru(i+1):= Window.opt.mru(i);
     end loop;
 
     -- name exists in list
-    Window.mru(Window.mru'First):= To_GString_Unbounded(name);
+    Window.opt.mru(Window.opt.mru'First):= G2UG(name);
 
   end Add_MRU;
 
   procedure Update_MRU_Menu(Window: in out MDI_Main_Type; m: in Menu_type) is
   begin
-    for i in reverse Window.mru'Range loop
+    for i in reverse Window.opt.mru'Range loop
       Text(
         m, command, Window.IDM_MRU(i),
          '&' &
-         To_GString_from_String(Ada.Strings.Fixed.Trim(Integer'Image(i),Ada.Strings.Left)) &
+         S2G(Ada.Strings.Fixed.Trim(Integer'Image(i),Ada.Strings.Left)) &
          ' ' &
-         Shorten_file_name(GU2G(Window.mru(i)))
+         Shorten_file_name(GU2G(Window.opt.mru(i)))
       );
-      --State(m,command,cmd,Disabled);
     end loop;
   end Update_MRU_Menu;
 

@@ -506,6 +506,9 @@ package body AZip_GWin.MDI_Child is
     w: constant Natural:= Window.Client_Area_Width;
     h: constant Natural:= Window.Client_Area_Height - Window.Status_Bar.Height;
   begin
+    if Window.Parent.user_maximize_restore then
+      Window.Parent.opt.MDI_childen_maximized:= Zoom(Window);
+    end if;
     case Window.current_options.view_mode is
       when Flat =>
         Window.Directory_List.Location(
@@ -711,7 +714,7 @@ package body AZip_GWin.MDI_Child is
   procedure On_Close (Window    : in out MDI_Child_Type;
                       Can_Close :    out Boolean) is
   begin
-    Can_close:= True;
+    Can_Close:= True;
     if Is_file_saved(Window) then
       Update_Common_Menus(Window,GU2G(Window.File_Name));
       Window.Status_deamon.Stop;
@@ -733,6 +736,14 @@ package body AZip_GWin.MDI_Child is
                          exit;
           when others => null;
         end case;
+      end loop;
+    end if;
+    if Can_Close then
+      -- Remember column widths
+      for e in Entry_topic'Range loop
+        -- Window.Parent.opt.column_width(e):=
+        -- !! get width :-)
+        null;
       end loop;
     end if;
   end On_Close;

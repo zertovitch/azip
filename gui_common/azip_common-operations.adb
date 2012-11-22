@@ -5,6 +5,8 @@ with Ada.Directories;                   use Ada.Directories;
 with Ada.Strings;                       use Ada.Strings;
 with Ada.Streams.Stream_IO;
 
+with Interfaces;
+
 package body AZip_Common.Operations is
 
   function S(Source: Unbounded_String) return String

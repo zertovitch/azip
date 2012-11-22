@@ -6,8 +6,6 @@ with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 with GWindows;                          use GWindows;
 with GWindows.Base;
 with GWindows.Windows.MDI;
-with GWindows.GStrings;                 use GWindows.GStrings;
-with GWindows.Constants;
 with GWindows.Windows;                  use GWindows.Windows;
 
 package AZip_GWin.MDI_Main is
@@ -19,28 +17,23 @@ package AZip_GWin.MDI_Main is
   --                             Item    : in     Integer);
   --  Handle click on toolbar
 
-  type IDM_MRU_List is array(1..9) of Natural;
-
-  type MRU_List is array(IDM_MRU_List'Range) of GString_Unbounded;
+  type IDM_MRU_List is array(AZip_Common.User_options.MRU_List'Range) of Natural;
 
   type MDI_Main_Type is
     new GWindows.Windows.MDI.MDI_Main_Window_Type with
       record
-        Memorized_Left,
-        Memorized_Top,
-        Memorized_Width,
-        Memorized_Height     : Integer:= GWindows.Constants.Use_Default;
         Success_in_enumerated_close: Boolean;
         -- MRU (Most recently used) files names:
-        IDM_MRU: IDM_MRU_List;
-        mru: MRU_List:= (others=> To_GString_Unbounded(""));
+        -- Menu ID's stored into a handy array
+        IDM_MRU                : IDM_MRU_List;
         -- Tool_Bar               : MDI_Toolbar_Type;
         -- Images                 : GWindows.Image_Lists.Image_List_Type;
         Menu                   : Menu_MDI_Main_Type;
         -- record_dimensions      : Boolean:= False; -- in On_Move, On_Size
         User_maximize_restore  : Boolean:= True;
         -- ^ Detect user-triggered max/restore commands
-        opt: AZip_Common.User_options.Option_Pack_Type;
+        record_dimensions      : Boolean:= False; -- in On_Move, On_Size
+        opt                    : AZip_Common.User_options.Option_Pack_Type;
       end record;
 
   type MDI_Main_Access is access all MDI_Main_Type;
@@ -51,8 +44,16 @@ package AZip_GWin.MDI_Main is
   procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean);
   --  File|New event
 
-  procedure On_File_Drop (Window     : in out MDI_Main_Type;
-                          File_Names : in     Array_Of_File_Names);
+  procedure On_Move (Window : in out MDI_Main_Type;
+                     Left   : in     Integer;
+                     Top    : in     Integer);
+
+  overriding procedure On_Size (Window : in out MDI_Main_Type;
+                                Width  : in     Integer;
+                                Height : in     Integer);
+
+  overriding procedure On_File_Drop (Window     : in out MDI_Main_Type;
+                                     File_Names : in     Array_Of_File_Names);
 
   procedure Open_Child_Window_And_Load (
     Window     : in out MDI_Main_Type;

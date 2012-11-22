@@ -1,7 +1,6 @@
 with Zip, UnZip;
 
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with Interfaces;
 
 package AZip_Common.Operations is
 

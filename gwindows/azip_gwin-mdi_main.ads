@@ -80,4 +80,6 @@ package AZip_GWin.MDI_Main is
   )
   return Boolean;
 
+  NL: constant String:= (1=> ASCII.LF);
+
 end AZip_GWin.MDI_Main;

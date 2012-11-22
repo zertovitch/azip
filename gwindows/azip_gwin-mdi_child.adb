@@ -425,11 +425,10 @@ package body AZip_GWin.MDI_Child is
           "Processing failed",
           "Archive cannot be modified - probably it is read-only." &
           S2G(
-            ASCII.LF & "-----" & ASCII.LF &
-            Ada.Exceptions.Exception_Name (E) & ASCII.LF &
+            NL & "-----" & NL &
+            Ada.Exceptions.Exception_Name (E) & NL &
             Ada.Exceptions.Exception_Message (E)
-          )
-          ,
+          ),
           OK_Box,
           Exclamation_Icon
         );
@@ -497,7 +496,7 @@ package body AZip_GWin.MDI_Child is
           "Add dropped file(s) to new archive (" &
           GU2G(Window.Short_Name) &
           ") ?" &
-          S2G("" & ASCII.LF) &
+          S2G(NL) &
           "You'll be asked first under which name the archive will be created.",
         Yes_No_Box,
         Question_Icon) = Yes

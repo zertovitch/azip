@@ -1,4 +1,5 @@
 with AZip_Common;                       use AZip_Common;
+with AZip_Common.Operations;            use AZip_Common.Operations;
 
 with Zip;                               use Zip;
 with Zip_Streams;
@@ -28,6 +29,7 @@ with Interfaces;
 package body AZip_GWin.MDI_Child is
 
   function S2G (Value : String) return GString renames To_GString_From_String;
+  function G2S (Value : GString) return String renames To_String;
   function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
   function G2GU (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
 
@@ -182,34 +184,6 @@ package body AZip_GWin.MDI_Child is
     Parts(Window.Status_Bar, (200, -1));
     Dock (Window.Status_Bar, GWindows.Base.At_Bottom);
 
-    -- Window.Draw_Control.parent:=
-    --   MDI_Picture_Child_Access(Controlling_Parent(Window.Draw_Control));
-
-    -- Background_Mode (Window.Draw_Control.Drawing_Area, Transparent);
-    -- Background_Mode (Window.Draw_Control.Saved_Area, Transparent);
-
-    -- On_Change_Cursor_Handler (Window.Draw_Control, Do_Change_Cursor'Access);
-    -- On_Left_Mouse_Button_Down_Handler(Window.Draw_Control, Do_Left_Mouse_Down'Access);
-    -- On_Right_Mouse_Button_Down_Handler(Window.Draw_Control, Do_Right_Mouse_Down'Access);
-    -- On_Left_Mouse_Button_Up_Handler(Window.Draw_Control, Do_Mouse_Up'Access);
-    -- On_Right_Mouse_Button_Up_Handler(Window.Draw_Control, Do_Mouse_Up'Access);
-    -- On_Mouse_Move_Handler (Window.Draw_Control, Do_Mouse_Move'Access);
-    --
-    -- On_Character_Down_Handler (Window, Do_Key_Down'Access); -- 14-Oct-2005
-
-    -- Create_Compatible_Bitmap (Window.Draw_Control.Drawing_Area,
-    --                           Window.Draw_Control.Saved_Bitmap,
-    --                           Desktop_Width,
-    --                           Desktop_Height);
-    -- Select_Object (Window.Draw_Control.Saved_Area,
-    --                Window.Draw_Control.Saved_Bitmap);
-
-    --Refresh_size_dependent_parameters(
-    --  Window.Draw_Control.Picture,
-    --  objects => True
-    --);
-    --Subtle_redraw (Window.Draw_Control);
-
     Dock_Children (Window);
 
     AZip_Resource_GUI.Create_Full_Menu(Window.Menu);
@@ -217,7 +191,8 @@ package body AZip_GWin.MDI_Child is
 
     -- Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare
-      memo_unmaximized_children: constant Boolean:= not Window.parent.MDI_childen_maximized;
+      memo_unmaximized_children: constant Boolean:=
+        not Window.parent.opt.MDI_childen_maximized;
     begin
       if memo_unmaximized_children then
         Window.Parent.Freeze;
@@ -284,14 +259,11 @@ package body AZip_GWin.MDI_Child is
     if not Success then
       return;
     end if;
-    if Zip.Exists(GWindows.GStrings.To_String (
-      To_GString_From_Unbounded (New_File_Name))
-    ) -- !! conv.
-    then
+    if Zip.Exists(G2S(GU2G(New_File_Name))) then -- !! conv.
       if Message_Box (
         Window,
         "Save as",
-        "The file " & To_GString_From_Unbounded (New_File_Name) &
+        "The file " & GU2G (New_File_Name) &
         " already exists. Replace ?",
         Yes_No_Box,
         Question_Icon
@@ -304,10 +276,10 @@ package body AZip_GWin.MDI_Child is
     if Is_loaded(Window.zif) then
       begin
         Ada.Directories.Copy_File(
-          GWindows.GStrings.To_String (
-            To_GString_From_Unbounded (Window.File_Name)),
-          GWindows.GStrings.To_String (
-            To_GString_From_Unbounded (New_File_Name))
+          G2S (
+            GU2G (Window.File_Name)),
+          G2S (
+            GU2G (New_File_Name))
         );
       exception
         when others =>
@@ -321,17 +293,17 @@ package body AZip_GWin.MDI_Child is
           return;
       end;
     else -- we don't have a file yet
-      Create(empty_zip, Out_File, GWindows.GStrings.To_String (
-               To_GString_From_Unbounded (New_File_Name)));
+      Create(empty_zip, Out_File, G2S (
+               GU2G (New_File_Name)));
       for i in contents'Range loop
         Write(empty_zip, contents(i));
       end loop;
       Close(empty_zip);
     end if;
     Window.File_Name := New_File_Name;
-    Text (Window, To_GString_From_Unbounded (File_Title));
+    Text (Window, GU2G (File_Title));
     Window.Short_Name:= File_Title;
-    Update_Common_Menus(Window,To_GString_from_Unbounded(New_File_Name));
+    Update_Common_Menus(Window,GU2G(New_File_Name));
     Window.Load_archive_catalogue;
   end On_Save_As;
 
@@ -387,7 +359,7 @@ package body AZip_GWin.MDI_Child is
     for i in az_names'Range loop
       az_names(i):=
         (name => To_Unbounded_String(
-                   GWindows.GStrings.To_String(GU2G(File_Names(i)))
+                   G2S(GU2G(File_Names(i)))
                  ), -- !!
          utf_8 => False, -- !!
          match => 0
@@ -521,7 +493,7 @@ package body AZip_GWin.MDI_Child is
     if Zip.Is_loaded(Window.zif) then
       Zip.Delete(Window.zif);
     end if;
-    Zip.Load(Window.zif, GWindows.GStrings.To_String(To_GString_From_Unbounded(Window.File_Name)));
+    Zip.Load(Window.zif, G2S(GU2G(Window.File_Name)));
     Update_display(Window, archive_changed);
     -- Window.Status_deamon.Display(Window'Unchecked_Access);
   end Load_archive_catalogue;
@@ -575,7 +547,7 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Extract(Window : in out MDI_Child_Type) is
     dir: constant GString:= Get_Directory(Window, "Extract to...");
-    sdir: constant String:= GWindows.GStrings.To_String(dir); -- !! lazy conversion
+    sdir: constant String:= G2S(dir); -- !! lazy conversion
   begin
     if dir /= "" then
       Process_archive_GWin(
@@ -741,7 +713,7 @@ package body AZip_GWin.MDI_Child is
   begin
     Can_close:= True;
     if Is_file_saved(Window) then
-      Update_Common_Menus(Window,To_GString_from_Unbounded(Window.File_Name));
+      Update_Common_Menus(Window,GU2G(Window.File_Name));
       Window.Status_deamon.Stop;
     else -- This happens only for documents that may stay in an unsaved state.
       loop
@@ -749,7 +721,7 @@ package body AZip_GWin.MDI_Child is
                (Window,
                 "Close file", -- sheet, picture, ...
                 "Do you want to save the changes you made to " &
-                To_GString_from_Unbounded(Window.Short_Name) & "' ?",
+                GU2G(Window.Short_Name) & "' ?",
                 Yes_No_Cancel_Box,
                 Question_Icon)
         is

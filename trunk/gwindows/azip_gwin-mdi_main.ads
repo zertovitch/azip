@@ -5,6 +5,8 @@ with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
 with GWindows;                          use GWindows;
 with GWindows.Base;
+with GWindows.Common_Dialogs;
+with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 
@@ -80,5 +82,14 @@ package AZip_GWin.MDI_Main is
   return Boolean;
 
   NL: constant String:= (1=> ASCII.LF);
+
+  function S2G (Value : String) return GString renames To_GString_From_String;
+  function G2S (Value : GString) return String renames To_String;
+  function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
+  function G2GU (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
+
+  Zip_archives_filters: GWindows.Common_Dialogs.Filter_Array:=
+    ((G2GU ("Zip archives (*.zip)"), G2GU ("*.zip" )),
+     (G2GU ("All files (*.*)"),      G2GU ("*.*")));
 
 end AZip_GWin.MDI_Main;

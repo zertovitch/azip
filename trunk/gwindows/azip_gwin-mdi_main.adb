@@ -10,7 +10,6 @@ with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Registry;
 with GWindows.Static_Controls;          use GWindows.Static_Controls;
 with GWindows.Static_Controls.Web;      use GWindows.Static_Controls.Web;
-with GWindows.GStrings;                 use GWindows.GStrings;
 
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
@@ -19,11 +18,6 @@ with Ada.Text_IO;
 with GNAT.Compiler_Version;
 
 package body AZip_GWin.MDI_Main is
-
-  function S2G (Value : String) return GString renames To_GString_From_String;
-  function G2S (Value : GString) return String renames To_String;
-  function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
-  function G2UG (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
 
   procedure Focus_an_already_opened_window(
     Window    : MDI_Main_Type;
@@ -179,7 +173,7 @@ package body AZip_GWin.MDI_Main is
     Open_Child_Window_And_Load(
       Window,
       File_Name,
-      G2UG(Shorten_file_name(GU2G(File_Name)))
+      G2GU(Shorten_file_name(GU2G(File_Name)))
     );
   end Open_Child_Window_And_Load;
 
@@ -272,7 +266,7 @@ package body AZip_GWin.MDI_Main is
     for I in 1..Argument_Count loop
       Open_Child_Window_And_Load(
         Window,
-        G2UG(To_GString_from_String(Argument(I)))
+        G2GU(To_GString_from_String(Argument(I)))
       );
     end loop;
     Window.Accept_File_Drag_And_Drop;
@@ -329,7 +323,7 @@ package body AZip_GWin.MDI_Main is
   )
   is
 
-    function Suffix return GWindows.Gstring is
+    function Suffix return GWindows.GString is
     begin
       if Current_MDI_Window = 0 then
         return "";
@@ -344,7 +338,7 @@ package body AZip_GWin.MDI_Main is
     New_Window.extra_first_doc:= extra_first_doc;
     Window.user_maximize_restore:= False;
     Create_MDI_Child (New_Window.all, Window, File_Title, Is_Dynamic => True);
-    New_Window.Short_Name:= G2UG(File_Title);
+    New_Window.Short_Name:= G2GU(File_Title);
     MDI_Active_Window (Window, New_Window.all);
 
     -- Transfer user-defined default options:
@@ -372,21 +366,14 @@ package body AZip_GWin.MDI_Main is
   -- On_File_Open --
   ------------------
 
-  procedure On_File_Open (
-        Window : in out MDI_Main_Type ) is
+  procedure On_File_Open (Window : in out MDI_Main_Type) is
     File_Name, File_Title : GString_Unbounded;
     Success    : Boolean;
   begin
-    Open_File (Window, "Open",
-      File_Name,
-      ((G2UG ("Zip archives (*.zip)"),
-          G2UG ("*.zip" )),
-        (G2UG ("All files (*.*)"),
-          G2UG ("*.*"))),
-      ".zip",
-      File_Title,
-      Success);
-
+    Open_File (
+      Window, "Open", File_Name, Zip_archives_filters, ".zip", File_Title,
+      Success
+    );
     if Success then
       Open_Child_Window_And_Load( Window, File_Name, File_Title );
     end if;
@@ -553,7 +540,7 @@ package body AZip_GWin.MDI_Main is
       for i in x .. Window.opt.mru'Last-1 loop
         Window.opt.mru(i):= Window.opt.mru(i+1);
       end loop;
-      Window.opt.mru(Window.opt.mru'Last):= G2UG("");
+      Window.opt.mru(Window.opt.mru'Last):= Null_GString_Unbounded;
     end if;
 
     -- roll down the full list
@@ -562,7 +549,7 @@ package body AZip_GWin.MDI_Main is
     end loop;
 
     -- name exists in list
-    Window.opt.mru(Window.opt.mru'First):= G2UG(name);
+    Window.opt.mru(Window.opt.mru'First):= G2GU(name);
 
   end Add_MRU;
 

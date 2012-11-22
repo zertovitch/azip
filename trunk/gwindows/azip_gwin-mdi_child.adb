@@ -28,11 +28,6 @@ with Interfaces;
 
 package body AZip_GWin.MDI_Child is
 
-  function S2G (Value : String) return GString renames To_GString_From_String;
-  function G2S (Value : GString) return String renames To_String;
-  function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
-  function G2GU (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
-
   procedure Update_display(
     Window : in out MDI_Child_Type;
     need   :        Update_need
@@ -108,14 +103,14 @@ package body AZip_GWin.MDI_Child is
             Lst.Insert_Column(
               S2G(Image(topic)),
               Entry_topic'Pos(topic),
-              Window.current_options.column_width(topic)
+              Window.Parent.opt.column_width(topic)
             );
           when archive_changed =>
             Lst.Clear;
             Lst.Set_Column(
               S2G(Image(topic)),
               Entry_topic'Pos(topic),
-              Window.current_options.column_width(topic)
+              Window.Parent.opt.column_width(topic)
             );
           when simple_refresh =>
             null;
@@ -129,7 +124,7 @@ package body AZip_GWin.MDI_Child is
     sel: Natural;
 
   begin
-    case Window.current_options.view_mode is
+    case Window.opt.view_mode is
       when Flat =>
         Window.Folder_Tree.Hide;
         Feed_directory_list("");
@@ -176,6 +171,8 @@ package body AZip_GWin.MDI_Child is
 
     -- Filial feelings:
     Window.parent:= MDI_Main_Access(Controlling_Parent(Window));
+    -- Copy options to child level:
+    Window.opt:= Window.Parent.opt;
 
     Create(Window.Directory_List, Window, 50,1,20,20, Multiple, Report_View);
     Create(Window.Folder_Tree, Window, 1,1,20,20);
@@ -245,15 +242,8 @@ package body AZip_GWin.MDI_Child is
   begin
     New_File_Name := Window.File_Name;
     Save_File (
-      Window,
-      "Save as...",
-      New_File_Name,
-      ((To_GString_Unbounded ("Zip archive (*.zip)"),
-        To_GString_Unbounded ("*.zip" )),
-       (To_GString_Unbounded ("All files (*.*)"),
-        To_GString_Unbounded ("*.*"))),
-      ".zip",
-      File_Title,
+      Window, "Save as...", New_File_Name, Zip_archives_filters,
+      ".zip", File_Title,
       Success
     );
     if not Success then
@@ -509,7 +499,7 @@ package body AZip_GWin.MDI_Child is
     if Window.Parent.user_maximize_restore then
       Window.Parent.opt.MDI_childen_maximized:= Zoom(Window);
     end if;
-    case Window.current_options.view_mode is
+    case Window.opt.view_mode is
       when Flat =>
         Window.Directory_List.Location(
             GWindows.Types.Rectangle_Type'
@@ -605,8 +595,8 @@ package body AZip_GWin.MDI_Child is
       Window,
       "Add files to archive...",
       File_Names,
-       ( 1=>(To_GString_Unbounded ("All files (*.*)"),
-             To_GString_Unbounded ("*.*"))),
+       ( 1=>(G2GU ("All files (*.*)"),
+             G2GU ("*.*"))),
       "",
       File_Title,
       Success
@@ -741,9 +731,8 @@ package body AZip_GWin.MDI_Child is
     if Can_Close then
       -- Remember column widths
       for e in Entry_topic'Range loop
-        -- Window.Parent.opt.column_width(e):=
-        -- !! get width :-)
-        null;
+        Window.Parent.opt.column_width(e):=
+          Window.Directory_List.Column_Width(Entry_topic'Pos(e));
       end loop;
     end if;
   end On_Close;

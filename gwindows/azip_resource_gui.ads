@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/21   16:59:32
+-- Transcription time: 2012/11/23   10:09:04
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -63,7 +63,9 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
     -- Label: IDC_STATIC
     AZip_URL: Label_Type;
-    Static_0006: Group_Box_Type;
+    -- Label: IDC_STATIC
+    -- Label: IDC_STATIC
+    Static_0008: Group_Box_Type;
     GNAT_URL: Label_Type;
     GNAT_Version: Label_Type;
     GNAVI_URL: Label_Type;
@@ -76,7 +78,7 @@ package azip_Resource_GUI is
     Credits_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 141
+  -- Dialog at resource line 143
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -119,7 +121,7 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- Find_box_Type
 
-  -- Dialog at resource line 157
+  -- Dialog at resource line 159
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -160,7 +162,7 @@ package azip_Resource_GUI is
     Cancel_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 172
+  -- Dialog at resource line 174
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -275,6 +277,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return GString;
 
 
-  -- Last line of resource script file: 246
+  -- Last line of resource script file: 249
 
 end azip_Resource_GUI;

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/21   16:59:32
+-- Transcription time: 2012/11/23   10:09:04
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -51,7 +51,7 @@ package body azip_Resource_GUI is
     Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Select &all" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
     Append_Item(Menu.Popup_0003, "&Unselect all" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+U", IDM_Unselect_all);
-    Append_Item(Menu.Popup_0003, "&Extract...", IDM_EXTRACT);
+    Append_Item(Menu.Popup_0003, "&Extract..." & To_GString_from_String((1=>ASCII.HT)) & "Shift+E", IDM_EXTRACT);
     Append_Separator(Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Delete entries" & To_GString_from_String((1=>ASCII.HT)) & "Del / -", IDM_Delete_selected);
     Append_Item(Menu.Popup_0003, "A&dd files..." & To_GString_from_String((1=>ASCII.HT)) & "+", IDM_ADD_FILES);
@@ -191,20 +191,24 @@ package body azip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  5, 12, 65, 65, x,y,w,h);
+    Dlg_to_Scn(  9, 12, 22, 22, x,y,w,h);
     Create( Window.Static_0001, Window, Num_resource(AZip_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  76, 10, 165, 8, x,y,w,h);
+    Dlg_to_Scn(  50, 10, 165, 8, x,y,w,h);
     Create_label( Window, "AZip - a portable Zip user interface", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  76, 25, 151, 8, x,y,w,h);
+    Dlg_to_Scn(  50, 25, 151, 8, x,y,w,h);
     Create_label( Window, "Copyright © Gautier de Montmollin 2012", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  76, 40, 100, 8, x,y,w,h);
+    Dlg_to_Scn(  50, 40, 100, 8, x,y,w,h);
     Create_label( Window, "MIT Open Source License", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  10, 70, 30, 8, x,y,w,h);
+    Dlg_to_Scn(  10, 60, 30, 8, x,y,w,h);
     Create_label( Window, "Internet:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  57, 70, 132, 8, x,y,w,h);
+    Dlg_to_Scn(  57, 60, 132, 8, x,y,w,h);
     Create( Window.AZip_URL, Window, "http://sf.net/projects/azip", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => AZip_URL);
+    Dlg_to_Scn(  10, 80, 30, 8, x,y,w,h);
+    Create_label( Window, "Version:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  57, 80, 132, 8, x,y,w,h);
+    Create_label( Window, "0.95", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  5, 105, 247, 81, x,y,w,h);
-    Create( Window.Static_0006, Window, "Software made with the following free, open source components:", x,y,w,h);
+    Create( Window.Static_0008, Window, "Software made with the following free, open source components:", x,y,w,h);
     Dlg_to_Scn(  23, 119, 100, 8, x,y,w,h);
     Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAT_URL);
     Dlg_to_Scn(  133, 119, 113, 8, x,y,w,h);
@@ -245,7 +249,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- About_box_Type
 
 
-  -- Dialog at resource line 150
+  -- Dialog at resource line 152
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -348,7 +352,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Find_box_Type
 
 
-  -- Dialog at resource line 166
+  -- Dialog at resource line 168
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -550,6 +554,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 246
+  -- Last line of resource script file: 249
 
 end azip_Resource_GUI;

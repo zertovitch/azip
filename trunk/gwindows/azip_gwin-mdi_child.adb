@@ -180,7 +180,7 @@ package body AZip_GWin.MDI_Child is
     Create(Window.Folder_Tree, Window, 1,1,20,20);
 
     Create(Window.Status_Bar, Window, "No archive");
-    Parts(Window.Status_Bar, (200, -1));
+    Parts(Window.Status_Bar, (1 => 200));
     Dock (Window.Status_Bar, GWindows.Base.At_Bottom);
 
     Dock_Children (Window);

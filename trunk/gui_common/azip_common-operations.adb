@@ -127,12 +127,17 @@ package body AZip_Common.Operations is
       buf: array(Buffer_range) of Character:= (others => ' ');
       i, bup: Buffer_range:= 0;
       j: Natural;
-      ignore_case: constant Boolean:= True;
+      ignore_case: constant Boolean:= True; -- !! as option
     begin
+      -- First we copy the string
+      -- !! wide or not : what to do ? --
       stl:= 0;
       for w in search_pattern'Range loop
-        str(stl):= To_Character(search_pattern(w)); -- !! lazy conversion
         stl:= stl + 1;
+        str(stl):= To_Character(search_pattern(w)); -- !! lazy conversion
+        if ignore_case then
+          str(stl):= To_Upper(str(stl));
+        end if;
       end loop;
       l:= str(stl);
       occ:= 0;
@@ -215,21 +220,32 @@ package body AZip_Common.Operations is
         when Exact =>
           -- !! use hashed maps either for searching !!
           for i in entry_name'Range loop
-            if entry_name(i).name = name and then
-              entry_name(i).utf_8 = unicode_file_name
-            then
+            if entry_name(i).name = name then
+              -- !! convert both names
+              -- according to
+              --   entry_name(i).utf_8 and
+              --   unicode_file_name
               match:= True;
               exit;
             end if;
           end loop;
         when Substring =>
           for i in entry_name'Range loop
-            if Index(entry_name(i).name, name) > 0 and then
-              entry_name(i).utf_8 = unicode_file_name
-            then
-              match:= True;
-              exit;
-            end if;
+            declare
+              pattern: constant String:= To_String(entry_name(i).name);
+            begin
+              if pattern = "" then
+                match:= True;
+                exit;
+              elsif Index(short_name, pattern) > 0 then
+                -- !! convert both names
+                -- according to
+                --   entry_name(i).utf_8 and
+                --   unicode_file_name
+                  match:= True;
+                exit;
+              end if;
+            end;
           end loop;
       end case;
       if operation in Read_Only_Operation and then entry_name'Length = 0 then

@@ -325,22 +325,7 @@ package body AZip_GWin.MDI_Child is
       box.File_Progress.Position(file_percents_done);
       box.Archive_Progress.Position(archive_percents_done);
       box.Entry_name.Text(S2G(entry_being_processed)); -- !! UTF-8
-      case operation is
-        when Append =>
-          box.Entry_operation_name.Text("Appending...");
-        when Replace =>
-          box.Entry_operation_name.Text("Replacing...");
-        when Copy =>
-          box.Entry_operation_name.Text("Copying...");
-        when Skip =>
-          box.Entry_operation_name.Text("Skipping...");
-        when Test =>
-          box.Entry_operation_name.Text("Testing...");
-        when Extract =>
-          box.Entry_operation_name.Text("Extracting...");
-        when Search =>
-          box.Entry_operation_name.Text("Searching...");
-      end case;
+      box.Entry_operation_name.Text(S2G(Description(operation)));
       Message_Check;
     end Boxed_Feedback;
     --
@@ -377,7 +362,6 @@ package body AZip_GWin.MDI_Child is
         Set_Time_Stamp => Ada_Directories_Extensions.Set_Modification_Time'Access,
         new_temp_name  => new_temp_name
       );
-      -- !! after processing we should do something with the counts -> Results col.
       Window.last_operation:= operation;
       if operation in Modifying_Operation then
         Window.Load_archive_catalogue;
@@ -483,11 +467,14 @@ package body AZip_GWin.MDI_Child is
   end Update_Common_Menus;
 
   procedure Load_archive_catalogue (Window : in out MDI_Child_Type) is
+    new_zif: Zip_info;
   begin
+    Zip.Load(new_zif, G2S(GU2G(Window.File_Name)));
     if Zip.Is_loaded(Window.zif) then
+      Copy_user_codes(Window.zif, new_zif);
       Zip.Delete(Window.zif);
     end if;
-    Zip.Load(Window.zif, G2S(GU2G(Window.File_Name)));
+    Window.zif:= new_zif;
     Update_display(Window, archive_changed);
     -- Window.Status_deamon.Display(Window'Unchecked_Access);
   end Load_archive_catalogue;
@@ -674,7 +661,6 @@ package body AZip_GWin.MDI_Child is
       new_temp_name  => ""
     );
     -- !! Message_Box: say something if failure
-    -- !! Display results (0 -> OK -> green; 1 -> KO -> red)
   end On_Test;
 
   procedure On_Menu_Select (

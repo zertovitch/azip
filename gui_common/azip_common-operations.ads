@@ -38,6 +38,8 @@ package AZip_Common.Operations is
     Search
   );
 
+  function Description(op: Entry_Operation) return String;
+
   type Zip_entry_name is record
     name : Unbounded_String;
     utf_8: Boolean;
@@ -66,5 +68,7 @@ package AZip_Common.Operations is
     Set_Time_Stamp :        UnZip.Set_Time_Stamp_proc;
     new_temp_name  :        String
   );
+
+  procedure Copy_user_codes(from, to: Zip.Zip_info);
 
 end AZip_Common.Operations;

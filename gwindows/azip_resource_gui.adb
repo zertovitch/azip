@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/23   10:09:04
+-- Transcription time: 2012/11/23   16:42:20
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -191,7 +191,7 @@ package body azip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  9, 12, 22, 22, x,y,w,h);
+    Dlg_to_Scn(  9, 12, 85, 79, x,y,w,h);
     Create( Window.Static_0001, Window, Num_resource(AZip_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  50, 10, 165, 8, x,y,w,h);
     Create_label( Window, "AZip - a portable Zip user interface", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
@@ -206,9 +206,9 @@ package body azip_Resource_GUI is
     Dlg_to_Scn(  10, 80, 30, 8, x,y,w,h);
     Create_label( Window, "Version:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  57, 80, 132, 8, x,y,w,h);
-    Create_label( Window, "0.95", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create( Window.Version_label, Window, "0.95", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Version_label);
     Dlg_to_Scn(  5, 105, 247, 81, x,y,w,h);
-    Create( Window.Static_0008, Window, "Software made with the following free, open source components:", x,y,w,h);
+    Create( Window.Static_0007, Window, "Software made with the following free, open source components:", x,y,w,h);
     Dlg_to_Scn(  23, 119, 100, 8, x,y,w,h);
     Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAT_URL);
     Dlg_to_Scn(  133, 119, 113, 8, x,y,w,h);
@@ -250,6 +250,151 @@ package body azip_Resource_GUI is
 
 
   -- Dialog at resource line 152
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out File_exists_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out File_exists_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "File already exists";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 359, 95, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- File_exists_box_Type
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out File_exists_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 359, 95, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  4, 74, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.Overwrite_Yes, Window, "Yes", x,y,w,h, ID => Overwrite_Yes);
+    Create( Window.Overwrite_Yes_permanent, Window, "Yes", x,y,w,h, ID => Overwrite_Yes);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.Overwrite_Yes_permanent);
+    else -- hide the closing button
+      Hide(Window.Overwrite_Yes);
+    end if;
+    Dlg_to_Scn(  64, 74, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.Overwrite_No, Window, "No", x,y,w,h, ID => Overwrite_No);
+    Create( Window.Overwrite_No_permanent, Window, "No", x,y,w,h, ID => Overwrite_No);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.Overwrite_No_permanent);
+    else -- hide the closing button
+      Hide(Window.Overwrite_No);
+    end if;
+    Dlg_to_Scn(  124, 74, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.Overwrite_All, Window, "All", x,y,w,h, ID => Overwrite_All);
+    Create( Window.Overwrite_All_permanent, Window, "All", x,y,w,h, ID => Overwrite_All);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.Overwrite_All_permanent);
+    else -- hide the closing button
+      Hide(Window.Overwrite_All);
+    end if;
+    Dlg_to_Scn(  184, 74, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.Overwrite_None, Window, "None", x,y,w,h, ID => Overwrite_None);
+    Create( Window.Overwrite_None_permanent, Window, "None", x,y,w,h, ID => Overwrite_None);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.Overwrite_None_permanent);
+    else -- hide the closing button
+      Hide(Window.Overwrite_None);
+    end if;
+    Dlg_to_Scn(  244, 74, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.Overwrite_Rename, Window, "Rename", x,y,w,h, ID => Overwrite_Rename);
+    Create( Window.Overwrite_Rename_permanent, Window, "Rename", x,y,w,h, ID => Overwrite_Rename);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.Overwrite_Rename_permanent);
+    else -- hide the closing button
+      Hide(Window.Overwrite_Rename);
+    end if;
+    Dlg_to_Scn(  304, 74, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDCANCEL_permanent);
+    else -- hide the closing button
+      Hide(Window.IDCANCEL);
+    end if;
+    Dlg_to_Scn(  10, 7, 258, 8, x,y,w,h);
+    Create_label( Window, "A file with the same name exists on the target location.", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  10, 25, 345, 8, x,y,w,h);
+    Create( Window.Conflict_simple_name, Window, "(name)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Conflict_simple_name);
+    Dlg_to_Scn(  10, 49, 340, 8, x,y,w,h);
+    Create( Window.Conflict_location, Window, "(location)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Conflict_location);
+  end Create_Contents; -- File_exists_box_Type
+
+
+  -- Dialog at resource line 171
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -352,7 +497,108 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Find_box_Type
 
 
-  -- Dialog at resource line 168
+  -- Dialog at resource line 187
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out Password_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Password_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Password";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 186, 95, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- Password_box_Type
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Password_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 186, 95, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  72, 74, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDOK, Window, "OK", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "OK", x,y,w,h, ID => IDOK);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDOK_permanent);
+    else -- hide the closing button
+      Hide(Window.IDOK);
+    end if;
+    Dlg_to_Scn(  127, 74, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDCANCEL_permanent);
+    else -- hide the closing button
+      Hide(Window.IDCANCEL);
+    end if;
+    Dlg_to_Scn(  13, 42, 162, 13, x,y,w,h);
+    Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Password_edit);
+    Dlg_to_Scn(  13, 8, 157, 8, x,y,w,h);
+    Create_label( Window, "The current password is invalid.", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  14, 22, 159, 8, x,y,w,h);
+    Create_label( Window, "Please enter a new password:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+  end Create_Contents; -- Password_box_Type
+
+
+  -- Dialog at resource line 202
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -554,6 +800,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 249
+  -- Last line of resource script file: 283
 
 end azip_Resource_GUI;

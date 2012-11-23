@@ -6,6 +6,7 @@ with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 with Ada.Streams.Stream_IO;
 
 with Interfaces;
+with Ada.Text_IO;
 
 package body AZip_Common.Operations is
 
@@ -39,6 +40,49 @@ package body AZip_Common.Operations is
     end case;
     return "";
   end Result_message;
+
+  function Description(op: Entry_Operation) return String is
+  begin
+    case op is
+      when Append =>
+        return "Appending...";
+      when Replace =>
+        return "Replacing...";
+      when Copy =>
+        return "Copying...";
+      when Skip =>
+        return "Skipping...";
+      when Test =>
+        return "Testing...";
+      when Extract =>
+        return "Extracting...";
+      when Search =>
+        return "Searching...";
+    end case;
+  end Description;
+
+  procedure Copy_user_codes(from, to: Zip.Zip_info) is
+    procedure Copy_user_code(
+      name             : String; -- 'name' is compressed entry's full name
+      file_index       : Positive;
+      comp_size        : Zip.File_size_type;
+      uncomp_size      : Zip.File_size_type;
+      crc_32           : Interfaces.Unsigned_32;
+      date_time        : Zip.Time;
+      method           : Zip.PKZip_method;
+      unicode_file_name: Boolean;
+      read_only        : Boolean;
+      user_code        : in out Integer
+    )
+    is
+    pragma Unreferenced (file_index, comp_size, uncomp_size, crc_32, date_time, method, unicode_file_name, read_only);
+    begin
+      Zip.Set_user_code(to, name, user_code);
+    end Copy_user_code;
+    procedure Do_it is new Zip.Traverse_verbose(Copy_user_code);
+  begin
+    Do_it(from);
+  end Copy_user_codes;
 
   function S(Source: Unbounded_String) return String
     renames Ada.Strings.Unbounded.To_String;
@@ -372,10 +416,11 @@ package body AZip_Common.Operations is
     --
     case operation is
       when Add =>
-        for i in entry_name'Range loop -- !! use hashed maps either
+        for i in entry_name'Range loop
           processed_entries:= processed_entries + 1;
           archive_percents_done:= (100 * processed_entries) / total_entries;
           if not Zip.Exists(zif, To_String(entry_name(i).name)) then
+ada.text_io.put_line(To_String(entry_name(i).name));
             -- !! name: Wide to UTF-8 !!
             current_operation:= Append;
             current_entry_name:= U(Remove_path(To_String(entry_name(i).name)));

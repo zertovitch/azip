@@ -1,5 +1,4 @@
 with AZip_Common;                       use AZip_Common;
-with AZip_Common.Operations;            use AZip_Common.Operations;
 
 with Zip;                               use Zip;
 with Zip_Streams;
@@ -9,7 +8,6 @@ with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
-with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Types;
@@ -38,7 +36,7 @@ package body AZip_GWin.MDI_Child is
       row: Natural:= 0;
       Lst: MDI_Child_List_View_Control_Type renames Window.Directory_List;
       --
-      procedure Insert_row(
+      procedure Process_row(
         name             : String; -- 'name' is compressed entry's name
         file_index       : Positive;
         comp_size        : File_size_type;
@@ -47,7 +45,8 @@ package body AZip_GWin.MDI_Child is
         date_time        : Time;
         method           : PKZip_method;
         unicode_file_name: Boolean;
-        read_only        : Boolean
+        read_only        : Boolean;
+        user_code        : in out Integer
       )
       is
         pragma Unreferenced (file_index);
@@ -55,8 +54,9 @@ package body AZip_GWin.MDI_Child is
         extension_idx: Positive:= name'Last + 1;
         R_mark: constant array (Boolean) of Character:= (' ', 'R');
       begin
-        for i in name'Range loop
-          case name(i) is
+        if need in first_display .. archive_changed then
+          for i in name'Range loop
+            case name(i) is
             when '/' | '\' =>
               -- Directory separator, ok with Unicode UTF-8 names
               simple_name_idx:= i + 1;
@@ -65,35 +65,37 @@ package body AZip_GWin.MDI_Child is
               extension_idx:= i + 1;
             when others =>
               null;
-          end case;
-        end loop;
-        if simple_name_idx > name'Last then -- skip directory entries
-          return;
+            end case;
+          end loop;
+          if simple_name_idx > name'Last then -- skip directory entries
+            return;
+          end if;
+          if name'Length < prefix_path'Length or else
+            prefix_path /=  name(name'First..name'First+prefix_path'Length-1)
+          then
+            return;
+          end if;
+          Lst.Insert_Item(S2G(name(simple_name_idx..name'Last)), row);
+          Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, 1);
+          begin
+            Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
+          exception
+            when Zip_Streams.Calendar.Time_Error =>
+              Lst.Set_Sub_Item("(invalid)", row, 2);
+          end;
+          Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, 3);
+          Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, 4);
+          Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, 5);
+          Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
+          Lst.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
+          Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
+          Lst.Set_Sub_Item(S2G(name(name'First..simple_name_idx - 1)), row, 9);
         end if;
-        if name'Length < prefix_path'Length or else
-          prefix_path /=  name(name'First..name'First+prefix_path'Length-1)
-        then
-          return;
-        end if;
-        Lst.Insert_Item(S2G(name(simple_name_idx..name'Last)), row);
-        Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, 1);
-        begin
-          Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
-        exception
-          when Zip_Streams.Calendar.Time_Error =>
-            Lst.Set_Sub_Item("(invalid)", row, 2);
-        end;
-        Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, 3);
-        Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, 4);
-        Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, 5);
-        Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
-        Lst.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
-        Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
-        Lst.Set_Sub_Item(S2G(name(name'First..simple_name_idx - 1)), row, 9);
+        Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, user_code)), row, 10);
         row:= row + 1; -- more subtle with our sorting
-      end Insert_row;
+      end Process_row;
 
-      procedure Traverse is new Zip.Traverse_verbose(Insert_row);
+      procedure Traverse is new Zip.Traverse_verbose(Process_row);
 
     begin
       for topic in Entry_topic loop
@@ -112,11 +114,11 @@ package body AZip_GWin.MDI_Child is
               Entry_topic'Pos(topic),
               Window.Parent.opt.column_width(topic)
             );
-          when simple_refresh =>
+          when results_refresh | simple_refresh =>
             null;
         end case;
       end loop;
-      if Is_Loaded(Window.zif) and then need <= archive_changed then
+      if Is_Loaded(Window.zif) and then need <= results_refresh then
         Traverse(Window.zif);
       end if;
     end Feed_directory_list;
@@ -351,8 +353,7 @@ package body AZip_GWin.MDI_Child is
         (name => To_Unbounded_String(
                    G2S(GU2G(File_Names(i)))
                  ), -- !!
-         utf_8 => False, -- !!
-         match => 0
+         utf_8 => False -- !!
         );
     end loop;
     box.Create_Full_Dialog(Window);
@@ -377,8 +378,11 @@ package body AZip_GWin.MDI_Child is
         new_temp_name  => new_temp_name
       );
       -- !! after processing we should do something with the counts -> Results col.
+      Window.last_operation:= operation;
       if operation in Modifying_Operation then
         Window.Load_archive_catalogue;
+      else
+        Update_display(Window, results_refresh);
       end if;
   exception
     when E : Ada.IO_Exceptions.Use_Error =>

@@ -10,6 +10,17 @@ package AZip_Common.Operations is
 
   type Archive_Operation is (Add, Remove, Test, Extract, Search);
 
+  -- Convention for operation results set Zip_info's user_code:
+  --
+  -- Add / Update : 1 if entry was replaced or appended, 0 otherwise
+  -- Test         : 0 if test was successful, -1 if test failed
+  -- Extract      : 1 if entry was extracted, 0 otherwise, -1 if error
+  -- Search       : number of strings found, or 1 for file
+  --                     name found (no text search)
+  -- Compare      : 0 = same; 1 = different; 2 = missing in the other archive
+
+  function Result_message(op: Archive_Operation; code: Integer) return String;
+
   subtype Modifying_Operation is Archive_Operation range Add .. Remove;
   subtype Read_Only_Operation is Archive_Operation range Test .. Search;
 
@@ -30,9 +41,6 @@ package AZip_Common.Operations is
   type Zip_entry_name is record
     name : Unbounded_String;
     utf_8: Boolean;
-    match: Natural;
-    -- Search: number of strings found;
-    -- Add / Update: 1 if entry was replaced, 0 otherwise
   end record;
 
   type Name_list is array(Positive range <>) of Zip_entry_name;

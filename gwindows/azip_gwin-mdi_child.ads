@@ -1,4 +1,5 @@
-with AZip_Common.User_options;
+with AZip_Common.User_options;          use AZip_Common.User_options;
+with AZip_Common.Operations;            use AZip_Common.Operations;
 with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
 with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
@@ -6,7 +7,6 @@ with Zip;
 
 with GWindows;                          use GWindows;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
-with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 
@@ -60,12 +60,13 @@ package AZip_GWin.MDI_Child is
         Directory_List   : MDI_Child_List_View_Control_Type;
         Folder_Tree      : Tree_View_Control_Type;
         zif              : Zip.Zip_info;
-        opt              : AZip_Common.User_options.Option_Pack_Type;
+        opt              : Option_Pack_Type;
         Status_deamon    : Daemons.Status_display;
         Status_Bar       : MDI_Child_Status_Bar_Type;
         Name_search      : GString_Unbounded;
         Content_search   : GString_Unbounded;
         Temp_name_gen    : Ada.Numerics.Float_Random.Generator;
+        last_operation   : Archive_Operation:= Remove;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);
@@ -90,7 +91,8 @@ package AZip_GWin.MDI_Child is
 
   type Update_need is
     (first_display,   -- first display ever, no columns set
-     archive_changed, -- directory needs a refresh
+     archive_changed, -- directory list needs to be refilled
+     results_refresh, -- same directory, only results changed
      simple_refresh
     );
 

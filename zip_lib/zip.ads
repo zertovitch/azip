@@ -156,7 +156,8 @@ package Zip is
       date_time        : Time;
       method           : PKZip_method;
       unicode_file_name: Boolean;
-      read_only        : Boolean
+      read_only        : Boolean;
+      user_code        : in out Integer
     );
   procedure Traverse_verbose( z: Zip_info );
 
@@ -195,7 +196,6 @@ package Zip is
   procedure Find_offset(
     info           : in     Zip_info;
     name           : in     String;
-    case_sensitive : in     Boolean;
     file_index     :    out Ada.Streams.Stream_IO.Positive_Count;
     comp_size      :    out File_size_type;
     uncomp_size    :    out File_size_type
@@ -203,17 +203,26 @@ package Zip is
 
   File_name_not_found: exception;
 
-  function Exists(
-    info           : in     Zip_info;
-    name           : in     String;
-    case_sensitive : in     Boolean
+  function Exists(info: Zip_info; name: String) return Boolean;
+
+  -- User code: any information e.g. as a result of a string search,
+  -- archive comparison, archive update, recompression,...
+
+  procedure Set_user_code(
+    info           : in Zip_info;
+    name           : in String;
+    code           : in Integer
+  );
+
+  function User_code(
+    info           : in Zip_info;
+    name           : in String
   )
-  return Boolean;
+  return Integer;
 
   procedure Get_sizes(
     info           : in     Zip_info;
     name           : in     String;
-    case_sensitive : in     Boolean;
     comp_size      :    out File_size_type;
     uncomp_size    :    out File_size_type
   );
@@ -318,8 +327,8 @@ package Zip is
   -- Information about this package - e.g. for an "about" box --
   --------------------------------------------------------------
 
-  version   : constant String:= "44";
-  reference : constant String:= "3-Nov-2012";
+  version   : constant String:= "45, preview #1";
+  reference : constant String:= "22-Nov-2012";
   web       : constant String:= "http://unzip-ada.sf.net/";
   -- hopefully the latest version is at that URL...  ---^
 
@@ -351,12 +360,14 @@ private
     method           : PKZip_method;
     unicode_file_name: Boolean;
     read_only        : Boolean; -- TBD: attributes of most supported systems
+    user_code        : Integer;
   end record;
 
   type p_String is access String;
 
   type Zip_info is record
     loaded          : Boolean:= False;
+    case_sensitive  : Boolean;
     zip_file_name   : p_String;        -- a file name...
     zip_input_stream: Zip_Streams.Zipstream_Class_Access; -- ...or an input stream
     -- ^ when not null, we use this and not zip_file_name

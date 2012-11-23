@@ -2,12 +2,43 @@ with Zip.Create, UnZip.Streams, Zip_Streams;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;                   use Ada.Directories;
-with Ada.Strings;                       use Ada.Strings;
+with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 with Ada.Streams.Stream_IO;
 
 with Interfaces;
 
 package body AZip_Common.Operations is
+
+  function Result_message(op: Archive_Operation; code: Integer) return String
+  is
+  begin
+    case op is
+      when Add =>
+        if code = 1 then
+          return "Replaced";
+        end if;
+      when Remove =>
+        null;
+      when Test =>
+        if code = -1 then
+          return "Test failed";
+        else
+          return "OK";
+        end if;
+      when Extract =>
+        case code is
+          when -1 =>
+            return "Extraction failed";
+          when 1 =>
+            return "Extracted";
+          when others =>
+            null;
+        end case;
+      when Search =>
+        return Trim(Integer'Image(code), Left);
+    end case;
+    return "";
+  end Result_message;
 
   function S(Source: Unbounded_String) return String
     renames Ada.Strings.Unbounded.To_String;
@@ -158,7 +189,7 @@ package body AZip_Common.Operations is
     use Zip.Create;
     --
     procedure Action(
-      name             : String; -- 'name' is compressed entry's name
+      name             : String; -- 'name' is compressed entry's full name
       file_index       : Positive;
       comp_size        : Zip.File_size_type;
       uncomp_size      : Zip.File_size_type;
@@ -166,15 +197,16 @@ package body AZip_Common.Operations is
       date_time        : Zip.Time;
       method           : Zip.PKZip_method;
       unicode_file_name: Boolean;
-      read_only        : Boolean
+      read_only        : Boolean;
+      user_code        : in out Integer
     )
     is
       pragma Unreferenced
         (comp_size, uncomp_size, crc_32, date_time, method, read_only);
       match: Boolean:= False;
       short_name: constant String:= Remove_path(name);
-      idx: Natural:= 0;
     begin
+      user_code:= 0;
       processed_entries:= processed_entries + 1;
       archive_percents_done:= (100 * processed_entries) / total_entries;
       file_percents_done:= 0;
@@ -187,7 +219,7 @@ package body AZip_Common.Operations is
               entry_name(i).utf_8 = unicode_file_name
             then
               match:= True;
-              idx:= i;
+              exit;
             end if;
           end loop;
         when Substring =>
@@ -196,7 +228,7 @@ package body AZip_Common.Operations is
               entry_name(i).utf_8 = unicode_file_name
             then
               match:= True;
-              idx:= i;
+              exit;
             end if;
           end loop;
       end case;
@@ -220,9 +252,7 @@ package body AZip_Common.Operations is
               Is_read_only       => False, -- !!
               Feedback           => Entry_feedback'Unrestricted_Access
             );
-            if idx > 0 then
-              entry_name(idx).match:= 1;
-            end if;
+            user_code:= 1;
           when Remove =>
             Feedback(
               file_percents_done,
@@ -235,43 +265,46 @@ package body AZip_Common.Operations is
             current_operation:= Test;
             current_entry_name:= U(short_name);
             is_unicode:= unicode_file_name;
-            UnZip.Extract(
-              from                 => zif,
-              what                 => name,
-              feedback             => Entry_feedback'Unrestricted_Access,
-              help_the_file_exists => null,
-              tell_data            => null,
-              get_pwd              => null, -- !!
-              options              => (UnZip.test_only => True, others => False)
-            );
-            if idx > 0 then
-              entry_name(idx).match:= 1;
-            end if;
+            begin
+              UnZip.Extract(
+                from                 => zif,
+                what                 => name,
+                feedback             => Entry_feedback'Unrestricted_Access,
+                help_the_file_exists => null,
+                tell_data            => null,
+                get_pwd              => null, -- !!
+                options              => (UnZip.test_only => True, others => False)
+              );
+            exception
+              when others =>
+                user_code:= -1;
+            end;
           when Extract =>
             current_operation:= Extract;
             current_entry_name:= U(short_name);
             is_unicode:= unicode_file_name;
-            UnZip.Extract(
-              from                 => zif,
-              what                 => name,
-              feedback             => Entry_feedback'Unrestricted_Access,
-              help_the_file_exists => null, -- !!
-              tell_data            => null,
-              get_pwd              => null, -- !!
-              options              => (others => False),
-              file_system_routines => Extract_FS_routines
-            );
-            if idx > 0 then
-              entry_name(idx).match:= 1;
-            end if;
+            begin
+              UnZip.Extract(
+                from                 => zif,
+                what                 => name,
+                feedback             => Entry_feedback'Unrestricted_Access,
+                help_the_file_exists => null, -- !!
+                tell_data            => null,
+                get_pwd              => null, -- !!
+                options              => (others => False),
+                file_system_routines => Extract_FS_routines
+              );
+              user_code:= 1;
+            exception
+              when others =>
+                user_code:= -1;
+            end;
           when Search =>
             if search_pattern = "" then -- just mark entries with matching names
-              if idx > 0 then
-                entry_name(idx).match:= 1;
-              end if;
+              user_code:= 1;
             else
               -- We need to search the string in the compressed entry...
-              Search_1_file(name => name, occ  => entry_name(idx).match);
+              Search_1_file(name => name, occ  => user_code);
             end if;
         end case;
       else -- archive entry name is not matched by a file name in the list
@@ -298,9 +331,6 @@ package body AZip_Common.Operations is
     if not Zip.Is_loaded(zif) then
       return; -- we have an "null" archive (not even a file with 0 entries)
     end if;
-    for i in entry_name'Range loop
-      entry_name(i).match:= 0;
-    end loop;
     case operation is
       when Add =>
         total_entries:= Zip.Entries(zif) + entry_name'Length;
@@ -329,12 +359,8 @@ package body AZip_Common.Operations is
         for i in entry_name'Range loop -- !! use hashed maps either
           processed_entries:= processed_entries + 1;
           archive_percents_done:= (100 * processed_entries) / total_entries;
-          if not Zip.Exists(
-            zif,
-            To_String(entry_name(i).name),
-            case_sensitive => True -- !! system-dependent!...
-          )
-          then
+          if not Zip.Exists(zif, To_String(entry_name(i).name)) then
+            -- !! name: Wide to UTF-8 !!
             current_operation:= Append;
             current_entry_name:= U(Remove_path(To_String(entry_name(i).name)));
             is_unicode:= entry_name(i).utf_8;

@@ -7,6 +7,8 @@ with Zip;
 
 with GWindows;                          use GWindows;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
+with GWindows.Drawing;
+with GWindows.Types;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 
@@ -108,6 +110,15 @@ package AZip_GWin.MDI_Child is
     Width  : in     Integer;
     Height : in     Integer
   );
+
+  -- Avoid painting the background colour since the child window client area
+  -- is completely covered by contents. Practically, it avoids
+  -- the flickering when resizing the window with Windows' full redraw option
+
+  overriding procedure On_Erase_Background
+    (Window : in out MDI_Child_Type;
+     Canvas : in out GWindows.Drawing.Canvas_Type;
+     Area   : in     GWindows.Types.Rectangle_Type);
 
   overriding procedure On_Menu_Select (
     Window : in out MDI_Child_Type;

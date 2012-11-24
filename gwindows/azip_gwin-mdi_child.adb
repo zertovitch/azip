@@ -10,7 +10,6 @@ with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
-with GWindows.Types;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;
@@ -377,17 +376,27 @@ package body AZip_GWin.MDI_Child is
       else
         Update_display(Window, results_refresh);
       end if;
-  exception
-    when E : Ada.IO_Exceptions.Use_Error =>
-      Message_Box(
+    exception
+      when E : Ada.IO_Exceptions.Name_Error =>
+        Message_Box(
+          Window,
+          "Processing failed",
+          "Either the archive cannot be opened (deleted ? moved ?) " & NL &
+          "or a new file cannot be written." &
+          NL & "-----" & NL &
+          S2G(Ada.Exceptions.Exception_Name (E)) & NL &
+          S2G(Ada.Exceptions.Exception_Message (E)),
+          OK_Box,
+          Exclamation_Icon
+        );
+      when E : Ada.IO_Exceptions.Use_Error =>
+        Message_Box(
           Window,
           "Processing failed",
           "Archive cannot be modified - probably it is read-only." &
-          S2G(
-            NL & "-----" & NL &
-            Ada.Exceptions.Exception_Name (E) & NL &
-            Ada.Exceptions.Exception_Message (E)
-          ),
+          NL & "-----" & NL &
+          S2G(Ada.Exceptions.Exception_Name (E)) & NL &
+          S2G(Ada.Exceptions.Exception_Message (E)),
           OK_Box,
           Exclamation_Icon
         );
@@ -452,10 +461,8 @@ package body AZip_GWin.MDI_Child is
       if Message_Box(
         Window,
         "File(s) dropped",
-          "Add dropped file(s) to new archive (" &
-          GU2G(Window.Short_Name) &
-          ") ?" &
-          S2G(NL) &
+          "Add dropped file(s) to new archive (" &  GU2G(Window.Short_Name) &
+          ") ?" &  NL &
           "You'll be asked first under which name the archive will be created.",
         Yes_No_Box,
         Question_Icon) = Yes
@@ -518,6 +525,20 @@ package body AZip_GWin.MDI_Child is
     end case;
     Dock_Children (Window);
   end On_Size;
+
+  procedure On_Erase_Background
+    (Window : in out MDI_Child_Type;
+     Canvas : in out GWindows.Drawing.Canvas_Type;
+     Area   : in     GWindows.Types.Rectangle_Type)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, Canvas);
+    pragma Warnings (Off, Area);
+  begin
+    null;
+    -- Do nothing! This avoids the flickering between background
+    -- (invisible anyway) and contents.
+  end On_Erase_Background;
 
   function Get_selected_entry_list(Window: MDI_Child_Type)
   return Array_Of_File_Names

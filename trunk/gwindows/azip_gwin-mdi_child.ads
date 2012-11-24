@@ -65,9 +65,10 @@ package AZip_GWin.MDI_Child is
         opt              : Option_Pack_Type;
         Status_deamon    : Daemons.Status_display;
         Status_Bar       : MDI_Child_Status_Bar_Type;
-        Name_search      : GString_Unbounded;
-        Content_search   : GString_Unbounded;
-        Temp_name_gen    : Ada.Numerics.Float_Random.Generator;
+        name_search      : GString_Unbounded;
+        content_search   : GString_Unbounded;
+        current_password : GString_Unbounded;
+        temp_name_gen    : Ada.Numerics.Float_Random.Generator;
         last_operation   : Archive_Operation:= Remove;
       end record;
 

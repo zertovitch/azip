@@ -181,17 +181,19 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-Password_input_box DIALOG 0, 0, 228, 106
+Password_input_box DIALOG 0, 0, 228, 137
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "Password"
 FONT 8, "Ms Shell Dlg"
 {
-    DEFPUSHBUTTON   "OK", IDOK, 112, 85, 50, 14
-    PUSHBUTTON      "Cancel", IDCANCEL, 167, 85, 50, 14
-    EDITTEXT        Password_edit, 14, 39, 204, 13, ES_AUTOHSCROLL | ES_PASSWORD
-    LTEXT           "The current password is invalid.", IDC_STATIC, 13, 8, 157, 8, SS_LEFT
-    LTEXT           "Please enter a new password:", IDC_STATIC, 14, 22, 159, 8, SS_LEFT
-    AUTOCHECKBOX    "Show password", Show_password_box, 13, 63, 96, 8
+    DEFPUSHBUTTON   "OK", IDOK, 112, 119, 50, 14
+    PUSHBUTTON      "Cancel", IDCANCEL, 167, 119, 50, 14
+    EDITTEXT        Password_edit, 14, 73, 204, 13, ES_AUTOHSCROLL | ES_PASSWORD
+    LTEXT           "The current password is invalid.", IDC_STATIC, 13, 42, 157, 8, SS_LEFT
+    LTEXT           "Please enter a new password:", IDC_STATIC, 14, 56, 159, 8, SS_LEFT
+    AUTOCHECKBOX    "Show password", Show_password_box, 13, 97, 96, 8
+    LTEXT           "(name)", Encrypted_entry, 26, 21, 175, 8, SS_LEFT
+    GROUPBOX        "This entry is encrypted.", IDC_STATIC, 12, 10, 203, 26
 }
 
 

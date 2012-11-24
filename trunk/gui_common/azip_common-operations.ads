@@ -1,6 +1,7 @@
 with Zip, UnZip;
 
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
+with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 
 package AZip_Common.Operations is
 
@@ -10,9 +11,10 @@ package AZip_Common.Operations is
 
   type Archive_Operation is (Add, Remove, Test, Extract, Search);
 
-  success : constant:=  1;
-  nothing : constant:=  0;
-  bad_crc : constant:= -1;
+  success   : constant:=  1;
+  nothing   : constant:=  0;
+  bad_crc   : constant:= -1;
+  wrong_pwd : constant:= -2; -- After N attempts, password was still wrong
 
   -- Convention for operation results set Zip_info's user_code:
   -- Add / Update : 1 if entry was replaced or appended, 0 otherwise
@@ -59,18 +61,22 @@ package AZip_Common.Operations is
       operation             : Entry_Operation;
       user_abort            : out Boolean
     );
+    with procedure Change_password(
+      entry_name : in String;
+      password   : in out Unbounded_Wide_String
+    );
   procedure Process_archive(
-    zif            :        Zip.Zip_Info; -- preserved, even after modifying operation
-    operation      :        Archive_Operation;
-    entry_name     : in out Name_list;
-    name_match     :        Name_matching_mode;
-    base_folder    :        String;
-    search_pattern :        Wide_String;
-    output_folder  :        String;
-    Set_Time_Stamp :        UnZip.Set_Time_Stamp_proc;
-    new_temp_name  :        String;
-    Name_conflict  :        UnZip.Resolve_conflict_proc;
-    Change_password:        UnZip.Get_password_proc
+    zif             :        Zip.Zip_Info; -- preserved, even after modifying operation
+    operation       :        Archive_Operation;
+    entry_name      :        Name_list;
+    name_match      :        Name_matching_mode;
+    base_folder     :        String;
+    search_pattern  :        Wide_String;
+    output_folder   :        String;
+    Set_Time_Stamp  :        UnZip.Set_Time_Stamp_proc;
+    new_temp_name   :        String;
+    Name_conflict   :        UnZip.Resolve_conflict_proc;
+    password        : in out Unbounded_Wide_String
   );
 
   ------------------

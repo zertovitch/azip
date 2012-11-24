@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/24   17:52:41
+-- Transcription time: 2012/11/24   23:29:08
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -212,9 +212,11 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
     -- Label: IDC_STATIC
     Show_password_box: Check_Box_Type;
+    Encrypted_entry: Label_Type;
+    Static_0003: Group_Box_Type;
   end record; -- Password_input_box_Type
 
-  -- Dialog at resource line 194
+  -- Dialog at resource line 196
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -255,7 +257,7 @@ package azip_Resource_GUI is
     Cancel_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 209
+  -- Dialog at resource line 211
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -315,6 +317,7 @@ package azip_Resource_GUI is
   Password_input_box        : constant:=    119;
   Archive_Progress          : constant:=   1000;
   Conflict_simple_name      : constant:=   1000;
+  Encrypted_entry           : constant:=   1000;
   GNAT_URL                  : constant:=   1000;
   Entry_operation_name      : constant:=   1001;
   GNAT_Version              : constant:=   1001;
@@ -382,6 +385,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return GString;
 
 
-  -- Last line of resource script file: 284
+  -- Last line of resource script file: 286
 
 end azip_Resource_GUI;

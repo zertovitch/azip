@@ -12,6 +12,14 @@ package body AZip_Common.Operations is
   function Result_message(op: Archive_Operation; code: Integer) return String
   is
   begin
+    -- Following codes have a single explanation over all operations
+    case code is
+      when wrong_pwd =>
+        return "Password wrong" & Integer'Image(UnZip.tolerance_wrong_password) & " times";
+      when others =>
+        null;
+    end case;
+    --
     case op is
       when Add =>
         if code = success then
@@ -24,7 +32,7 @@ package body AZip_Common.Operations is
           when success =>
             return "OK";
           when bad_crc =>
-            return "CRC Test failed";
+            return "CRC test failed";
           when nothing =>
             return "not tested";
           when others =>
@@ -33,7 +41,7 @@ package body AZip_Common.Operations is
       when Extract =>
         case code is
           when bad_crc =>
-            return "CRC Test failed on extraction";
+            return "CRC test failed on extraction";
           when success =>
             return "Extracted";
           when others =>
@@ -114,17 +122,17 @@ package body AZip_Common.Operations is
   ------------------------------------------------
 
   procedure Process_archive(
-    zif            :        Zip.Zip_Info; -- preserved, even after modifying operation
-    operation      :        Archive_Operation;
-    entry_name     : in out Name_list;
-    name_match     :        Name_matching_mode;
-    base_folder    :        String;
-    search_pattern :        Wide_String;
-    output_folder  :        String;
-    Set_Time_Stamp :        UnZip.Set_Time_Stamp_proc;
-    new_temp_name  :        String;
-    Name_conflict  :        UnZip.Resolve_conflict_proc;
-    Change_password:        UnZip.Get_password_proc
+    zif             :        Zip.Zip_Info; -- preserved, even after modifying operation
+    operation       :        Archive_Operation;
+    entry_name      :        Name_list;
+    name_match      :        Name_matching_mode;
+    base_folder     :        String;
+    search_pattern  :        Wide_String;
+    output_folder   :        String;
+    Set_Time_Stamp  :        UnZip.Set_Time_Stamp_proc;
+    new_temp_name   :        String;
+    Name_conflict   :        UnZip.Resolve_conflict_proc;
+    password        : in out Unbounded_Wide_String
   )
   is
     new_zip: Zip.Create.Zip_Create_info;
@@ -192,7 +200,18 @@ package body AZip_Common.Operations is
       end loop;
       l:= str(stl);
       occ:= 0;
-      Open( f, zif, name );
+      for attempt in 1..UnZip.tolerance_wrong_password loop
+        begin
+          Open( f, zif, name, To_String(To_Wide_String(password)) );
+          exit;
+        exception
+          when UnZip.Wrong_password =>
+            if attempt = UnZip.tolerance_wrong_password then
+              raise;
+            end if;
+            Change_password(To_String(current_entry_name), password);
+        end;
+      end loop;
       s:= Stream(f);
       while not End_of_file(f) loop
         Character'Read(s,c);
@@ -234,7 +253,15 @@ package body AZip_Common.Operations is
         return output_folder & Directory_Separator & File_Name;
       end if;
     end Add_extract_directory;
-
+    --
+    procedure Get_password_internal(pwd: out Unbounded_String) is
+      use UnZip;
+    begin
+      Change_password(To_String(current_entry_name), password);
+      -- persistence over entries + wide strings...
+      pwd:=  To_Unbounded_String(To_String(To_Wide_String(password)));
+    end Get_password_internal;
+    --
     Extract_FS_routines: constant UnZip.FS_routines_type:=
       ( Create_Path         => Ada.Directories.Create_Path'Access,
         Set_Time_Stamp      => Set_Time_Stamp,
@@ -350,8 +377,9 @@ package body AZip_Common.Operations is
                 feedback             => Entry_feedback'Unrestricted_Access,
                 help_the_file_exists => null,
                 tell_data            => null,
-                get_pwd              => Change_password,
-                options              => (test_only => True, others => False)
+                get_pwd              => Get_password_internal'Unrestricted_Access,
+                options              => (test_only => True, others => False),
+                password             => To_String(To_Wide_String(password))
               );
               user_code:= success;
             exception
@@ -359,6 +387,9 @@ package body AZip_Common.Operations is
                 abort_rest_of_operation:= True;
               when UnZip.CRC_Error =>
                 user_code:= bad_crc;
+              when UnZip.Wrong_password =>
+                user_code:= wrong_pwd;
+                abort_rest_of_operation:= True;
             end;
           when Extract =>
             current_operation:= Extract;
@@ -378,8 +409,9 @@ package body AZip_Common.Operations is
                 feedback             => Entry_feedback'Unrestricted_Access,
                 help_the_file_exists => Name_conflict,
                 tell_data            => null,
-                get_pwd              => Change_password,
+                get_pwd              => Get_password_internal'Unrestricted_Access,
                 options              => (others => False),
+                password             => To_String(To_Wide_String(password)),
                 file_system_routines => Extract_FS_routines
               );
               case current_user_attitude is
@@ -399,13 +431,22 @@ package body AZip_Common.Operations is
                 abort_rest_of_operation:= True;
               when UnZip.CRC_Error =>
                 user_code:= bad_crc;
+              when UnZip.Wrong_password =>
+                user_code:= wrong_pwd;
+                abort_rest_of_operation:= True;
             end;
           when Search =>
             if search_pattern = "" then -- just mark entries with matching names
               user_code:= 1;
             else
-              -- We need to search the string in the compressed entry...
-              Search_1_file(name => name, occ  => user_code);
+              begin
+                -- We need to search the string in the compressed entry...
+                Search_1_file(name => name, occ  => user_code);
+              exception
+                when UnZip.Wrong_password =>
+                  user_code:= wrong_pwd;
+                  abort_rest_of_operation:= True;
+              end;
             end if;
         end case;
       else -- archive entry name is not matched by a file name in the list

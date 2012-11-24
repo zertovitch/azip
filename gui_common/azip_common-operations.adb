@@ -6,7 +6,6 @@ with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 with Ada.Streams.Stream_IO;
 
 with Interfaces;
-with Ada.Text_IO;
 
 package body AZip_Common.Operations is
 
@@ -419,23 +418,27 @@ package body AZip_Common.Operations is
         for i in entry_name'Range loop
           processed_entries:= processed_entries + 1;
           archive_percents_done:= (100 * processed_entries) / total_entries;
-          if not Zip.Exists(zif, To_String(entry_name(i).name)) then
-ada.text_io.put_line(To_String(entry_name(i).name));
+          declare
+            name: constant String:= To_String(entry_name(i).name);
+            short_name: constant String:= Remove_path(name);
             -- !! name: Wide to UTF-8 !!
-            current_operation:= Append;
-            current_entry_name:= U(Remove_path(To_String(entry_name(i).name)));
-            is_unicode:= entry_name(i).utf_8;
-            Add_File(
-              Info               => new_zip,
-              Name               => To_String(entry_name(i).name),
-              Name_in_archive    => Remove_path(To_String(entry_name(i).name)),
-              Delete_file_after  => False,
-              Name_UTF_8_encoded => entry_name(i).utf_8,
-              Modification_time  => Zip.Convert(Modification_Time(To_String(entry_name(i).name))),
-              Is_read_only       => False, -- !!
-              Feedback           => Entry_feedback'Unrestricted_Access
-            );
-          end if;
+          begin
+            if not Zip.Exists(zif, short_name) then
+              current_operation:= Append;
+              current_entry_name:= U(short_name);
+              is_unicode:= entry_name(i).utf_8;
+              Add_File(
+                Info               => new_zip,
+                Name               => name,
+                Name_in_archive    => short_name,
+                Delete_file_after  => False,
+                Name_UTF_8_encoded => entry_name(i).utf_8,
+                Modification_time  => Zip.Convert(Modification_Time(name)),
+                Is_read_only       => False, -- !!
+                Feedback           => Entry_feedback'Unrestricted_Access
+              );
+            end if;
+          end;
         end loop;
       when Remove =>
         null;

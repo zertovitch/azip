@@ -2,6 +2,7 @@ with AZip_Common;                       use AZip_Common;
 
 with Zip;                               use Zip;
 with Zip_Streams;
+with UnZip;
 with Time_Display;
 
 with GWindows.Application;              use GWindows.Application;
@@ -179,7 +180,7 @@ package body AZip_GWin.MDI_Child is
     Create(Window.Folder_Tree, Window, 1,1,20,20);
 
     Create(Window.Status_Bar, Window, "No archive");
-    Parts(Window.Status_Bar, (1 => 200));
+    Parts(Window.Status_Bar, (1 => 200, 2 => -1));
     Dock (Window.Status_Bar, GWindows.Base.At_Bottom);
 
     Dock_Children (Window);
@@ -254,8 +255,7 @@ package body AZip_GWin.MDI_Child is
       if Message_Box (
         Window,
         "Save as",
-        "The file " & GU2G (New_File_Name) &
-        " already exists. Replace ?",
+        "The file " & GU2G (New_File_Name) & " already exists. Replace ?",
         Yes_No_Box,
         Question_Icon
       ) = No
@@ -267,10 +267,8 @@ package body AZip_GWin.MDI_Child is
     if Is_loaded(Window.zif) then
       begin
         Ada.Directories.Copy_File(
-          G2S (
-            GU2G (Window.File_Name)),
-          G2S (
-            GU2G (New_File_Name))
+          G2S(GU2G (Window.File_Name)), -- !! unicode
+          G2S(GU2G (New_File_Name))
         );
       exception
         when others =>
@@ -284,8 +282,7 @@ package body AZip_GWin.MDI_Child is
           return;
       end;
     else -- we don't have a file yet
-      Create(empty_zip, Out_File, G2S (
-               GU2G (New_File_Name)));
+      Create(empty_zip, Out_File, G2S(GU2G(New_File_Name))); -- !! unicode
       for i in contents'Range loop
         Write(empty_zip, contents(i));
       end loop;
@@ -337,15 +334,46 @@ package body AZip_GWin.MDI_Child is
       user_abort:= aborted;
     end Boxed_Feedback;
     --
-    procedure Archive_processing is new Process_archive(Boxed_Feedback);
+    procedure Name_conflict_resolution
+     ( name            :  in String;
+       action          : out UnZip.Name_conflict_intervention;
+       new_name        : out String;
+       new_name_length : out Natural )
+    is
+      box: File_exists_box_Type;
+      use UnZip;
+    begin
+      box.Create_Full_Dialog(Window);
+      box.Conflict_simple_name.Text(S2G(Remove_path(name))); -- !! utf-8
+      box.Conflict_location.Text(S2G(output_folder));
+      box.Overwrite_Rename.Disable;
+      -- !! ^ Needs some effort to make an idiot-proof name query ;-)
+      box.Center;
+      case Show_Dialog(box, Window) is
+        when Overwrite_Yes    =>  action:= yes;
+        when Overwrite_No     =>  action:= no;
+        when Overwrite_All    =>  action:= yes_to_all;
+        when Overwrite_None   =>  action:= none;
+        when Overwrite_Rename =>  action:= rename_it;
+        when others           =>  action:= abort_now;
+      end case;
+    end Name_conflict_resolution;
     --
-  begin
+    procedure Get_password(password: out Unbounded_String) is
+    begin
+      null; --!!
+    end Get_password;
+    --
+    -- Instanciation of the GUI-agnostic processing
+    --
+    procedure Archive_processing is
+      new AZip_Common.Operations.Process_archive(Boxed_Feedback);
+    --
+  begin -- Process_archive_GWin
     -- Convert GStrings (UTF-16) to Strings with UTF-8
     for i in az_names'Range loop
       az_names(i):=
-        (name => To_Unbounded_String(
-                   G2S(GU2G(File_Names(i)))
-                 ), -- !!
+        (name => To_Unbounded_String(G2S(GU2G(File_Names(i)))), -- !!
          utf_8 => False -- !!
         );
     end loop;
@@ -360,15 +388,17 @@ package body AZip_GWin.MDI_Child is
     Window.Parent.Disable;
     begin
       Archive_processing(
-        zif            => Window.zif,
-        operation      => operation,
-        entry_name     => az_names,
-        name_match     => name_match,
-        base_folder    => base_folder,
-        search_pattern => search_pattern,
-        output_folder  => output_folder,
-        Set_Time_Stamp => Ada_Directories_Extensions.Set_Modification_Time'Access,
-        new_temp_name  => new_temp_name
+        zif             => Window.zif,
+        operation       => operation,
+        entry_name      => az_names,
+        name_match      => name_match,
+        base_folder     => base_folder,
+        search_pattern  => search_pattern,
+        output_folder   => output_folder,
+        Set_Time_Stamp  => Ada_Directories_Extensions.Set_Modification_Time'Access,
+        new_temp_name   => new_temp_name,
+        Name_conflict   => Name_conflict_resolution'Unrestricted_Access,
+        Change_password => Get_password'Unrestricted_Access
       );
       Window.last_operation:= operation;
       if operation in Modifying_Operation then
@@ -690,7 +720,7 @@ package body AZip_GWin.MDI_Child is
       output_folder  => "",
       new_temp_name  => ""
     );
-    -- !! Message_Box: say something if failure
+    -- !! Message_Box: say something if any failure
   end On_Test;
 
   procedure On_Menu_Select (

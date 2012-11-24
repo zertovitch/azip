@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/23   16:42:20
+-- Transcription time: 2012/11/24   17:52:41
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -385,12 +385,12 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  10, 7, 258, 8, x,y,w,h);
-    Create_label( Window, "A file with the same name exists on the target location.", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  10, 25, 345, 8, x,y,w,h);
+    Dlg_to_Scn(  15, 26, 327, 8, x,y,w,h);
     Create( Window.Conflict_simple_name, Window, "(name)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Conflict_simple_name);
-    Dlg_to_Scn(  10, 49, 340, 8, x,y,w,h);
+    Dlg_to_Scn(  15, 50, 319, 8, x,y,w,h);
     Create( Window.Conflict_location, Window, "(location)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Conflict_location);
+    Dlg_to_Scn(  4, 7, 349, 63, x,y,w,h);
+    Create( Window.Static_0001, Window, "A file with the same name exists on the target location.", x,y,w,h);
   end Create_Contents; -- File_exists_box_Type
 
 
@@ -502,7 +502,7 @@ package body azip_Resource_GUI is
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
   --
-  procedure On_Pre_Create (Window    : in out Password_box_Type;
+  procedure On_Pre_Create (Window    : in out Password_input_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned)
   is
@@ -516,7 +516,7 @@ package body azip_Resource_GUI is
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
-     (Window      : in out Password_box_Type;
+     (Window      : in out Password_input_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
       Title       : in     GString := "Password";
       Left        : in     Integer := Use_Default; -- Default = as designed
@@ -528,7 +528,7 @@ package body azip_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 186, 95, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 228, 106, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -548,13 +548,13 @@ package body azip_Resource_GUI is
     if Height = Use_Default then Client_Area_Height(Window, h); end if;
     Use_GUI_Font(Window);
     Create_Contents(Window, True);
-  end Create_Full_Dialog; -- Password_box_Type
+  end Create_Full_Dialog; -- Password_input_box_Type
 
   --  b) Create all contents, not the window itself (must be
   --      already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
-     ( Window      : in out Password_box_Type;
+     ( Window      : in out Password_input_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      )
@@ -562,12 +562,12 @@ package body azip_Resource_GUI is
     x,y,w,h: Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 186, 95, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 228, 106, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  72, 74, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  112, 85, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -578,7 +578,7 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  127, 74, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  167, 85, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -589,16 +589,18 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  13, 42, 162, 13, x,y,w,h);
+    Dlg_to_Scn(  14, 39, 204, 13, x,y,w,h);
     Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Password_edit);
     Dlg_to_Scn(  13, 8, 157, 8, x,y,w,h);
     Create_label( Window, "The current password is invalid.", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  14, 22, 159, 8, x,y,w,h);
     Create_label( Window, "Please enter a new password:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-  end Create_Contents; -- Password_box_Type
+    Dlg_to_Scn(  13, 63, 96, 8, x,y,w,h);
+    Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
+  end Create_Contents; -- Password_input_box_Type
 
 
-  -- Dialog at resource line 202
+  -- Dialog at resource line 203
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -800,6 +802,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 283
+  -- Last line of resource script file: 284
 
 end azip_Resource_GUI;

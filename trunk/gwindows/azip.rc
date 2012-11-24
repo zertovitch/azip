@@ -157,9 +157,9 @@ FONT 8, "Ms Shell Dlg"
     PUSHBUTTON      "None", Overwrite_None, 184, 74, 50, 14
     PUSHBUTTON      "Rename", Overwrite_Rename, 244, 74, 50, 14
     PUSHBUTTON      "Cancel", IDCANCEL, 304, 74, 50, 14
-    LTEXT           "A file with the same name exists on the target location.", IDC_STATIC, 10, 7, 258, 8, SS_LEFT
-    LTEXT           "(name)", Conflict_simple_name, 10, 25, 345, 8, SS_LEFT
-    LTEXT           "(location)", Conflict_location, 10, 49, 340, 8, SS_LEFT
+    LTEXT           "(name)", Conflict_simple_name, 15, 26, 327, 8, SS_LEFT
+    LTEXT           "(location)", Conflict_location, 15, 50, 319, 8, SS_LEFT
+    GROUPBOX        "A file with the same name exists on the target location.", IDC_STATIC, 4, 7, 349, 63
 }
 
 
@@ -181,16 +181,17 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-Password_box DIALOG 0, 0, 186, 95
+Password_input_box DIALOG 0, 0, 228, 106
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "Password"
 FONT 8, "Ms Shell Dlg"
 {
-    DEFPUSHBUTTON   "OK", IDOK, 72, 74, 50, 14
-    PUSHBUTTON      "Cancel", IDCANCEL, 127, 74, 50, 14
-    EDITTEXT        Password_edit, 13, 42, 162, 13, ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK", IDOK, 112, 85, 50, 14
+    PUSHBUTTON      "Cancel", IDCANCEL, 167, 85, 50, 14
+    EDITTEXT        Password_edit, 14, 39, 204, 13, ES_AUTOHSCROLL | ES_PASSWORD
     LTEXT           "The current password is invalid.", IDC_STATIC, 13, 8, 157, 8, SS_LEFT
     LTEXT           "Please enter a new password:", IDC_STATIC, 14, 22, 159, 8, SS_LEFT
+    AUTOCHECKBOX    "Show password", Show_password_box, 13, 63, 96, 8
 }
 
 

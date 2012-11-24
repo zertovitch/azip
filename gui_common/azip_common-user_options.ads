@@ -19,10 +19,11 @@ package AZip_Common.User_options is
     win_left,
     win_top,
     win_width,
-    win_height            : Integer:= use_default;
-    MDI_childen_maximized : Boolean:= True;
-    MDI_main_maximized    : Boolean:= False;
+    win_height            : Integer := use_default;
+    MDI_childen_maximized : Boolean := True;
+    MDI_main_maximized    : Boolean := False;
     mru                   : MRU_List:= (others => Null_Unbounded_Wide_String);
+    show_passwords        : Boolean := False;
   end record;
 
   -----------------

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/24   17:52:41
+-- Transcription time: 2012/11/24   23:29:08
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -528,7 +528,7 @@ package body azip_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 228, 106, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 228, 137, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -562,12 +562,12 @@ package body azip_Resource_GUI is
     x,y,w,h: Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 228, 106, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 228, 137, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  112, 85, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  112, 119, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -578,7 +578,7 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  167, 85, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  167, 119, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -589,18 +589,22 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  14, 39, 204, 13, x,y,w,h);
+    Dlg_to_Scn(  14, 73, 204, 13, x,y,w,h);
     Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Password_edit);
-    Dlg_to_Scn(  13, 8, 157, 8, x,y,w,h);
+    Dlg_to_Scn(  13, 42, 157, 8, x,y,w,h);
     Create_label( Window, "The current password is invalid.", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  14, 22, 159, 8, x,y,w,h);
+    Dlg_to_Scn(  14, 56, 159, 8, x,y,w,h);
     Create_label( Window, "Please enter a new password:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  13, 63, 96, 8, x,y,w,h);
+    Dlg_to_Scn(  13, 97, 96, 8, x,y,w,h);
     Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
+    Dlg_to_Scn(  26, 21, 175, 8, x,y,w,h);
+    Create( Window.Encrypted_entry, Window, "(name)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Encrypted_entry);
+    Dlg_to_Scn(  12, 10, 203, 26, x,y,w,h);
+    Create( Window.Static_0003, Window, "This entry is encrypted.", x,y,w,h);
   end Create_Contents; -- Password_input_box_Type
 
 
-  -- Dialog at resource line 203
+  -- Dialog at resource line 205
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -802,6 +806,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 284
+  -- Last line of resource script file: 286
 
 end azip_Resource_GUI;

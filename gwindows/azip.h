@@ -13,6 +13,7 @@
 #define Password_input_box                      119
 #define Archive_Progress                        1000
 #define Conflict_simple_name                    1000
+#define Encrypted_entry                         1000
 #define GNAT_URL                                1000
 #define Entry_operation_name                    1001
 #define GNAT_Version                            1001

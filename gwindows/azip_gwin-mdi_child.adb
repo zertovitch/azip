@@ -7,8 +7,10 @@ with Time_Display;
 
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
+with GWindows.Buttons;                  use GWindows.Buttons;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
+with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
@@ -359,15 +361,60 @@ package body AZip_GWin.MDI_Child is
       end case;
     end Name_conflict_resolution;
     --
-    procedure Get_password(password: out Unbounded_String) is
+    procedure Get_password(
+      entry_name : in String;
+      password   : in out GString_Unbounded
+    )
+    is
+      box: Password_input_box_Type;
+      pwd_candidate: GString_Unbounded:= Window.current_password;
+      --
+      procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
+        pragma Warnings(off, dummy);
+      begin
+        pwd_candidate:= G2GU(box.Password_edit.Text);
+        Window.Parent.opt.show_passwords:= box.Show_password_box.State = Checked;
+      end Get_Data;
+      --
+      procedure Show_or_Hide ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
+        pragma Warnings(off, dummy);
+      begin
+        if box.Show_password_box.State = Checked then
+          box.Password_edit.Password(Off);
+        else
+          box.Password_edit.Password('#');
+        end if;
+        box.Password_edit.Redraw;
+        box.Password_edit.Focus;
+      end Show_or_Hide;
     begin
-      null; --!!
+      box.Create_Full_Dialog(Window);
+      box.Encrypted_entry.Text(S2G(entry_name)); -- !! utf-8
+      box.Password_edit.Text(GU2G(password));
+      if Window.Parent.opt.show_passwords then
+        box.Show_password_box.State(Checked);
+      else
+        box.Show_password_box.State(Unchecked);
+      end if;
+      box.Center;
+      box.On_Destroy_Handler(Get_Data'Unrestricted_Access);
+      box.Show_password_box.On_Click_Handler(Show_or_Hide'Unrestricted_Access);
+      Show_or_Hide(Window);
+      case Show_Dialog(box, Window) is
+        when IDOK =>
+          password:= pwd_candidate;
+        when others =>
+          null; -- abandond pwd change
+      end case;
     end Get_password;
     --
     -- Instanciation of the GUI-agnostic processing
     --
     procedure Archive_processing is
-      new AZip_Common.Operations.Process_archive(Boxed_Feedback);
+      new AZip_Common.Operations.Process_archive(
+        Boxed_Feedback,
+        Get_password
+      );
     --
   begin -- Process_archive_GWin
     -- Convert GStrings (UTF-16) to Strings with UTF-8
@@ -388,17 +435,17 @@ package body AZip_GWin.MDI_Child is
     Window.Parent.Disable;
     begin
       Archive_processing(
-        zif             => Window.zif,
-        operation       => operation,
-        entry_name      => az_names,
-        name_match      => name_match,
-        base_folder     => base_folder,
-        search_pattern  => search_pattern,
-        output_folder   => output_folder,
-        Set_Time_Stamp  => Ada_Directories_Extensions.Set_Modification_Time'Access,
-        new_temp_name   => new_temp_name,
-        Name_conflict   => Name_conflict_resolution'Unrestricted_Access,
-        Change_password => Get_password'Unrestricted_Access
+        zif              => Window.zif,
+        operation        => operation,
+        entry_name       => az_names,
+        name_match       => name_match,
+        base_folder      => base_folder,
+        search_pattern   => search_pattern,
+        output_folder    => output_folder,
+        Set_Time_Stamp   => Ada_Directories_Extensions.Set_Modification_Time'Access,
+        new_temp_name    => new_temp_name,
+        Name_conflict    => Name_conflict_resolution'Unrestricted_Access,
+        password         => Window.current_password
       );
       Window.last_operation:= operation;
       if operation in Modifying_Operation then
@@ -686,6 +733,7 @@ package body AZip_GWin.MDI_Child is
     box.Content_to_be_searched.Text(GU2G(Window.Content_search));
     box.Center;
     box.On_Destroy_Handler(Get_Data'Unrestricted_Access);
+    box.Name_to_be_searched.Focus;
     if Show_Dialog (box, Window) = IDOK then
       Process_archive_GWin(
         Window         => Window,

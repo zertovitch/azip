@@ -7,7 +7,8 @@ package body AZip_Common.User_options is
         col_width,
         win_left, win_top, win_width, win_height,
         maximized, children_maximized,
-        mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9
+        mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
+        show_passwords
       );
 
     pragma Unreferenced (mru2, mru3, mru4, mru5, mru6, mru7, mru8);
@@ -44,6 +45,8 @@ package body AZip_Common.User_options is
               when mru1..mru9 =>
                 opt.mru( Key'Pos(k)-Key'Pos(mru1)+1 ):=
                   To_Unbounded_Wide_String(s);
+              when show_passwords =>
+                opt.show_passwords:= Boolean'Wide_Value(s);
             end case;
           end;
         exception
@@ -91,6 +94,8 @@ package body AZip_Common.User_options is
               R(Boolean'Wide_Image(opt.MDI_childen_maximized));
             when mru1..mru9 =>
               R( To_Wide_String(opt.mru( Key'Pos(k)-Key'Pos(mru1)+1 )) );
+            when show_passwords =>
+              R(Boolean'Wide_Image(opt.show_passwords));
           end case;
         end;
       end loop;

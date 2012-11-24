@@ -10,11 +10,12 @@ package AZip_Common.Operations is
 
   type Archive_Operation is (Add, Remove, Test, Extract, Search);
 
+  success : constant:=  1;
+  nothing : constant:=  0;
+  bad_crc : constant:= -1;
+
   -- Convention for operation results set Zip_info's user_code:
-  --
   -- Add / Update : 1 if entry was replaced or appended, 0 otherwise
-  -- Test         : 0 if test was successful, -1 if test failed
-  -- Extract      : 1 if entry was extracted, 0 otherwise, -1 if error
   -- Search       : number of strings found, or 1 for file
   --                     name found (no text search)
   -- Compare      : 0 = same; 1 = different; 2 = missing in the other archive
@@ -55,7 +56,8 @@ package AZip_Common.Operations is
       archive_percents_done : Natural;
       entry_being_processed : String;
       is_UTF_8              : Boolean;
-      operation             : Entry_Operation
+      operation             : Entry_Operation;
+      user_abort            : out Boolean
     );
   procedure Process_archive(
     zif            :        Zip.Zip_Info; -- preserved, even after modifying operation

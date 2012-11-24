@@ -312,13 +312,21 @@ package body AZip_GWin.MDI_Child is
   is
     az_names: Name_list(File_Names'Range);
     box: Progress_Box_Type;
+    aborted: Boolean:= False;
+    --
+    procedure Abort_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
+      pragma Warnings(off, dummy);
+    begin
+      aborted:= True;
+    end Abort_clicked;
     --
     procedure Boxed_Feedback(
       file_percents_done    : Natural;
       archive_percents_done : Natural;
       entry_being_processed : String;
       is_UTF_8              : Boolean;
-      operation             : Entry_Operation
+      operation             : Entry_Operation;
+      user_abort            : out Boolean
     )
     is
     begin
@@ -327,6 +335,7 @@ package body AZip_GWin.MDI_Child is
       box.Entry_name.Text(S2G(entry_being_processed)); -- !! UTF-8
       box.Entry_operation_name.Text(S2G(Description(operation)));
       Message_Check;
+      user_abort:= aborted;
     end Boxed_Feedback;
     --
     procedure Archive_processing is new Process_archive(Boxed_Feedback);
@@ -346,7 +355,7 @@ package body AZip_GWin.MDI_Child is
     box.Archive_Progress.Position(0);
     box.Cancel_button.Hide;
     box.Cancel_button_permanent.Show;
-    box.Cancel_button_permanent.Disable; -- !!
+    box.Cancel_button_permanent.On_Click_Handler(Abort_clicked'Unrestricted_Access);
     box.Center;
     box.Show;
     Window.Parent.Disable;

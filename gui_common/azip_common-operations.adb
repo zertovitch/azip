@@ -1,4 +1,4 @@
-with Zip.Create, UnZip.Streams, Zip_Streams;
+with Zip.Create, Zip.Compress, UnZip.Streams, Zip_Streams;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;                   use Ada.Directories;
@@ -14,22 +14,27 @@ package body AZip_Common.Operations is
   begin
     case op is
       when Add =>
-        if code = 1 then
+        if code = success then
           return "Replaced";
         end if;
       when Remove =>
         null;
       when Test =>
-        if code = -1 then
-          return "Test failed";
-        else
-          return "OK";
-        end if;
+        case code is
+          when success =>
+            return "OK";
+          when bad_crc =>
+            return "CRC Test failed";
+          when nothing =>
+            return "not tested";
+          when others =>
+            null;
+        end case;
       when Extract =>
         case code is
-          when -1 =>
-            return "Extraction failed";
-          when 1 =>
+          when bad_crc =>
+            return "CRC Test failed on extraction";
+          when success =>
             return "Extracted";
           when others =>
             null;
@@ -148,9 +153,9 @@ package body AZip_Common.Operations is
         archive_percents_done,
         S(current_entry_name),
         is_unicode,
-        current_operation
+        current_operation,
+        user_abort
       );
-      user_abort:= False; -- !!
     end Entry_feedback;
     --
     -- Taken from Find_zip
@@ -235,6 +240,7 @@ package body AZip_Common.Operations is
     );
     --
     use Zip.Create;
+    abort_rest_of_operation: Boolean:= False;
     --
     procedure Action(
       name             : String; -- 'name' is compressed entry's full name
@@ -253,8 +259,12 @@ package body AZip_Common.Operations is
         (comp_size, uncomp_size, crc_32, date_time, method, read_only);
       match: Boolean:= False;
       short_name: constant String:= Remove_path(name);
+      dummy_user_abort: Boolean;
     begin
       user_code:= 0;
+      if abort_rest_of_operation then
+        return;
+      end if;
       processed_entries:= processed_entries + 1;
       archive_percents_done:= (100 * processed_entries) / total_entries;
       file_percents_done:= 0;
@@ -301,24 +311,30 @@ package body AZip_Common.Operations is
             current_operation:= Replace;
             current_entry_name:= U(short_name);
             is_unicode:= unicode_file_name;
-            Add_File(
-              Info               => new_zip,
-              Name               => name,
-              Name_in_archive    => short_name,
-              Delete_file_after  => False,
-              Name_UTF_8_encoded => unicode_file_name,
-              Modification_time  => Zip.Convert(Modification_Time(name)),
-              Is_read_only       => False, -- !!
-              Feedback           => Entry_feedback'Unrestricted_Access
-            );
-            user_code:= 1;
+            begin
+              Add_File(
+                Info               => new_zip,
+                Name               => name,
+                Name_in_archive    => short_name,
+                Delete_file_after  => False,
+                Name_UTF_8_encoded => unicode_file_name,
+                Modification_time  => Zip.Convert(Modification_Time(name)),
+                Is_read_only       => False, -- !!
+                Feedback           => Entry_feedback'Unrestricted_Access
+              );
+              user_code:= success;
+            exception
+              when Zip.Compress.User_Abort =>
+                abort_rest_of_operation:= True;
+            end;
           when Remove =>
             Feedback(
               file_percents_done,
               archive_percents_done,
               short_name,
               unicode_file_name,
-              Skip
+              Skip,
+              dummy_user_abort
             );
           when Test =>
             current_operation:= Test;
@@ -334,9 +350,12 @@ package body AZip_Common.Operations is
                 get_pwd              => null, -- !!
                 options              => (UnZip.test_only => True, others => False)
               );
+              user_code:= success;
             exception
-              when others =>
-                user_code:= -1;
+              when UnZip.User_Abort =>
+                abort_rest_of_operation:= True;
+              when UnZip.CRC_Error =>
+                user_code:= bad_crc;
             end;
           when Extract =>
             current_operation:= Extract;
@@ -353,10 +372,12 @@ package body AZip_Common.Operations is
                 options              => (others => False),
                 file_system_routines => Extract_FS_routines
               );
-              user_code:= 1;
+              user_code:= success;
             exception
-              when others =>
-                user_code:= -1;
+              when UnZip.User_Abort =>
+                abort_rest_of_operation:= True;
+              when UnZip.CRC_Error =>
+                user_code:= bad_crc;
             end;
           when Search =>
             if search_pattern = "" then -- just mark entries with matching names
@@ -438,6 +459,10 @@ package body AZip_Common.Operations is
                 Feedback           => Entry_feedback'Unrestricted_Access
               );
             end if;
+          exception
+            when Zip.Compress.User_Abort =>
+              abort_rest_of_operation:= True;
+              exit;
           end;
         end loop;
       when Remove =>
@@ -452,8 +477,12 @@ package body AZip_Common.Operations is
       when Modifying_Operation =>
         Zip_Streams.Close(old_fzs);
         Finish(new_zip);
-        Delete_File(Zip.Zip_Name(zif));
-        Rename(new_temp_name, Zip.Zip_Name(zif));
+        if abort_rest_of_operation then
+          Delete_File(new_temp_name);
+        else
+          Delete_File(Zip.Zip_Name(zif));
+          Rename(new_temp_name, Zip.Zip_Name(zif));
+        end if;
       when Read_Only_Operation =>
         null;
     end case;

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/23   16:42:20
+-- Transcription time: 2012/11/24   17:52:41
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -123,9 +123,9 @@ package azip_Resource_GUI is
     Overwrite_Rename_permanent: Button_Type; -- doesn't close parent window after click
     IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
-    -- Label: IDC_STATIC
     Conflict_simple_name: Label_Type;
     Conflict_location: Label_Type;
+    Static_0001: Group_Box_Type;
   end record; -- File_exists_box_Type
 
   -- Dialog at resource line 162
@@ -202,7 +202,7 @@ package azip_Resource_GUI is
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      );
 
-  type Password_box_Type is new Window_type with record
+  type Password_input_box_Type is new Window_type with record
 
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
@@ -211,21 +211,22 @@ package azip_Resource_GUI is
     Password_edit: Edit_Box_Type;
     -- Label: IDC_STATIC
     -- Label: IDC_STATIC
-  end record; -- Password_box_Type
+    Show_password_box: Check_Box_Type;
+  end record; -- Password_input_box_Type
 
-  -- Dialog at resource line 193
+  -- Dialog at resource line 194
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
   --
-  procedure On_Pre_Create (Window    : in out Password_box_Type;
+  procedure On_Pre_Create (Window    : in out Password_input_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned);
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
-     (Window      : in out Password_box_Type;
+     (Window      : in out Password_input_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
       Title       : in     GString := "Password";
       Left        : in     Integer := Use_Default; -- Default = as designed
@@ -239,7 +240,7 @@ package azip_Resource_GUI is
   --      already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
-     ( Window      : in out Password_box_Type;
+     ( Window      : in out Password_input_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      );
@@ -254,7 +255,7 @@ package azip_Resource_GUI is
     Cancel_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 208
+  -- Dialog at resource line 209
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -310,8 +311,8 @@ package azip_Resource_GUI is
   Find_box                  : constant:=    111;
   AZip_Doc_Icon             : constant:=    112;
   AZip_Icon                 : constant:=    114;
-  Password_box              : constant:=    116;
   File_exists_box           : constant:=    118;
+  Password_input_box        : constant:=    119;
   Archive_Progress          : constant:=   1000;
   Conflict_simple_name      : constant:=   1000;
   GNAT_URL                  : constant:=   1000;
@@ -321,6 +322,7 @@ package azip_Resource_GUI is
   File_Progress             : constant:=   1002;
   GNAVI_URL                 : constant:=   1002;
   Name_to_be_searched       : constant:=   1002;
+  Show_password_box         : constant:=   1002;
   Cancel_button             : constant:=   1003;
   Version_label             : constant:=   1003;
   Content_to_be_searched    : constant:=   1004;
@@ -380,6 +382,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return GString;
 
 
-  -- Last line of resource script file: 283
+  -- Last line of resource script file: 284
 
 end azip_Resource_GUI;

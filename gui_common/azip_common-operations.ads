@@ -68,8 +68,16 @@ package AZip_Common.Operations is
     search_pattern :        Wide_String;
     output_folder  :        String;
     Set_Time_Stamp :        UnZip.Set_Time_Stamp_proc;
-    new_temp_name  :        String
+    new_temp_name  :        String;
+    Name_conflict  :        UnZip.Resolve_conflict_proc;
+    Change_password:        UnZip.Get_password_proc
   );
+
+  ------------------
+  -- Some goodies --
+  ------------------
+
+  function Remove_path(s: String) return String;
 
   procedure Copy_user_codes(from, to: Zip.Zip_info);
 

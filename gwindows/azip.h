@@ -9,8 +9,8 @@
 #define Find_box                                111
 #define AZip_Doc_Icon                           112
 #define AZip_Icon                               114
-#define Password_box                            116
 #define File_exists_box                         118
+#define Password_input_box                      119
 #define Archive_Progress                        1000
 #define Conflict_simple_name                    1000
 #define GNAT_URL                                1000
@@ -20,6 +20,7 @@
 #define File_Progress                           1002
 #define GNAVI_URL                               1002
 #define Name_to_be_searched                     1002
+#define Show_password_box                       1002
 #define Cancel_button                           1003
 #define Version_label                           1003
 #define Content_to_be_searched                  1004

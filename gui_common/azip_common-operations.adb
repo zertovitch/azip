@@ -122,7 +122,9 @@ package body AZip_Common.Operations is
     search_pattern :        Wide_String;
     output_folder  :        String;
     Set_Time_Stamp :        UnZip.Set_Time_Stamp_proc;
-    new_temp_name  :        String
+    new_temp_name  :        String;
+    Name_conflict  :        UnZip.Resolve_conflict_proc;
+    Change_password:        UnZip.Get_password_proc
   )
   is
     new_zip: Zip.Create.Zip_Create_info;
@@ -147,7 +149,8 @@ package body AZip_Common.Operations is
       else
         file_percents_done:= percents_done;
       end if;
-      -- Call the given feedback (Windows GUI, Gtk, Lumen, iOS, console, ...)
+      -- Call the given non-portable feedback box
+      -- (Windows GUI, Gtk, Lumen, iOS, console, ...)
       Feedback(
         file_percents_done,
         archive_percents_done,
@@ -239,7 +242,7 @@ package body AZip_Common.Operations is
         others              => null
     );
     --
-    use Zip.Create;
+    use Zip.Create, UnZip;
     abort_rest_of_operation: Boolean:= False;
     --
     procedure Action(
@@ -259,9 +262,9 @@ package body AZip_Common.Operations is
         (comp_size, uncomp_size, crc_32, date_time, method, read_only);
       match: Boolean:= False;
       short_name: constant String:= Remove_path(name);
-      dummy_user_abort: Boolean;
+      dummy_user_abort, conflict: Boolean;
     begin
-      user_code:= 0;
+      user_code:= nothing;
       if abort_rest_of_operation then
         return;
       end if;
@@ -341,14 +344,14 @@ package body AZip_Common.Operations is
             current_entry_name:= U(short_name);
             is_unicode:= unicode_file_name;
             begin
-              UnZip.Extract(
+              Extract(
                 from                 => zif,
                 what                 => name,
                 feedback             => Entry_feedback'Unrestricted_Access,
                 help_the_file_exists => null,
                 tell_data            => null,
-                get_pwd              => null, -- !!
-                options              => (UnZip.test_only => True, others => False)
+                get_pwd              => Change_password,
+                options              => (test_only => True, others => False)
               );
               user_code:= success;
             exception
@@ -361,18 +364,36 @@ package body AZip_Common.Operations is
             current_operation:= Extract;
             current_entry_name:= U(short_name);
             is_unicode:= unicode_file_name;
+            if current_user_attitude = none then
+              conflict:= Exists(Add_extract_directory(name));
+            else
+              conflict:= True;
+              -- Covers the case where current_user_attitude is "yes" before
+              -- call to Extract, then "none" after.
+            end if;
             begin
-              UnZip.Extract(
+              Extract(
                 from                 => zif,
                 what                 => name,
                 feedback             => Entry_feedback'Unrestricted_Access,
-                help_the_file_exists => null, -- !!
+                help_the_file_exists => Name_conflict,
                 tell_data            => null,
-                get_pwd              => null, -- !!
+                get_pwd              => Change_password,
                 options              => (others => False),
                 file_system_routines => Extract_FS_routines
               );
-              user_code:= success;
+              case current_user_attitude is
+                when yes | yes_to_all | rename_it =>
+                  user_code:= success;
+                when none =>
+                  if conflict then
+                    null; -- nothing happened since a file with that name existed
+                  else
+                    user_code:= success;
+                  end if;
+                when others =>
+                  null;
+              end case;
             exception
               when UnZip.User_Abort =>
                 abort_rest_of_operation:= True;
@@ -427,6 +448,7 @@ package body AZip_Common.Operations is
         -- Read-only operation, doesn't need a new archive file;
         -- current archive opened only at entry testing / extracting
     end case;
+    UnZip.current_user_attitude:= UnZip.yes;
     --------------------------------
     -- The main job is done here: --
     --------------------------------

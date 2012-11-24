@@ -114,7 +114,8 @@ package body AZip_GWin.MDI_Main is
       Message_Box(
         Window,
         "Invalid zip archive",
-        "File " & GU2G(File_Name) & " is not a valid zip archive.",
+        "File " & GU2G(File_Name) & NL &
+        "doesn't exist or is not a valid zip archive.",
         OK_Box,
         Error_Icon
       );
@@ -619,10 +620,9 @@ package body AZip_GWin.MDI_Main is
           Message_Box(
             Window,
             "File is a Zip archive",
-            S2G(
             "Should AZip open this Zip archive individually," & NL &
             "in a separate window ?" & NL &
-            "If not, it will be added as a file into an archive."),
+            "If not, it will be added as a file into an archive.",
             Yes_No_Box,
             Question_Icon
           );
@@ -631,10 +631,9 @@ package body AZip_GWin.MDI_Main is
           Message_Box(
             Window,
             "Files are Zip archives",
-            S2G(
             "Should AZip open these Zip archives individually," & NL &
             "in separate windows ?" & NL &
-            "If not, they will be added as files into an archive."),
+            "If not, they will be added as files into an archive.",
             Yes_No_Box,
             Question_Icon
           );

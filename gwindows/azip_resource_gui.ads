@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/24   23:29:08
+-- Transcription time: 2012/11/25   01:01:16
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 21-Nov-2012
+-- RC Grammar version: 25-Nov-2012
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;

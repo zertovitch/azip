@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/24   23:29:08
+-- Transcription time: 2012/11/25   01:01:16
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 21-Nov-2012
+-- RC Grammar version: 25-Nov-2012
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -152,7 +152,7 @@ package body azip_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 256, 210, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 289, 210, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -186,32 +186,32 @@ package body azip_Resource_GUI is
     x,y,w,h: Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 256, 210, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 289, 210, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  9, 12, 85, 79, x,y,w,h);
-    Create( Window.Static_0001, Window, Num_resource(AZip_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  50, 10, 165, 8, x,y,w,h);
+    Dlg_to_Scn(  12, 14, 87, 80, x,y,w,h);
+    Create( Window.Static_0001, Window, Num_resource(AZip_Icon), x,y,w,h, GWindows.Static_Controls.STATIC_SIZE, HALF_SUNKEN);
+    Dlg_to_Scn(  110, 14, 165, 8, x,y,w,h);
     Create_label( Window, "AZip - a portable Zip user interface", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  50, 25, 151, 8, x,y,w,h);
+    Dlg_to_Scn(  110, 29, 151, 8, x,y,w,h);
     Create_label( Window, "Copyright © Gautier de Montmollin 2012", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  50, 40, 100, 8, x,y,w,h);
+    Dlg_to_Scn(  110, 44, 100, 8, x,y,w,h);
     Create_label( Window, "MIT Open Source License", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  10, 60, 30, 8, x,y,w,h);
+    Dlg_to_Scn(  110, 61, 30, 8, x,y,w,h);
     Create_label( Window, "Internet:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  57, 60, 132, 8, x,y,w,h);
+    Dlg_to_Scn(  157, 61, 101, 8, x,y,w,h);
     Create( Window.AZip_URL, Window, "http://sf.net/projects/azip", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => AZip_URL);
-    Dlg_to_Scn(  10, 80, 30, 8, x,y,w,h);
+    Dlg_to_Scn(  110, 81, 30, 8, x,y,w,h);
     Create_label( Window, "Version:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  57, 80, 132, 8, x,y,w,h);
+    Dlg_to_Scn(  157, 81, 87, 8, x,y,w,h);
     Create( Window.Version_label, Window, "0.95", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Version_label);
-    Dlg_to_Scn(  5, 105, 247, 81, x,y,w,h);
+    Dlg_to_Scn(  5, 105, 278, 81, x,y,w,h);
     Create( Window.Static_0007, Window, "Software made with the following free, open source components:", x,y,w,h);
     Dlg_to_Scn(  23, 119, 100, 8, x,y,w,h);
     Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAT_URL);
-    Dlg_to_Scn(  133, 119, 113, 8, x,y,w,h);
+    Dlg_to_Scn(  132, 119, 147, 8, x,y,w,h);
     Create( Window.GNAT_Version, Window, "GNAT_Version", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAT_Version);
     Dlg_to_Scn(  23, 134, 118, 8, x,y,w,h);
     Create( Window.GNAVI_URL, Window, "GNAVI / GWindows", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAVI_URL);
@@ -219,9 +219,9 @@ package body azip_Resource_GUI is
     Create( Window.ResEdit_URL, Window, "ResEdit", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ResEdit_URL);
     Dlg_to_Scn(  23, 164, 75, 8, x,y,w,h);
     Create( Window.ZipAda_URL, Window, "Zip-Ada", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ZipAda_URL);
-    Dlg_to_Scn(  133, 164, 113, 8, x,y,w,h);
+    Dlg_to_Scn(  132, 164, 147, 8, x,y,w,h);
     Create( Window.ZipAda_Version, Window, "ZA_Version", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ZipAda_Version);
-    Dlg_to_Scn(  103, 190, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  120, 190, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.

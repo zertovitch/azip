@@ -454,7 +454,7 @@ package body AZip_GWin.MDI_Child is
         Update_display(Window, results_refresh);
       end if;
     exception
-      when E : Ada.IO_Exceptions.Name_Error =>
+      when E : program_Error => -- Ada.IO_Exceptions.Name_Error =>
         Message_Box(
           Window,
           "Processing failed",

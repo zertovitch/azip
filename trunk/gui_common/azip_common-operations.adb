@@ -18,6 +18,8 @@ package body AZip_Common.Operations is
     case code is
       when wrong_pwd =>
         return "Password wrong" & Integer'Image(UnZip.tolerance_wrong_password) & " times";
+      when corrupt =>
+        return "Compressed data is corrupt";
       when others =>
         null;
     end case;
@@ -380,6 +382,8 @@ package body AZip_Common.Operations is
                 abort_rest_of_operation:= True;
               when UnZip.CRC_Error =>
                 user_code:= bad_crc;
+              when Zip.Zip_file_Error =>
+                user_code:= corrupt;
               when UnZip.Wrong_password =>
                 user_code:= wrong_pwd;
                 abort_rest_of_operation:= True;
@@ -424,6 +428,8 @@ package body AZip_Common.Operations is
                 abort_rest_of_operation:= True;
               when UnZip.CRC_Error =>
                 user_code:= bad_crc;
+              when Zip.Zip_file_Error =>
+                user_code:= corrupt;
               when UnZip.Wrong_password =>
                 user_code:= wrong_pwd;
                 abort_rest_of_operation:= True;

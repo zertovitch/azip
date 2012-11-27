@@ -1,5 +1,6 @@
 with Zip;
-
+with Ada.Strings.UTF_Encoding;
+with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 with Interfaces;
 
 ------------------------------------------------------------------
@@ -15,6 +16,26 @@ package AZip_Common is
     Size, Packed, Ratio, Format, CRC32, Path,
     Result -- Result of search, for instance
   );
+
+  -------------
+  -- Strings --
+  -------------
+
+  subtype UTF_8_String is Ada.Strings.UTF_Encoding.UTF_8_String;
+
+  subtype UTF_16_String is Ada.Strings.UTF_Encoding.UTF_16_Wide_String;
+  subtype UTF_16_Unbounded_String is Unbounded_Wide_String;
+
+  -- PKWARE Appnote.txt
+  --
+  -- APPENDIX D - Language Encoding (EFS)
+  --
+  type Zip_name_encoding is (IBM_437, UTF_8);
+
+  function To_UTF_16(s: String; encoding: Zip_name_encoding) return UTF_16_String;
+  function To_UTF_16(s: String; is_UTF_8: Boolean) return UTF_16_String;
+
+  function To_UTF_8(s: UTF_16_String) return UTF_8_String;
 
   --------------------------
   -- Text display helpers --

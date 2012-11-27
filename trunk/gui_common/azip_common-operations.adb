@@ -3,7 +3,9 @@ with Zip.Create, Zip.Compress, UnZip.Streams, Zip_Streams;
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;                   use Ada.Directories;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
+with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
 with Ada.Streams.Stream_IO;
+with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 
 with Interfaces;
 
@@ -128,7 +130,7 @@ package body AZip_Common.Operations is
     name_match      :        Name_matching_mode;
     base_folder     :        String;
     search_pattern  :        Wide_String;
-    output_folder   :        String;
+    output_folder   :        Wide_String;
     Set_Time_Stamp  :        UnZip.Set_Time_Stamp_proc;
     new_temp_name   :        String;
     Name_conflict   :        UnZip.Resolve_conflict_proc;
@@ -248,9 +250,9 @@ package body AZip_Common.Operations is
       elsif output_folder(output_folder'Last) = '\' or
             output_folder(output_folder'Last) = '/'
       then
-        return output_folder & File_Name;
+        return To_UTF_8(output_folder) & File_Name;
       else
-        return output_folder & Directory_Separator & File_Name;
+        return To_UTF_8(output_folder) & Directory_Separator & File_Name;
       end if;
     end Add_extract_directory;
     --
@@ -301,13 +303,9 @@ package body AZip_Common.Operations is
       --
       case name_match is
         when Exact =>
-          -- !! use hashed maps either for searching !!
+          -- !! use hashed maps either for searching
           for i in entry_name'Range loop
-            if entry_name(i).name = name then
-              -- !! convert both names
-              -- according to
-              --   entry_name(i).utf_8 and
-              --   unicode_file_name
+            if entry_name(i) = To_UTF_16(name, unicode_file_name) then
               match:= True;
               exit;
             end if;
@@ -315,17 +313,12 @@ package body AZip_Common.Operations is
         when Substring =>
           for i in entry_name'Range loop
             declare
-              pattern: constant String:= To_String(entry_name(i).name);
+              pattern: constant UTF_16_String:= To_Wide_String(entry_name(i));
             begin
-              if pattern = "" then
+              if pattern = "" or else
+                Index(To_UTF_16(short_name, unicode_file_name), pattern) > 0
+              then
                 match:= True;
-                exit;
-              elsif Index(short_name, pattern) > 0 then
-                -- !! convert both names
-                -- according to
-                --   entry_name(i).utf_8 and
-                --   unicode_file_name
-                  match:= True;
                 exit;
               end if;
             end;
@@ -503,20 +496,19 @@ package body AZip_Common.Operations is
           processed_entries:= processed_entries + 1;
           archive_percents_done:= (100 * processed_entries) / total_entries;
           declare
-            name: constant String:= To_String(entry_name(i).name);
+            name: constant String:= To_UTF_8(To_Wide_String(entry_name(i)));
             short_name: constant String:= Remove_path(name);
-            -- !! name: Wide to UTF-8 !!
           begin
             if not Zip.Exists(zif, short_name) then
               current_operation:= Append;
               current_entry_name:= U(short_name);
-              is_unicode:= entry_name(i).utf_8;
+              is_unicode:= True;
               Add_File(
                 Info               => new_zip,
                 Name               => name,
                 Name_in_archive    => short_name,
                 Delete_file_after  => False,
-                Name_UTF_8_encoded => entry_name(i).utf_8,
+                Name_UTF_8_encoded => True,
                 Modification_time  => Zip.Convert(Modification_Time(name)),
                 Is_read_only       => False, -- !!
                 Feedback           => Entry_feedback'Unrestricted_Access

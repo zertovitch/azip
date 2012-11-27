@@ -22,7 +22,6 @@ with Ada.Exceptions;
 with Ada.IO_Exceptions;
 with Ada.Sequential_IO;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
-with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 with Ada.Unchecked_Deallocation;
 with Interfaces;
 
@@ -77,7 +76,7 @@ package body AZip_GWin.MDI_Child is
           return;
         end if;
         if need in first_display .. archive_changed then
-          Lst.Insert_Item(S2G(name(simple_name_idx..name'Last)), row);
+          Lst.Insert_Item(To_UTF_16(name(simple_name_idx..name'Last), unicode_file_name), row);
           Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, 1);
           begin
             Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
@@ -91,7 +90,7 @@ package body AZip_GWin.MDI_Child is
           Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
           Lst.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
           Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
-          Lst.Set_Sub_Item(S2G(name(name'First..simple_name_idx - 1)), row, 9);
+          Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), unicode_file_name), row, 9);
         end if;
         Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, user_code)), row, 10);
         row:= row + 1; -- more subtle with our sorting
@@ -304,7 +303,7 @@ package body AZip_GWin.MDI_Child is
     name_match     : Name_matching_mode;
     base_folder    : String;
     search_pattern : GString;
-    output_folder  : String;
+    output_folder  : Wide_String;
     new_temp_name  : String
   )
   is
@@ -330,7 +329,7 @@ package body AZip_GWin.MDI_Child is
     begin
       box.File_Progress.Position(file_percents_done);
       box.Archive_Progress.Position(archive_percents_done);
-      box.Entry_name.Text(S2G(entry_being_processed)); -- !! UTF-8
+      box.Entry_name.Text(To_UTF_16(entry_being_processed, is_UTF_8));
       box.Entry_operation_name.Text(S2G(Description(operation)));
       Message_Check;
       user_abort:= aborted;
@@ -338,6 +337,7 @@ package body AZip_GWin.MDI_Child is
     --
     procedure Name_conflict_resolution
      ( name            :  in String;
+       is_UTF_8        :  in Boolean;
        action          : out UnZip.Name_conflict_intervention;
        new_name        : out String;
        new_name_length : out Natural )
@@ -346,8 +346,8 @@ package body AZip_GWin.MDI_Child is
       use UnZip;
     begin
       box.Create_Full_Dialog(Window);
-      box.Conflict_simple_name.Text(S2G(Remove_path(name))); -- !! utf-8
-      box.Conflict_location.Text(S2G(output_folder));
+      box.Conflict_simple_name.Text(To_UTF_16(Remove_path(name), is_UTF_8));
+      box.Conflict_location.Text(output_folder);
       box.Overwrite_Rename.Disable;
       -- !! ^ Needs some effort to make an idiot-proof name query ;-)
       box.Center;
@@ -417,12 +417,9 @@ package body AZip_GWin.MDI_Child is
       );
     --
   begin -- Process_archive_GWin
-    -- Convert GStrings (UTF-16) to Strings with UTF-8
+    -- Neutral conversion: GStrings (UTF-16) to UTF_16_String
     for i in az_names'Range loop
-      az_names(i):=
-        (name => To_Unbounded_String(G2S(GU2G(File_Names(i)))), -- !!
-         utf_8 => False -- !!
-        );
+      az_names(i):= File_Names(i);
     end loop;
     box.Create_Full_Dialog(Window);
     box.File_Progress.Position(0);
@@ -637,18 +634,28 @@ package body AZip_GWin.MDI_Child is
   end Get_selected_entry_list;
 
   procedure On_Extract(Window : in out MDI_Child_Type) is
-    dir: constant GString:= Get_Directory(Window, "Extract to...");
-    sdir: constant String:= G2S(dir); -- !! lazy conversion
+  list: constant Array_Of_File_Names:= Get_selected_entry_list(Window);
+    function Archive_extract_msg return GString is
+    begin
+      if list'Length = 0 then
+        return "Extract entire archive to...";
+      else
+        return
+          "Extract the" & Integer'Wide_Image(list'Length) &
+          " selected entrie(s) to...";
+      end if;
+    end;
+    dir: constant GString:= Get_Directory(Window, Archive_extract_msg);
   begin
     if dir /= "" then
       Process_archive_GWin(
         Window         => Window,
         operation      => Extract,
-        file_names     => Get_selected_entry_list(Window),
+        file_names     => list,
         name_match     => Exact,
         base_folder    => "",
         search_pattern => "",
-        output_folder  => sdir,
+        output_folder  => dir,
         new_temp_name  => ""
       );
     end if;

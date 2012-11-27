@@ -1,5 +1,3 @@
-with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
-
 package AZip_Common.User_options is
 
   type Column_width_array is array(Entry_topic) of Natural;

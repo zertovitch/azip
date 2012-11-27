@@ -14,7 +14,7 @@ with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
-with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
+with Ada.Calendar;
 with Ada.Directories;
 with Ada_Directories_Extensions;
 with Ada.Environment_Variables;         use Ada.Environment_Variables;
@@ -23,6 +23,8 @@ with Ada.IO_Exceptions;
 with Ada.Sequential_IO;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 with Ada.Unchecked_Deallocation;
+with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
+
 with Interfaces;
 
 package body AZip_GWin.MDI_Child is
@@ -298,6 +300,15 @@ package body AZip_GWin.MDI_Child is
     Window.Load_archive_catalogue(False);
   end On_Save_As;
 
+  procedure Set_Modification_Time_B (Name : in String;
+                                     To   : in Ada.Calendar.Time) is
+  begin
+    Ada_Directories_Extensions.Set_Modification_Time(Name, To);
+  exception
+    when Ada.IO_Exceptions.Name_Error =>
+      null; -- !! utf-8 or ascii names with characters > pos 127 fail
+  end Set_Modification_Time_B;
+
   procedure Process_archive_GWin(
     Window         : in out MDI_Child_Type;
     operation      : Archive_Operation;
@@ -442,7 +453,7 @@ package body AZip_GWin.MDI_Child is
         base_folder      => base_folder,
         search_pattern   => search_pattern,
         output_folder    => output_folder,
-        Set_Time_Stamp   => Ada_Directories_Extensions.Set_Modification_Time'Access,
+        Set_Time_Stamp   => Set_Modification_Time_B'Access,
         new_temp_name    => new_temp_name,
         Name_conflict    => Name_conflict_resolution'Unrestricted_Access,
         password         => Window.current_password
@@ -454,11 +465,11 @@ package body AZip_GWin.MDI_Child is
         Update_display(Window, results_refresh);
       end if;
     exception
-      when E : program_Error => -- Ada.IO_Exceptions.Name_Error =>
+      when E : Ada.IO_Exceptions.Name_Error =>
         Message_Box(
           Window,
           "Processing failed",
-          "Either the archive cannot be opened (deleted ? moved ?) " & NL &
+          "Either the archive cannot be opened (deleted ? moved ?)," & NL &
           "or a new file cannot be written." &
           NL & "-----" & NL &
           S2G(Ada.Exceptions.Exception_Name (E)) & NL &
@@ -470,7 +481,8 @@ package body AZip_GWin.MDI_Child is
         Message_Box(
           Window,
           "Processing failed",
-          "Archive cannot be modified - probably it is read-only." &
+          "Archive cannot be modified (read-only ?)," & NL &
+          "or a new file cannot be written." &
           NL & "-----" & NL &
           S2G(Ada.Exceptions.Exception_Name (E)) & NL &
           S2G(Ada.Exceptions.Exception_Message (E)),

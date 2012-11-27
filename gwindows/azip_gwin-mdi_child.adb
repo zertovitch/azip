@@ -600,20 +600,6 @@ package body AZip_GWin.MDI_Child is
     Dock_Children (Window);
   end On_Size;
 
-  procedure On_Erase_Background
-    (Window : in out MDI_Child_Type;
-     Canvas : in out GWindows.Drawing.Canvas_Type;
-     Area   : in     GWindows.Types.Rectangle_Type)
-  is
-    pragma Warnings (Off, Window);
-    pragma Warnings (Off, Canvas);
-    pragma Warnings (Off, Area);
-  begin
-    null;
-    -- Do nothing! This avoids the flickering between background
-    -- (invisible anyway) and contents.
-  end On_Erase_Background;
-
   function Get_selected_entry_list(Window: MDI_Child_Type)
   return Array_Of_File_Names
   is

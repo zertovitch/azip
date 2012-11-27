@@ -430,8 +430,18 @@ package body AZip_Common.Operations is
             end;
           when Search =>
             if search_pattern = "" then -- just mark entries with matching names
+              -- No feedback, it would be too time-consuming
+              -- for just 1 instruction !
               user_code:= 1;
             else
+              Feedback(
+                file_percents_done,
+                archive_percents_done,
+                short_name,
+                unicode_file_name,
+                Search,
+                dummy_user_abort
+              );
               begin
                 -- We need to search the string in the compressed entry...
                 Search_1_file(name => name, occ  => user_code);

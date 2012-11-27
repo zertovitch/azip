@@ -104,7 +104,10 @@ package AZip_GWin.MDI_Child is
     need   :        Update_need
   );
 
-  procedure Load_archive_catalogue (Window : in out MDI_Child_Type);
+  procedure Load_archive_catalogue (
+    Window     : in out MDI_Child_Type;
+    copy_codes :        Boolean
+  );
 
   overriding procedure On_Size (
     Window : in out MDI_Child_Type;

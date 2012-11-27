@@ -295,7 +295,7 @@ package body AZip_GWin.MDI_Child is
     Text (Window, GU2G (File_Title));
     Window.Short_Name:= File_Title;
     Update_Common_Menus(Window,GU2G(New_File_Name));
-    Window.Load_archive_catalogue;
+    Window.Load_archive_catalogue(False);
   end On_Save_As;
 
   procedure Process_archive_GWin(
@@ -337,12 +337,13 @@ package body AZip_GWin.MDI_Child is
       user_abort:= aborted;
     end Boxed_Feedback;
     --
-    procedure Name_conflict_resolution
-     ( name            :  in String;
-       is_UTF_8        :  in Boolean;
-       action          : out UnZip.Name_conflict_intervention;
-       new_name        : out String;
-       new_name_length : out Natural )
+    procedure Name_conflict_resolution(
+      name            :  in String;
+      is_UTF_8        :  in Boolean;
+      action          : out UnZip.Name_conflict_intervention;
+      new_name        : out String;
+      new_name_length : out Natural
+    )
     is
       box: File_exists_box_Type;
       use UnZip;
@@ -448,7 +449,7 @@ package body AZip_GWin.MDI_Child is
       );
       Window.last_operation:= operation;
       if operation in Modifying_Operation then
-        Window.Load_archive_catalogue;
+        Window.Load_archive_catalogue(operation /= Remove);
       else
         Update_display(Window, results_refresh);
       end if;
@@ -558,12 +559,18 @@ package body AZip_GWin.MDI_Child is
     Update_Common_Menus( Window.parent.all, top_entry );
   end Update_Common_Menus;
 
-  procedure Load_archive_catalogue (Window : in out MDI_Child_Type) is
+  procedure Load_archive_catalogue (
+    Window     : in out MDI_Child_Type;
+    copy_codes :        Boolean
+  )
+  is
     new_zif: Zip_info;
   begin
     Zip.Load(new_zif, G2S(GU2G(Window.File_Name)));
     if Zip.Is_loaded(Window.zif) then
-      Copy_user_codes(Window.zif, new_zif);
+      if copy_codes then
+        Copy_user_codes(Window.zif, new_zif);
+      end if;
       Zip.Delete(Window.zif);
     end if;
     Window.zif:= new_zif;

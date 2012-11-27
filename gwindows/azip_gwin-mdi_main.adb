@@ -136,7 +136,7 @@ package body AZip_GWin.MDI_Main is
       New_Window.Short_Name:= File_Title;
       MDI_Active_Window (Window, New_Window.all);
       Update_Common_Menus(Window, GU2G(New_Window.File_Name));
-      Load_archive_catalogue(New_Window.all);
+      New_Window.Load_archive_catalogue(False);
       Finish_subwindow_opening(Window, New_Window.all);
       New_Window.Focus;
     end;
@@ -430,6 +430,7 @@ package body AZip_GWin.MDI_Main is
     package CVer is new GNAT.Compiler_Version;
   begin
     box.Create_Full_Dialog(Window);
+    box.Version_label.Text(S2G(Version_info.FileVersion));
     Create_and_Swap(url_azip, box.AZip_URL, box, "http://sf.net/projects/azip");
     Create_and_Swap(url_gnat, box.GNAT_URL, box, "http://libre.adacore.com");
     Text(box.GNAT_Version, S2G("version " & CVer.Version));

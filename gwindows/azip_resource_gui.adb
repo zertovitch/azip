@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/11/25   01:01:16
+-- Transcription time: 2012/11/27   15:54:21
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -194,7 +194,7 @@ package body azip_Resource_GUI is
     Dlg_to_Scn(  12, 14, 87, 80, x,y,w,h);
     Create( Window.Static_0001, Window, Num_resource(AZip_Icon), x,y,w,h, GWindows.Static_Controls.STATIC_SIZE, HALF_SUNKEN);
     Dlg_to_Scn(  110, 14, 165, 8, x,y,w,h);
-    Create_label( Window, "AZip - a portable Zip user interface", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_label( Window, "AZip - A portable Zip Archive Manager", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  110, 29, 151, 8, x,y,w,h);
     Create_label( Window, "Copyright © Gautier de Montmollin 2012", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  110, 44, 100, 8, x,y,w,h);

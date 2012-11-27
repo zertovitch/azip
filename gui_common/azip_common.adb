@@ -3,7 +3,34 @@ with Ada.Strings;                       use Ada.Strings;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 with Ada.Text_IO;
 
+with Ada.Strings.UTF_Encoding.Conversions;
+
 package body AZip_Common is
+
+  function To_UTF_16(s: String; encoding: Zip_name_encoding) return Wide_String
+  is
+  begin
+    case encoding is
+      when IBM_437 =>
+        return To_Wide_String(s); -- !!
+      when UTF_8 =>
+        return Ada.Strings.UTF_Encoding.Conversions.Convert(s);
+    end case;
+  end To_UTF_16;
+
+  function To_UTF_16(s: String; is_UTF_8: Boolean) return Wide_String is
+  begin
+    if is_UTF_8 then
+      return To_UTF_16(s, UTF_8);
+    else
+      return To_UTF_16(s, IBM_437);
+    end if;
+  end To_UTF_16;
+
+  function To_UTF_8(s: UTF_16_String) return UTF_8_String is
+  begin
+    return Ada.Strings.UTF_Encoding.Conversions.Convert(s);
+  end To_UTF_8;
 
   function Image(topic: Entry_topic) return String is
     u: constant String:= Entry_topic'Image(topic);

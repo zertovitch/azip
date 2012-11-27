@@ -1,8 +1,5 @@
 with Zip, UnZip;
 
-with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
-with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
-
 package AZip_Common.Operations is
 
   ------------------------------------------------
@@ -43,12 +40,7 @@ package AZip_Common.Operations is
 
   function Description(op: Entry_Operation) return String;
 
-  type Zip_entry_name is record
-    name : Unbounded_String;
-    utf_8: Boolean;
-  end record;
-
-  type Name_list is array(Positive range <>) of Zip_entry_name;
+  type Name_list is array(Positive range <>) of UTF_16_Unbounded_String;
 
   type Name_matching_mode is (Exact, Substring);
 
@@ -72,7 +64,7 @@ package AZip_Common.Operations is
     name_match      :        Name_matching_mode;
     base_folder     :        String;
     search_pattern  :        Wide_String;
-    output_folder   :        String;
+    output_folder   :        Wide_String;
     Set_Time_Stamp  :        UnZip.Set_Time_Stamp_proc;
     new_temp_name   :        String;
     Name_conflict   :        UnZip.Resolve_conflict_proc;

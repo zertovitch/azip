@@ -102,7 +102,6 @@ package body AZip_GWin.MDI_Main is
     File_Title :        GWindows.GString_Unbounded
   )
   is
-    -- Candidate              : TC.Archive;
     is_open: Boolean;
   begin
     Focus_an_already_opened_window( Window, File_Name, is_open );

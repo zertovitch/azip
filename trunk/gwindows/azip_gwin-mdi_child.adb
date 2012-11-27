@@ -14,7 +14,7 @@ with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
-with Ada.Characters.Handling;           use Ada.Characters.Handling;
+with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 with Ada.Directories;
 with Ada_Directories_Extensions;
 with Ada.Environment_Variables;         use Ada.Environment_Variables;
@@ -88,11 +88,12 @@ package body AZip_GWin.MDI_Child is
           Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, 4);
           Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, 5);
           Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
-          Lst.Set_Sub_Item(S2G(To_Lower(PKZip_method'Image(method))), row, 7);
+          Lst.Set_Sub_Item(To_Lower(PKZip_method'Wide_Image(method)), row, 7);
           Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
           Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), unicode_file_name), row, 9);
+          Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(boolean_to_encoding(unicode_file_name)), row, 10);
         end if;
-        Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, user_code)), row, 10);
+        Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, user_code)), row, 11);
         row:= row + 1; -- more subtle with our sorting
       end Process_row;
 
@@ -144,13 +145,13 @@ package body AZip_GWin.MDI_Child is
       sel:= Window.Directory_List.Selected_Item_Count;
       if sel > 0 then
         Text( Window.Status_Bar,
-          S2G(Integer'Image(Entries(Window.zif)) &
-            " files," & Integer'Image(sel) & " selected"), 0
+          Integer'Wide_Image(Window.Directory_List.Item_Count) &
+            " files," & Integer'Wide_Image(sel) & " selected", 0
          );
       else
         Text( Window.Status_Bar,
-          S2G(Integer'Image(Entries(Window.zif)) &
-            " files, none selected"), 0
+          Integer'Wide_Image(Window.Directory_List.Item_Count) &
+            " files, none selected", 0
          );
       end if;
     else
@@ -241,6 +242,7 @@ package body AZip_GWin.MDI_Child is
     package CIO is new Ada.Sequential_IO(Character);
     use CIO;
     empty_zip: File_Type;
+    -- This is the empty Zip archive:
     contents: constant String:= "PK" & ASCII.ENQ & ASCII.ACK & 18 * ASCII.NUL;
   begin
     New_File_Name := Window.File_Name;

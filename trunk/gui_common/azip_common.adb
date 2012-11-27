@@ -20,11 +20,7 @@ package body AZip_Common is
 
   function To_UTF_16(s: String; is_UTF_8: Boolean) return Wide_String is
   begin
-    if is_UTF_8 then
-      return To_UTF_16(s, UTF_8);
-    else
-      return To_UTF_16(s, IBM_437);
-    end if;
+    return To_UTF_16(s, boolean_to_encoding(is_UTF_8));
   end To_UTF_16;
 
   function To_UTF_8(s: UTF_16_String) return UTF_8_String is

@@ -13,8 +13,9 @@ package AZip_Common is
 
   type Entry_topic is (
     Name, FType, Modified, Attributes,
-    Size, Packed, Ratio, Format, CRC32, Path,
-    Result -- Result of search, for instance
+    Size, Packed, Ratio, Format, CRC32,
+    Path, Encoding,
+    Result
   );
 
   -------------
@@ -31,6 +32,9 @@ package AZip_Common is
   -- APPENDIX D - Language Encoding (EFS)
   --
   type Zip_name_encoding is (IBM_437, UTF_8);
+
+  boolean_to_encoding: constant array(Boolean) of Zip_name_encoding:=
+    (False => IBM_437, True => UTF_8);
 
   function To_UTF_16(s: String; encoding: Zip_name_encoding) return UTF_16_String;
   function To_UTF_16(s: String; is_UTF_8: Boolean) return UTF_16_String;

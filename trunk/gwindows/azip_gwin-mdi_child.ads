@@ -7,8 +7,6 @@ with Zip;
 
 with GWindows;                          use GWindows;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
-with GWindows.Drawing;
-with GWindows.Types;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 

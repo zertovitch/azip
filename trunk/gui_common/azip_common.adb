@@ -4,6 +4,7 @@ with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
 with Ada.Text_IO;
 
 with Ada.Strings.UTF_Encoding.Conversions;
+with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 
 package body AZip_Common is
 
@@ -287,15 +288,40 @@ package body AZip_Common is
     end case;
   end To_UTF_16;
 
-  function To_UTF_16(s: String; is_UTF_8: Boolean) return Wide_String is
-  begin
-    return To_UTF_16(s, boolean_to_encoding(is_UTF_8));
-  end To_UTF_16;
-
   function To_UTF_8(s: UTF_16_String) return UTF_8_String is
   begin
     return Ada.Strings.UTF_Encoding.Conversions.Convert(s);
   end To_UTF_8;
+
+  function To_UTF_8(s: String; encoding: Zip_name_encoding) return UTF_8_String is
+  begin
+    case encoding is
+      when UTF_8 =>
+        return s; -- nothing to do :-)
+      when IBM_437 =>
+        return To_UTF_8(To_UTF_16(s, encoding));
+    end case;
+  end To_UTF_8;
+
+  function To_IBM_437(s: UTF_16_String) return String is
+    res: String(s'Range);
+    found: Boolean;
+  begin
+    for i in s'Range loop
+      found:= False;
+      for c in Character loop
+        if IBM_437_to_UTF_16(c) = s(i) then
+          res(i):= c;
+          found:= True;
+          exit;
+        end if;
+      end loop;
+      if not found then
+        raise Cannot_encode_to_IBM_437;
+      end if;
+    end loop;
+    return res;
+  end To_IBM_437;
 
   function Image(topic: Entry_topic) return String is
     u: constant String:= Entry_topic'Image(topic);
@@ -355,4 +381,6 @@ package body AZip_Common is
       return False;
   end Is_valid_Zip_archive;
 
+begin
+  Zip.Form_For_IO_Open_N_Create:= To_Unbounded_String("encoding=utf8");
 end AZip_Common;

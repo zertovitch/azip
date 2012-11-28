@@ -50,7 +50,7 @@ package AZip_Common.Operations is
       file_percents_done    : Natural;
       archive_percents_done : Natural;
       entry_being_processed : String;
-      is_UTF_8              : Boolean;
+      entry_name_encoding   : Zip_name_encoding;
       operation             : Entry_Operation;
       user_abort            : out Boolean
     );

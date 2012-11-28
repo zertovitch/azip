@@ -26,6 +26,7 @@ with Ada.Unchecked_Deallocation;
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 
 with Interfaces;
+with GWindows.Types;
 
 package body AZip_GWin.MDI_Child is
 
@@ -47,7 +48,7 @@ package body AZip_GWin.MDI_Child is
         crc_32           : Interfaces.Unsigned_32;
         date_time        : Time;
         method           : PKZip_method;
-        unicode_file_name: Boolean;
+        name_encoding    : Zip_name_encoding;
         read_only        : Boolean;
         user_code        : in out Integer
       )
@@ -78,7 +79,7 @@ package body AZip_GWin.MDI_Child is
           return;
         end if;
         if need in first_display .. archive_changed then
-          Lst.Insert_Item(To_UTF_16(name(simple_name_idx..name'Last), unicode_file_name), row);
+          Lst.Insert_Item(To_UTF_16(name(simple_name_idx..name'Last), name_encoding), row);
           Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, 1);
           begin
             Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
@@ -92,8 +93,8 @@ package body AZip_GWin.MDI_Child is
           Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
           Lst.Set_Sub_Item(To_Lower(PKZip_method'Wide_Image(method)), row, 7);
           Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
-          Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), unicode_file_name), row, 9);
-          Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(boolean_to_encoding(unicode_file_name)), row, 10);
+          Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), name_encoding), row, 9);
+          Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, 10);
         end if;
         Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, user_code)), row, 11);
         row:= row + 1; -- more subtle with our sorting
@@ -256,7 +257,7 @@ package body AZip_GWin.MDI_Child is
     if not Success then
       return;
     end if;
-    if Zip.Exists(G2S(GU2G(New_File_Name))) then -- !! conv.
+    if Zip.Exists(To_UTF_8(GU2G(New_File_Name))) then
       if Message_Box (
         Window,
         "Save as",
@@ -272,8 +273,9 @@ package body AZip_GWin.MDI_Child is
     if Is_loaded(Window.zif) then
       begin
         Ada.Directories.Copy_File(
-          G2S(GU2G (Window.File_Name)), -- !! unicode
-          G2S(GU2G (New_File_Name))
+          To_UTF_8(GU2G (Window.File_Name)),
+          To_UTF_8(GU2G (New_File_Name)),
+          "encoding=utf8"
         );
       exception
         when others =>
@@ -287,7 +289,7 @@ package body AZip_GWin.MDI_Child is
           return;
       end;
     else -- we don't have a file yet
-      Create(empty_zip, Out_File, G2S(GU2G(New_File_Name))); -- !! unicode
+      Create(empty_zip, Out_File, To_UTF_8(GU2G(New_File_Name)), "encoding=utf8");
       for i in contents'Range loop
         Write(empty_zip, contents(i));
       end loop;
@@ -305,7 +307,7 @@ package body AZip_GWin.MDI_Child is
   begin
     Ada_Directories_Extensions.Set_Modification_Time(Name, To);
   exception
-    when Ada.IO_Exceptions.Name_Error =>
+    when others =>
       null; -- !! utf-8 or ascii names with characters > pos 127 fail
   end Set_Modification_Time_B;
 
@@ -334,7 +336,7 @@ package body AZip_GWin.MDI_Child is
       file_percents_done    : Natural;
       archive_percents_done : Natural;
       entry_being_processed : String;
-      is_UTF_8              : Boolean;
+      entry_name_encoding   : Zip_name_encoding;
       operation             : Entry_Operation;
       user_abort            : out Boolean
     )
@@ -342,7 +344,7 @@ package body AZip_GWin.MDI_Child is
     begin
       box.File_Progress.Position(file_percents_done);
       box.Archive_Progress.Position(archive_percents_done);
-      box.Entry_name.Text(To_UTF_16(entry_being_processed, is_UTF_8));
+      box.Entry_name.Text(To_UTF_16(entry_being_processed, entry_name_encoding));
       box.Entry_operation_name.Text(S2G(Description(operation)));
       Message_Check;
       user_abort:= aborted;
@@ -350,17 +352,18 @@ package body AZip_GWin.MDI_Child is
     --
     procedure Name_conflict_resolution(
       name            :  in String;
-      is_UTF_8        :  in Boolean;
+      name_encoding   :  in Zip_name_encoding;
       action          : out UnZip.Name_conflict_intervention;
       new_name        : out String;
       new_name_length : out Natural
     )
     is
+    pragma Unreferenced (new_name, new_name_length);
       box: File_exists_box_Type;
       use UnZip;
     begin
       box.Create_Full_Dialog(Window);
-      box.Conflict_simple_name.Text(To_UTF_16(Remove_path(name), is_UTF_8));
+      box.Conflict_simple_name.Text(To_UTF_16(Remove_path(name), name_encoding));
       box.Conflict_location.Text(output_folder);
       box.Overwrite_Rename.Disable;
       -- !! ^ Needs some effort to make an idiot-proof name query ;-)
@@ -578,7 +581,7 @@ package body AZip_GWin.MDI_Child is
   is
     new_zif: Zip_info;
   begin
-    Zip.Load(new_zif, G2S(GU2G(Window.File_Name)));
+    Zip.Load(new_zif, To_UTF_8(GU2G(Window.File_Name)));
     if Zip.Is_loaded(Window.zif) then
       if copy_codes then
         Copy_user_codes(Window.zif, new_zif);
@@ -881,6 +884,7 @@ package body AZip_GWin.MDI_Child is
 
     task body Testing_type is
       current_child_window: AZip_GWin.MDI_Child.MDI_Child_Access;
+      pragma Unreferenced (current_child_window);
     begin
       accept Start;
       loop

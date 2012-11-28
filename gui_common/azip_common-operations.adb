@@ -86,12 +86,12 @@ package body AZip_Common.Operations is
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
       method           : Zip.PKZip_method;
-      unicode_file_name: Boolean;
+      name_encoding    : Zip.Zip_name_encoding;
       read_only        : Boolean;
       user_code        : in out Integer
     )
     is
-    pragma Unreferenced (file_index, comp_size, uncomp_size, crc_32, date_time, method, unicode_file_name, read_only);
+    pragma Unreferenced (file_index, comp_size, uncomp_size, crc_32, date_time, method, name_encoding, read_only);
     begin
       Zip.Set_user_code(to, name, user_code);
     end Copy_user_code;
@@ -146,7 +146,7 @@ package body AZip_Common.Operations is
     archive_percents_done: Natural:= 0;
     processed_entries, total_entries: Natural:= 0;
     current_entry_name: Unbounded_String;
-    is_unicode: Boolean;
+    current_entry_name_encoding: Zip_name_encoding;
     current_operation: Entry_operation;
     --
     procedure Entry_feedback(
@@ -167,7 +167,7 @@ package body AZip_Common.Operations is
         file_percents_done,
         archive_percents_done,
         S(current_entry_name),
-        is_unicode,
+        current_entry_name_encoding,
         current_operation,
         user_abort
       );
@@ -240,21 +240,25 @@ package body AZip_Common.Operations is
       end loop;
       Close(f);
     end Search_1_file;
-    --
-    -- Taken from UnZipAda
-    --
-    function Add_extract_directory(File_Name : String) return String is
-      Directory_Separator: constant Character:= '/';
-      -- '/' is also accepted by Windows
+
+    function Add_extract_directory(
+      File_Name      : String;
+      Name_Encoding  : Zip_name_encoding
+    )
+    return String
+    is
+      UTF_8_Name: constant UTF_8_String:= To_UTF_8(File_Name, Name_Encoding);
+      -- AZip writes all files with names that passed UTF_8 encoded to the system
     begin
       if output_folder = "" then
-        return File_Name;
+        return UTF_8_Name;
       elsif output_folder(output_folder'Last) = '\' or
             output_folder(output_folder'Last) = '/'
       then
-        return To_UTF_8(output_folder) & File_Name;
+        return To_UTF_8(output_folder) & UTF_8_Name;
       else
-        return To_UTF_8(output_folder) & Directory_Separator & File_Name;
+        return To_UTF_8(output_folder) & '/' & UTF_8_Name;
+        -- '/' is also accepted by Windows
       end if;
     end Add_extract_directory;
     --
@@ -284,7 +288,7 @@ package body AZip_Common.Operations is
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
       method           : Zip.PKZip_method;
-      unicode_file_name: Boolean;
+      name_encoding    : Zip.Zip_name_encoding;
       read_only        : Boolean;
       user_code        : in out Integer
     )
@@ -307,7 +311,7 @@ package body AZip_Common.Operations is
         when Exact =>
           -- !! use hashed maps either for searching
           for i in entry_name'Range loop
-            if entry_name(i) = To_UTF_16(name, unicode_file_name) then
+            if entry_name(i) = To_UTF_16(name, name_encoding) then
               match:= True;
               exit;
             end if;
@@ -318,7 +322,7 @@ package body AZip_Common.Operations is
               pattern: constant UTF_16_String:= To_Wide_String(entry_name(i));
             begin
               if pattern = "" or else
-                Index(To_UTF_16(short_name, unicode_file_name), pattern) > 0
+                Index(To_UTF_16(short_name, name_encoding), pattern) > 0
               then
                 match:= True;
                 exit;
@@ -335,14 +339,14 @@ package body AZip_Common.Operations is
           when Add =>
             current_operation:= Replace;
             current_entry_name:= U(short_name);
-            is_unicode:= unicode_file_name;
+            current_entry_name_encoding:= name_encoding;
             begin
               Add_File(
                 Info               => new_zip,
-                Name               => name,
+                Name               => To_UTF_8(name, name_encoding),
                 Name_in_archive    => short_name,
                 Delete_file_after  => False,
-                Name_UTF_8_encoded => unicode_file_name,
+                Name_encoding      => UTF_8,
                 Modification_time  => Zip.Convert(Modification_Time(name)),
                 Is_read_only       => False, -- !!
                 Feedback           => Entry_feedback'Unrestricted_Access
@@ -357,14 +361,14 @@ package body AZip_Common.Operations is
               file_percents_done,
               archive_percents_done,
               short_name,
-              unicode_file_name,
+              name_encoding,
               Skip,
               dummy_user_abort
             );
           when Test =>
             current_operation:= Test;
             current_entry_name:= U(short_name);
-            is_unicode:= unicode_file_name;
+            current_entry_name_encoding:= name_encoding;
             begin
               Extract(
                 from                 => zif,
@@ -391,9 +395,9 @@ package body AZip_Common.Operations is
           when Extract =>
             current_operation:= Extract;
             current_entry_name:= U(short_name);
-            is_unicode:= unicode_file_name;
+            current_entry_name_encoding:= name_encoding;
             if current_user_attitude = none then
-              conflict:= Exists(Add_extract_directory(name));
+              conflict:= Zip.Exists(Add_extract_directory(name, name_encoding));
             else
               conflict:= True;
               -- Covers the case where current_user_attitude is "yes" before
@@ -444,7 +448,7 @@ package body AZip_Common.Operations is
                 file_percents_done,
                 archive_percents_done,
                 short_name,
-                unicode_file_name,
+                name_encoding,
                 Search,
                 dummy_user_abort
               );
@@ -463,7 +467,7 @@ package body AZip_Common.Operations is
           when Modifying_Operation =>
             current_operation:= Copy;
             current_entry_name:= U(short_Name);
-            is_unicode:= unicode_file_name;
+            current_entry_name_encoding:= name_encoding;
             Zip_Streams.Set_Index(old_fzs, file_index);
             Zip.Create.Add_Compressed_Stream(
               Info     => new_zip,
@@ -480,7 +484,7 @@ package body AZip_Common.Operations is
 
   begin -- Process_archive
     if not Zip.Is_loaded(zif) then
-      return; -- we have an "null" archive (not even a file with 0 entries)
+      return; -- we have a "null" archive (not even a file with 0 entries)
     end if;
     case operation is
       when Add =>
@@ -492,7 +496,7 @@ package body AZip_Common.Operations is
       when Modifying_Operation =>
         Zip_Streams.Set_Name(old_fzs, Zip.Zip_Name(zif));
         Zip_Streams.Open(old_fzs, Ada.Streams.Stream_IO.In_File);
-        Create(new_zip, new_fzs'Unchecked_Access, new_temp_name);
+        Zip.Create.Create(new_zip, new_fzs'Unchecked_Access, new_temp_name);
       when Read_Only_Operation =>
         null;
         -- Read-only operation, doesn't need a new archive file;
@@ -518,17 +522,33 @@ package body AZip_Common.Operations is
             if not Zip.Exists(zif, short_name) then
               current_operation:= Append;
               current_entry_name:= U(short_name);
-              is_unicode:= True;
-              Add_File(
-                Info               => new_zip,
-                Name               => name,
-                Name_in_archive    => short_name,
-                Delete_file_after  => False,
-                Name_UTF_8_encoded => True,
-                Modification_time  => Zip.Convert(Modification_Time(name)),
-                Is_read_only       => False, -- !!
-                Feedback           => Entry_feedback'Unrestricted_Access
-              );
+              current_entry_name_encoding:= UTF_8;
+              begin
+                -- We try to convert as many names as possible to the
+                -- "old DOS" encoding, for compatibility, e.g. with WinZip 10.0
+                Add_File(
+                  Info               => new_zip,
+                  Name               => name,
+                  Name_in_archive    => To_IBM_437(To_UTF_16(short_name, UTF_8)),
+                  Delete_file_after  => False,
+                  Name_encoding      => IBM_437,
+                  Modification_time  => Zip.Convert(Modification_Time(name)),
+                  Is_read_only       => False, -- !!
+                  Feedback           => Entry_feedback'Unrestricted_Access
+                );
+              exception
+                when Cannot_encode_to_IBM_437 =>
+                  Add_File(
+                    Info               => new_zip,
+                    Name               => name,
+                    Name_in_archive    => short_name,
+                    Delete_file_after  => False,
+                    Name_encoding      => UTF_8,
+                    Modification_time  => Zip.Convert(Modification_Time(name)),
+                    Is_read_only       => False, -- !!
+                    Feedback           => Entry_feedback'Unrestricted_Access
+                  );
+              end;
             end if;
           exception
             when Zip.Compress.User_Abort =>

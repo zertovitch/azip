@@ -1,3 +1,4 @@
+with AZip_Common;                       use AZip_Common;
 with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
 with Zip;
 
@@ -108,7 +109,7 @@ package body AZip_GWin.MDI_Main is
     if is_open then
       return;        -- nothing to do, archive already in a window
     end if;
-    if not AZip_Common.Is_valid_Zip_archive(G2S(GU2G(File_Name))) then
+    if not Is_valid_Zip_archive(To_UTF_8(GU2G(File_Name))) then
       -- !! lazy conversion of wide string to potential utf-8
       Message_Box(
         Window,

@@ -110,7 +110,6 @@ package body AZip_GWin.MDI_Main is
       return;        -- nothing to do, archive already in a window
     end if;
     if not Is_valid_Zip_archive(To_UTF_8(GU2G(File_Name))) then
-      -- !! lazy conversion of wide string to potential utf-8
       Message_Box(
         Window,
         "Invalid zip archive",
@@ -596,15 +595,14 @@ package body AZip_GWin.MDI_Main is
   end Update_Common_Menus;
 
   function All_Zip_files(File_Names: Array_Of_File_Names) return Boolean is
-    result, empty: Boolean:= True;
+    all_valid, empty: Boolean:= True;
   begin
     for i in File_Names'Range loop
       empty:= False;
-      result:= result and
-        AZip_Common.Is_valid_Zip_archive(G2S(GU2G(File_Names(i))));
-        -- !! lazy conversion of wide string to potential utf-8
+      all_valid:= all_valid and
+        Is_valid_Zip_archive(To_UTF_8(GU2G(File_Names(i))));
     end loop;
-    return result and not empty;
+    return all_valid and not empty;
   end All_Zip_files;
 
   function Confirm_archives_if_all_Zip_files(

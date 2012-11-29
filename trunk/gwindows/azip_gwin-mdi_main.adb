@@ -266,7 +266,7 @@ package body AZip_GWin.MDI_Main is
     for I in 1..Argument_Count loop
       Open_Child_Window_And_Load(
         Window,
-        G2GU(To_GString_from_String(Argument(I)))
+        G2GU(To_UTF_16(Argument(I), Zip.UTF_8))
       );
     end loop;
     Window.Accept_File_Drag_And_Drop;

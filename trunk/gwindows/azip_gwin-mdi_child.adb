@@ -250,7 +250,7 @@ package body AZip_GWin.MDI_Child is
   begin
     New_File_Name := Window.File_Name;
     Save_File (
-      Window, "Save as...", New_File_Name, Zip_archives_filters,
+      Window, "Save Zip archive as...", New_File_Name, Zip_archives_filters,
       ".zip", File_Title,
       Success
     );

@@ -13,6 +13,7 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Types;
 
 with Ada.Calendar;
 with Ada.Directories;
@@ -26,7 +27,6 @@ with Ada.Unchecked_Deallocation;
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 
 with Interfaces;
-with GWindows.Types;
 
 package body AZip_GWin.MDI_Child is
 

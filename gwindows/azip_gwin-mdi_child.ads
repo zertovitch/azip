@@ -72,6 +72,7 @@ package AZip_GWin.MDI_Child is
         current_password : GString_Unbounded;
         temp_name_gen    : Ada.Numerics.Float_Random.Generator;
         last_operation   : Archive_Operation:= Remove;
+        last_max_code    : Integer;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);

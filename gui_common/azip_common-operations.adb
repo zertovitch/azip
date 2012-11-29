@@ -14,18 +14,6 @@ package body AZip_Common.Operations is
   function Result_message(op: Archive_Operation; code: Integer) return String
   is
   begin
-    -- Following codes have a single explanation over all operations
-    case code is
-      when wrong_pwd =>
-        return "Password wrong" & Integer'Image(UnZip.tolerance_wrong_password) & " times";
-      when corrupt =>
-        return "Compressed data is corrupt";
-      when bad_crc =>
-        return "CRC test failed";
-      when others =>
-        null;
-    end case;
-    --
     case op is
       when Add =>
         if code = success then
@@ -52,8 +40,50 @@ package body AZip_Common.Operations is
       when Search =>
         return Trim(Integer'Image(code), Left);
     end case;
+    -- Following codes have a single explanation over all operations
+    case code is
+      when wrong_pwd =>
+        return "Password wrong" & Integer'Image(UnZip.tolerance_wrong_password) & " times";
+      when corrupt =>
+        return "Compressed data is corrupt";
+      when bad_crc =>
+        return "CRC test failed";
+      when others =>
+        null;
+    end case;
+    --
     return "";
   end Result_message;
+
+  function Result_color(
+    op       : Archive_Operation;
+    code     : Integer;
+    max_code : Integer
+  )
+  return RGB_type
+  is
+    val: Color_range;
+    max: constant Color_range:= Color_range'Last;
+  begin
+    case op is
+      when Search =>
+        val:= Color_range(Float(max) * Float(code) / Float(max_code));
+        return (Red => max - val, Green => max - val, Blue => max);
+      when others =>
+        null;
+    end case;
+    -- Following codes have a single explanation over all operations
+    case code is
+      when wrong_pwd | corrupt | bad_crc =>
+        return (Red => max, Green => 0, Blue => 0);
+      when success =>
+        return (Red => 0, Green => max, Blue => 0);
+      when others =>
+        null;
+    end case;
+    --
+    return (Red => max, Green => max, Blue => max);
+  end Result_color;
 
   function Description(op: Entry_Operation) return String is
   begin
@@ -134,7 +164,8 @@ package body AZip_Common.Operations is
     Set_Time_Stamp  :        UnZip.Set_Time_Stamp_proc;
     new_temp_name   :        String;
     Name_conflict   :        UnZip.Resolve_conflict_proc;
-    password        : in out Unbounded_Wide_String
+    password        : in out Unbounded_Wide_String;
+    max_code        :    out Integer
   )
   is
     new_zip: Zip.Create.Zip_Create_info;
@@ -463,6 +494,7 @@ package body AZip_Common.Operations is
                   user_code:= corrupt;
               end;
             end if;
+            max_code:= Integer'Max(max_code, user_code);
         end case;
       else -- archive entry name is not matched by a file name in the list
         case operation is
@@ -485,6 +517,7 @@ package body AZip_Common.Operations is
   procedure Traverse_archive is new Zip.Traverse_verbose(Action);
 
   begin -- Process_archive
+    max_code:= 0;
     if not Zip.Is_loaded(zif) then
       return; -- we have a "null" archive (not even a file with 0 entries)
     end if;

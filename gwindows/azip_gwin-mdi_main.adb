@@ -43,7 +43,7 @@ package body AZip_GWin.MDI_Main is
 
   begin
     is_open:= False;
-    GWindows.Base.Enumerate_Children(
+    Enumerate_Children(
       MDI_Client_Window (Window).all,
       Identify'Unrestricted_Access
     );
@@ -54,15 +54,15 @@ package body AZip_GWin.MDI_Main is
   begin
     if Window.all in MDI_Child_Type'Class then
       -- !! some content refresh, dbl buffering
-      GWindows.Base.Redraw(Window.all);
+      Window.Redraw;
     end if;
   end Redraw_Child;
 
   procedure Redraw_all(Window: in out MDI_Main_Type) is
   begin
-    Redraw(Window);
+    Window.Redraw;
     -- Redraw(Window.Tool_bar);
-    GWindows.Base.Enumerate_Children(MDI_Client_Window (Window).all,Redraw_child'Access);
+    Enumerate_Children(MDI_Client_Window (Window).all,Redraw_child'Access);
   end Redraw_all;
 
   procedure Close_extra_first_child(Window : GWindows.Base.Pointer_To_Base_Window_Class)
@@ -73,7 +73,7 @@ package body AZip_GWin.MDI_Main is
         w: MDI_Child_Type renames MDI_Child_Type(Window.all);
       begin
         if w.Extra_first_doc and Is_file_saved(w) then
-          Close(Window.all);
+          Window.Close;
         end if;
       end;
     end if;
@@ -81,7 +81,7 @@ package body AZip_GWin.MDI_Main is
 
   procedure Close_extra_first_child(Window: in out MDI_Main_Type) is
   begin
-    GWindows.Base.Enumerate_Children(MDI_Client_Window (Window).all,Close_extra_first_child'Access);
+    Enumerate_Children(MDI_Client_Window (Window).all,Close_extra_first_child'Access);
   end Close_extra_first_child;
 
   procedure Finish_subwindow_opening(

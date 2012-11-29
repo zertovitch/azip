@@ -7,6 +7,7 @@ with Zip;
 
 with GWindows;                          use GWindows;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
+with GWindows.Common_Controls.Ex_List_View;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 
@@ -44,7 +45,10 @@ package AZip_GWin.MDI_Child is
   type MDI_Child_Status_Bar_Type is
     new GWindows.Common_Controls.Status_Bar_Type with null record;
 
-  type MDI_Child_List_View_Control_Type is new List_View_Control_Type with null record;
+  package AZip_LV_Ex is new GWindows.Common_Controls.Ex_List_View(Integer);
+
+  type MDI_Child_List_View_Control_Type is
+    new AZip_LV_Ex.Ex_List_View_Control_Type with null record;
   procedure On_Item_Changed (Control : in out MDI_Child_List_View_Control_Type);
 
   type MDI_Child_Type is

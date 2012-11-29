@@ -371,7 +371,8 @@ package body AZip_GWin.MDI_Main is
     Success    : Boolean;
   begin
     Open_File (
-      Window, "Open", File_Name, Zip_archives_filters, ".zip", File_Title,
+      Window, "Open Zip archive",
+      File_Name, Zip_archives_filters, ".zip", File_Title,
       Success
     );
     if Success then

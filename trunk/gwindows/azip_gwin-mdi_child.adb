@@ -8,6 +8,7 @@ with Time_Display;
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Buttons;                  use GWindows.Buttons;
+with GWindows.Colors;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
@@ -57,6 +58,12 @@ package body AZip_GWin.MDI_Child is
         simple_name_idx: Positive:= name'First;
         extension_idx: Positive:= name'Last + 1;
         R_mark: constant array (Boolean) of Character:= (' ', 'R');
+        az_color: AZip_Common.Operations.RGB_type;
+        gw_color: GWindows.Colors.RGB_Type;
+        use GWindows.Colors;
+        intensity: Integer;
+        normalized_intensity: Float;
+        font_color: Color_Type;
       begin
         for i in name'Range loop
           case name(i) is
@@ -97,6 +104,26 @@ package body AZip_GWin.MDI_Child is
           Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, 10);
         end if;
         Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, user_code)), row, 11);
+        az_color:= Result_color(Window.last_operation, user_code, Window.last_max_code);
+        gw_color:=
+          (Red    => GWindows.Colors.Color_Range(az_color.Red),
+           Green  => GWindows.Colors.Color_Range(az_color.Green),
+           Blue   => GWindows.Colors.Color_Range(az_color.Blue),
+           Unused => 0
+          );
+        intensity:=
+          Integer(gw_color.Red)   ** 2 +
+          Integer(gw_color.Green) ** 2 +
+          Integer(gw_color.Blue)  ** 2;
+        normalized_intensity:=
+          Float(intensity) / ((Float(GWindows.Colors.Color_Range'Last) ** 2) * 3.0);
+        -- Ensure we can read the text, given the background color.
+        if normalized_intensity > 0.5 then
+          font_color:= Black;
+        else
+          font_color:= White;
+        end if;
+        Lst.Subitem_Color(font_color, To_Color(gw_color), row, 11);
         row:= row + 1; -- more subtle with our sorting
       end Process_row;
 
@@ -165,7 +192,7 @@ package body AZip_GWin.MDI_Child is
   procedure On_Item_Changed (Control : in out MDI_Child_List_View_Control_Type) is
     PW: MDI_Child_Type renames MDI_Child_Type(Control.Parent.all);
   begin
-    Update_display(PW, simple_refresh);
+    PW.Update_display(simple_refresh);
   end On_Item_Changed;
 
   ---------------
@@ -174,7 +201,7 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Create (Window : in out MDI_Child_Type) is
   begin
-    Small_Icon (Window, "AZip_Doc_Icon_Name");
+    Window.Small_Icon("AZip_Doc_Icon_Name");
 
     -- Filial feelings:
     Window.parent:= MDI_Main_Access(Controlling_Parent(Window));
@@ -183,17 +210,18 @@ package body AZip_GWin.MDI_Child is
 
     Window.Directory_List.Create(Window, 50,1,20,20, Multiple, Report_View, Sort_Custom);
     Window.Directory_List.Set_Extended_Style(AZip_LV_Ex.Fullrowselect);
+    Window.Directory_List.Color_mode(AZip_LV_Ex.Subitem);
 
-    Create(Window.Folder_Tree, Window, 1,1,20,20);
+    Window.Folder_Tree.Create(Window, 1,1,20,20);
 
-    Create(Window.Status_Bar, Window, "No archive");
-    Parts(Window.Status_Bar, (1 => 200, 2 => -1));
-    Dock (Window.Status_Bar, GWindows.Base.At_Bottom);
+    Window.Status_Bar.Create(Window, "No archive");
+    Window.Status_Bar.Parts((1 => 200, 2 => -1));
+    Window.Status_Bar.Dock(At_Bottom);
 
-    Dock_Children (Window);
+    Window.Dock_Children;
 
     AZip_Resource_GUI.Create_Full_Menu(Window.Menu);
-    MDI_Menu (Window, Window.Menu.Main, Window_Menu => 5);
+    Window.MDI_Menu(Window.Menu.Main, Window_Menu => 5);
 
     -- Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare
@@ -211,12 +239,8 @@ package body AZip_GWin.MDI_Child is
         -- Window.parent.Tool_Bar.Redraw;
       end if;
     end;
-
-    --Scroll_Position(Window, Vertical, Scroll_Maximum(Window, Vertical));
-    --Adjust_Draw_Control_Position(Window);
-
     Window.Status_deamon.Start;
-    Update_display(Window, first_display);
+    Window.Update_display(first_display);
     Window.Accept_File_Drag_And_Drop;
     Ada.Numerics.Float_Random.Reset(Window.Temp_name_gen);
   end On_Create;
@@ -298,9 +322,9 @@ package body AZip_GWin.MDI_Child is
       Close(empty_zip);
     end if;
     Window.File_Name := New_File_Name;
-    Text (Window, GU2G (File_Title));
+    Window.Text(GU2G(File_Title));
     Window.Short_Name:= File_Title;
-    Update_Common_Menus(Window,GU2G(New_File_Name));
+    Window.Update_Common_Menus(GU2G(New_File_Name));
     Window.Load_archive_catalogue(False);
   end On_Save_As;
 
@@ -461,7 +485,8 @@ package body AZip_GWin.MDI_Child is
         Set_Time_Stamp   => Set_Modification_Time_B'Access,
         new_temp_name    => new_temp_name,
         Name_conflict    => Name_conflict_resolution'Unrestricted_Access,
-        password         => Window.current_password
+        password         => Window.current_password,
+        max_code         => Window.last_max_code
       );
       Window.last_operation:= operation;
       if operation in Modifying_Operation then

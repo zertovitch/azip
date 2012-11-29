@@ -22,6 +22,22 @@ package AZip_Common.Operations is
 
   function Result_message(op: Archive_Operation; code: Integer) return String;
 
+  type Color_range is range 0 .. 255;
+
+  type RGB_type is
+    record
+      Red    : Color_range;
+      Green  : Color_range;
+      Blue   : Color_range;
+    end record;
+
+  function Result_color(
+    op       : Archive_Operation;
+    code     : Integer;
+    max_code : Integer
+  )
+  return RGB_type;
+
   subtype Modifying_Operation is Archive_Operation range Add .. Remove;
   subtype Read_Only_Operation is Archive_Operation range Test .. Search;
 
@@ -69,7 +85,8 @@ package AZip_Common.Operations is
     Set_Time_Stamp  :        UnZip.Set_Time_Stamp_proc;
     new_temp_name   :        String;
     Name_conflict   :        UnZip.Resolve_conflict_proc;
-    password        : in out Unbounded_Wide_String
+    password        : in out Unbounded_Wide_String;
+    max_code        :    out Integer
   );
 
   ------------------

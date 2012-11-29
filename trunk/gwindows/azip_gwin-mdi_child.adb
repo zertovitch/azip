@@ -181,7 +181,9 @@ package body AZip_GWin.MDI_Child is
     -- Copy options to child level:
     Window.opt:= Window.Parent.opt;
 
-    Create(Window.Directory_List, Window, 50,1,20,20, Multiple, Report_View);
+    Window.Directory_List.Create(Window, 50,1,20,20, Multiple, Report_View, Sort_Custom);
+    Window.Directory_List.Set_Extended_Style(AZip_LV_Ex.Fullrowselect);
+
     Create(Window.Folder_Tree, Window, 1,1,20,20);
 
     Create(Window.Status_Bar, Window, "No archive");

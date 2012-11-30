@@ -1,5 +1,3 @@
--- with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
-
 with System;
 with Ada.unchecked_conversion;
 with Ada.Unchecked_Deallocation;
@@ -1124,7 +1122,6 @@ package body GWindows.Common_Controls.Ex_List_View is
                Value2 : in GString) return Integer
    is
    begin
-     --  Message_Box("", "On_Compare not overriden");
      return Fire_On_Compare(Control, Column, Value1, Value2);
    end On_Compare;
    --
@@ -1160,8 +1157,6 @@ package body GWindows.Common_Controls.Ex_List_View is
                   Direction: in Sort_Direction_Type;
                   Show_Icon: in Boolean := true)
    is
-     -- GdM: moved here the internal comparison function
-     -- Otherwise inheritance is not working!
       function On_compare_internal
         (Lparam1    : in     Gwindows.Types.lparam;
          Lparam2    : in     Gwindows.Types.lparam;
@@ -1206,14 +1201,12 @@ package body GWindows.Common_Controls.Ex_List_View is
                                              item => Index2,
                                              Subitem => Control.Sort_Object.Sort_Column);
          begin
-            -- Message_Box("","Compare internal");
-            --
             -- We call the method, which is either overriden, or calls
             -- Fire_On_Compare which in turn calls the handler, if available, or
             -- applies a default alphabetical sorting.
             return Interfaces.C.Int(
                On_Compare(
-                  Control => Control,
+                  Control => Ex_List_View_Control_Type'Class(Control),
                   Column  => Control.Sort_Object.Sort_column,
                   Value1  => Value1,
                   Value2  => Value2)

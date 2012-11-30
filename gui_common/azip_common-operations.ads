@@ -22,7 +22,7 @@ package AZip_Common.Operations is
 
   function Result_message(op: Archive_Operation; code: Integer) return String;
 
-  type Color_range is range 0 .. 255;
+  type Color_range is new Integer range 0 .. 255;
 
   type RGB_type is
     record
@@ -31,12 +31,13 @@ package AZip_Common.Operations is
       Blue   : Color_range;
     end record;
 
-  function Result_color(
-    op       : Archive_Operation;
-    code     : Integer;
-    max_code : Integer
-  )
-  return RGB_type;
+  procedure Result_color(
+    op        : Archive_Operation;
+    code      : Integer;
+    max_code  : Integer;
+    color     : out RGB_type;
+    intensity : out Float
+  );
 
   subtype Modifying_Operation is Archive_Operation range Add .. Remove;
   subtype Read_Only_Operation is Archive_Operation range Test .. Search;

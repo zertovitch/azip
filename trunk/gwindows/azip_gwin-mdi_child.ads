@@ -49,7 +49,15 @@ package AZip_GWin.MDI_Child is
 
   type MDI_Child_List_View_Control_Type is
     new AZip_LV_Ex.Ex_List_View_Control_Type with null record;
-  procedure On_Item_Changed (Control : in out MDI_Child_List_View_Control_Type);
+  --
+  overriding procedure On_Item_Changed
+    (Control : in out MDI_Child_List_View_Control_Type);
+  --
+--    overriding function On_Compare(
+--                 Control: in MDI_Child_List_View_Control_Type;
+--                 Column : in Natural;
+--                 Value1 : in GString;
+--                 Value2 : in GString) return Integer;
 
   type MDI_Child_Type is
     new GWindows.Windows.MDI.MDI_Child_Window_Type with

@@ -24,7 +24,6 @@ with Ada.Exceptions;
 with Ada.IO_Exceptions;
 with Ada.Sequential_IO;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
-with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
 with Ada.Unchecked_Deallocation;
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 
@@ -96,11 +95,11 @@ package body AZip_GWin.MDI_Child is
               Lst.Set_Sub_Item("(invalid)", row, cidx(Modified)-1);
           end;
           Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, cidx(Attributes)-1);
-          Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, cidx(Size)-1);
-          Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, cidx(Packed)-1);
-          Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, cidx(Ratio)-1);
+          Lst.Set_Sub_Item(File_size_image(uncomp_size), row, cidx(Size)-1);
+          Lst.Set_Sub_Item(File_size_image(comp_size), row, cidx(Packed)-1);
+          Lst.Set_Sub_Item(Ratio_pct_image(comp_size, uncomp_size), row, cidx(Ratio)-1);
           Lst.Set_Sub_Item(To_Lower(PKZip_method'Wide_Image(method)), row, cidx(Format)-1);
-          Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, cidx(CRC32)-1);
+          Lst.Set_Sub_Item(Hexadecimal(crc_32), row, cidx(CRC32)-1);
           Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), name_encoding), row, cidx(Path)-1);
           Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, cidx(Encoding)-1);
         end if;
@@ -130,14 +129,14 @@ package body AZip_GWin.MDI_Child is
           when first_display =>
             Lst.Clear;
             Lst.Insert_Column(
-              S2G(Image(topic)),
+              Image(topic),
               Entry_topic'Pos(topic),
               Window.Parent.opt.column_width(topic)
             );
           when archive_changed =>
             Lst.Clear;
             Lst.Set_Column(
-              S2G(Image(topic)),
+              Image(topic),
               Entry_topic'Pos(topic),
               Window.Parent.opt.column_width(topic)
             );
@@ -199,25 +198,13 @@ package body AZip_GWin.MDI_Child is
   return Integer
   is
     i1, i2: Integer;
-    function Bytes(v: GString) return Integer is
-    begin
-      if Index(v, "KB") > 0 then
-        return Integer'Wide_Value(v(v'First..v'Last-3)) * 1024;
-      elsif Index(v, "MB") > 0 then
-        return Integer'Wide_Value(v(v'First..v'Last-3)) * 1024**2;
-      elsif Index(v, "GB") > 0 then
-        return Integer'Wide_Value(v(v'First..v'Last-3)) * 1024**3;
-      else
-        return Integer'Wide_Value(v);
-      end if;
-    end Bytes;
   begin
     for t in Entry_topic loop
       if Column = MDI_Child_Type(Control.Parent.all).opt.column_index(t)-1 then
         case t is
           when Size | Packed => -- 3 KB
-            i1:= Bytes(Value1);
-            i2:= Bytes(Value2);
+            i1:= Integer(File_Size_Value(Value1));
+            i2:= Integer(File_Size_Value(Value2));
             if i1 = i2 then
               return 0;
             elsif i1 > i2 then
@@ -226,8 +213,8 @@ package body AZip_GWin.MDI_Child is
               return -1;
             end if;
           when Ratio => -- 77%
-            i1:= Integer'Wide_Value(Value1(Value1'First..Value1'Last-1));
-            i2:= Integer'Wide_Value(Value2(Value2'First..Value2'Last-1));
+            i1:= Pct_value(Value1);
+            i2:= Pct_value(Value2);
             if i1 = i2 then
               return 0;
             elsif i1 > i2 then

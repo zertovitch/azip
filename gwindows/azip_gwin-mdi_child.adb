@@ -189,6 +189,55 @@ package body AZip_GWin.MDI_Child is
     PW.Update_display(simple_refresh);
   end On_Item_Changed;
 
+  function My_Compare(
+               Control: in AZip_LV_Ex.Ex_List_View_Control_Type; -- MDI_Child_List_View_Control_Type;
+               Column : in Natural;
+               Value1 : in GString;
+               Value2 : in GString
+  )
+  return Integer
+  is
+    i1, i2: Integer;
+  begin
+    for t in Entry_topic loop
+      if Column = MDI_Child_Type(Control.Parent.all).opt.column_index(t)-1 then
+        case t is
+          when Size | Packed =>
+            null; -- !! KB/MB...
+          when Ratio =>
+            null; -- !! pct
+          when Result =>
+            i1:= Integer'Wide_Value(Value1);
+            i2:= Integer'Wide_Value(Value2);
+            if i1 = i2 then
+              return 0;
+            elsif i1 > i2 then
+              return 1;
+            else
+              return -1;
+            end if;
+          when others =>
+            null;
+        end case;
+      end if;
+    end loop;
+    -- Default behaviour (alphabetic).
+    --
+    -- Call parent method.
+     --      return AZip_LV_Ex.Ex_List_View_Control_Type(Control).On_Compare(
+     --        Column,
+     --        Value1,
+     --        Value2
+     --      );
+      if Value1 = Value2 then
+         return 0;
+      elsif Value1 > Value2 then
+         return 1;
+      else
+         return -1;
+      end if;
+  end My_Compare;
+
   ---------------
   -- On_Create --
   ---------------
@@ -203,8 +252,9 @@ package body AZip_GWin.MDI_Child is
     Window.opt:= Window.Parent.opt;
 
     Window.Directory_List.Create(Window, 50,1,20,20, Multiple, Report_View, Sort_Custom);
-    Window.Directory_List.Set_Extended_Style(AZip_LV_Ex.Fullrowselect);
+    Window.Directory_List.Set_Extended_Style(AZip_LV_Ex.Full_Row_Select);
     Window.Directory_List.Color_mode(AZip_LV_Ex.Subitem);
+    Window.Directory_List.On_Compare_Handler(My_Compare'Access);
 
     Window.Folder_Tree.Create(Window, 1,1,20,20);
 

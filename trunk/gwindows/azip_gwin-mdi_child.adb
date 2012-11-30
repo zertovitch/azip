@@ -61,8 +61,7 @@ package body AZip_GWin.MDI_Child is
         az_color: AZip_Common.Operations.RGB_type;
         gw_color: GWindows.Colors.RGB_Type;
         use GWindows.Colors;
-        intensity: Integer;
-        normalized_intensity: Float;
+        intensity: Float;
         font_color: Color_Type;
       begin
         for i in name'Range loop
@@ -104,21 +103,15 @@ package body AZip_GWin.MDI_Child is
           Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, 10);
         end if;
         Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, user_code)), row, 11);
-        az_color:= Result_color(Window.last_operation, user_code, Window.last_max_code);
+        Result_color(Window.last_operation, user_code, Window.last_max_code, az_color, intensity);
         gw_color:=
           (Red    => GWindows.Colors.Color_Range(az_color.Red),
            Green  => GWindows.Colors.Color_Range(az_color.Green),
            Blue   => GWindows.Colors.Color_Range(az_color.Blue),
            Unused => 0
           );
-        intensity:=
-          Integer(gw_color.Red)   ** 2 +
-          Integer(gw_color.Green) ** 2 +
-          Integer(gw_color.Blue)  ** 2;
-        normalized_intensity:=
-          Float(intensity) / ((Float(GWindows.Colors.Color_Range'Last) ** 2) * 3.0);
         -- Ensure we can read the text, given the background color.
-        if normalized_intensity > 0.5 then
+        if intensity > 0.58 then
           font_color:= Black;
         else
           font_color:= White;

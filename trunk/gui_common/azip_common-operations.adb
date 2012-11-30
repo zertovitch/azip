@@ -2,6 +2,7 @@ with Zip.Create, Zip.Compress, UnZip.Streams, Zip_Streams;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;                   use Ada.Directories;
+with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
 with Ada.Streams.Stream_IO;
@@ -14,6 +15,17 @@ package body AZip_Common.Operations is
   function Result_message(op: Archive_Operation; code: Integer) return String
   is
   begin
+    -- Following codes have a single explanation over all operations
+    case code is
+      when wrong_pwd =>
+        return "Password wrong" & Integer'Image(UnZip.tolerance_wrong_password) & " times";
+      when corrupt =>
+        return "Compressed data is corrupt";
+      when bad_crc =>
+        return "CRC test failed";
+      when others =>
+        null;
+    end case;
     case op is
       when Add =>
         if code = success then
@@ -40,49 +52,51 @@ package body AZip_Common.Operations is
       when Search =>
         return Trim(Integer'Image(code), Left);
     end case;
-    -- Following codes have a single explanation over all operations
-    case code is
-      when wrong_pwd =>
-        return "Password wrong" & Integer'Image(UnZip.tolerance_wrong_password) & " times";
-      when corrupt =>
-        return "Compressed data is corrupt";
-      when bad_crc =>
-        return "CRC test failed";
-      when others =>
-        null;
-    end case;
     --
     return "";
   end Result_message;
 
-  function Result_color(
-    op       : Archive_Operation;
-    code     : Integer;
-    max_code : Integer
+  procedure Result_color(
+    op        : Archive_Operation;
+    code      : Integer;
+    max_code  : Integer;
+    color     : out RGB_type;
+    intensity : out Float
   )
-  return RGB_type
   is
     val: Color_range;
     max: constant Color_range:= Color_range'Last;
+    raw_intensity_sq: Natural;
+    max_raw_intensity_sq: constant:= max * max * 3;
   begin
     case op is
       when Search =>
-        val:= Color_range(Float(max) * Float(code) / Float(max_code));
-        return (Red => max - val, Green => max - val, Blue => max);
+        if max_code = 0 or code < 0 then
+          val:= 0;
+        else
+          val:= Color_range(Float'Floor(Float(max) * Float(code) / Float(max_code)));
+        end if;
+        color:= (Red => max - val, Green => max - val, Blue => max - val / 4);
       when others =>
-        null;
+        case code is
+          when success =>
+            color:= (Red => 0, Green => (max * 3) / 4, Blue => 0);
+          when others =>
+            color:= (Red => max, Green => max, Blue => max);
+        end case;
     end case;
-    -- Following codes have a single explanation over all operations
+    -- Errors are always shown
     case code is
       when wrong_pwd | corrupt | bad_crc =>
-        return (Red => max, Green => 0, Blue => 0);
-      when success =>
-        return (Red => 0, Green => max, Blue => 0);
+        color:= (Red => (max * 3) / 4, Green => 0, Blue => 0);
       when others =>
         null;
     end case;
-    --
-    return (Red => max, Green => max, Blue => max);
+    raw_intensity_sq:=
+      Integer(color.Red)   ** 2 +
+      Integer(color.Green) ** 2 +
+      Integer(color.Blue)  ** 2;
+    intensity:= Sqrt(Float(raw_intensity_sq) / Float(max_raw_intensity_sq));
   end Result_color;
 
   function Description(op: Entry_Operation) return String is

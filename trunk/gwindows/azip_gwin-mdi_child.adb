@@ -24,6 +24,7 @@ with Ada.Exceptions;
 with Ada.IO_Exceptions;
 with Ada.Sequential_IO;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
+with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
 with Ada.Unchecked_Deallocation;
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 
@@ -189,8 +190,8 @@ package body AZip_GWin.MDI_Child is
     PW.Update_display(simple_refresh);
   end On_Item_Changed;
 
-  function My_Compare(
-               Control: in AZip_LV_Ex.Ex_List_View_Control_Type; -- MDI_Child_List_View_Control_Type;
+  function On_Compare(
+               Control: in MDI_Child_List_View_Control_Type;
                Column : in Natural;
                Value1 : in GString;
                Value2 : in GString
@@ -198,15 +199,44 @@ package body AZip_GWin.MDI_Child is
   return Integer
   is
     i1, i2: Integer;
+    function Bytes(v: GString) return Integer is
+    begin
+      if Index(v, "KB") > 0 then
+        return Integer'Wide_Value(v(v'First..v'Last-3)) * 1024;
+      elsif Index(v, "MB") > 0 then
+        return Integer'Wide_Value(v(v'First..v'Last-3)) * 1024**2;
+      elsif Index(v, "GB") > 0 then
+        return Integer'Wide_Value(v(v'First..v'Last-3)) * 1024**3;
+      else
+        return Integer'Wide_Value(v);
+      end if;
+    end Bytes;
   begin
     for t in Entry_topic loop
       if Column = MDI_Child_Type(Control.Parent.all).opt.column_index(t)-1 then
         case t is
-          when Size | Packed =>
-            null; -- !! KB/MB...
-          when Ratio =>
-            null; -- !! pct
-          when Result =>
+          when Size | Packed => -- 3 KB
+            i1:= Bytes(Value1);
+            i2:= Bytes(Value2);
+            if i1 = i2 then
+              return 0;
+            elsif i1 > i2 then
+              return 1;
+            else
+              return -1;
+            end if;
+          when Ratio => -- 77%
+            i1:= Integer'Wide_Value(Value1(Value1'First..Value1'Last-1));
+            i2:= Integer'Wide_Value(Value2(Value2'First..Value2'Last-1));
+            if i1 = i2 then
+              return 0;
+            elsif i1 > i2 then
+              return 1;
+            else
+              return -1;
+            end if;
+          when Result => -- 1234
+            -- Message_Box("Falk forever", "Waaaah!");
             i1:= Integer'Wide_Value(Value1);
             i2:= Integer'Wide_Value(Value2);
             if i1 = i2 then
@@ -221,22 +251,16 @@ package body AZip_GWin.MDI_Child is
         end case;
       end if;
     end loop;
-    -- Default behaviour (alphabetic).
-    --
-    -- Call parent method.
-     --      return AZip_LV_Ex.Ex_List_View_Control_Type(Control).On_Compare(
-     --        Column,
-     --        Value1,
-     --        Value2
-     --      );
-      if Value1 = Value2 then
-         return 0;
-      elsif Value1 > Value2 then
-         return 1;
-      else
-         return -1;
-      end if;
-  end My_Compare;
+    -- Default behaviour: alphabetic. We could also call the parent method,
+    -- with same effect but certainly a bit slower.
+    if Value1 = Value2 then
+      return 0;
+    elsif Value1 > Value2 then
+      return 1;
+    else
+      return -1;
+    end if;
+  end On_Compare;
 
   ---------------
   -- On_Create --
@@ -254,7 +278,7 @@ package body AZip_GWin.MDI_Child is
     Window.Directory_List.Create(Window, 50,1,20,20, Multiple, Report_View, Sort_Custom);
     Window.Directory_List.Set_Extended_Style(AZip_LV_Ex.Full_Row_Select);
     Window.Directory_List.Color_mode(AZip_LV_Ex.Subitem);
-    Window.Directory_List.On_Compare_Handler(My_Compare'Access);
+--    Window.Directory_List.On_Compare_Handler(My_Compare'Access);
 
     Window.Folder_Tree.Create(Window, 1,1,20,20);
 

@@ -63,6 +63,7 @@ package body AZip_GWin.MDI_Child is
         use GWindows.Colors;
         intensity: Float;
         font_color: Color_Type;
+        cidx: Column_integer_array renames Window.opt.column_index;
       begin
         for i in name'Range loop
           case name(i) is
@@ -86,23 +87,23 @@ package body AZip_GWin.MDI_Child is
         end if;
         if need in first_display .. archive_changed then
           Lst.Insert_Item(To_UTF_16(name(simple_name_idx..name'Last), name_encoding), row);
-          Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, 1);
+          Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, cidx(FType)-1);
           begin
-            Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, 2);
+            Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, cidx(Modified)-1);
           exception
             when Zip_Streams.Calendar.Time_Error =>
-              Lst.Set_Sub_Item("(invalid)", row, 2);
+              Lst.Set_Sub_Item("(invalid)", row, cidx(Modified)-1);
           end;
-          Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, 3);
-          Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, 4);
-          Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, 5);
-          Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, 6);
-          Lst.Set_Sub_Item(To_Lower(PKZip_method'Wide_Image(method)), row, 7);
-          Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, 8);
-          Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), name_encoding), row, 9);
-          Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, 10);
+          Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, cidx(Attributes)-1);
+          Lst.Set_Sub_Item(S2G(Pretty_file_size(uncomp_size)), row, cidx(Size)-1);
+          Lst.Set_Sub_Item(S2G(Pretty_file_size(comp_size)), row, cidx(Packed)-1);
+          Lst.Set_Sub_Item(S2G(Ratio_pct(comp_size, uncomp_size)), row, cidx(Ratio)-1);
+          Lst.Set_Sub_Item(To_Lower(PKZip_method'Wide_Image(method)), row, cidx(Format)-1);
+          Lst.Set_Sub_Item(S2G(Hexadecimal(crc_32)), row, cidx(CRC32)-1);
+          Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), name_encoding), row, cidx(Path)-1);
+          Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, cidx(Encoding)-1);
         end if;
-        Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, user_code)), row, 11);
+        Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, user_code)), row, cidx(Result)-1);
         Result_color(Window.last_operation, user_code, Window.last_max_code, az_color, intensity);
         gw_color:=
           (Red    => GWindows.Colors.Color_Range(az_color.Red),
@@ -116,7 +117,7 @@ package body AZip_GWin.MDI_Child is
         else
           font_color:= White;
         end if;
-        Lst.Subitem_Color(font_color, To_Color(gw_color), row, 11);
+        Lst.Subitem_Color(font_color, To_Color(gw_color), row, cidx(Result)-1);
         row:= row + 1; -- more subtle with our sorting
       end Process_row;
 

@@ -1,7 +1,7 @@
-with Ada.Characters.Handling;           use Ada.Characters.Handling;
+with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 with Ada.Strings;                       use Ada.Strings;
-with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
-with Ada.Text_IO;
+with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
+with Ada.Wide_Text_IO;
 
 with Ada.Strings.UTF_Encoding.Conversions;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
@@ -323,9 +323,9 @@ package body AZip_Common is
     return res;
   end To_IBM_437;
 
-  function Image(topic: Entry_topic) return String is
-    u: constant String:= Entry_topic'Image(topic);
-    l: constant String:= To_Lower(u);
+  function Image(topic: Entry_topic) return UTF_16_String is
+    u: constant UTF_16_String:= Entry_topic'Wide_Image(topic);
+    l: constant UTF_16_String:= To_Lower(u);
   begin
     case topic is
       when FType =>
@@ -337,38 +337,61 @@ package body AZip_Common is
     end case;
   end Image;
 
-  function Hexadecimal(x: Interfaces.Unsigned_32) return String
+  function Hexadecimal(x: Interfaces.Unsigned_32) return UTF_16_String
   is
-    package MIO is new Ada.Text_IO.Modular_IO(Interfaces.Unsigned_32);
-    str: String(1..12);
+    package MIO is new Ada.Wide_Text_IO.Modular_IO(Interfaces.Unsigned_32);
+    str: UTF_16_String(1..12);
   begin
     MIO.Put(str, x, 16);
     return str(Index(str,"#")+1..11);
   end Hexadecimal;
 
-  function Pretty_file_size(x: Zip.File_size_type) return String is
+  function File_size_image(x: Zip.File_size_type) return UTF_16_String is
     use type Zip.File_size_type;
   begin
     if x >= 1024 ** 3 then
-      return Pretty_file_size(x / (1024 ** 3)) & " GB";
+      return File_size_image(x / (1024 ** 3)) & " GB";
     elsif x >= 1024 ** 2 then
-      return Pretty_file_size(x / (1024 ** 2)) & " MB";
+      return File_size_image(x / (1024 ** 2)) & " MB";
     elsif x >= 1024 then
-      return Pretty_file_size(x / 1024) & " KB";
+      return File_size_image(x / 1024) & " KB";
     else
-      return Trim(Zip.File_size_type'Image(x), Left);
+      return Trim(Zip.File_size_type'Wide_Image(x), Left);
     end if;
-  end Pretty_file_size;
+  end File_size_image;
 
-  function Ratio_pct(n,d: Zip.File_size_type) return String is
+  function File_Size_Value(s: UTF_16_String) return Zip.File_size_type is
+    use type File_size_type;
+  begin
+    if Index(s, "KB") > 0 then
+      return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024;
+    elsif Index(s, "MB") > 0 then
+      return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024**2;
+    elsif Index(s, "GB") > 0 then
+      return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024**3;
+    else
+      return File_size_type'Wide_Value(s);
+    end if;
+  end File_Size_Value;
+
+  function Ratio_pct_Image(n,d: Zip.File_size_type) return UTF_16_String is
     use type Zip.File_size_type;
   begin
     if d = 0 then
       return "--";
     else
-      return Trim(Integer'Image(Integer(100.0 * Float(n) / Float(d))), Left) & '%';
+      return Trim(Integer'Wide_Image(Integer(100.0 * Float(n) / Float(d))), Left) & '%';
     end if;
-  end Ratio_pct;
+  end Ratio_pct_Image;
+
+  function Pct_Value(s: UTF_16_String) return Natural is -- 0..101
+  begin
+    if s = "--" then
+      return 101;
+    else
+      return Integer'Wide_Value(s(s'First..s'Last-1));
+    end if;
+  end;
 
   function Is_valid_Zip_archive(file_name: String) return Boolean is
     info: Zip.Zip_info;

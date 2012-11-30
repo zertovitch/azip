@@ -40,10 +40,14 @@ package AZip_Common is
   -- Text display helpers --
   --------------------------
 
-  function Image(topic: Entry_topic) return String;
-  function Hexadecimal(x: Interfaces.Unsigned_32) return String;
-  function Pretty_file_size(x: Zip.File_size_type) return String;
-  function Ratio_pct(n,d: Zip.File_size_type) return String;
+  function Image(topic: Entry_topic) return UTF_16_String;
+  function Hexadecimal(x: Interfaces.Unsigned_32) return UTF_16_String;
+  -- File sizes
+  function File_Size_Image(x: Zip.File_size_type) return UTF_16_String;
+  function File_Size_Value(s: UTF_16_String) return Zip.File_size_type;
+
+  function Ratio_pct_Image(n,d: Zip.File_size_type) return UTF_16_String;
+  function Pct_Value(s: UTF_16_String) return Natural; -- 0..100
 
   ---------------------
   -- Various helpers --

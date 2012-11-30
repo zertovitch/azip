@@ -56,6 +56,9 @@ package body AZip_Common.Operations is
     return "";
   end Result_message;
 
+  max: constant Color_range:= Color_range'Last;
+  f_max: constant Float:= FLoat(max);
+
   procedure Result_color(
     op        : Archive_Operation;
     code      : Integer;
@@ -65,16 +68,18 @@ package body AZip_Common.Operations is
   )
   is
     val: Color_range;
-    max: constant Color_range:= Color_range'Last;
     raw_intensity_sq: Natural;
     max_raw_intensity_sq: constant:= max * max * 3;
+    code_rel: Float;
   begin
     case op is
       when Search =>
         if max_code = 0 or code < 0 then
           val:= 0;
         else
-          val:= Color_range(Float'Floor(Float(max) * Float(code) / Float(max_code)));
+          code_rel:= Float(code) / Float(max_code);
+          code_rel:= code_rel ** 0.25; -- we skew the value (visual effect)
+          val:= Color_range(Float'Floor(f_max * code_rel));
         end if;
         color:= (Red => max - val, Green => max - val, Blue => max - val / 4);
       when others =>

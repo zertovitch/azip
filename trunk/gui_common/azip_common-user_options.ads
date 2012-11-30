@@ -1,6 +1,6 @@
 package AZip_Common.User_options is
 
-  type Column_width_array is array(Entry_topic) of Natural;
+  type Column_integer_array is array(Entry_topic) of Natural;
 
   use_default: constant:= -1;
 
@@ -11,9 +11,23 @@ package AZip_Common.User_options is
   --
   type Option_Pack_Type is record
     view_mode    : View_Mode_Type:= Flat;
-    column_width : Column_width_array:=
+    column_width : Column_integer_array:=
       -- Defaults for GWindows. May be scaled for different GUI metrics.
       (Name => 150, Modified => 120, others => 70);
+    column_index : Column_integer_array:=
+      (Name       => 1, -- This should never change
+       FType      => 2,
+       Modified   => 3,
+       Attributes => 4,
+       Size       => 5,
+       Packed     => 6,
+       Ratio      => 7,
+       Format     => 8,
+       CRC32      => 9,
+       Path       => 10,
+       Encoding   => 11,
+       Result     => 12
+      );
     win_left,
     win_top,
     win_width,

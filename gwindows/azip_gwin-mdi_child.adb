@@ -418,6 +418,7 @@ package body AZip_GWin.MDI_Child is
       archive_percents_done : Natural;
       entry_being_processed : GString;
       operation             : Entry_Operation;
+      skip_hint             : Boolean;
       user_abort            : out Boolean
     )
     is
@@ -425,7 +426,7 @@ package body AZip_GWin.MDI_Child is
       box.File_Progress.Position(file_percents_done);
       box.Archive_Progress.Position(archive_percents_done);
       box.Entry_name.Text(entry_being_processed);
-      box.Entry_operation_name.Text(S2G(Description(operation)));
+      box.Entry_operation_name.Text(Description(operation, skip_hint));
       Message_Check;
       user_abort:= aborted;
     end Boxed_Feedback;
@@ -725,7 +726,7 @@ package body AZip_GWin.MDI_Child is
   end Get_selected_entry_list;
 
   procedure On_Extract(Window : in out MDI_Child_Type) is
-  list: constant Array_Of_File_Names:= Get_selected_entry_list(Window);
+    list: constant Array_Of_File_Names:= Get_selected_entry_list(Window);
     function Archive_extract_msg return GString is
     begin
       if list'Length = 0 then
@@ -736,7 +737,10 @@ package body AZip_GWin.MDI_Child is
           " selected entrie(s) to...";
       end if;
     end;
-    dir: constant GString:= Get_Directory(Window, Archive_extract_msg);
+    dir: constant GString:= Get_Directory(
+      Window            => Window,
+      Dialog_Title      => Archive_extract_msg);
+      -- Initial_Directory => ...);
   begin
     if dir /= "" then
       Process_archive_GWin(

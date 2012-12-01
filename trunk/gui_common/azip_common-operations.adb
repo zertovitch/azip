@@ -104,7 +104,7 @@ package body AZip_Common.Operations is
     intensity:= Sqrt(Float(raw_intensity_sq) / Float(max_raw_intensity_sq));
   end Result_color;
 
-  function Description(op: Entry_Operation) return String is
+  function Description(op: Entry_Operation; skip_hint: Boolean) return UTF_16_String is
   begin
     case op is
       when Append =>
@@ -118,7 +118,11 @@ package body AZip_Common.Operations is
       when Test =>
         return "Testing...";
       when Extract =>
-        return "Extracting (unless skipped)...";
+        if skip_hint then
+          return "Extracting (unless skipped)...";
+        else
+          return "Extracting...";
+        end if;
       when Search =>
         return "Searching...";
     end case;
@@ -193,6 +197,7 @@ package body AZip_Common.Operations is
     processed_entries, total_entries: Natural:= 0;
     current_entry_name: UTF_16_Unbounded_String;
     current_operation: Entry_operation;
+    current_skip_hint: Boolean;
     --
     procedure Entry_feedback(
       percents_done:  in Natural;  -- %'s completed
@@ -213,6 +218,7 @@ package body AZip_Common.Operations is
         archive_percents_done,
         To_Wide_String(current_entry_name),
         current_operation,
+        current_skip_hint,
         user_abort
       );
     end Entry_feedback;
@@ -342,7 +348,7 @@ package body AZip_Common.Operations is
       match: Boolean:= False;
       name_utf_16: constant UTF_16_String:= To_UTF_16(name, name_encoding);
       short_name_utf_16: constant UTF_16_String:= Remove_path(name_utf_16);
-      dummy_user_abort, conflict: Boolean;
+      dummy_user_abort, skip_if_conflict: Boolean;
       idx: Natural;
     begin
       user_code:= nothing;
@@ -388,7 +394,7 @@ package body AZip_Common.Operations is
             current_operation:= Replace;
             current_entry_name:= U(short_name_utf_16);
             declare
-              external_file_name: UTF_8_String:=
+            external_file_name: constant UTF_8_String:=
                 To_UTF_8(To_Wide_String(entry_name(idx)));
             begin
               -- !! try IBM_437 (same as Append below)
@@ -413,6 +419,7 @@ package body AZip_Common.Operations is
               archive_percents_done,
               short_name_utf_16,
               Skip,
+              True,
               dummy_user_abort
             );
           when Test =>
@@ -445,9 +452,10 @@ package body AZip_Common.Operations is
             current_operation:= Extract;
             current_entry_name:= U(short_name_utf_16);
             if current_user_attitude = none then
-              conflict:= Zip.Exists(Add_extract_directory(name, name_encoding));
+              skip_if_conflict:= Zip.Exists(Add_extract_directory(name, name_encoding));
+              current_skip_hint:= True;
             else
-              conflict:= True;
+              skip_if_conflict:= True;
               -- Covers the case where current_user_attitude is "yes" before
               -- call to Extract, then "none" after.
             end if;
@@ -467,7 +475,7 @@ package body AZip_Common.Operations is
                 when yes | yes_to_all | rename_it =>
                   user_code:= success;
                 when none =>
-                  if conflict then
+                  if skip_if_conflict then
                     null; -- nothing happened since a file with that name existed
                   else
                     user_code:= success;
@@ -497,6 +505,7 @@ package body AZip_Common.Operations is
                 archive_percents_done,
                 short_name_utf_16,
                 Search,
+                False,
                 dummy_user_abort
               );
               begin
@@ -555,6 +564,7 @@ package body AZip_Common.Operations is
         -- current archive opened only at entry testing / extracting
     end case;
     UnZip.current_user_attitude:= UnZip.yes;
+    current_skip_hint:= False;
     --------------------------------
     -- The main job is done here: --
     --------------------------------

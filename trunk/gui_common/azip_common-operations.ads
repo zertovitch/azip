@@ -56,7 +56,7 @@ package AZip_Common.Operations is
     Search
   );
 
-  function Description(op: Entry_Operation) return String;
+  function Description(op: Entry_Operation; skip_hint: Boolean) return UTF_16_String;
 
   type Name_list is array(Positive range <>) of UTF_16_Unbounded_String;
 
@@ -68,6 +68,7 @@ package AZip_Common.Operations is
       archive_percents_done : Natural;
       entry_being_processed : UTF_16_String;
       operation             : Entry_Operation;
+      skip_hint             : Boolean;
       user_abort            : out Boolean
     );
     with procedure Change_password(

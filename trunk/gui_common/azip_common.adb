@@ -332,6 +332,8 @@ package body AZip_Common is
         return "Type";
       when CRC32 =>
         return "CRC 32";
+      when Encoding =>
+        return "Name encoding";
       when others =>
         return u(u'First) & l(l'First+1..l'Last);
     end case;

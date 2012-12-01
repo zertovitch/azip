@@ -66,13 +66,12 @@ package AZip_Common.Operations is
     with procedure Feedback(
       file_percents_done    : Natural;
       archive_percents_done : Natural;
-      entry_being_processed : String;
-      entry_name_encoding   : Zip_name_encoding;
+      entry_being_processed : UTF_16_String;
       operation             : Entry_Operation;
       user_abort            : out Boolean
     );
     with procedure Change_password(
-      entry_name : in String;
+      entry_name : in UTF_16_String;
       password   : in out Unbounded_Wide_String
     );
   procedure Process_archive(
@@ -94,7 +93,7 @@ package AZip_Common.Operations is
   -- Some goodies --
   ------------------
 
-  function Remove_path(s: String) return String;
+  function Remove_path(s: UTF_16_String) return UTF_16_String;
 
   procedure Copy_user_codes(from, to: Zip.Zip_info);
 

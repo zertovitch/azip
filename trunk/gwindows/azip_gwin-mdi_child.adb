@@ -416,8 +416,7 @@ package body AZip_GWin.MDI_Child is
     procedure Boxed_Feedback(
       file_percents_done    : Natural;
       archive_percents_done : Natural;
-      entry_being_processed : String;
-      entry_name_encoding   : Zip_name_encoding;
+      entry_being_processed : GString;
       operation             : Entry_Operation;
       user_abort            : out Boolean
     )
@@ -425,7 +424,7 @@ package body AZip_GWin.MDI_Child is
     begin
       box.File_Progress.Position(file_percents_done);
       box.Archive_Progress.Position(archive_percents_done);
-      box.Entry_name.Text(To_UTF_16(entry_being_processed, entry_name_encoding));
+      box.Entry_name.Text(entry_being_processed);
       box.Entry_operation_name.Text(S2G(Description(operation)));
       Message_Check;
       user_abort:= aborted;
@@ -444,7 +443,7 @@ package body AZip_GWin.MDI_Child is
       use UnZip;
     begin
       box.Create_Full_Dialog(Window);
-      box.Conflict_simple_name.Text(To_UTF_16(Remove_path(name), name_encoding));
+      box.Conflict_simple_name.Text(Remove_path(To_UTF_16(name, name_encoding)));
       box.Conflict_location.Text(output_folder);
       box.Overwrite_Rename.Disable;
       -- !! ^ Needs some effort to make an idiot-proof name query ;-)
@@ -460,7 +459,7 @@ package body AZip_GWin.MDI_Child is
     end Name_conflict_resolution;
     --
     procedure Get_password(
-      entry_name : in String;
+      entry_name : in GString;
       password   : in out GString_Unbounded
     )
     is
@@ -487,7 +486,7 @@ package body AZip_GWin.MDI_Child is
       end Show_or_Hide;
     begin
       box.Create_Full_Dialog(Window);
-      box.Encrypted_entry.Text(S2G(entry_name)); -- !! utf-8
+      box.Encrypted_entry.Text(entry_name);
       box.Password_edit.Text(GU2G(password));
       if Window.Parent.opt.show_passwords then
         box.Show_password_box.State(Checked);

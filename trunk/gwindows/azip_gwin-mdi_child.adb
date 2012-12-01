@@ -224,8 +224,8 @@ package body AZip_GWin.MDI_Child is
             end if;
           when Result => -- 1234
             -- Message_Box("Falk forever", "Waaaah!");
-            i1:= Integer'Wide_Value(Value1);
-            i2:= Integer'Wide_Value(Value2);
+            i1:= Result_Value(Value1);
+            i2:= Result_Value(Value2);
             if i1 = i2 then
               return 0;
             elsif i1 > i2 then

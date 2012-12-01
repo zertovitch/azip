@@ -393,6 +393,17 @@ package body AZip_Common is
     end if;
   end;
 
+  function Result_Value(s: UTF_16_String) return Integer is -- can be a non-number
+  begin
+    if s = "" then
+      return 0;
+    end if;
+    return Integer'Wide_Value(s(s'First..s'Last-1));
+  exception
+    when others =>
+      return -1;
+  end;
+
   function Is_valid_Zip_archive(file_name: String) return Boolean is
     info: Zip.Zip_info;
   begin

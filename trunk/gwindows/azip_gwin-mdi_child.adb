@@ -37,92 +37,8 @@ package body AZip_GWin.MDI_Child is
   )
   is
 
-    procedure Feed_directory_list(prefix_path: String) is
-      row: Natural:= 0;
+    procedure Define_columns is
       Lst: MDI_Child_List_View_Control_Type renames Window.Directory_List;
-      --
-      procedure Process_row(
-        name             : String; -- 'name' is compressed entry's name
-        file_index       : Positive;
-        comp_size        : File_size_type;
-        uncomp_size      : File_size_type;
-        crc_32           : Interfaces.Unsigned_32;
-        date_time        : Time;
-        method           : PKZip_method;
-        name_encoding    : Zip_name_encoding;
-        read_only        : Boolean;
-        user_code        : in out Integer
-      )
-      is
-        pragma Unreferenced (file_index);
-        simple_name_idx: Positive:= name'First;
-        extension_idx: Positive:= name'Last + 1;
-        R_mark: constant array (Boolean) of Character:= (' ', 'R');
-        az_color: AZip_Common.Operations.RGB_type;
-        gw_color: GWindows.Colors.RGB_Type;
-        use GWindows.Colors;
-        intensity: Float;
-        font_color: Color_Type;
-        cidx: Column_integer_array renames Window.opt.column_index;
-      begin
-        for i in name'Range loop
-          case name(i) is
-            when '/' | '\' =>
-              -- Directory separator, ok with Unicode UTF-8 names
-              simple_name_idx:= i + 1;
-            when '.' =>
-              -- Last dot is the extension separator
-              extension_idx:= i + 1;
-            when others =>
-              null;
-          end case;
-        end loop;
-        if simple_name_idx > name'Last then -- skip directory entries
-          return;
-        end if;
-        if name'Length < prefix_path'Length or else
-          prefix_path /=  name(name'First..name'First+prefix_path'Length-1)
-        then -- not in a part of the tree to be displayed
-          return;
-        end if;
-        if need in first_display .. archive_changed then
-          Lst.Insert_Item(To_UTF_16(name(simple_name_idx..name'Last), name_encoding), row);
-          Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, cidx(FType)-1);
-          begin
-            Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, cidx(Modified)-1);
-          exception
-            when Zip_Streams.Calendar.Time_Error =>
-              Lst.Set_Sub_Item("(invalid)", row, cidx(Modified)-1);
-          end;
-          Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, cidx(Attributes)-1);
-          Lst.Set_Sub_Item(File_size_image(uncomp_size), row, cidx(Size)-1);
-          Lst.Set_Sub_Item(File_size_image(comp_size), row, cidx(Packed)-1);
-          Lst.Set_Sub_Item(Ratio_pct_image(comp_size, uncomp_size), row, cidx(Ratio)-1);
-          Lst.Set_Sub_Item(To_Lower(PKZip_method'Wide_Image(method)), row, cidx(Format)-1);
-          Lst.Set_Sub_Item(Hexadecimal(crc_32), row, cidx(CRC32)-1);
-          Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), name_encoding), row, cidx(Path)-1);
-          Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, cidx(Encoding)-1);
-        end if;
-        Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, user_code)), row, cidx(Result)-1);
-        Result_color(Window.last_operation, user_code, Window.last_max_code, az_color, intensity);
-        gw_color:=
-          (Red    => GWindows.Colors.Color_Range(az_color.Red),
-           Green  => GWindows.Colors.Color_Range(az_color.Green),
-           Blue   => GWindows.Colors.Color_Range(az_color.Blue),
-           Unused => 0
-          );
-        -- Ensure we can read the text, given the background color.
-        if intensity > 0.58 then
-          font_color:= Black;
-        else
-          font_color:= White;
-        end if;
-        Lst.Subitem_Color(font_color, To_Color(gw_color), row, cidx(Result)-1);
-        row:= row + 1; -- more subtle with our sorting
-      end Process_row;
-
-      procedure Traverse is new Zip.Traverse_verbose(Process_row);
-
     begin
       for topic in Entry_topic loop
         case need is
@@ -144,23 +60,136 @@ package body AZip_GWin.MDI_Child is
             null;
         end case;
       end loop;
-      if Is_Loaded(Window.zif) and then need <= results_refresh then
-        Traverse(Window.zif);
+    end Define_columns;
+
+    -- Window.zif is assumed to be loaded
+    --
+    procedure Feed_directory_list(prefix_path: String) is
+      row, last_row: Integer:= -1;
+      Lst: MDI_Child_List_View_Control_Type renames Window.Directory_List;
+      cidx: Column_integer_array renames Window.opt.column_index;
+      max_entries: constant Natural:= Entries(Window.zif);
+      -- This includes potential invisible entries (directory names from Info-Zip, WinZip)
+      sorted_index, unsorted_index, result_code: array(0..max_entries-1) of Natural;
+      --
+      procedure Process_row(
+        name             : String; -- 'name' is compressed entry's name
+        file_index       : Positive;
+        comp_size        : File_size_type;
+        uncomp_size      : File_size_type;
+        crc_32           : Interfaces.Unsigned_32;
+        date_time        : Time;
+        method           : PKZip_method;
+        name_encoding    : Zip_name_encoding;
+        read_only        : Boolean;
+        user_code        : in out Integer
+      )
+      is
+        pragma Unreferenced (file_index);
+        simple_name_idx: Positive:= name'First;
+        extension_idx: Positive:= name'Last + 1;
+        R_mark: constant array (Boolean) of Character:= (' ', 'R');
+        payload_access: AZip_LV_Ex.Data_Access;
+      begin
+        for i in name'Range loop
+          case name(i) is
+            when '/' | '\' =>
+              -- Directory separator, ok with Unicode UTF-8 names
+              simple_name_idx:= i + 1;
+            when '.' =>
+              -- Last dot is the extension separator
+              extension_idx:= i + 1;
+            when others =>
+              null;
+          end case;
+        end loop;
+        if simple_name_idx > name'Last then -- skip directory entries
+          return;
+        end if;
+        if name'Length < prefix_path'Length or else
+          prefix_path /=  name(name'First..name'First+prefix_path'Length-1)
+        then -- not in a part of the tree to be displayed
+          return;
+        end if;
+        row:= row + 1;
+        if need in first_display .. archive_changed then
+          Lst.Insert_Item(To_UTF_16(name(simple_name_idx..name'Last), name_encoding), row);
+          payload_access:= new LV_payload'(index_before_sorting => row); -- !! small leak here...
+          Lst.Item_Data(row, payload_access);
+          Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, cidx(FType)-1);
+          begin
+            Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, cidx(Modified)-1);
+          exception
+            when Zip_Streams.Calendar.Time_Error =>
+              Lst.Set_Sub_Item("(invalid)", row, cidx(Modified)-1);
+          end;
+          Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, cidx(Attributes)-1);
+          Lst.Set_Sub_Item(File_size_image(uncomp_size), row, cidx(Size)-1);
+          Lst.Set_Sub_Item(File_size_image(comp_size), row, cidx(Packed)-1);
+          Lst.Set_Sub_Item(Ratio_pct_image(comp_size, uncomp_size), row, cidx(Ratio)-1);
+          Lst.Set_Sub_Item(To_Lower(PKZip_method'Wide_Image(method)), row, cidx(Format)-1);
+          Lst.Set_Sub_Item(Hexadecimal(crc_32), row, cidx(CRC32)-1);
+          Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), name_encoding), row, cidx(Path)-1);
+          Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, cidx(Encoding)-1);
+        end if;
+        unsorted_index(row):= Lst.Item_Data(row).index_before_sorting;
+        result_code(row):= user_code;
+        -- This is equal to row if the list is unsorted.
+      end Process_row;
+
+      procedure Traverse is new Zip.Traverse_verbose(Process_row);
+
+      az_color: AZip_Common.Operations.RGB_type;
+      gw_color: GWindows.Colors.RGB_Type;
+      use GWindows.Colors;
+      intensity: Float;
+      font_color: Color_Type;
+    begin
+      if need > results_refresh then
+        return;
       end if;
+      Traverse(Window.zif);
+      last_row:= row;
+      for i in 0..last_row loop
+        sorted_index(unsorted_index(i)):= i; -- Nice one, isn't it ?
+      end loop;
+      for u in 0..last_row loop
+        row:= sorted_index(u);
+        Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, result_code(u))), row, cidx(Result)-1);
+        Result_color(Window.last_operation, result_code(u), Window.last_max_code, az_color, intensity);
+        gw_color:=
+          (Red    => GWindows.Colors.Color_Range(az_color.Red),
+           Green  => GWindows.Colors.Color_Range(az_color.Green),
+           Blue   => GWindows.Colors.Color_Range(az_color.Blue),
+           Unused => 0
+          );
+        -- Ensure we can read the text, given the background color.
+        if intensity > 0.58 then
+          font_color:= Black;
+        else
+          font_color:= White;
+        end if;
+        Lst.Subitem_Color(font_color, To_Color(gw_color), row, cidx(Result)-1);
+      end loop;
     end Feed_directory_list;
 
     sel: Natural;
 
   begin
+    Define_columns;
     case Window.opt.view_mode is
       when Flat =>
         Window.Folder_Tree.Hide;
-        Feed_directory_list("");
+        if Is_Loaded(Window.zif) then
+          Feed_directory_list("");
+        end if;
         Check(Window.Menu.Main, Command, IDM_FLAT_VIEW, True);
         Check(Window.Menu.Main, Command, IDM_TREE_VIEW, False);
       when Tree =>
         -- all stuff
-        -- Feed_directory_list([selected path]);
+        -- if Is_Loaded(Window.zif) then
+        --   Feed_directory_list([selected path]);
+        -- end if;
         Window.Folder_Tree.Show;
         Check(Window.Menu.Main, Command, IDM_FLAT_VIEW, False);
         Check(Window.Menu.Main, Command, IDM_TREE_VIEW, True);

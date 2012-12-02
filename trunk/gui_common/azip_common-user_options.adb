@@ -14,6 +14,7 @@ package body AZip_Common.User_options is
     pragma Unreferenced (mru2, mru3, mru4, mru5, mru6, mru7, mru8);
 
     procedure Load(opt: out Option_Pack_Type) is
+      defaults: Option_Pack_Type;
     begin
       for k in Key loop
         begin
@@ -29,6 +30,9 @@ package body AZip_Common.User_options is
                   opt.column_width(e):= Integer'Wide_Value(
                     Read_key(ks & "_" & Entry_topic'Wide_Image(e))
                   );
+                  if opt.column_width(e) = 0 then
+                    opt.column_width(e):= defaults.column_width(e);
+                  end if;
                 end loop;
               when win_left =>
                 opt.win_left:= Integer'Wide_Value(s);
@@ -73,7 +77,7 @@ package body AZip_Common.User_options is
             when view_mode =>
               R(View_Mode_Type'Wide_Image(opt.view_mode));
             when col_width =>
-              R("(root)"); -- dummy for having reading going well
+              R("(root - dummy)"); -- dummy for having reading going well
               for e in Entry_topic loop
                 Write_key(
                   ks & "_" & Entry_topic'Wide_Image(e),

@@ -45,7 +45,7 @@ package body AZip_Common.Operations is
       when Extract =>
         case code is
           when success =>
-            return "Extracted";
+            return "Checked and extracted";
           when others =>
             null;
         end case;
@@ -178,10 +178,9 @@ package body AZip_Common.Operations is
     zif             :        Zip.Zip_Info; -- preserved, even after modifying operation
     operation       :        Archive_Operation;
     entry_name      :        Name_list;
-    name_match      :        Name_matching_mode;
-    base_folder     :        String;
-    search_pattern  :        Wide_String;
-    output_folder   :        Wide_String;
+    base_folder     :        UTF_16_String;
+    search_pattern  :        UTF_16_String;
+    output_folder   :        UTF_16_String;
     Set_Time_Stamp  :        UnZip.Set_Time_Stamp_proc;
     new_temp_name   :        String;
     Name_conflict   :        UnZip.Resolve_conflict_proc;
@@ -345,10 +344,10 @@ package body AZip_Common.Operations is
     is
       pragma Unreferenced
         (comp_size, uncomp_size, crc_32, date_time, method, read_only);
-      match: Boolean:= False;
       name_utf_16: constant UTF_16_String:= To_UTF_16(name, name_encoding);
       short_name_utf_16: constant UTF_16_String:= Remove_path(name_utf_16);
       dummy_user_abort, skip_if_conflict: Boolean;
+      match: Boolean:= False;
       idx: Natural;
     begin
       user_code:= nothing;
@@ -359,34 +358,52 @@ package body AZip_Common.Operations is
       archive_percents_done:= (100 * processed_entries) / total_entries;
       file_percents_done:= 0;
       --
-      case name_match is
-        when Exact =>
-          -- !! use hashed maps either for searching
+      -- !! use hashed maps either for searching
+      --
+      case operation is
+        when Add =>
           for i in entry_name'Range loop
-            if Remove_path(To_Wide_String(entry_name(i))) = name_utf_16 then
+            if base_folder & Remove_path(To_Wide_String(entry_name(i))) = name_utf_16 then
+              -- The path removed is from an external file name.
+              -- The file will be added with the base_folder from archive
               match:= True;
               idx:= i;
               exit;
             end if;
           end loop;
-        when Substring =>
-          for i in entry_name'Range loop
-            declare
-              pattern: constant UTF_16_String:= To_Wide_String(entry_name(i));
-            begin
-              if pattern = "" or else
-                Index(short_name_utf_16, pattern) > 0
-              then
+        when Remove | Extract =>
+          if entry_name'Length = 0 then
+            match:= True; -- empty name list -> we process the whole archive
+          else
+            for i in entry_name'Range loop
+              if To_Wide_String(entry_name(i)) = name_utf_16 then
                 match:= True;
                 idx:= i;
                 exit;
               end if;
-            end;
-          end loop;
+            end loop;
+          end if;
+        when Test =>
+          match:= True;
+        when Search =>
+          if entry_name'Length = 0 then
+            match:= True; -- empty name list -> we process the whole archive
+          else
+            for i in entry_name'Range loop
+              declare
+                pattern: constant UTF_16_String:= To_Wide_String(entry_name(i));
+              begin
+                if pattern = "" or else -- empty name -> we process the whole archive
+                  Index(short_name_utf_16, pattern) > 0
+                then
+                  match:= True;
+                  idx:= i;
+                  exit;
+                end if;
+              end;
+            end loop;
+          end if;
       end case;
-      if operation in Read_Only_Operation and then entry_name'Length = 0 then
-        match:= True; -- empty name list -> we process the whole archive
-      end if;
       --
       if match then
         case operation is

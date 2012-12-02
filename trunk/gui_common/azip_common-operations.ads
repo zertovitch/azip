@@ -60,8 +60,6 @@ package AZip_Common.Operations is
 
   type Name_list is array(Positive range <>) of UTF_16_Unbounded_String;
 
-  type Name_matching_mode is (Exact, Substring);
-
   generic
     with procedure Feedback(
       file_percents_done    : Natural;
@@ -79,10 +77,9 @@ package AZip_Common.Operations is
     zif             :        Zip.Zip_Info; -- preserved, even after modifying operation
     operation       :        Archive_Operation;
     entry_name      :        Name_list;
-    name_match      :        Name_matching_mode;
-    base_folder     :        String;
-    search_pattern  :        Wide_String;
-    output_folder   :        Wide_String;
+    base_folder     :        UTF_16_String;
+    search_pattern  :        UTF_16_String;
+    output_folder   :        UTF_16_String;
     Set_Time_Stamp  :        UnZip.Set_Time_Stamp_proc;
     new_temp_name   :        String;
     Name_conflict   :        UnZip.Resolve_conflict_proc;

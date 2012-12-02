@@ -425,8 +425,7 @@ package body AZip_GWin.MDI_Child is
     Window         : in out MDI_Child_Type;
     operation      : Archive_Operation;
     file_names     : Array_Of_File_Names;
-    name_match     : Name_matching_mode;
-    base_folder    : String;
+    base_folder    : GString;
     search_pattern : GString;
     output_folder  : Wide_String;
     new_temp_name  : String
@@ -562,7 +561,6 @@ package body AZip_GWin.MDI_Child is
         zif              => Window.zif,
         operation        => operation,
         entry_name       => az_names,
-        name_match       => name_match,
         base_folder      => base_folder,
         search_pattern   => search_pattern,
         output_folder    => output_folder,
@@ -631,7 +629,6 @@ package body AZip_GWin.MDI_Child is
       Window         => Window,
       operation      => Add,
       file_names     => File_Names,
-      name_match     => Exact,
       base_folder    => "",           -- !! only for flat view
       search_pattern => "",
       output_folder  => "",
@@ -776,7 +773,6 @@ package body AZip_GWin.MDI_Child is
         Window         => Window,
         operation      => Extract,
         file_names     => list,
-        name_match     => Exact,
         base_folder    => "",
         search_pattern => "",
         output_folder  => dir,
@@ -802,7 +798,6 @@ package body AZip_GWin.MDI_Child is
         Window         => Window,
         operation      => Remove,
         file_names     => Get_selected_entry_list(Window),
-        name_match     => Exact,
         base_folder    => "",
         search_pattern => "",
         output_folder  => "",
@@ -870,7 +865,6 @@ package body AZip_GWin.MDI_Child is
         Window         => Window,
         operation      => Search,
         file_names     => (1 => Window.Name_search),
-        name_match     => Substring,
         base_folder    => "",
         search_pattern => GU2G(Window.Content_search),
         output_folder  => "",
@@ -893,7 +887,6 @@ package body AZip_GWin.MDI_Child is
       Window         => Window,
       operation      => Test,
       file_names     => Empty_Array_Of_File_Names,
-      name_match     => Exact,
       base_folder    => "",
       search_pattern => "",
       output_folder  => "",

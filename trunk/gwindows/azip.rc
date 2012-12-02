@@ -42,14 +42,14 @@ Menu_MDI_Child MENU
     {
         MENUITEM "Select &all\tCtrl+A", IDM_Select_all
         MENUITEM "&Unselect all\tCtrl+U", IDM_Unselect_all
-        MENUITEM "&Extract...\tShift+E", IDM_EXTRACT
+        MENUITEM "&Extract...\tCtrl+E", IDM_EXTRACT
         MENUITEM SEPARATOR
         MENUITEM "Delete entries\tDel / -", IDM_Delete_selected
         MENUITEM "A&dd files...\t+", IDM_ADD_FILES
     }
     POPUP "&Tools"
     {
-        MENUITEM "&Test archive\tShift+T", IDM__TEST_ARCHIVE
+        MENUITEM "&Test archive\tCtrl+T", IDM__TEST_ARCHIVE
         MENUITEM "Fre&shen archive", IDM_FRESHEN_ARCHIVE, GRAYED
         MENUITEM "&Recompress archive", IDM__RECOMPRESS_ARCHIVE, GRAYED
         MENUITEM "&Find in archive...\tCtrl+F", IDM_FIND_IN_ARCHIVE
@@ -224,9 +224,9 @@ Main_Menu ACCELERATORS
     "W",            IDM__CLOSE_ARCHIVE, VIRTKEY, CONTROL
     "A",            IDM_Select_all, VIRTKEY, CONTROL
     "U",            IDM_Unselect_all, VIRTKEY, CONTROL
-    "E",            IDM_EXTRACT, VIRTKEY, SHIFT
+    "E",            IDM_EXTRACT, VIRTKEY, CONTROL
     VK_DELETE,     IDM_Delete_selected, VIRTKEY
-    "T",            IDM__TEST_ARCHIVE, VIRTKEY, SHIFT
+    "T",            IDM__TEST_ARCHIVE, VIRTKEY, CONTROL
     "F",            IDM_FIND_IN_ARCHIVE, VIRTKEY, CONTROL
     VK_ADD,        IDM_ADD_FILES, VIRTKEY
     VK_F12,        IDM__SAVE_ARCHIVE_AS, VIRTKEY

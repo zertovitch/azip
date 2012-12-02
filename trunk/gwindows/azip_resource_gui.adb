@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/12/02   03:56:12
+-- Transcription time: 2012/12/02   04:36:02
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -51,13 +51,13 @@ package body azip_Resource_GUI is
     Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Select &all" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
     Append_Item(Menu.Popup_0003, "&Unselect all" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+U", IDM_Unselect_all);
-    Append_Item(Menu.Popup_0003, "&Extract..." & To_GString_from_String((1=>ASCII.HT)) & "Shift+E", IDM_EXTRACT);
+    Append_Item(Menu.Popup_0003, "&Extract..." & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+E", IDM_EXTRACT);
     Append_Separator(Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "Delete entries" & To_GString_from_String((1=>ASCII.HT)) & "Del / -", IDM_Delete_selected);
     Append_Item(Menu.Popup_0003, "A&dd files..." & To_GString_from_String((1=>ASCII.HT)) & "+", IDM_ADD_FILES);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Tools", Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&Test archive" & To_GString_from_String((1=>ASCII.HT)) & "Shift+T", IDM_TEST_ARCHIVE);
+    Append_Item(Menu.Popup_0004, "&Test archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+T", IDM_TEST_ARCHIVE);
     Append_Item(Menu.Popup_0004, "Fre&shen archive", IDM_FRESHEN_ARCHIVE);
     State(Menu.Popup_0004, Command, IDM_FRESHEN_ARCHIVE, Grayed);
     Append_Item(Menu.Popup_0004, "&Recompress archive", IDM_RECOMPRESS_ARCHIVE);

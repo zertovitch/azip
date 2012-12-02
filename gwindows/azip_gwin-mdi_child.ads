@@ -45,7 +45,11 @@ package AZip_GWin.MDI_Child is
   type MDI_Child_Status_Bar_Type is
     new GWindows.Common_Controls.Status_Bar_Type with null record;
 
-  package AZip_LV_Ex is new GWindows.Common_Controls.Ex_List_View(Integer);
+  type LV_Payload is record
+    index_before_sorting: Integer;
+  end record;
+
+  package AZip_LV_Ex is new GWindows.Common_Controls.Ex_List_View(LV_Payload);
 
   type MDI_Child_List_View_Control_Type is
     new AZip_LV_Ex.Ex_List_View_Control_Type with null record;

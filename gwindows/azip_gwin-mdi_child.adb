@@ -210,6 +210,18 @@ package body AZip_GWin.MDI_Child is
     else
       Text(Window.Status_Bar,"No archive loaded",0);
     end if;
+    if need in first_display .. archive_changed and then
+      Window.Parent.opt.sort_column >= 0
+    then
+      Window.Directory_List.Sort(
+        Window.Parent.opt.sort_column,
+        AZip_LV_Ex.Sort_Direction_Type'Value(
+          AZip_Common.User_options.Sort_Direction_Type'Image(
+            Window.Parent.opt.sort_direction
+           )
+         )
+       );
+    end if;
   end Update_display;
 
   procedure On_Item_Changed (Control : in out MDI_Child_List_View_Control_Type) is
@@ -933,6 +945,7 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Close (Window    : in out MDI_Child_Type;
                       Can_Close :    out Boolean) is
+    sd: AZip_LV_Ex.Sort_Direction_Type;
   begin
     Can_Close:= True;
     if Is_file_saved(Window) then
@@ -964,6 +977,15 @@ package body AZip_GWin.MDI_Child is
         Window.Parent.opt.column_width(e):=
           Window.Directory_List.Column_Width(Entry_topic'Pos(e));
       end loop;
+      Window.Directory_List.Sort_Info(
+        Window.Parent.opt.sort_column,
+        sd
+      );
+      -- We pass the Up/Down direction from the GWindows type to our.
+      Window.Parent.opt.sort_direction:=
+        AZip_Common.User_options.Sort_Direction_Type'Value(
+           AZip_LV_Ex.Sort_Direction_Type'Image(sd)
+        );
     end if;
   end On_Close;
 

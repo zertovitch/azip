@@ -436,13 +436,32 @@ package body AZip_Common is
     return s(i..s'Last);
   end Remove_path;
 
+  procedure Load_insensitive_if_possible(info: out Zip_info; from: String) is
+  begin
+    -- Whenever possible, we try to load the directory as case insensitive
+    Zip.Load(
+      info           => info,
+      from           => from,
+      case_sensitive => False
+    );
+  exception
+    when Duplicate_name =>
+      -- Perhaps a .jar with a.txt and A.txt
+      Zip.Load(
+        info           => info,
+        from           => from,
+        case_sensitive => True
+      );
+      -- If Duplicate_name is raised again, well, it is really invalid!
+  end Load_insensitive_if_possible;
+
   function Is_valid_Zip_archive(file_name: String) return Boolean is
     info: Zip.Zip_info;
   begin
     Zip.Load(
       info           => info,
       from           => file_name,
-      case_sensitive => case_sensitive_zip_directory
+      case_sensitive => True
     );
     Zip.Delete(info);
     return True;

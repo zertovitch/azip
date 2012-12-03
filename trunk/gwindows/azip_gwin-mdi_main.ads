@@ -89,7 +89,8 @@ package AZip_GWin.MDI_Main is
   NL: constant GString:= S2G((1=> ASCII.LF));
 
   Zip_archives_filters: GWindows.Common_Dialogs.Filter_Array:=
-    ((G2GU ("Zip archives (*.zip)"), G2GU ("*.zip" )),
-     (G2GU ("All files (*.*)"),      G2GU ("*.*")));
+    ((G2GU ("Zip archives (*.zip)"),        G2GU ("*.zip" )),
+     (G2GU ("JAR (Java archives) (*.jar)"), G2GU ("*.jar" )),
+     (G2GU ("All files (*.*)"),             G2GU ("*.*")));
 
 end AZip_GWin.MDI_Main;

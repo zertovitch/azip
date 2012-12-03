@@ -11,6 +11,7 @@
 #define AZip_Icon                               114
 #define File_exists_box                         118
 #define Password_input_box                      119
+#define Credits_box                             121
 #define Archive_Progress                        1000
 #define Conflict_simple_name                    1000
 #define Encrypted_entry                         1000

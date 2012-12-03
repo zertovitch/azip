@@ -71,4 +71,6 @@ package AZip_Common is
 
   function Is_valid_Zip_archive(file_name: String) return Boolean;
 
+  case_sensitive_zip_directory: constant Boolean:= True;
+
 end AZip_Common;

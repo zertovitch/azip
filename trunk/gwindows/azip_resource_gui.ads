@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/12/02   04:36:02
+-- Transcription time: 2012/12/03   21:36:19
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -109,6 +109,42 @@ package azip_Resource_GUI is
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      );
 
+  type Credits_box_Type is new Window_type with record
+
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    Static_0001: Group_Box_Type;
+    -- Label: IDC_STATIC
+    -- Label: IDC_STATIC
+    Static_0004: Group_Box_Type;
+    -- Label: IDC_STATIC
+    -- Label: IDC_STATIC
+  end record; -- Credits_box_Type
+
+  -- Dialog at resource line 160
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Credits_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Credits";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Credits_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     );
+
   type File_exists_box_Type is new Window_type with record
 
     Overwrite_Yes: Dialog_Button_Type;    -- closes parent window after click
@@ -128,7 +164,7 @@ package azip_Resource_GUI is
     Static_0001: Group_Box_Type;
   end record; -- File_exists_box_Type
 
-  -- Dialog at resource line 162
+  -- Dialog at resource line 179
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -171,7 +207,7 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- Find_box_Type
 
-  -- Dialog at resource line 178
+  -- Dialog at resource line 195
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -216,7 +252,7 @@ package azip_Resource_GUI is
     Static_0003: Group_Box_Type;
   end record; -- Password_input_box_Type
 
-  -- Dialog at resource line 196
+  -- Dialog at resource line 213
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -257,7 +293,7 @@ package azip_Resource_GUI is
     Cancel_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 211
+  -- Dialog at resource line 228
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -315,6 +351,7 @@ package azip_Resource_GUI is
   AZip_Icon                 : constant:=    114;
   File_exists_box           : constant:=    118;
   Password_input_box        : constant:=    119;
+  Credits_box               : constant:=    121;
   Archive_Progress          : constant:=   1000;
   Conflict_simple_name      : constant:=   1000;
   Encrypted_entry           : constant:=   1000;
@@ -385,6 +422,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return GString;
 
 
-  -- Last line of resource script file: 286
+  -- Last line of resource script file: 303
 
 end azip_Resource_GUI;

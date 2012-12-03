@@ -139,8 +139,25 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "ResEdit", ResEdit_URL, 23, 149, 170, 8, SS_LEFT
     LTEXT           "Zip-Ada", ZipAda_URL, 23, 164, 75, 8, SS_LEFT
     LTEXT           "ZA_Version", ZipAda_Version, 132, 164, 147, 8, SS_LEFT
-    DEFPUSHBUTTON   "Close", IDOK, 120, 190, 50, 14
-    PUSHBUTTON      "Credits", Credits_button, 5, 190, 50, 14, WS_DISABLED
+    DEFPUSHBUTTON   "Close", IDOK, 87, 190, 115, 14
+    PUSHBUTTON      "Credits", Credits_button, 5, 190, 44, 14
+}
+
+
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Credits_box DIALOG 0, 0, 301, 199
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+CAPTION "Credits"
+FONT 8, "Ms Shell Dlg"
+{
+    DEFPUSHBUTTON   "Close", IDOK, 107, 180, 88, 14
+    GROUPBOX        "GWindows - native MS Windows framework", IDC_STATIC, 11, 54, 284, 62
+    LTEXT           "David Botton: main author", IDC_STATIC, 24, 69, 237, 8, SS_LEFT
+    LTEXT           "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", IDC_STATIC, 24, 83, 260, 8, SS_LEFT
+    GROUPBOX        "Zip-Ada", IDC_STATIC, 11, 4, 283, 44
+    LTEXT           "Stratégies Software team: intensive profiling and contributions", IDC_STATIC, 25, 17, 234, 8, SS_LEFT
+    LTEXT           "ITEC team at NXP Semiconductors: contributions", IDC_STATIC, 25, 31, 226, 8, SS_LEFT
 }
 
 

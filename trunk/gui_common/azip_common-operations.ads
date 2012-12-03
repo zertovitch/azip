@@ -8,11 +8,12 @@ package AZip_Common.Operations is
 
   type Archive_Operation is (Add, Remove, Test, Extract, Search);
 
-  success   : constant:=  1;
-  nothing   : constant:=  0;
-  bad_crc   : constant:= -1;
-  wrong_pwd : constant:= -2; -- After N attempts, password was still wrong
-  corrupt   : constant:= -3;
+  success     : constant:=  1;
+  nothing     : constant:=  0;
+  bad_crc     : constant:= -1;
+  wrong_pwd   : constant:= -2; -- After N attempts, password was still wrong
+  corrupt     : constant:= -3;
+  unsupported : constant:= -4;
 
   -- Convention for operation results set Zip_info's user_code:
   -- Add / Update : 1 if entry was replaced or appended, 0 otherwise

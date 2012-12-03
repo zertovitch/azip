@@ -439,7 +439,11 @@ package body AZip_Common is
   function Is_valid_Zip_archive(file_name: String) return Boolean is
     info: Zip.Zip_info;
   begin
-    Zip.Load(info, file_name);
+    Zip.Load(
+      info           => info,
+      from           => file_name,
+      case_sensitive => case_sensitive_zip_directory
+    );
     Zip.Delete(info);
     return True;
   exception

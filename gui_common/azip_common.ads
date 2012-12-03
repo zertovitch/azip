@@ -63,6 +63,7 @@ package AZip_Common is
   function Give_path(s: UTF_16_String) return UTF_16_String;
   -- s is always equal to: Give_path & Remove_path
 
+  procedure Load_insensitive_if_possible(info: out Zip_info; from: String);
 
   -- This function will tell if a file is actually a Zip file.
   -- It is useful for instance when files are dropped onto AZip,
@@ -70,7 +71,5 @@ package AZip_Common is
   -- or it is meant to add the files into an archive.
 
   function Is_valid_Zip_archive(file_name: String) return Boolean;
-
-  case_sensitive_zip_directory: constant Boolean:= True;
 
 end AZip_Common;

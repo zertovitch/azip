@@ -701,11 +701,7 @@ package body AZip_GWin.MDI_Child is
   is
     new_zif: Zip_info;
   begin
-    Zip.Load(
-      info           => new_zif,
-      from           => To_UTF_8(GU2G(Window.File_Name)),
-      case_sensitive => case_sensitive_zip_directory
-    );
+    Load_insensitive_if_possible(new_zif, To_UTF_8(GU2G(Window.File_Name)));
     if Zip.Is_loaded(Window.zif) then
       if copy_codes then
         Copy_user_codes(Window.zif, new_zif);

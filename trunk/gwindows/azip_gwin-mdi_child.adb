@@ -753,6 +753,7 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Extract(Window : in out MDI_Child_Type) is
     list: constant Array_Of_File_Names:= Get_selected_entry_list(Window);
+    --
     function Archive_extract_msg return GString is
     begin
       if list'Length = 0 then
@@ -762,23 +763,30 @@ package body AZip_GWin.MDI_Child is
           "Extract the" & Integer'Wide_Image(list'Length) &
           " selected entrie(s) to...";
       end if;
-    end;
-    dir: constant GString:= Get_Directory(
-      Window            => Window,
-      Dialog_Title      => Archive_extract_msg);
-      -- Initial_Directory => ...);
+    end Archive_extract_msg;
   begin
-    if dir /= "" then
-      Process_archive_GWin(
-        Window         => Window,
-        operation      => Extract,
-        file_names     => list,
-        base_folder    => "",
-        search_pattern => "",
-        output_folder  => dir,
-        new_temp_name  => ""
-      );
+    if not Is_Loaded(Window.zif) then
+      return; -- No archive, then nothing to do
     end if;
+    declare
+      dir: constant GString:= Get_Directory(
+        Window            => Window,
+        Dialog_Title      => Archive_extract_msg,
+        Initial_Directory => GU2G(Window.extract_dir) );
+    begin
+      if dir /= "" then
+        Window.extract_dir:= G2GU(dir);
+        Process_archive_GWin(
+          Window         => Window,
+          operation      => Extract,
+          file_names     => list,
+          base_folder    => "",
+          search_pattern => "",
+          output_folder  => dir,
+          new_temp_name  => ""
+        );
+      end if;
+    end;
   end On_Extract;
 
   procedure On_Delete(Window : in out MDI_Child_Type) is

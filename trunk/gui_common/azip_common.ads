@@ -22,6 +22,10 @@ package AZip_Common is
   -- Strings --
   -------------
 
+  -- Internal format for AZip: UTF-16
+  -- Format for file names on Open / Create operations: UTF-8
+  -- In zip archives, names can be either UTF-8 or IBM 437.
+
   subtype UTF_8_String is Ada.Strings.UTF_Encoding.UTF_8_String;
 
   subtype UTF_16_String is Ada.Strings.UTF_Encoding.UTF_16_Wide_String;
@@ -54,6 +58,11 @@ package AZip_Common is
   ---------------------
   -- Various helpers --
   ---------------------
+
+  function Remove_path(s: UTF_16_String) return UTF_16_String;
+  function Give_path(s: UTF_16_String) return UTF_16_String;
+  -- s is always equal to: Give_path & Remove_path
+
 
   -- This function will tell if a file is actually a Zip file.
   -- It is useful for instance when files are dropped onto AZip,

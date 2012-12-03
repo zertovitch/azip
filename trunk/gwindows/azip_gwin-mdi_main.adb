@@ -114,7 +114,7 @@ package body AZip_GWin.MDI_Main is
         Window,
         "Invalid zip archive",
         "File " & GU2G(File_Name) & NL &
-        "doesn't exist or is not a valid zip archive.",
+        "doesn't exist, or is not a valid zip archive.",
         OK_Box,
         Error_Icon
       );
@@ -128,6 +128,7 @@ package body AZip_GWin.MDI_Main is
       --
       Window.user_maximize_restore:= False;
       New_Window.File_Name:= File_Name;
+      New_Window.extract_dir:= G2GU(Give_path(GU2G(File_Name)));
       Create_MDI_Child (New_Window.all,
         Window,
         GU2G(File_Title),

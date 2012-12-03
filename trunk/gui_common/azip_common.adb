@@ -406,6 +406,36 @@ package body AZip_Common is
       return -1;
   end Result_Value;
 
+  function Give_path(s: UTF_16_String) return UTF_16_String is
+    i: Positive;
+  begin
+    if s = "" then
+      return "";
+    end if;
+    i:= s'First;
+    for j in s'Range loop
+      if s(j)= '/' or s(j)= '\' then
+        i:= j+1;
+      end if;
+    end loop;
+    return s(s'First..i-1);
+  end Give_path;
+
+  function Remove_path(s: UTF_16_String) return UTF_16_String is
+    i: Positive;
+  begin
+    if s = "" then
+      return "";
+    end if;
+    i:= s'First;
+    for j in s'Range loop
+      if s(j)= '/' or s(j)= '\' then
+        i:= j+1;
+      end if;
+    end loop;
+    return s(i..s'Last);
+  end Remove_path;
+
   function Is_valid_Zip_archive(file_name: String) return Boolean is
     info: Zip.Zip_info;
   begin

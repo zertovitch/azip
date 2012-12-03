@@ -86,6 +86,8 @@ package AZip_GWin.MDI_Child is
         last_operation   : Archive_Operation:= Remove;
         last_max_code    : Integer;
         extract_dir      : GString_Unbounded;
+        last_sort_col    : Integer:= -1; -- -1 if none
+        last_sort_direc  : AZip_LV_Ex.Sort_Direction_Type;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);

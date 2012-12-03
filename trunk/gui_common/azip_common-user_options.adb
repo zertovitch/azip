@@ -5,6 +5,8 @@ package body AZip_Common.User_options is
     type Key is
       ( view_mode,
         col_width,
+        sort_column,
+        sort_direction,
         win_left, win_top, win_width, win_height,
         maximized, children_maximized,
         mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
@@ -34,6 +36,10 @@ package body AZip_Common.User_options is
                     opt.column_width(e):= defaults.column_width(e);
                   end if;
                 end loop;
+              when sort_column =>
+                opt.sort_column:= Integer'Wide_Value(s);
+              when sort_direction =>
+                opt.sort_direction:= Sort_Direction_Type'Wide_Value(s);
               when win_left =>
                 opt.win_left:= Integer'Wide_Value(s);
               when win_top =>
@@ -84,6 +90,10 @@ package body AZip_Common.User_options is
                   Integer'Wide_Image(opt.column_width(e))
                 );
               end loop;
+            when sort_column =>
+              R(Integer'Wide_Image(opt.sort_column));
+            when sort_direction =>
+              R(Sort_Direction_Type'Wide_Image(opt.sort_direction));
             when win_left =>
               R(Integer'Wide_Image(opt.win_left));
             when win_top =>

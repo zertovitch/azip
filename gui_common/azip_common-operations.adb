@@ -154,22 +154,6 @@ package body AZip_Common.Operations is
   function U(Source: Wide_String) return Unbounded_Wide_String
     renames Ada.Strings.Wide_Unbounded.To_Unbounded_Wide_String;
 
-  function Remove_path(s: UTF_16_String) return UTF_16_String is
-    i: Positive;
-  begin
-    if s = "" then
-      return "";
-    else
-      i:= s'First;
-      for j in s'Range loop
-        if s(j)= '/' or s(j)= '\' then
-          i:= j+1;
-        end if;
-      end loop;
-    end if;
-    return s(i..s'Last);
-  end Remove_path;
-
   ------------------------------------------------
   -- Blocking, visible processing of an archive --
   ------------------------------------------------

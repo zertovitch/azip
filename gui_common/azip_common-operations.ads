@@ -91,8 +91,6 @@ package AZip_Common.Operations is
   -- Some goodies --
   ------------------
 
-  function Remove_path(s: UTF_16_String) return UTF_16_String;
-
   procedure Copy_user_codes(from, to: Zip.Zip_info);
 
 end AZip_Common.Operations;

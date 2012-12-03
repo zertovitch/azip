@@ -430,6 +430,16 @@ package body AZip_GWin.MDI_Main is
     box: About_Box_Type;
     url_azip, url_gnat, url_gnavi, url_resedit, url_zipada: URL_Type;
     package CVer is new GNAT.Compiler_Version;
+    --
+    procedure Credits_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
+      credits_box: Credits_box_Type;
+      pragma Warnings(off, dummy);
+    begin
+      credits_box.Create_Full_Dialog(box);
+      credits_box.Center;
+      Show_Dialog(credits_Box, box);
+    end Credits_clicked;
+    --
   begin
     box.Create_Full_Dialog(Window);
     box.Version_label.Text(S2G(Version_info.FileVersion));
@@ -440,6 +450,9 @@ package body AZip_GWin.MDI_Main is
     Create_and_Swap(url_resedit, box.ResEdit_URL, box, "http://resedit.net");
     Create_and_Swap(url_zipada, box.ZipAda_URL, box, S2G(Zip.web));
     Text(box.ZipAda_Version, S2G("version " & Zip.version & ", ref. " & Zip.reference));
+    box.Credits_button_permanent.Show;
+    box.Credits_button.Hide;
+    box.Credits_button_permanent.On_Click_Handler(Credits_clicked'Unrestricted_Access);
     box.Center;
     if Show_Dialog (box, Window) = IDOK then
       null;

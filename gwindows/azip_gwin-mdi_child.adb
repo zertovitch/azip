@@ -70,7 +70,7 @@ package body AZip_GWin.MDI_Child is
       cidx: Column_integer_array renames Window.opt.column_index;
       max_entries: constant Natural:= Entries(Window.zif);
       -- This includes potential invisible entries (directory names from Info-Zip, WinZip)
-      sorted_index, unsorted_index, result_code: array(0..max_entries-1) of Natural;
+      sorted_index, unsorted_index, result_code: array(0..max_entries-1) of Integer;
       --
       procedure Process_row(
         name             : String; -- 'name' is compressed entry's name
@@ -701,7 +701,11 @@ package body AZip_GWin.MDI_Child is
   is
     new_zif: Zip_info;
   begin
-    Zip.Load(new_zif, To_UTF_8(GU2G(Window.File_Name)));
+    Zip.Load(
+      info           => new_zif,
+      from           => To_UTF_8(GU2G(Window.File_Name)),
+      case_sensitive => case_sensitive_zip_directory
+    );
     if Zip.Is_loaded(Window.zif) then
       if copy_codes then
         Copy_user_codes(Window.zif, new_zif);

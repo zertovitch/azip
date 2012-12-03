@@ -23,6 +23,8 @@ package body AZip_Common.Operations is
         return "Compressed data is corrupt";
       when bad_crc =>
         return "CRC test failed";
+      when unsupported =>
+        return "Compression format not supported";
       when others =>
         null;
     end case;
@@ -92,7 +94,7 @@ package body AZip_Common.Operations is
     end case;
     -- Errors are always shown
     case code is
-      when wrong_pwd | corrupt | bad_crc =>
+      when wrong_pwd | corrupt | bad_crc | unsupported =>
         color:= (Red => (max * 3) / 4, Green => 0, Blue => 0);
       when others =>
         null;
@@ -448,6 +450,8 @@ package body AZip_Common.Operations is
               when UnZip.Wrong_password =>
                 user_code:= wrong_pwd;
                 abort_rest_of_operation:= True;
+              when UnZip.Unsupported_method =>
+                user_code:= unsupported;
             end;
           when Extract =>
             current_operation:= Extract;
@@ -494,6 +498,8 @@ package body AZip_Common.Operations is
               when UnZip.Wrong_password =>
                 user_code:= wrong_pwd;
                 abort_rest_of_operation:= True;
+              when UnZip.Unsupported_method =>
+                user_code:= unsupported;
             end;
           when Search =>
             if search_pattern = "" then -- just mark entries with matching names

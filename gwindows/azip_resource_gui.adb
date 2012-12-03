@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/12/02   04:36:02
+-- Transcription time: 2012/12/03   21:36:19
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -221,7 +221,7 @@ package body azip_Resource_GUI is
     Create( Window.ZipAda_URL, Window, "Zip-Ada", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ZipAda_URL);
     Dlg_to_Scn(  132, 164, 147, 8, x,y,w,h);
     Create( Window.ZipAda_Version, Window, "ZA_Version", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ZipAda_Version);
-    Dlg_to_Scn(  120, 190, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  87, 190, 115, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -232,7 +232,7 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  5, 190, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  5, 190, 44, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -243,13 +243,92 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Credits_button);
     end if;
-    Enabled(Window.Credits_button_permanent, False);
-    Enabled(Window.Credits_button, False);
-    Disable(Window.Credits_button_permanent);
   end Create_Contents; -- About_box_Type
 
 
   -- Dialog at resource line 152
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Credits_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Credits";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 301, 199, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- Credits_box_Type
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Credits_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 301, 199, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  107, 180, 88, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDOK, Window, "Close", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "Close", x,y,w,h, ID => IDOK);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDOK_permanent);
+    else -- hide the closing button
+      Hide(Window.IDOK);
+    end if;
+    Dlg_to_Scn(  11, 54, 284, 62, x,y,w,h);
+    Create( Window.Static_0001, Window, "GWindows - native MS Windows framework", x,y,w,h);
+    Dlg_to_Scn(  24, 69, 237, 8, x,y,w,h);
+    Create_label( Window, "David Botton: main author", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  24, 83, 260, 8, x,y,w,h);
+    Create_label( Window, "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  11, 4, 283, 44, x,y,w,h);
+    Create( Window.Static_0004, Window, "Zip-Ada", x,y,w,h);
+    Dlg_to_Scn(  25, 17, 234, 8, x,y,w,h);
+    Create_label( Window, "Stratégies Software team: intensive profiling and contributions", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  25, 31, 226, 8, x,y,w,h);
+    Create_label( Window, "ITEC team at NXP Semiconductors: contributions", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+  end Create_Contents; -- Credits_box_Type
+
+
+  -- Dialog at resource line 169
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -394,7 +473,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- File_exists_box_Type
 
 
-  -- Dialog at resource line 171
+  -- Dialog at resource line 188
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -497,7 +576,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Find_box_Type
 
 
-  -- Dialog at resource line 187
+  -- Dialog at resource line 204
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -604,7 +683,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Password_input_box_Type
 
 
-  -- Dialog at resource line 205
+  -- Dialog at resource line 222
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -806,6 +885,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 286
+  -- Last line of resource script file: 303
 
 end azip_Resource_GUI;

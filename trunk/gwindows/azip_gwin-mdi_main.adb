@@ -1,5 +1,6 @@
 with AZip_Common;                       use AZip_Common;
 with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
+with AZip_GWin.Toolbars;
 with Zip;
 
 with GWindows.Application;              use GWindows.Application;
@@ -153,6 +154,14 @@ package body AZip_GWin.MDI_Main is
       Message_Box(Window, "Error", "Archive file not found", Icon => Exclamation_Icon);
   end Open_Child_Window_And_Load;
 
+  procedure On_Button_Select (
+        Control : in out MDI_Toolbar_Type;
+        Item    : in     Integer           ) is
+    Parent : constant MDI_Main_Access := MDI_Main_Access (Controlling_Parent (Control));
+  begin
+    On_Menu_Select (Parent.all, Item);
+  end On_Button_Select;
+
   function Shorten_file_name( s: GString ) return GString is
     max: constant:= 33;
     beg: constant:= 6;
@@ -243,6 +252,10 @@ package body AZip_GWin.MDI_Main is
        IDM_MRU_5,       IDM_MRU_6,       IDM_MRU_7,       IDM_MRU_8,
        IDM_MRU_9
       );
+
+    -- ** Main tool bar (new/open/save/...) at top left of the main window:
+
+    AZip_GWin.Toolbars.Init_Main_toolbar(Window.Tool_Bar, Window.Images, Window);
 
     -- ** Resize according to options:
 

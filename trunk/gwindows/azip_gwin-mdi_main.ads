@@ -6,18 +6,20 @@ with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 with GWindows;                          use GWindows;
 with GWindows.Base;
 with GWindows.Common_Dialogs;
+with GWindows.Common_Controls;
 with GWindows.GStrings;                 use GWindows.GStrings;
+with GWindows.Image_Lists;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 
 package AZip_GWin.MDI_Main is
 
-  -- type MDI_Toolbar_Type is
-  --   new GWindows.Common_Controls.Toolbar_Control_Type with null record;
+  type MDI_Toolbar_Type is
+    new GWindows.Common_Controls.Toolbar_Control_Type with null record;
 
-  -- procedure On_Button_Select (Control : in out MDI_Toolbar_Type;
-  --                             Item    : in     Integer);
-  --  Handle click on toolbar
+  procedure On_Button_Select (Control : in out MDI_Toolbar_Type;
+                             Item    : in     Integer);
+  -- Handle click on toolbar
 
   type IDM_MRU_List is array(AZip_Common.User_options.MRU_List'Range) of Natural;
 
@@ -28,8 +30,8 @@ package AZip_GWin.MDI_Main is
         -- MRU (Most recently used) files names:
         -- Menu ID's stored into a handy array
         IDM_MRU                : IDM_MRU_List;
-        -- Tool_Bar               : MDI_Toolbar_Type;
-        -- Images                 : GWindows.Image_Lists.Image_List_Type;
+        Tool_Bar               : MDI_Toolbar_Type;
+        Images                 : GWindows.Image_Lists.Image_List_Type;
         Menu                   : Menu_MDI_Main_Type;
         -- record_dimensions      : Boolean:= False; -- in On_Move, On_Size
         User_maximize_restore  : Boolean:= True;

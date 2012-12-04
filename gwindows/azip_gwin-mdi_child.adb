@@ -306,7 +306,6 @@ package body AZip_GWin.MDI_Child is
     Window.Directory_List.Create(Window, 50,1,20,20, Multiple, Report_View, Sort_Custom);
     Window.Directory_List.Set_Extended_Style(AZip_LV_Ex.Full_Row_Select);
     Window.Directory_List.Color_mode(AZip_LV_Ex.Subitem);
---    Window.Directory_List.On_Compare_Handler(My_Compare'Access);
 
     Window.Folder_Tree.Create(Window, 1,1,20,20);
 

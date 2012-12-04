@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/12/03   21:36:19
+-- Transcription time: 2012/12/04   15:12:15
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -21,7 +21,7 @@ package body azip_Resource_GUI is
   -- ** Generated code begins here \/ \/ \/.
 
 
-  -- Menu at line 17
+  -- Menu at line 25
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type)
   is
@@ -85,7 +85,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Child_Type
 
 
-  -- Menu at line 81
+  -- Menu at line 89
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -121,7 +121,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Main_Type
 
 
-  -- Dialog at resource line 125
+  -- Dialog at resource line 133
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -246,7 +246,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- About_box_Type
 
 
-  -- Dialog at resource line 152
+  -- Dialog at resource line 160
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -328,7 +328,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Credits_box_Type
 
 
-  -- Dialog at resource line 169
+  -- Dialog at resource line 177
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -473,7 +473,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- File_exists_box_Type
 
 
-  -- Dialog at resource line 188
+  -- Dialog at resource line 196
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -576,7 +576,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Find_box_Type
 
 
-  -- Dialog at resource line 204
+  -- Dialog at resource line 212
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -683,7 +683,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Password_input_box_Type
 
 
-  -- Dialog at resource line 222
+  -- Dialog at resource line 230
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -885,6 +885,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 303
+  -- Last line of resource script file: 311
 
 end azip_Resource_GUI;

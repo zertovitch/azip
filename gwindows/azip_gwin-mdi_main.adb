@@ -223,7 +223,7 @@ package body AZip_GWin.MDI_Main is
   procedure On_Create ( Window : in out MDI_Main_Type ) is
     use Ada.Command_Line;
     --
-    -- Replace default values by system-dependent ones
+    -- Replace AZip default values by system-dependent ones (here those of GWindows)
     --
     procedure Replace_default(x: in out Integer) is
     begin
@@ -253,7 +253,7 @@ package body AZip_GWin.MDI_Main is
        IDM_MRU_9
       );
 
-    -- ** Main tool bar (new/open/save/...) at top left of the main window:
+    -- ** Main tool bar (add / remove / ...) at top left of the main window:
 
     AZip_GWin.Toolbars.Init_Main_toolbar(Window.Tool_Bar, Window.Images, Window);
 

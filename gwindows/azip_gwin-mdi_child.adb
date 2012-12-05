@@ -781,9 +781,9 @@ package body AZip_GWin.MDI_Child is
     end if;
     declare
       dir: constant GString:= Get_Directory(
-        Window            => Window,
-        Dialog_Title      => Archive_extract_msg,
-        Initial_Directory => GU2G(Window.extract_dir) );
+        Window       => Window,
+        Dialog_Title => Archive_extract_msg,
+        Initial_Path => GU2G(Window.extract_dir) );
     begin
       if dir /= "" then
         Window.extract_dir:= G2GU(dir);

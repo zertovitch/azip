@@ -6,7 +6,6 @@ with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Menus;                    use GWindows.Menus;
 
 with Interfaces.C;
-with GWindows.Types;
 
 package body AZip_GWin.Toolbars is
 
@@ -20,7 +19,7 @@ package body AZip_GWin.Toolbars is
   begin
     for i in s'Range loop
       case s(i) is
-        when '&' =>
+        when '&' | GCharacter'Val(0) =>
           null;
         when GCharacter'Val(9) => -- Tab
           exit;
@@ -33,28 +32,16 @@ package body AZip_GWin.Toolbars is
     return To_GString_From_Unbounded(u);
   end;
 
-  procedure Add_Button_with_Tip
-    (Control     : in out GWindows.Common_Controls.Toolbar_Control_Type'Class;
-     parent      : in out AZip_GWin.MDI_Main.MDI_Main_Type;
-     Image_Index : in     Natural;
-     Command_ID     : in     Integer)
-  is
-    use GWindows.Common_Controls;
-    Fake_Menu: Menu_MDI_Child_Type;
-  begin
-    Create_Full_Menu(Fake_Menu);
-    Control.Add_Button(Image_Index, Command_ID);
-    Parent.Tool_Bar_Tips.Add_Tool_Tip(
-      Parent.zzz,
-      -- avoid the toolbar itself, since it would show the same tip
-      -- on the whole bar.
-      Tip => Filter(Text(Fake_Menu.Main, Command, Command_ID))
-    );
-  end Add_Button_with_Tip;
+  -- How to Display Tooltips for Buttons (Windows)
+  -- http://msdn.microsoft.com/en-us/library/windows/desktop/hh298386(v=vs.85).aspx
 
   TBSTYLE_TOOLTIPS : constant:= 16#100#;
   TBSTYLE_FLAT     : constant:= 16#800#;
-  sep_w: constant:= 8;
+  TBSTYLE_LIST     : constant:= 16#00001000#;
+
+  TBSTYLE_EX_MIXEDBUTTONS     : constant:= 16#00000008#;
+
+  sep_width: constant:= 8;
 
   function Num_resource(id: Natural) return GString is
     img: constant String:= Integer'Image(id);
@@ -62,31 +49,29 @@ package body AZip_GWin.Toolbars is
     return To_GString_from_String('#' & img(img'first+1..img'Last));
   end Num_resource;
 
-
-
   procedure Init_Main_toolbar(
     tb    : in out GWindows.Common_Controls.Toolbar_Control_Type'Class;
     il    : in out GWindows.Image_Lists.Image_List_Type;
     parent: in out AZip_GWin.MDI_Main.MDI_Main_Type
   )
   is
+    string_count: Natural:= 0;
+    Fake_Menu: Menu_MDI_Child_Type;
+    --
+    procedure Add_Button_with_Tip
+      (Image_Index : in     Natural;
+       Command_ID  : in     Integer)
+    is
+      use GWindows.Common_Controls;
+      use type GString_Unbounded;
+    begin
+      tb.Add_String(Filter(Text(Fake_Menu.Main, Command, Command_ID)));
+      tb.Add_Button(Image_Index, Command_ID, string_count);
+      string_count:= string_count + 1;
+    end Add_Button_with_Tip;
+
     use GWindows.Common_Controls;
     st: Interfaces.C.unsigned;
-
-    procedure Assoc(tt: GWindows.Common_Controls.Tool_Tip_Type) is
-    WM_USER        : constant := 16#400#;
-    TB_SETTOOLTIPS : constant := WM_USER + 36;
-      procedure SendMessage_Associate_TT
-        (hwnd   : GWindows.Types.Handle := Handle (tb);
-         uMsg   : Interfaces.C.int      := TB_SETTOOLTIPS;
-         wParam : GWindows.Types.Handle := Handle (tt);
-         lParam : GWindows.Types.Wparam := 0);
-      pragma Import (StdCall, SendMessage_Associate_TT,
-                     "SendMessage" & Character_Mode_Identifier);
-    begin
-      SendMessage_Associate_TT;
-    end assoc;
-
   begin
     Create (tb, parent, 0, 0, 0, 40);
     Dock (tb, GWindows.Base.At_Top);
@@ -94,21 +79,16 @@ package body AZip_GWin.Toolbars is
     Create (il, Num_resource(Toolbar_Bmp), 32);
     Set_Image_List (tb, il);
     st:= Get_Style(tb);
-    Set_Style(tb, TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or st);
+    Set_Style(tb, TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST or st);
+    Set_Extended_Style(tb, TBSTYLE_EX_MIXEDBUTTONS);
 
-    Parent.Tool_Bar_Tips.Create(Parent);
-    Parent.Tool_Bar_Tips.Maximum_Width(150);
-    --
-    Assoc(Parent.Tool_Bar_Tips);
-    --
-    Add_Button_with_Tip (tb, parent,  2, IDM_EXTRACT);
-    Add_Separator(tb, sep_w);
-    Add_Button_with_Tip (tb, parent,  0, IDM_ADD_FILES);
-    Add_Button_with_Tip (tb, parent,  1, IDM_Delete_selected);
-    Add_Separator(tb, sep_w);
-    Add_Button_with_Tip (tb, parent,  3, IDM_FIND_IN_ARCHIVE);
-
-
+    Create_Full_Menu(Fake_Menu);
+    Add_Button_with_Tip (2, IDM_EXTRACT);
+    Add_Separator(tb, sep_width);
+    Add_Button_with_Tip (0, IDM_ADD_FILES);
+    Add_Button_with_Tip (1, IDM_Delete_selected);
+    Add_Separator(tb, sep_width);
+    Add_Button_with_Tip (3, IDM_FIND_IN_ARCHIVE);
   end Init_Main_toolbar;
 
 end AZip_GWin.Toolbars;

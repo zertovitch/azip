@@ -58,6 +58,25 @@ package body AZip_Common.Operations is
     return "";
   end Result_message;
 
+  function Result_value(s: UTF_16_String) return Integer is -- can be a non-number
+  begin
+    return Integer'Wide_Value(s);
+  exception
+    when others =>
+      if s = "" then
+        return nothing;
+      elsif s = "OK" then
+        return success;
+      elsif s = "Compressed data is corrupt" then
+        return corrupt;
+      elsif s = "CRC test failed" then
+        return bad_crc;
+      elsif s = "Compression format not supported" then
+        return unsupported;
+      end if;
+      return -100;
+  end Result_value;
+
   max: constant Color_range:= Color_range'Last;
   f_max: constant Float:= FLoat(max);
 
@@ -89,7 +108,7 @@ package body AZip_Common.Operations is
           when success =>
             color:= (Red => 0, Green => (max * 3) / 4, Blue => 0);
           when others =>
-            color:= (Red => max, Green => max, Blue => max);
+            color:= white;
         end case;
     end case;
     -- Errors are always shown

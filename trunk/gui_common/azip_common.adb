@@ -1,3 +1,5 @@
+with Zip_Streams;
+
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 with Ada.Strings;                       use Ada.Strings;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
@@ -460,5 +462,5 @@ package body AZip_Common is
   end Is_valid_Zip_archive;
 
 begin
-  Zip.Form_For_IO_Open_N_Create:= To_Unbounded_String("encoding=utf8");
+  Zip_Streams.Form_For_IO_Open_and_Create:= To_Unbounded_String("encoding=utf8");
 end AZip_Common;

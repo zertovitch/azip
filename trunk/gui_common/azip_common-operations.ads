@@ -22,6 +22,7 @@ package AZip_Common.Operations is
   -- Compare      : 0 = same; 1 = different; 2 = missing in the other archive
 
   function Result_message(op: Archive_Operation; code: Integer) return String;
+  function Result_value(s: UTF_16_String) return Integer; -- can be a non-number
 
   type Color_range is new Integer range 0 .. 255;
 
@@ -31,6 +32,8 @@ package AZip_Common.Operations is
       Green  : Color_range;
       Blue   : Color_range;
     end record;
+
+  white: constant RGB_type:= (others => Color_range'Last);
 
   procedure Result_color(
     op        : Archive_Operation;

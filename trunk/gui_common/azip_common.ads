@@ -52,8 +52,7 @@ package AZip_Common is
   -- Percentages
   function Ratio_pct_Image(n,d: Zip.File_size_type) return UTF_16_String;
   function Pct_Value(s: UTF_16_String) return Natural; -- 0..100
-  -- Results
-  function Result_Value(s: UTF_16_String) return Integer; -- can be a non-number
+  -- Results: see AZip_Common.Operations.
 
   ---------------------
   -- Various helpers --

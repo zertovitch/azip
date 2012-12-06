@@ -167,7 +167,7 @@ package body AZip_GWin.MDI_Child is
         if intensity > 0.58 then
           font_color:= Black;
         else
-          font_color:= White;
+          font_color:= GWindows.Colors.White;
         end if;
         Lst.Subitem_Color(font_color, To_Color(gw_color), row, cidx(Result)-1);
       end loop;

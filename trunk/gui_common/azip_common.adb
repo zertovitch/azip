@@ -395,17 +395,6 @@ package body AZip_Common is
     end if;
   end Pct_Value;
 
-  function Result_Value(s: UTF_16_String) return Integer is -- can be a non-number
-  begin
-    if s = "" then
-      return 0;
-    end if;
-    return Integer'Wide_Value(s);
-  exception
-    when others =>
-      return -1;
-  end Result_Value;
-
   function Give_path(s: UTF_16_String) return UTF_16_String is
     i: Positive;
   begin

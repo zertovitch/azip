@@ -269,8 +269,8 @@ package body AZip_GWin.MDI_Main is
     );
     Zoom(Window,Window.opt.MDI_main_maximized);
 
-    Dock_Children(Window);
-    Show (Window);
+    Window.Dock_Children;
+    Window.Show;
 
     if Argument_count=0 then
       On_File_New (Window, extra_first_doc => True);

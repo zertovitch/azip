@@ -131,6 +131,12 @@ package body AZip_GWin.MDI_Child is
           Lst.Set_Sub_Item(Hexadecimal(crc_32), row, cidx(CRC32)-1);
           Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), name_encoding), row, cidx(Path)-1);
           Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, cidx(Encoding)-1);
+          --
+          -- Show some response if the zip directory is very large
+          --
+          if row mod 1024 = 0 then
+            Message_Check;
+          end if;
         end if;
         unsorted_index(row):= Lst.Item_Data(row).index_before_sorting;
         result_code(row):= user_code;
@@ -148,6 +154,7 @@ package body AZip_GWin.MDI_Child is
       if need > results_refresh then
         return;
       end if;
+      Window.refreshing_list:= True;
       Traverse(Window.zif);
       last_row:= row;
       for i in 0..last_row loop
@@ -170,7 +177,13 @@ package body AZip_GWin.MDI_Child is
           font_color:= GWindows.Colors.White;
         end if;
         Lst.Subitem_Color(font_color, To_Color(gw_color), row, cidx(Result)-1);
+        -- Show some response if the zip directory is very large
+        --
+        if u mod 1024 = 0 then
+          Message_Check;
+        end if;
       end loop;
+      Window.refreshing_list:= False;
     end Feed_directory_list;
 
     sel: Natural;
@@ -227,7 +240,13 @@ package body AZip_GWin.MDI_Child is
   procedure On_Item_Changed (Control : in out MDI_Child_List_View_Control_Type) is
     PW: MDI_Child_Type renames MDI_Child_Type(Control.Parent.all);
   begin
-    PW.Update_display(simple_refresh);
+    if PW.refreshing_list then
+      null;
+      -- We avoid a call to Update_display during a full refresh...
+      -- with Update_display.
+    else
+      PW.Update_display(simple_refresh);
+    end if;
   end On_Item_Changed;
 
   function On_Compare(
@@ -331,7 +350,7 @@ package body AZip_GWin.MDI_Child is
       if memo_unmaximized_children then
         Window.Parent.Thaw; -- Before Zoom, otherwise uncomplete draw.
         Window.Zoom(False);
-        -- Window.parent.Tool_Bar.Redraw;
+        Window.parent.Tool_Bar.Redraw;
       end if;
     end;
     Window.Status_deamon.Start;

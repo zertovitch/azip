@@ -10,8 +10,6 @@ with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 
 with Interfaces;
 
-with ada.text_Io;
-
 package body AZip_Common.Operations is
 
   function Result_message(op: Archive_Operation; code: Integer) return String
@@ -183,7 +181,6 @@ package body AZip_Common.Operations is
     if name.sep = 0 then
       return Remove_path(s);
     else
-ada.text_Io.put_line("sep" & name.sep'img);
       return s(s'First + name.sep .. s'Last);
     end if;
   end Remove_external_path;
@@ -688,7 +685,6 @@ ada.text_Io.put_line("sep" & name.sep'img);
     end case;
   end Process_archive;
 
-
   function Expand_folders(l: Name_list) return Name_list is
     --
     -- The challenge is to do it all without heap allocation :-)
@@ -696,7 +692,6 @@ ada.text_Io.put_line("sep" & name.sep'img);
     function Expand_one_entry(Name: Name_descriptor) return Name_List is
       --
       files, total_files: Natural:= 0;
-      pattern: constant String:= "*";
       sep: Natural;
       --
       -- Position of separator in "d:\ada\azip\gwindows\test\jaja\"
@@ -727,7 +722,7 @@ ada.text_Io.put_line("sep" & name.sep'img);
           end Subdir;
         begin
           -- The files
-          Search (To_String(Name), Pattern, (others => True), Print'Access);
+          Search (To_String(Name), "*", (Directory => False, others => True), Print'Access);
           -- The subfolders
           Search (To_String(Name), "", (Directory => True, others => False), Subdir'Access);
         end Walk;
@@ -764,8 +759,8 @@ ada.text_Io.put_line("sep" & name.sep'img);
     else
       return
         -- Looks like LISP, doesn't it ?...
-        (Expand_one_entry(l(l'First)) &           -- car - first item
-         Expand_folders(l(l'First +1 .. l'Last))  -- cdr - rest of the list
+        ( Expand_one_entry(l(l'First)) &            -- car - first item
+          Expand_folders(l(l'First + 1 .. l'Last))  -- cdr - rest of the list
         );
     end if;
   end Expand_folders;

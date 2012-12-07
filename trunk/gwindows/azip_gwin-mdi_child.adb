@@ -575,7 +575,7 @@ package body AZip_GWin.MDI_Child is
   begin -- Process_archive_GWin
     -- Neutral conversion: GStrings (UTF-16) to UTF_16_String
     for i in az_names'Range loop
-      az_names(i):= File_Names(i);
+      az_names(i).str:= File_Names(i);
     end loop;
     box.Create_Full_Dialog(Window);
     box.File_Progress.Position(0);
@@ -590,7 +590,7 @@ package body AZip_GWin.MDI_Child is
       Archive_processing(
         zif              => Window.zif,
         operation        => operation,
-        entry_name       => az_names,
+        entry_name       => Expand_folders(az_names),
         base_folder      => base_folder,
         search_pattern   => search_pattern,
         output_folder    => output_folder,

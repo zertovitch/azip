@@ -10,6 +10,8 @@ with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 
 with Interfaces;
 
+with ada.text_Io;
+
 package body AZip_Common.Operations is
 
   function Result_message(op: Archive_Operation; code: Integer) return String
@@ -174,6 +176,17 @@ package body AZip_Common.Operations is
 
   function U(Source: Wide_String) return Unbounded_Wide_String
     renames Ada.Strings.Wide_Unbounded.To_Unbounded_Wide_String;
+
+  function Remove_external_path(name: Name_descriptor) return UTF_16_String is
+    s: constant Wide_String:= To_Wide_String(name.str);
+  begin
+    if name.sep = 0 then
+      return Remove_path(s);
+    else
+ada.text_Io.put_line("sep" & name.sep'img);
+      return s(s'First + name.sep .. s'Last);
+    end if;
+  end Remove_external_path;
 
   ------------------------------------------------
   -- Blocking, visible processing of an archive --
@@ -368,7 +381,7 @@ package body AZip_Common.Operations is
       case operation is
         when Add =>
           for i in entry_name'Range loop
-            if base_folder & Remove_path(To_Wide_String(entry_name(i))) = name_utf_16 then
+            if base_folder & Remove_external_path(entry_name(i)) = name_utf_16 then
               -- The path removed is from an external file name.
               -- The file will be added with the base_folder from archive
               match:= True;
@@ -381,7 +394,7 @@ package body AZip_Common.Operations is
             match:= True; -- empty name list -> we process the whole archive
           else
             for i in entry_name'Range loop
-              if To_Wide_String(entry_name(i)) = name_utf_16 then
+              if To_Wide_String(entry_name(i).str) = name_utf_16 then
                 match:= True;
                 idx:= i;
                 exit;
@@ -396,7 +409,7 @@ package body AZip_Common.Operations is
           else
             for i in entry_name'Range loop
               declare
-                pattern: constant UTF_16_String:= To_Wide_String(entry_name(i));
+                pattern: constant UTF_16_String:= To_Wide_String(entry_name(i).str);
               begin
                 if pattern = "" or else -- empty name -> we process the whole archive
                   Index(short_name_utf_16, pattern) > 0
@@ -417,7 +430,7 @@ package body AZip_Common.Operations is
             current_entry_name:= U(short_name_utf_16);
             declare
             external_file_name: constant UTF_8_String:=
-                To_UTF_8(To_Wide_String(entry_name(idx)));
+                To_UTF_8(To_Wide_String(entry_name(idx).str));
             begin
               -- !! try IBM_437 (same as Append below)
               Add_File(
@@ -604,8 +617,9 @@ package body AZip_Common.Operations is
           processed_entries:= processed_entries + 1;
           archive_percents_done:= (100 * processed_entries) / total_entries;
           declare
-            name: constant UTF_16_String:= To_Wide_String(entry_name(i));
-            short_name: constant UTF_16_String:= Remove_path(name);
+            name: constant UTF_16_String:= To_Wide_String(entry_name(i).str);
+            short_name: constant UTF_16_String:=
+              base_folder & Remove_external_path(entry_name(i));
             ex: Boolean;
           begin
             begin
@@ -673,5 +687,87 @@ package body AZip_Common.Operations is
         null;
     end case;
   end Process_archive;
+
+
+  function Expand_folders(l: Name_list) return Name_list is
+    --
+    -- The challenge is to do it all without heap allocation :-)
+    --
+    function Expand_one_entry(Name: Name_descriptor) return Name_List is
+      --
+      files, total_files: Natural:= 0;
+      pattern: constant String:= "*";
+      sep: Natural;
+      --
+      -- Position of separator in "d:\ada\azip\gwindows\test\jaja\"
+
+      --
+      -- This is a modified version of the Rosetta code example
+      -- http://rosettacode.org/wiki/Walk_a_directory/Recursively#Ada
+      --
+      procedure Full_Walk(Name : Wide_String; Count_only: Boolean; New_list: out Name_List) is
+        --
+        procedure Walk (Name : Wide_String) is
+          procedure Print (Item : Directory_Entry_Type) is
+          begin
+            if Simple_Name (Item) /= "." and then Simple_Name (Item) /= ".." then
+              files:= files + 1;
+              if not Count_only then
+                new_list(files):= (U((To_Wide_String(Full_Name (Item)))), sep);
+              end if;
+            end if;
+          end Print;
+          procedure Subdir (Item : Directory_Entry_Type) is
+          begin
+            if Simple_Name (Item) /= "." and then Simple_Name (Item) /= ".." then
+              Walk (To_Wide_String(Full_Name (Item)));
+            end if;
+          exception
+            when Name_Error => null;
+          end Subdir;
+        begin
+          -- The files
+          Search (To_String(Name), Pattern, (others => True), Print'Access);
+          -- The subfolders
+          Search (To_String(Name), "", (Directory => True, others => False), Subdir'Access);
+        end Walk;
+      begin
+        Walk(Name);
+      end Full_Walk;
+
+      Dir: constant Wide_String:= To_Wide_String(Name.str);
+      fake_list: Name_list(1..0);
+      --
+    begin
+      Full_Walk (Name => Dir, Count_only => True, New_list => fake_list);
+      total_files:= files;
+      files:= 0;
+      declare
+        new_list: Name_list(1..total_files);
+      begin
+        for i in Dir'Range loop
+          if Dir(i) = '\' or Dir(i) = '/' then
+            sep:= i;
+          end if;
+        end loop;
+        Full_Walk (Name => Dir, Count_only => False, New_list => new_list);
+        return new_list;
+      end;
+    exception
+      when Name_Error =>
+        return (1 => Name);
+    end Expand_one_entry;
+    --
+  begin
+    if l'Length = 0 then
+      return l;
+    else
+      return
+        -- Looks like LISP, doesn't it ?...
+        (Expand_one_entry(l(l'First)) &           -- car - first item
+         Expand_folders(l(l'First +1 .. l'Last))  -- cdr - rest of the list
+        );
+    end if;
+  end Expand_folders;
 
 end AZip_Common.Operations;

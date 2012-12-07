@@ -74,8 +74,9 @@ package AZip_Common.Operations is
     -- jaja is located here: d:\ada\azip\gwindows\test .
     -- then the function Expand_folder will give many names, like:
     -- d:\ada\azip\gwindows\test\jaja\javax\swing\JProgressBar.class
-    -- sep indicates this point------^
-    -- the Zip entry to be replaced will be: javax\swing\JProgressBar.class
+    -- sep indicates this point ^
+    -- the Zip entry to be replaced or appended will be:
+    -- jaja\javax\swing\JProgressBar.class
   end record;
 
   type Name_list is array(Positive range <>) of Name_descriptor;

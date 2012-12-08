@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/12/04   15:12:15
+-- Transcription time: 2012/12/08   13:34:40
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -324,10 +324,41 @@ package azip_Resource_GUI is
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      );
 
+  type Wait_refresh_box_Type is new Window_type with record
+
+    -- Label: IDC_STATIC
+    -- Label: IDC_STATIC
+    null; -- empty!
+  end record; -- Wait_refresh_box_Type
+
+  -- Dialog at resource line 248
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Wait_refresh_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Please wait";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Wait_refresh_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     );
+
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager";
-    FileVersion: constant String:= "0.96";
+    FileVersion: constant String:= "1.00";
     LegalCopyright: constant String:= "© 2012 G. de Montmollin (MIT license)";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
@@ -353,6 +384,7 @@ package azip_Resource_GUI is
   Password_input_box        : constant:=    119;
   Credits_box               : constant:=    121;
   Toolbar_BMP               : constant:=    123;
+  Wait_refresh_box          : constant:=    125;
   Archive_Progress          : constant:=   1000;
   Conflict_simple_name      : constant:=   1000;
   Encrypted_entry           : constant:=   1000;
@@ -423,6 +455,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return GString;
 
 
-  -- Last line of resource script file: 311
+  -- Last line of resource script file: 323
 
 end azip_Resource_GUI;

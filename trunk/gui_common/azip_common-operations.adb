@@ -47,7 +47,7 @@ package body AZip_Common.Operations is
       when Extract =>
         case code is
           when success =>
-            return "Checked and extracted";
+            return "OK & extracted";
           when others =>
             null;
         end case;

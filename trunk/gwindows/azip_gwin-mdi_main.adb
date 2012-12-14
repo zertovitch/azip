@@ -449,6 +449,7 @@ package body AZip_GWin.MDI_Main is
       pragma Warnings(off, dummy);
     begin
       credits_box.Create_Full_Dialog(box);
+      credits_box.Small_Icon("AZip_Doc_Icon_Name");
       credits_box.Center;
       Show_Dialog(credits_Box, box);
     end Credits_clicked;

@@ -88,6 +88,7 @@ package body AZip_GWin.Toolbars is
     Add_Button_with_Tip (0, IDM_ADD_FILES);
     Add_Button_with_Tip (1, IDM_Delete_selected);
     Add_Separator(tb, sep_width);
+    Add_Button_with_Tip (4, IDM_TEST_ARCHIVE);
     Add_Button_with_Tip (3, IDM_FIND_IN_ARCHIVE);
   end Init_Main_toolbar;
 

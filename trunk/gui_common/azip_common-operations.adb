@@ -369,8 +369,8 @@ package body AZip_Common.Operations is
       if abort_rest_of_operation then
         return;
       end if;
-      processed_entries:= processed_entries + 1;
       archive_percents_done:= (100 * processed_entries) / total_entries;
+      processed_entries:= processed_entries + 1;
       file_percents_done:= 0;
       --
       -- !! use hashed maps either for searching
@@ -457,6 +457,8 @@ package body AZip_Common.Operations is
           when Test =>
             current_operation:= Test;
             current_entry_name:= U(short_name_utf_16);
+            Entry_feedback(1, False, dummy_user_abort);
+            -- ^ Just have the right title if password is asked for
             begin
               Extract(
                 from                 => zif,
@@ -485,6 +487,8 @@ package body AZip_Common.Operations is
           when Extract =>
             current_operation:= Extract;
             current_entry_name:= U(short_name_utf_16);
+            Entry_feedback(1, False, dummy_user_abort);
+            -- ^ Just have the right title if password is asked for
             if current_user_attitude = none then
               skip_if_conflict:= Zip.Exists(Add_extract_directory(name, name_encoding));
               current_skip_hint:= True;

@@ -920,6 +920,32 @@ package body AZip_GWin.MDI_Child is
   end Full_Select;
 
   procedure On_Test(Window : in out MDI_Child_Type) is
+    count_ok, count_ko: Natural:= 0;
+    procedure Action(
+      name             : String; -- 'name' is compressed entry's full name
+      file_index       : Positive;
+      comp_size        : Zip.File_size_type;
+      uncomp_size      : Zip.File_size_type;
+      crc_32           : Interfaces.Unsigned_32;
+      date_time        : Zip.Time;
+      method           : Zip.PKZip_method;
+      name_encoding    : Zip.Zip_name_encoding;
+      read_only        : Boolean;
+      user_code        : in out Integer
+    )
+    is
+    pragma Unreferenced (
+      name, file_index, comp_size, uncomp_size, crc_32,
+      date_time, method, name_encoding, read_only
+    );
+    begin
+      case user_code is
+        when success => count_ok:= count_ok + 1;
+        when nothing => null; -- should not happen: whole archive is tested
+        when others  => count_ko:= count_ko + 1;
+      end case;
+    end Action;
+    procedure Count_totals is new Zip.Traverse_verbose(Action);
   begin
     Process_archive_GWin(
       Window         => Window,
@@ -930,7 +956,20 @@ package body AZip_GWin.MDI_Child is
       output_folder  => "",
       new_temp_name  => ""
     );
-    -- !! Message_Box: say something if any failure
+    Count_totals(Window.zif);
+    if count_ko = 0 then
+      Message_Box(Window,
+        "Data integrity: everything OK",
+        "All entries are OK."
+      );
+    else
+      Message_Box(Window,
+        "Data integrity: at least one failure",
+        Integer'Wide_Image(count_ok) & " entries are OK;" & NL &
+        Integer'Wide_Image(count_ko) &
+        " entries had errors or could not be processed."
+      );
+    end if;
   end On_Test;
 
   procedure On_Menu_Select (

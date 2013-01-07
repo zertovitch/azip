@@ -959,15 +959,17 @@ package body AZip_GWin.MDI_Child is
     Count_totals(Window.zif);
     if count_ko = 0 then
       Message_Box(Window,
-        "Data integrity: everything OK",
-        "All entries are OK."
+        "Data integrity",
+        "All entries in archive are OK.",
+        Icon => Information_Icon
       );
     else
       Message_Box(Window,
         "Data integrity: at least one failure",
         Integer'Wide_Image(count_ok) & " entries are OK;" & NL &
         Integer'Wide_Image(count_ko) &
-        " entries had errors or could not be processed."
+        " entries had errors or could not be processed.",
+        Icon => Warning_Icon
       );
     end if;
   end On_Test;

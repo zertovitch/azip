@@ -123,18 +123,22 @@ package body AZip_GWin.MDI_Child is
             when Zip_Streams.Calendar.Time_Error =>
               Lst.Set_Sub_Item("(invalid)", row, cidx(Modified)-1);
           end;
-          Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, cidx(Attributes)-1);
+          if read_only then -- any attribute
+            Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, cidx(Attributes)-1);
+          end if;
           Lst.Set_Sub_Item(File_size_image(uncomp_size), row, cidx(Size)-1);
           Lst.Set_Sub_Item(File_size_image(comp_size), row, cidx(Packed)-1);
           Lst.Set_Sub_Item(Ratio_pct_image(comp_size, uncomp_size), row, cidx(Ratio)-1);
           Lst.Set_Sub_Item(To_Lower(PKZip_method'Wide_Image(method)), row, cidx(Format)-1);
           Lst.Set_Sub_Item(Hexadecimal(crc_32), row, cidx(CRC32)-1);
-          Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), name_encoding), row, cidx(Path)-1);
+          if simple_name_idx > name'First then
+            Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), name_encoding), row, cidx(Path)-1);
+          end if;
           Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, cidx(Encoding)-1);
           --
           -- Show some response if the zip directory is very large
           --
-          if row mod 1024 = 0 then
+          if row mod 2048 = 0 then
             Message_Check;
           end if;
         end if;
@@ -150,11 +154,13 @@ package body AZip_GWin.MDI_Child is
       use GWindows.Colors;
       intensity: Float;
       font_color: Color_Type;
-    begin
+    begin -- Feed_directory_list
       if need > results_refresh then
         return;
       end if;
       Window.refreshing_list:= True;
+      -- Performance is meant to be better with the All_Items mode.
+      Window.Directory_List.Color_mode(AZip_LV_Ex.All_Items);
       Traverse(Window.zif);
       last_row:= row;
       for i in 0..last_row loop
@@ -170,19 +176,22 @@ package body AZip_GWin.MDI_Child is
            Blue   => GWindows.Colors.Color_Range(az_color.Blue),
            Unused => 0
           );
-        -- Ensure we can read the text, given the background color.
-        if intensity > 0.58 then
-          font_color:= Black;
-        else
-          font_color:= GWindows.Colors.White;
+        if need = results_refresh or az_color /= AZip_Common.Operations.white then
+          -- Ensure user can read the text, given the background color.
+          if intensity > 0.58 then
+            font_color:= Black;
+          else
+            font_color:= GWindows.Colors.White;
+          end if;
+          Lst.Subitem_Color(font_color, To_Color(gw_color), row, cidx(Result)-1);
         end if;
-        Lst.Subitem_Color(font_color, To_Color(gw_color), row, cidx(Result)-1);
         -- Show some response if the zip directory is very large
         --
-        if u mod 1024 = 0 then
+        if u mod 2048 = 0 then
           Message_Check;
         end if;
       end loop;
+      Window.Directory_List.Color_mode(AZip_LV_Ex.Subitem);
       Window.refreshing_list:= False;
     end Feed_directory_list;
 
@@ -471,6 +480,8 @@ package body AZip_GWin.MDI_Child is
       aborted:= True;
     end Abort_clicked;
     --
+    tick: Ada.Calendar.Time;
+    --
     procedure Boxed_Feedback(
       file_percents_done    : Natural;
       archive_percents_done : Natural;
@@ -480,12 +491,21 @@ package body AZip_GWin.MDI_Child is
       user_abort            : out Boolean
     )
     is
+      use Ada.Calendar;
+      now: constant Ada.Calendar.Time:= Clock;
     begin
-      box.File_Progress.Position(file_percents_done);
-      box.Archive_Progress.Position(archive_percents_done);
-      box.Entry_name.Text(entry_being_processed);
-      box.Entry_operation_name.Text(Description(operation, skip_hint));
-      Message_Check;
+      -- Display only at most every 2/100 second (i.e. max 50 fps).
+      -- Otherwise Windows may be overflown by messages and the operation
+      -- takes much more time due to the display. Typical case: an archive
+      -- with many small files - GWin.zip or Java run-time Jar's for instance.
+      if now - tick >= 0.02 then
+        box.File_Progress.Position(file_percents_done);
+        box.Archive_Progress.Position(archive_percents_done);
+        box.Entry_name.Text(entry_being_processed);
+        box.Entry_operation_name.Text(Description(operation, skip_hint));
+        Message_Check;
+        tick:= now;
+      end if;
       user_abort:= aborted;
     end Boxed_Feedback;
     --
@@ -577,6 +597,7 @@ package body AZip_GWin.MDI_Child is
     for i in az_names'Range loop
       az_names(i).str:= File_Names(i);
     end loop;
+    tick:= Ada.Calendar."-"(Ada.Calendar.Clock, 1.0);
     box.Create_Full_Dialog(Window);
     box.File_Progress.Position(0);
     box.Archive_Progress.Position(0);
@@ -584,6 +605,7 @@ package body AZip_GWin.MDI_Child is
     box.Cancel_button_permanent.Show;
     box.Cancel_button_permanent.On_Click_Handler(Abort_clicked'Unrestricted_Access);
     box.Center;
+    box.Redraw;
     box.Show;
     Window.Parent.Disable;
     begin

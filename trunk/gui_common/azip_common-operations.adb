@@ -769,4 +769,41 @@ package body AZip_Common.Operations is
     end if;
   end Expand_folders;
 
+  procedure Count_test_totals(
+    archive: Zip.Zip_info;
+    count_ok, count_ko, count_nt: out Natural
+  )
+  is
+    procedure Action(
+      name             : String; -- 'name' is compressed entry's full name
+      file_index       : Positive;
+      comp_size        : Zip.File_size_type;
+      uncomp_size      : Zip.File_size_type;
+      crc_32           : Interfaces.Unsigned_32;
+      date_time        : Zip.Time;
+      method           : Zip.PKZip_method;
+      name_encoding    : Zip.Zip_name_encoding;
+      read_only        : Boolean;
+      user_code        : in out Integer
+    )
+    is
+    pragma Unreferenced (
+      name, file_index, comp_size, uncomp_size, crc_32,
+      date_time, method, name_encoding, read_only
+    );
+    begin
+      case user_code is
+        when success => count_ok:= count_ok + 1;
+        when nothing => count_nt:= count_nt + 1; -- happens if cancelled
+        when others  => count_ko:= count_ko + 1;
+      end case;
+    end Action;
+    procedure Count_totals is new Zip.Traverse_verbose(Action);
+  begin
+    count_ok:= 0;
+    count_ko:= 0;
+    count_nt:= 0;
+    Count_totals(archive);
+  end Count_test_totals;
+
 end AZip_Common.Operations;

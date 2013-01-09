@@ -119,4 +119,9 @@ package AZip_Common.Operations is
 
   procedure Copy_user_codes(from, to: Zip.Zip_info);
 
+  procedure Count_test_totals(
+    archive: Zip.Zip_info;
+    count_ok, count_ko, count_nt: out Natural
+  );
+
 end AZip_Common.Operations;

@@ -8,6 +8,7 @@ package AZip_Common.Operations is
 
   type Archive_Operation is (Add, Remove, Test, Extract, Search);
 
+  appended    : constant:=  2;
   success     : constant:=  1;
   nothing     : constant:=  0;
   bad_crc     : constant:= -1;
@@ -16,7 +17,7 @@ package AZip_Common.Operations is
   unsupported : constant:= -4;
 
   -- Convention for operation results set Zip_info's user_code:
-  -- Add / Update : 1 if entry was replaced or appended, 0 otherwise
+  -- Add          : 0 = preserved; 1 = replaced; 2 = appended
   -- Search       : number of strings found, or 1 for file
   --                     name found (no text search)
   -- Compare      : 0 = same; 1 = different; 2 = missing in the other archive
@@ -118,6 +119,8 @@ package AZip_Common.Operations is
   ------------------
 
   procedure Copy_user_codes(from, to: Zip.Zip_info);
+
+  procedure Set_user_codes(info: Zip.Zip_info; code: Integer);
 
   procedure Count_test_totals(
     archive: Zip.Zip_info;

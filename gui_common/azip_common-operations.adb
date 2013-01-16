@@ -30,9 +30,14 @@ package body AZip_Common.Operations is
     end case;
     case op is
       when Add =>
-        if code = success then
-          return "Replaced";
-        end if;
+        case code is
+          when success =>
+            return "Replaced";
+          when appended =>
+            return "Added";
+          when others =>
+            null;
+        end case;
       when Remove =>
         null;
       when Test =>
@@ -104,14 +109,15 @@ package body AZip_Common.Operations is
         end if;
         color:= (Red => max - val, Green => max - val, Blue => max - val / 4);
       when others =>
+        -- For other operations, we have a simple color code: green or white
         case code is
-          when success =>
+          when success | appended =>
             color:= (Red => 0, Green => (max * 3) / 4, Blue => 0);
           when others =>
             color:= white;
         end case;
     end case;
-    -- Errors are always shown
+    -- Errors are always shown - in red of course!
     case code is
       when wrong_pwd | corrupt | bad_crc | unsupported =>
         color:= (Red => (max * 3) / 4, Green => 0, Blue => 0);
@@ -171,6 +177,16 @@ package body AZip_Common.Operations is
   begin
     Do_it(from);
   end Copy_user_codes;
+
+  procedure Set_user_codes(info: Zip.Zip_info; code: Integer) is
+    procedure Set_same_user_code(name: String) is
+    begin
+      Zip.Set_user_code(info, name, code);
+    end Set_same_user_code;
+    procedure Do_it is new Zip.Traverse(Set_same_user_code);
+  begin
+    Do_it(info);
+  end Set_user_codes;
 
   function U(Source: Wide_String) return Unbounded_Wide_String
     renames Ada.Strings.Wide_Unbounded.To_Unbounded_Wide_String;

@@ -744,6 +744,7 @@ package body AZip_GWin.MDI_Child is
     Load_insensitive_if_possible(new_zif, To_UTF_8(GU2G(Window.File_Name)));
     if Zip.Is_loaded(Window.zif) then
       if copy_codes then
+        Set_user_codes(new_zif, appended);
         Copy_user_codes(Window.zif, new_zif);
       end if;
       Zip.Delete(Window.zif);

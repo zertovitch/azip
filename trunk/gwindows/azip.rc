@@ -58,7 +58,7 @@ Menu_MDI_Child MENU
     POPUP "&Tools"
     {
         MENUITEM "&Test archive\tCtrl+T", IDM__TEST_ARCHIVE
-        MENUITEM "Fre&shen archive", IDM_FRESHEN_ARCHIVE, GRAYED
+        MENUITEM "Fre&shen archive", IDM_FRESHEN_ARCHIVE
         MENUITEM "&Recompress archive", IDM__RECOMPRESS_ARCHIVE, GRAYED
         MENUITEM "&Find in archive...\tCtrl+F", IDM_FIND_IN_ARCHIVE
         MENUITEM SEPARATOR
@@ -283,15 +283,15 @@ AZip_Doc_Icon_Name ICON           "ico_bmp/azip_doc.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Box_Closed_Icon_Name ICON           "ico_bmp/box_closed.ico"
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 AZip_Doc_Icon      ICON           "ico_bmp/azip_doc.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 AZip_Icon          ICON           "ico_bmp/azip.ico"
-
-
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Box_Closed_Icon_Name ICON           "ico_bmp/box_closed.ico"
 
 
 

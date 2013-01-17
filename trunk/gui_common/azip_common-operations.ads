@@ -14,6 +14,7 @@ package AZip_Common.Operations is
   appended    : constant:=  2;
   only_archive: constant:=  2;
   success     : constant:=  1;
+  replaced    : constant:=  1;
   nothing     : constant:=  0;
   bad_crc     : constant:= -1;
   wrong_pwd   : constant:= -2; -- After N attempts, password was still wrong

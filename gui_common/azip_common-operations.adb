@@ -31,7 +31,7 @@ package body AZip_Common.Operations is
     case op is
       when Add =>
         case code is
-          when success =>
+          when replaced =>
             return "Replaced";
           when appended =>
             return "Added";
@@ -40,7 +40,7 @@ package body AZip_Common.Operations is
         end case;
       when Freshen =>
         case code is
-          when success =>
+          when replaced =>
             return "Replaced";
           when only_archive =>
             return "File only in archive";
@@ -393,9 +393,10 @@ package body AZip_Common.Operations is
       user_code        : in out Integer
     )
     is
-      pragma Unreferenced(comp_size, uncomp_size, crc_32, method, read_only);
+      pragma Unreferenced(comp_size, uncomp_size, method, read_only);
       name_utf_16: constant UTF_16_String:= To_UTF_16(name, name_encoding);
-      name_utf_8: constant UTF_8_String:= Add_extract_directory(name, name_encoding);
+      name_utf_8_as_in_archive: constant UTF_8_String:= To_UTF_8(name_utf_16);
+      name_utf_8_with_extra_folder: constant UTF_8_String:= Add_extract_directory(name, name_encoding);
       short_name_utf_16: constant UTF_16_String:= Remove_path(name_utf_16);
       dummy_user_abort, skip_if_conflict: Boolean;
       match: Boolean:= False;
@@ -412,7 +413,72 @@ package body AZip_Common.Operations is
           Feedback => Entry_feedback'Unrestricted_Access
         );
       end Preserve_entry;
-    begin
+      --
+      procedure Freshen_entry is
+        stamp: constant Time:= Zip.Convert(Modification_Time(name_utf_8_with_extra_folder));
+        -- Ada.Directories not utf-8 compatible !!
+        use Zip_Streams.Calendar;
+        this_file_zip_name: constant String:= new_temp_name & ".one.zip";
+        this_file_zip: Zip.Create.Zip_Create_info;
+        this_file_fzs: aliased Zip_Streams.File_Zipstream;
+        this_file_zif: Zip.Zip_info;
+        dummy_name_encoding  : Zip_name_encoding;
+        file_index     : Ada.Streams.Stream_IO.Positive_Count;
+        dummy_comp_size      : Zip.File_size_type;
+        dummy_uncomp_size    : Zip.File_size_type;
+        new_crc_32     : Interfaces.Unsigned_32;
+        use Interfaces;
+      begin
+        if date_time > stamp then -- newer in archive -> preserve from archive
+          Preserve_entry;
+          user_code:= nothing;
+        else
+          current_operation:= Replace;
+          current_entry_name:= U(short_name_utf_16);
+          -- We write a one-file zip file first with the new data
+          Zip.Create.Create(this_file_zip, this_file_fzs'Unchecked_Access, this_file_zip_name);
+          Add_File(
+            Info               => this_file_zip,
+            Name               => name_utf_8_with_extra_folder,
+            Name_in_archive    => name_utf_8_as_in_archive,
+            Delete_file_after  => False,
+            Name_encoding      => UTF_8,
+            Modification_time  => stamp,
+            Is_read_only       => False,
+            Feedback           => Entry_feedback'Unrestricted_Access
+          );
+          Finish(this_file_zip);
+          -- We load the one-file zip file's information
+          Load(this_file_zif, this_file_zip_name);
+          Find_offset(
+            info          => this_file_zif,
+            name          => name_utf_8_as_in_archive,
+            name_encoding => dummy_name_encoding,
+            file_index    => file_index,
+            comp_size     => dummy_comp_size,
+            uncomp_size   => dummy_uncomp_size,
+            crc_32        => new_crc_32
+          );
+          if new_crc_32 = crc_32 then
+            Preserve_entry;
+            user_code:= nothing;
+          else
+            Zip_Streams.Set_Name(this_file_fzs, this_file_zip_name);
+            Zip_Streams.Open(this_file_fzs, Ada.Streams.Stream_IO.In_File);
+            Zip_Streams.Set_Index(this_file_fzs, Positive(file_index));
+            Zip.Create.Add_Compressed_Stream(
+              Info     => new_zip,
+              Stream   => this_file_fzs,
+              Feedback => Entry_feedback'Unrestricted_Access
+            );
+            Zip_Streams.Close(this_file_fzs);
+            user_code:= replaced;
+          end if;
+          Delete_File(this_file_zip_name);
+        end if;
+      end Freshen_entry;
+      --
+    begin -- Action
       user_code:= nothing;
       if abort_rest_of_operation then
         return;
@@ -496,22 +562,11 @@ package body AZip_Common.Operations is
                 abort_rest_of_operation:= True;
             end;
           when Freshen =>
-            if Zip.Exists(name_utf_8) then
-              user_code:= nothing;
-              declare
-              stamp: constant Time:= Zip.Convert(Modification_Time(name_utf_8));
-                -- Ada.Directories not utf-8 compatible !!
-                use Zip_Streams.Calendar;
-              begin
-                if stamp > date_time then
-                  Preserve_entry; -- !! no! replace if content is different !!
-                else
-                  Preserve_entry;
-                end if;
-              end;
+            if Zip.Exists(name_utf_8_with_extra_folder) then
+              Freshen_entry;
             else
-              user_code:= only_archive;
               Preserve_entry;
+              user_code:= only_archive;
             end if;
           when Remove =>
             Feedback(
@@ -558,7 +613,7 @@ package body AZip_Common.Operations is
             Entry_feedback(1, False, dummy_user_abort);
             -- ^ Just have the right title if password is asked for
             if current_user_attitude = none then
-              skip_if_conflict:= Zip.Exists(name_utf_8);
+              skip_if_conflict:= Zip.Exists(name_utf_8_with_extra_folder);
               current_skip_hint:= True;
             else
               skip_if_conflict:= True;
@@ -729,7 +784,7 @@ package body AZip_Common.Operations is
         end loop;
       when Freshen | Remove =>
         null;
-        -- There should be no file to be freshened removed which is
+        -- There should be no file to be freshened or removed which is
         -- not in original archive.
       when Read_Only_Operation =>
         null;

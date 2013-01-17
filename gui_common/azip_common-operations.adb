@@ -38,6 +38,17 @@ package body AZip_Common.Operations is
           when others =>
             null;
         end case;
+      when Freshen =>
+        case code is
+          when success =>
+            return "Replaced";
+          when only_archive =>
+            return "File only in archive";
+          when nothing =>
+            return "Newer date or same data in archive";
+          when others =>
+            null;
+        end case;
       when Remove =>
         null;
       when Test =>
@@ -108,11 +119,20 @@ package body AZip_Common.Operations is
           val:= Color_range(Float'Floor(f_max * code_rel));
         end if;
         color:= (Red => max - val, Green => max - val, Blue => max - val / 4);
+      -- For other operations, we have a simple color code: green or white
+      when Freshen =>
+        case code is
+          when success =>
+            color:= green;
+          when only_archive =>
+            color:= yellow;
+          when others =>
+            color:= white;
+        end case;
       when others =>
-        -- For other operations, we have a simple color code: green or white
         case code is
           when success | appended =>
-            color:= (Red => 0, Green => (max * 3) / 4, Blue => 0);
+            color:= green;
           when others =>
             color:= white;
         end case;
@@ -325,7 +345,7 @@ package body AZip_Common.Operations is
       File_Name      : String;
       Name_Encoding  : Zip_name_encoding
     )
-    return String
+    return UTF_8_String
     is
       UTF_8_Name: constant UTF_8_String:= To_UTF_8(File_Name, Name_Encoding);
       -- AZip writes all files with names that passed UTF_8 encoded to the system
@@ -373,13 +393,25 @@ package body AZip_Common.Operations is
       user_code        : in out Integer
     )
     is
-      pragma Unreferenced
-        (comp_size, uncomp_size, crc_32, date_time, method, read_only);
+      pragma Unreferenced(comp_size, uncomp_size, crc_32, method, read_only);
       name_utf_16: constant UTF_16_String:= To_UTF_16(name, name_encoding);
+      name_utf_8: constant UTF_8_String:= Add_extract_directory(name, name_encoding);
       short_name_utf_16: constant UTF_16_String:= Remove_path(name_utf_16);
       dummy_user_abort, skip_if_conflict: Boolean;
       match: Boolean:= False;
       idx: Natural;
+      -- Just copy entry from old to new archive (Modifying_Operation)
+      procedure Preserve_entry is
+      begin
+        current_operation:= Copy;
+        current_entry_name:= U(short_name_utf_16);
+        Zip_Streams.Set_Index(old_fzs, file_index);
+        Zip.Create.Add_Compressed_Stream(
+          Info     => new_zip,
+          Stream   => old_fzs,
+          Feedback => Entry_feedback'Unrestricted_Access
+        );
+      end Preserve_entry;
     begin
       user_code:= nothing;
       if abort_rest_of_operation then
@@ -402,6 +434,8 @@ package body AZip_Common.Operations is
               exit;
             end if;
           end loop;
+        when Freshen =>
+          match:= True;
         when Remove | Extract =>
           if entry_name'Length = 0 then
             match:= True; -- empty name list -> we process the whole archive
@@ -442,7 +476,7 @@ package body AZip_Common.Operations is
             current_operation:= Replace;
             current_entry_name:= U(short_name_utf_16);
             declare
-            external_file_name: constant UTF_8_String:=
+              external_file_name: constant UTF_8_String:=
                 To_UTF_8(To_Wide_String(entry_name(idx).str));
             begin
               -- !! try IBM_437 (same as Append below)
@@ -461,6 +495,24 @@ package body AZip_Common.Operations is
               when Zip.Compress.User_Abort =>
                 abort_rest_of_operation:= True;
             end;
+          when Freshen =>
+            if Zip.Exists(name_utf_8) then
+              user_code:= nothing;
+              declare
+              stamp: constant Time:= Zip.Convert(Modification_Time(name_utf_8));
+                -- Ada.Directories not utf-8 compatible !!
+                use Zip_Streams.Calendar;
+              begin
+                if stamp > date_time then
+                  Preserve_entry; -- !! no! replace if content is different !!
+                else
+                  Preserve_entry;
+                end if;
+              end;
+            else
+              user_code:= only_archive;
+              Preserve_entry;
+            end if;
           when Remove =>
             Feedback(
               file_percents_done,
@@ -506,7 +558,7 @@ package body AZip_Common.Operations is
             Entry_feedback(1, False, dummy_user_abort);
             -- ^ Just have the right title if password is asked for
             if current_user_attitude = none then
-              skip_if_conflict:= Zip.Exists(Add_extract_directory(name, name_encoding));
+              skip_if_conflict:= Zip.Exists(name_utf_8);
               current_skip_hint:= True;
             else
               skip_if_conflict:= True;
@@ -582,14 +634,7 @@ package body AZip_Common.Operations is
       else -- archive entry name is not matched by a file name in the list
         case operation is
           when Modifying_Operation =>
-            current_operation:= Copy;
-            current_entry_name:= U(short_name_utf_16);
-            Zip_Streams.Set_Index(old_fzs, file_index);
-            Zip.Create.Add_Compressed_Stream(
-              Info     => new_zip,
-              Stream   => old_fzs,
-              Feedback => Entry_feedback'Unrestricted_Access
-            );
+            Preserve_entry;
           when Read_Only_Operation =>
             null; -- Nothing to do here
         end case;
@@ -606,7 +651,7 @@ package body AZip_Common.Operations is
     case operation is
       when Add =>
         total_entries:= Zip.Entries(zif) + entry_name'Length;
-      when Remove | Read_Only_Operation =>
+      when Freshen | Remove | Read_Only_Operation =>
         total_entries:= Zip.Entries(zif);
     end case;
     case operation is
@@ -682,9 +727,9 @@ package body AZip_Common.Operations is
               exit;
           end;
         end loop;
-      when Remove =>
+      when Freshen | Remove =>
         null;
-        -- There should be no file to be removed which is
+        -- There should be no file to be freshened removed which is
         -- not in original archive.
       when Read_Only_Operation =>
         null;

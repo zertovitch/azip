@@ -6,9 +6,13 @@ package AZip_Common.Operations is
   -- Blocking, visible processing of an archive --
   ------------------------------------------------
 
-  type Archive_Operation is (Add, Remove, Test, Extract, Search);
+  type Archive_Operation is (Add, Freshen, Remove, Test, Extract, Search);
+
+  subtype Modifying_Operation is Archive_Operation range Add .. Remove;
+  subtype Read_Only_Operation is Archive_Operation range Test .. Search;
 
   appended    : constant:=  2;
+  only_archive: constant:=  2;
   success     : constant:=  1;
   nothing     : constant:=  0;
   bad_crc     : constant:= -1;
@@ -18,6 +22,7 @@ package AZip_Common.Operations is
 
   -- Convention for operation results set Zip_info's user_code:
   -- Add          : 0 = preserved; 1 = replaced; 2 = appended
+  -- Freshen      : 0 = preserved; 1 = replaced; 2 = file only in archive
   -- Search       : number of strings found, or 1 for file
   --                     name found (no text search)
   -- Compare      : 0 = same; 1 = different; 2 = missing in the other archive
@@ -35,6 +40,12 @@ package AZip_Common.Operations is
     end record;
 
   white: constant RGB_type:= (others => Color_range'Last);
+  green: constant RGB_type:=
+    (Red => 0, Green => (Color_range'Last * 3) / 4, Blue => 0);
+  yellow: constant RGB_type:=
+    (Red   => (Color_range'Last * 4) / 4,
+     Green => (Color_range'Last * 4) / 5,
+     Blue  => 0);
 
   procedure Result_color(
     op        : Archive_Operation;
@@ -43,9 +54,6 @@ package AZip_Common.Operations is
     color     : out RGB_type;
     intensity : out Float
   );
-
-  subtype Modifying_Operation is Archive_Operation range Add .. Remove;
-  subtype Read_Only_Operation is Archive_Operation range Test .. Search;
 
   type Entry_Operation is (
     -- Operations related to "Add"

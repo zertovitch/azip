@@ -974,6 +974,19 @@ package body AZip_GWin.MDI_Child is
     end if;
   end On_Test;
 
+  procedure On_Freshen(Window : in out MDI_Child_Type) is
+  begin
+    Process_archive_GWin(
+      Window         => Window,
+      operation      => Freshen,
+      file_names     => Empty_Array_Of_File_Names,
+      base_folder    => "", -- !! could be a different folder
+      search_pattern => "",
+      output_folder  => "",
+      new_temp_name  => Temp_AZip_name(Window)
+    );
+  end On_Freshen;
+
   procedure On_Menu_Select (
         Window : in out MDI_Child_Type;
         Item   : in     Integer        ) is
@@ -993,10 +1006,12 @@ package body AZip_GWin.MDI_Child is
         On_Add_files(Window);
       when IDM_Delete_selected =>
         On_Delete(Window);
-      when IDM_FIND_IN_ARCHIVE =>
-        On_Find(Window);
       when IDM_TEST_ARCHIVE =>
         On_Test(Window);
+      when IDM_FRESHEN_ARCHIVE =>
+        On_Freshen(Window);
+      when IDM_FIND_IN_ARCHIVE =>
+        On_Find(Window);
       when others =>
         On_Menu_Select (Window_Type (Window), Item);
     end case;

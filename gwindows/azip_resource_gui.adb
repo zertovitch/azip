@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2012/12/14   13:46:33
+-- Transcription time: 2013/01/17   14:07:53
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -59,7 +59,6 @@ package body azip_Resource_GUI is
     Append_Menu(Menu.Main, "&Tools", Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Test archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+T", IDM_TEST_ARCHIVE);
     Append_Item(Menu.Popup_0004, "Fre&shen archive", IDM_FRESHEN_ARCHIVE);
-    State(Menu.Popup_0004, Command, IDM_FRESHEN_ARCHIVE, Grayed);
     Append_Item(Menu.Popup_0004, "&Recompress archive", IDM_RECOMPRESS_ARCHIVE);
     State(Menu.Popup_0004, Command, IDM_RECOMPRESS_ARCHIVE, Grayed);
     Append_Item(Menu.Popup_0004, "&Find in archive..." & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+F", IDM_FIND_IN_ARCHIVE);

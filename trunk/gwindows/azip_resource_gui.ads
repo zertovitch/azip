@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2013/01/17   14:07:53
+-- Transcription time: 2013/01/18   11:25:27
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -358,8 +358,8 @@ package azip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager";
-    FileVersion: constant String:= "1.00";
-    LegalCopyright: constant String:= "© 2012 G. de Montmollin (MIT license)";
+    FileVersion: constant String:= "1.1";
+    LegalCopyright: constant String:= "© 2012..2013 G. de Montmollin (MIT license)";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
   end Version_info;
@@ -409,6 +409,7 @@ package azip_Resource_GUI is
   IDM_OPEN_ARCHIVE          : constant:=  40001;
   IDM_MRU_1                 : constant:=  40002;
   IDM_Unselect_all          : constant:=  40002;
+  IDM_SAVE_ARCHIVE_AS       : constant:=  40003;
   IDM_ABOUT                 : constant:=  40003;
   IDM_TEST_ARCHIVE          : constant:=  40004;
   IDM_QUIT                  : constant:=  40005;
@@ -435,11 +436,10 @@ package azip_Resource_GUI is
   IDM_Select_all            : constant:=  40025;
   IDM_Delete_selected       : constant:=  40026;
   IDM_ADD_FILES             : constant:=  40027;
-  IDM_FRESHEN_ARCHIVE       : constant:=  40028;
+  IDM_UPDATE_ARCHIVE        : constant:=  40028;
   ZipAda_Version            : constant:=  40028;
   IDM_CLOSE_ARCHIVE         : constant:=  40029;
   ZipAda_URL                : constant:=  40029;
-  IDM_SAVE_ARCHIVE_AS       : constant:=  40031;
   Overwrite_All             : constant:=  40032;
   Overwrite_None            : constant:=  40034;
   Overwrite_Rename          : constant:=  40036;
@@ -455,6 +455,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return GString;
 
 
-  -- Last line of resource script file: 327
+  -- Last line of resource script file: 328
 
 end azip_Resource_GUI;

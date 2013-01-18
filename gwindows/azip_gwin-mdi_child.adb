@@ -976,12 +976,15 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Update(Window : in out MDI_Child_Type) is
   begin
+    if not Is_Loaded(Window.zif) then
+      return;
+    end if;
     if Message_Box(
       Window,
       "Archive update",
       "You are about to start an archive update." & NL &
-      "Files that are newer and different (via CRC32) will " &
-      "replace those in the archive." & NL &
+      "Files that are newer and different (according to " &
+      "their CRC32) will replace those in the archive." & NL &
       "Proceed ?",
       Yes_No_Box,
       Question_Icon

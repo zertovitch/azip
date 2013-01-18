@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2013/01/18   11:25:27
+-- Transcription time: 2013/01/18   21:05:26
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -58,10 +58,11 @@ package body azip_Resource_GUI is
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Tools", Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Test archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+T", IDM_TEST_ARCHIVE);
+    Append_Item(Menu.Popup_0004, "&Find in archive..." & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+F", IDM_FIND_IN_ARCHIVE);
+    Append_Separator(Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Update archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+P", IDM_UPDATE_ARCHIVE);
     Append_Item(Menu.Popup_0004, "&Recompress archive", IDM_RECOMPRESS_ARCHIVE);
     State(Menu.Popup_0004, Command, IDM_RECOMPRESS_ARCHIVE, Grayed);
-    Append_Item(Menu.Popup_0004, "&Find in archive..." & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+F", IDM_FIND_IN_ARCHIVE);
     Append_Separator(Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Compare archives", IDM_COMPARE_ARCHIVES);
     State(Menu.Popup_0004, Command, IDM_COMPARE_ARCHIVES, Grayed);
@@ -84,7 +85,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Child_Type
 
 
-  -- Menu at line 89
+  -- Menu at line 90
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -120,7 +121,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Main_Type
 
 
-  -- Dialog at resource line 133
+  -- Dialog at resource line 134
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -245,7 +246,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- About_box_Type
 
 
-  -- Dialog at resource line 160
+  -- Dialog at resource line 161
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -327,7 +328,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Credits_box_Type
 
 
-  -- Dialog at resource line 177
+  -- Dialog at resource line 178
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -472,7 +473,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- File_exists_box_Type
 
 
-  -- Dialog at resource line 196
+  -- Dialog at resource line 197
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -575,7 +576,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Find_box_Type
 
 
-  -- Dialog at resource line 212
+  -- Dialog at resource line 213
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -682,7 +683,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Password_input_box_Type
 
 
-  -- Dialog at resource line 230
+  -- Dialog at resource line 231
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -774,7 +775,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Progress_box_Type
 
 
-  -- Dialog at resource line 245
+  -- Dialog at resource line 246
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -947,6 +948,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 328
+  -- Last line of resource script file: 329
 
 end azip_Resource_GUI;

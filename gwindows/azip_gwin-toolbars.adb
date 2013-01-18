@@ -90,6 +90,8 @@ package body AZip_GWin.Toolbars is
     Add_Separator(tb, sep_width);
     Add_Button_with_Tip (4, IDM_TEST_ARCHIVE);
     Add_Button_with_Tip (3, IDM_FIND_IN_ARCHIVE);
+    Add_Separator(tb, sep_width);
+    Add_Button_with_Tip (5, IDM_UPDATE_ARCHIVE);
   end Init_Main_toolbar;
 
 end AZip_GWin.Toolbars;

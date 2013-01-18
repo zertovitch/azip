@@ -38,8 +38,9 @@
 #define IDM__OPEN_ARCHIVE                       40001
 #define IDM_MRU_1                               40002
 #define IDM_Unselect_all                        40002
+#define IDM_SAVE_ARCHIVE_AS                     40003
 #define IDM__ABOUT                              40003
-#define IDM__TEST_ARCHIVE                       40004
+#define IDM_TEST_ARCHIVE                        40004
 #define IDM__QUIT                               40005
 #define IDM__RECOMPRESS_ARCHIVE                 40006
 #define IDM_EXTRACT                             40007
@@ -64,11 +65,10 @@
 #define IDM_Select_all                          40025
 #define IDM_Delete_selected                     40026
 #define IDM_ADD_FILES                           40027
-#define IDM_FRESHEN_ARCHIVE                     40028
+#define IDM_UPDATE_ARCHIVE                      40028
 #define ZipAda_Version                          40028
 #define IDM__CLOSE_ARCHIVE                      40029
 #define ZipAda_URL                              40029
-#define IDM__SAVE_ARCHIVE_AS                    40031
 #define Overwrite_All                           40032
 #define Overwrite_None                          40034
 #define Overwrite_Rename                        40036

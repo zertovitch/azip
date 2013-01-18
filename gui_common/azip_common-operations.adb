@@ -38,7 +38,7 @@ package body AZip_Common.Operations is
           when others =>
             null;
         end case;
-      when Freshen =>
+      when Update =>
         case code is
           when replaced =>
             return "Replaced";
@@ -120,7 +120,7 @@ package body AZip_Common.Operations is
         end if;
         color:= (Red => max - val, Green => max - val, Blue => max - val / 4);
       -- For other operations, we have a simple color code: green or white
-      when Freshen =>
+      when Update =>
         case code is
           when success =>
             color:= green;
@@ -414,7 +414,7 @@ package body AZip_Common.Operations is
         );
       end Preserve_entry;
       --
-      procedure Freshen_entry is
+      procedure Update_entry is
         stamp: constant Time:= Zip.Convert(Modification_Time(name_utf_8_with_extra_folder));
         -- Ada.Directories not utf-8 compatible !!
         use Zip_Streams.Calendar;
@@ -476,7 +476,7 @@ package body AZip_Common.Operations is
           end if;
           Delete_File(this_file_zip_name);
         end if;
-      end Freshen_entry;
+      end Update_entry;
       --
     begin -- Action
       user_code:= nothing;
@@ -500,7 +500,7 @@ package body AZip_Common.Operations is
               exit;
             end if;
           end loop;
-        when Freshen =>
+        when Update =>
           match:= True;
         when Remove | Extract =>
           if entry_name'Length = 0 then
@@ -561,9 +561,9 @@ package body AZip_Common.Operations is
               when Zip.Compress.User_Abort =>
                 abort_rest_of_operation:= True;
             end;
-          when Freshen =>
+          when Update =>
             if Zip.Exists(name_utf_8_with_extra_folder) then
-              Freshen_entry;
+              Update_entry;
             else
               Preserve_entry;
               user_code:= only_archive;
@@ -706,7 +706,7 @@ package body AZip_Common.Operations is
     case operation is
       when Add =>
         total_entries:= Zip.Entries(zif) + entry_name'Length;
-      when Freshen | Remove | Read_Only_Operation =>
+      when Update | Remove | Read_Only_Operation =>
         total_entries:= Zip.Entries(zif);
     end case;
     case operation is
@@ -782,9 +782,9 @@ package body AZip_Common.Operations is
               exit;
           end;
         end loop;
-      when Freshen | Remove =>
+      when Update | Remove =>
         null;
-        -- There should be no file to be freshened or removed which is
+        -- There should be no file to be updated or removed which is
         -- not in original archive.
       when Read_Only_Operation =>
         null;

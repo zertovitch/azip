@@ -56,7 +56,7 @@ package body AZip_GWin.MDI_Child is
               Entry_topic'Pos(topic),
               Window.Parent.opt.column_width(topic)
             );
-          when results_refresh | simple_refresh =>
+          when results_refresh | status_bar | toolbar_and_menu =>
             null;
         end case;
       end loop;
@@ -196,6 +196,7 @@ package body AZip_GWin.MDI_Child is
     end Feed_directory_list;
 
     sel: Natural;
+    non_empty: constant Boolean:= Is_Loaded(Window.zif) and then Entries(Window.zif) > 0;
 
   begin
     Define_columns;
@@ -244,6 +245,11 @@ package body AZip_GWin.MDI_Child is
          )
        );
     end if;
+    Window.Parent.Tool_Bar.Enabled(IDM_EXTRACT, non_empty);
+    Window.Parent.Tool_Bar.Enabled(IDM_Delete_selected, non_empty);
+    Window.Parent.Tool_Bar.Enabled(IDM_FIND_IN_ARCHIVE, non_empty);
+    Window.Parent.Tool_Bar.Enabled(IDM_TEST_ARCHIVE, non_empty);
+    Window.Parent.Tool_Bar.Enabled(IDM_UPDATE_ARCHIVE, non_empty);
   end Update_display;
 
   procedure On_Item_Changed (Control : in out MDI_Child_List_View_Control_Type) is
@@ -254,7 +260,7 @@ package body AZip_GWin.MDI_Child is
       -- We avoid a call to Update_display during a full refresh...
       -- with Update_display.
     else
-      PW.Update_display(simple_refresh);
+      PW.Update_display(status_bar);
     end if;
   end On_Item_Changed;
 
@@ -1032,6 +1038,11 @@ package body AZip_GWin.MDI_Child is
     end case;
   end On_Menu_Select;
 
+  overriding procedure On_Focus (Window : in out MDI_Child_Type) is
+  begin
+    Update_display(Window, toolbar_and_menu);
+  end On_Focus;
+
   procedure On_Close (Window    : in out MDI_Child_Type;
                       Can_Close :    out Boolean) is
     sd: AZip_LV_Ex.Sort_Direction_Type;
@@ -1096,7 +1107,7 @@ package body AZip_GWin.MDI_Child is
           accept Display(w: AZip_GWin.MDI_Child.MDI_Child_Access) do
             current_child_window:= w;
           end Display;
-          Update_display(current_child_window.all, simple_refresh);
+          Update_display(current_child_window.all, status_bar);
         or
           delay 0.05; -- relax
         end select;

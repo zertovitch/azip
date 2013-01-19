@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2013/01/18   21:05:26
+-- Transcription time: 2013/01/18   22:03:17
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -464,16 +464,18 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  15, 26, 327, 8, x,y,w,h);
+    Dlg_to_Scn(  18, 26, 327, 8, x,y,w,h);
     Create( Window.Conflict_simple_name, Window, "(name)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Conflict_simple_name);
-    Dlg_to_Scn(  15, 50, 319, 8, x,y,w,h);
+    Dlg_to_Scn(  18, 41, 319, 8, x,y,w,h);
     Create( Window.Conflict_location, Window, "(location)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Conflict_location);
     Dlg_to_Scn(  4, 7, 349, 63, x,y,w,h);
     Create( Window.Static_0001, Window, "A file with the same name exists on the target location.", x,y,w,h);
+    Dlg_to_Scn(  12, 58, 156, 8, x,y,w,h);
+    Create_label( Window, "Do you want to replace this file ?", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
   end Create_Contents; -- File_exists_box_Type
 
 
-  -- Dialog at resource line 197
+  -- Dialog at resource line 198
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -576,7 +578,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Find_box_Type
 
 
-  -- Dialog at resource line 213
+  -- Dialog at resource line 214
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -683,7 +685,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Password_input_box_Type
 
 
-  -- Dialog at resource line 231
+  -- Dialog at resource line 232
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -775,7 +777,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Progress_box_Type
 
 
-  -- Dialog at resource line 246
+  -- Dialog at resource line 247
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -948,6 +950,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 329
+  -- Last line of resource script file: 330
 
 end azip_Resource_GUI;

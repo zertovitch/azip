@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2013/01/18   22:03:17
+-- Transcription time: 2013/01/19   22:14:08
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -359,7 +359,7 @@ package azip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager";
-    FileVersion: constant String:= "1.1";
+    FileVersion: constant String:= "1.10";
     LegalCopyright: constant String:= "© 2012..2013 G. de Montmollin (MIT license)";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
@@ -410,7 +410,6 @@ package azip_Resource_GUI is
   IDM_OPEN_ARCHIVE          : constant:=  40001;
   IDM_MRU_1                 : constant:=  40002;
   IDM_Unselect_all          : constant:=  40002;
-  IDM_SAVE_ARCHIVE_AS       : constant:=  40003;
   IDM_ABOUT                 : constant:=  40003;
   IDM_TEST_ARCHIVE          : constant:=  40004;
   IDM_QUIT                  : constant:=  40005;
@@ -434,16 +433,17 @@ package azip_Resource_GUI is
   IDM_WINDOW_CLOSE_ALL      : constant:=  40023;
   IDM_MERGE_ARCHIVES        : constant:=  40024;
   AZip_URL                  : constant:=  40025;
-  IDM_Select_all            : constant:=  40025;
   IDM_Delete_selected       : constant:=  40026;
   IDM_ADD_FILES             : constant:=  40027;
   IDM_UPDATE_ARCHIVE        : constant:=  40028;
-  ZipAda_Version            : constant:=  40028;
   IDM_CLOSE_ARCHIVE         : constant:=  40029;
-  ZipAda_URL                : constant:=  40029;
   Overwrite_All             : constant:=  40032;
   Overwrite_None            : constant:=  40034;
   Overwrite_Rename          : constant:=  40036;
+  IDM_SAVE_ARCHIVE_AS       : constant:=  40037;
+  IDM_Select_all            : constant:=  40038;
+  ZipAda_Version            : constant:=  40039;
+  ZipAda_URL                : constant:=  40040;
 
   -- ** Some helper utilities (spec).
 

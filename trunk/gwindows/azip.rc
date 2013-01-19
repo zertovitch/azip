@@ -183,9 +183,10 @@ FONT 8, "Ms Shell Dlg"
     PUSHBUTTON      "None", Overwrite_None, 184, 74, 50, 14
     PUSHBUTTON      "Rename", Overwrite_Rename, 244, 74, 50, 14
     PUSHBUTTON      "Cancel", IDCANCEL, 304, 74, 50, 14
-    LTEXT           "(name)", Conflict_simple_name, 15, 26, 327, 8, SS_LEFT
-    LTEXT           "(location)", Conflict_location, 15, 50, 319, 8, SS_LEFT
+    LTEXT           "(name)", Conflict_simple_name, 18, 26, 327, 8, SS_LEFT
+    LTEXT           "(location)", Conflict_location, 18, 41, 319, 8, SS_LEFT
     GROUPBOX        "A file with the same name exists on the target location.", IDC_STATIC, 4, 7, 349, 63
+    LTEXT           "Do you want to replace this file ?", IDC_STATIC, 12, 58, 156, 8, SS_LEFT
 }
 
 

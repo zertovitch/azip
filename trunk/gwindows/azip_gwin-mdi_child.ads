@@ -115,7 +115,8 @@ package AZip_GWin.MDI_Child is
     (first_display,   -- first display ever, no columns set
      archive_changed, -- directory list needs to be refilled
      results_refresh, -- same directory, only results changed
-     simple_refresh
+     status_bar,      -- status bar and topics listed below
+     toolbar_and_menu -- update enable/disable of toolbar items and menu items
     );
 
   procedure Update_display (
@@ -138,6 +139,8 @@ package AZip_GWin.MDI_Child is
     Window : in out MDI_Child_Type;
     Item   : in     Integer
   );
+
+  overriding procedure On_Focus (Window : in out MDI_Child_Type);
 
   overriding procedure On_Close (
     Window    : in out MDI_Child_Type;

@@ -89,6 +89,10 @@ package body AZip_Common.Operations is
         return bad_crc;
       elsif s = "Compression format not supported" then
         return unsupported;
+      elsif s = "Replaced" then
+        return replaced;
+      elsif s = "File only in archive" then
+        return only_archive;
       end if;
       return -100;
   end Result_value;

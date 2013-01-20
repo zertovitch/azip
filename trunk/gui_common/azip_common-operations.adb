@@ -566,11 +566,15 @@ package body AZip_Common.Operations is
                 abort_rest_of_operation:= True;
             end;
           when Update =>
-            if Zip.Exists(name_utf_8_with_extra_folder) then
-              Update_entry;
+            if name = "" or else (name(name'Last)= '\' or name(name'Last)= '/') then
+              Preserve_entry; -- copy: it is a directory name (not visible in AZip)
             else
-              Preserve_entry;
-              user_code:= only_archive;
+              if Zip.Exists(name_utf_8_with_extra_folder) then
+                Update_entry;
+              else
+                Preserve_entry;
+                user_code:= only_archive;
+              end if;
             end if;
           when Remove =>
             Feedback(

@@ -3,7 +3,7 @@
 -- Build me with "gnatmake -P azip_gtk", or open me with GPS
 --
 
-with "../../GtkAda/gtkada";
+with "gtkada";
 -- svn checkout http://svn.eu.adacore.com/anonsvn/Dev/trunk/GtkAda
 
 project AZip_Gtk is

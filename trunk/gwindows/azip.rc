@@ -135,7 +135,7 @@ FONT 8, "Ms Shell Dlg"
 {
     ICON            AZip_Icon, IDC_STATIC, 12, 14, 87, 80, SS_ICON | SS_RIGHTJUST | SS_CENTERIMAGE | SS_SUNKEN | SS_REALSIZEIMAGE
     LTEXT           "AZip - A portable Zip Archive Manager", IDC_STATIC, 110, 14, 165, 8, SS_LEFT
-    LTEXT           "Copyright © Gautier de Montmollin 2012", IDC_STATIC, 110, 29, 151, 8, SS_LEFT
+    LTEXT           "Copyright © Gautier de Montmollin 2012 .. 2013", IDC_STATIC, 110, 29, 173, 8, SS_LEFT
     LTEXT           "MIT Open Source License", IDC_STATIC, 110, 44, 100, 8, SS_LEFT
     LTEXT           "Internet:", IDC_STATIC, 110, 61, 30, 8, SS_LEFT
     LTEXT           "http://azip.sf.net/", AZip_URL, 157, 61, 89, 8, SS_LEFT
@@ -303,8 +303,8 @@ AZip_Icon          ICON           "ico_bmp/azip.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     1,1,0,0
-    PRODUCTVERSION  1,1,0,0
+    FILEVERSION     1,1,0,1
+    PRODUCTVERSION  1,1,0,1
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -317,7 +317,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager"
-            VALUE "FileVersion", "1.10"
+            VALUE "FileVersion", "1.101"
             VALUE "LegalCopyright", "© 2012..2013 G. de Montmollin (MIT license)"
             VALUE "ProductName", "AZip"
         }

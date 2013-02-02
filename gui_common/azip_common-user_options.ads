@@ -40,6 +40,7 @@ package AZip_Common.User_options is
     show_passwords        : Boolean := False;
     sort_column           : Integer := -1; -- 0-based; -1 if none
     sort_direction        : Sort_Direction_Type:= Up;
+    ignore_extract_path   : Boolean := False;
   end record;
 
   -----------------

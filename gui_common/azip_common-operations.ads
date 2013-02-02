@@ -70,7 +70,12 @@ package AZip_Common.Operations is
     Search
   );
 
-  function Description(op: Entry_Operation; skip_hint: Boolean) return UTF_16_String;
+  function Description(
+    e_op      : Entry_Operation;
+    a_op      : Archive_Operation;
+    skip_hint : Boolean
+  )
+  return UTF_16_String;
 
   type Name_descriptor is record
     str : UTF_16_Unbounded_String;
@@ -120,6 +125,7 @@ package AZip_Common.Operations is
     new_temp_name   :        String;
     Name_conflict   :        UnZip.Resolve_conflict_proc;
     password        : in out Unbounded_Wide_String;
+    ignore_path     :        Boolean; -- ignore directories upon extraction
     max_code        :    out Integer
   );
 

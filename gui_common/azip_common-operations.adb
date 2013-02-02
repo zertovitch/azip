@@ -155,13 +155,25 @@ package body AZip_Common.Operations is
     intensity:= Sqrt(Float(raw_intensity_sq) / Float(max_raw_intensity_sq));
   end Result_color;
 
-  function Description(op: Entry_Operation; skip_hint: Boolean) return UTF_16_String is
+  function Description(
+    e_op      : Entry_Operation;
+    a_op      : Archive_Operation;
+    skip_hint : Boolean
+  )
+  return UTF_16_String
+  is
   begin
-    case op is
+    case e_op is
       when Append =>
         return "Appending...";
       when Replace =>
-        return "Replacing...";
+        if a_op = Update then
+          -- Since the replacement is only taken when contents are different
+          -- we prefer not to confuse the user by saying "Replacing"...
+          return "Processing...";
+        else
+          return "Replacing...";
+        end if;
       when Copy =>
         return "Copying...";
       when Skip =>
@@ -240,6 +252,7 @@ package body AZip_Common.Operations is
     new_temp_name   :        String;
     Name_conflict   :        UnZip.Resolve_conflict_proc;
     password        : in out Unbounded_Wide_String;
+    ignore_path     :        Boolean; -- ignore directories upon extraction
     max_code        :    out Integer
   )
   is
@@ -636,7 +649,7 @@ package body AZip_Common.Operations is
                 help_the_file_exists => Name_conflict,
                 tell_data            => null,
                 get_pwd              => Get_password_internal'Unrestricted_Access,
-                options              => (others => False),
+                options              => (junk_directories => ignore_path, others => False),
                 password             => To_String(To_Wide_String(password)),
                 file_system_routines => Extract_FS_routines
               );

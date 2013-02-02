@@ -473,6 +473,7 @@ package body AZip_GWin.MDI_Child is
     base_folder    : GString;
     search_pattern : GString;
     output_folder  : Wide_String;
+    ignore_path    : Boolean; -- ignore directories upon extraction
     new_temp_name  : String
   )
   is
@@ -492,7 +493,7 @@ package body AZip_GWin.MDI_Child is
       file_percents_done    : Natural;
       archive_percents_done : Natural;
       entry_being_processed : GString;
-      operation             : Entry_Operation;
+      e_operation           : Entry_Operation;
       skip_hint             : Boolean;
       user_abort            : out Boolean
     )
@@ -508,7 +509,9 @@ package body AZip_GWin.MDI_Child is
         box.File_Progress.Position(file_percents_done);
         box.Archive_Progress.Position(archive_percents_done);
         box.Entry_name.Text(entry_being_processed);
-        box.Entry_operation_name.Text(Description(operation, skip_hint));
+        box.Entry_operation_name.Text(
+          Description(e_operation, operation, skip_hint)
+        );
         Message_Check;
         tick:= now;
       end if;
@@ -626,6 +629,7 @@ package body AZip_GWin.MDI_Child is
         new_temp_name    => new_temp_name,
         Name_conflict    => Name_conflict_resolution'Unrestricted_Access,
         password         => Window.current_password,
+        ignore_path      => ignore_path,
         max_code         => Window.last_max_code
       );
       Window.last_operation:= operation;
@@ -690,6 +694,7 @@ package body AZip_GWin.MDI_Child is
       base_folder    => "",           -- !! only for flat view
       search_pattern => "",
       output_folder  => "",
+      ignore_path    => False,
       new_temp_name  => Temp_AZip_name(Window)
     );
   end Go_for_adding;
@@ -835,6 +840,15 @@ package body AZip_GWin.MDI_Child is
     begin
       if dir /= "" then
         Window.extract_dir:= G2GU(dir);
+        Window.opt.ignore_extract_path:=
+          Message_Box(
+            Window,
+            "Extract",
+            "Ignore archive's directories (folders) as seen on the ""Path"" column ?",
+            Yes_No_Box,
+            Question_Icon
+          )
+          = Yes;
         Process_archive_GWin(
           Window         => Window,
           operation      => Extract,
@@ -842,6 +856,7 @@ package body AZip_GWin.MDI_Child is
           base_folder    => "",
           search_pattern => "",
           output_folder  => dir,
+          ignore_path    => Window.opt.ignore_extract_path,
           new_temp_name  => ""
         );
       end if;
@@ -868,6 +883,7 @@ package body AZip_GWin.MDI_Child is
         base_folder    => "",
         search_pattern => "",
         output_folder  => "",
+        ignore_path    => False,
         new_temp_name  => Temp_AZip_name(Window)
       );
     end if;
@@ -935,6 +951,7 @@ package body AZip_GWin.MDI_Child is
         base_folder    => "",
         search_pattern => GU2G(Window.Content_search),
         output_folder  => "",
+        ignore_path    => False,
         new_temp_name  => ""
       );
     end if;
@@ -958,6 +975,7 @@ package body AZip_GWin.MDI_Child is
       base_folder    => "",
       search_pattern => "",
       output_folder  => "",
+      ignore_path    => False,
       new_temp_name  => ""
     );
     Count_test_totals(Window.zif, count_ok, count_ko, count_nt);
@@ -1003,6 +1021,7 @@ package body AZip_GWin.MDI_Child is
         base_folder    => "", -- !! could be a different folder
         search_pattern => "",
         output_folder  => "",
+        ignore_path    => False,
         new_temp_name  => Temp_AZip_name(Window)
       );
     end if;

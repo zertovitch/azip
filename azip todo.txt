@@ -1,17 +1,16 @@
 console mode through command lines options (no GUI then)
   -a for Add, -d for Delete, etc.
   -q: quiet: neither console output, nor gui
- 
+
+gw - drag & drop entre fenêtres, et vers explorer
+  
 gw - Tree view: arborescence
 gw - property box
 gw - sélection: somme des tailles compressées et non compressées
 gw - double-clic / return (ouvrir un fichier dans un rép. temporaire)
 copy_file et rename qui marchent avec utf-8 (virer Ada.Directories)
 
-gw - drag & drop entre fenêtres, et vers explorer
 gw - copy/paste entre fenêtres
-
-gw - option: junk_directories
 
 gw - "[Rename]" dans les conflits de nom
 

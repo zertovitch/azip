@@ -396,6 +396,7 @@ package body AZip_Common.Operations is
     --
     use Zip.Create, UnZip;
     abort_rest_of_operation: Boolean:= False;
+    none_updated: Boolean:= True;
     --
     procedure Action(
       name             : String; -- 'name' is compressed entry's full name
@@ -449,50 +450,51 @@ package body AZip_Common.Operations is
         if date_time > stamp then -- newer in archive -> preserve from archive
           Preserve_entry;
           user_code:= nothing;
-        else
-          current_operation:= Replace;
-          current_entry_name:= U(short_name_utf_16);
-          -- We write a one-file zip file first with the new data
-          Zip.Create.Create(this_file_zip, this_file_fzs'Unchecked_Access, this_file_zip_name);
-          Add_File(
-            Info               => this_file_zip,
-            Name               => name_utf_8_with_extra_folder,
-            Name_in_archive    => name_utf_8_as_in_archive,
-            Delete_file_after  => False,
-            Name_encoding      => UTF_8,
-            Modification_time  => stamp,
-            Is_read_only       => False,
-            Feedback           => Entry_feedback'Unrestricted_Access
-          );
-          Finish(this_file_zip);
-          -- We load the one-file zip file's information
-          Load(this_file_zif, this_file_zip_name);
-          Find_offset(
-            info          => this_file_zif,
-            name          => name_utf_8_as_in_archive,
-            name_encoding => dummy_name_encoding,
-            file_index    => file_index,
-            comp_size     => dummy_comp_size,
-            uncomp_size   => dummy_uncomp_size,
-            crc_32        => new_crc_32
-          );
-          if new_crc_32 = crc_32 then
-            Preserve_entry;
-            user_code:= nothing;
-          else
-            Zip_Streams.Set_Name(this_file_fzs, this_file_zip_name);
-            Zip_Streams.Open(this_file_fzs, Ada.Streams.Stream_IO.In_File);
-            Zip_Streams.Set_Index(this_file_fzs, Positive(file_index));
-            Zip.Create.Add_Compressed_Stream(
-              Info     => new_zip,
-              Stream   => this_file_fzs,
-              Feedback => Entry_feedback'Unrestricted_Access
-            );
-            Zip_Streams.Close(this_file_fzs);
-            user_code:= replaced;
-          end if;
-          Delete_File(this_file_zip_name);
+          return;
         end if;
+        current_operation:= Replace;
+        current_entry_name:= U(short_name_utf_16);
+        -- We write a one-file zip file first with the new data
+        Zip.Create.Create(this_file_zip, this_file_fzs'Unchecked_Access, this_file_zip_name);
+        Add_File(
+          Info               => this_file_zip,
+          Name               => name_utf_8_with_extra_folder,
+          Name_in_archive    => name_utf_8_as_in_archive,
+          Delete_file_after  => False,
+          Name_encoding      => UTF_8,
+          Modification_time  => stamp,
+          Is_read_only       => False,
+          Feedback           => Entry_feedback'Unrestricted_Access
+        );
+        Finish(this_file_zip);
+        -- We load the one-file zip file's information
+        Load(this_file_zif, this_file_zip_name);
+        Find_offset(
+          info          => this_file_zif,
+          name          => name_utf_8_as_in_archive,
+          name_encoding => dummy_name_encoding,
+          file_index    => file_index,
+          comp_size     => dummy_comp_size,
+          uncomp_size   => dummy_uncomp_size,
+          crc_32        => new_crc_32
+        );
+        if new_crc_32 = crc_32 then
+          Preserve_entry;
+          user_code:= nothing;
+        else
+          Zip_Streams.Set_Name(this_file_fzs, this_file_zip_name);
+          Zip_Streams.Open(this_file_fzs, Ada.Streams.Stream_IO.In_File);
+          Zip_Streams.Set_Index(this_file_fzs, Positive(file_index));
+          Zip.Create.Add_Compressed_Stream(
+            Info     => new_zip,
+            Stream   => this_file_fzs,
+            Feedback => Entry_feedback'Unrestricted_Access
+          );
+          Zip_Streams.Close(this_file_fzs);
+          user_code:= replaced;
+          none_updated:= False;
+        end if;
+        Delete_File(this_file_zip_name);
       end Update_entry;
       --
     begin -- Action
@@ -746,9 +748,9 @@ package body AZip_Common.Operations is
     -- The main job is done here: --
     --------------------------------
     Traverse_archive(zif);
-    --
-    -- Almost done, we only need to process new entries
-    --
+    ------------------------------------------------------
+    -- Almost done, we only need to process new entries --
+    ------------------------------------------------------
     case operation is
       when Add =>
         for i in entry_name'Range loop
@@ -815,7 +817,9 @@ package body AZip_Common.Operations is
       when Modifying_Operation =>
         Zip_Streams.Close(old_fzs);
         Finish(new_zip);
-        if abort_rest_of_operation then
+        if abort_rest_of_operation or
+          (operation = Update and none_updated)
+        then
           Delete_File(new_temp_name);
         else
           Delete_File(Zip.Zip_Name(zif));

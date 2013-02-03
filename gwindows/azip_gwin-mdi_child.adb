@@ -837,18 +837,24 @@ package body AZip_GWin.MDI_Child is
         Window       => Window,
         Dialog_Title => Archive_extract_msg,
         Initial_Path => GU2G(Window.extract_dir) );
+      box_kind: Message_Box_Type;
     begin
       if dir /= "" then
         Window.extract_dir:= G2GU(dir);
+        if Window.opt.ignore_extract_path then
+          box_kind:= Yes_No_Def_Box;
+        else
+          box_kind:= Yes_No_Box;
+        end if;
         Window.opt.ignore_extract_path:=
           Message_Box(
             Window,
             "Extract",
-            "Ignore archive's directories (folders) as seen on the ""Path"" column ?",
-            Yes_No_Box,
+            "Use archive's directories as seen on the ""Path"" column ?",
+            box_kind,
             Question_Icon
           )
-          = Yes;
+          = No;
         Process_archive_GWin(
           Window         => Window,
           operation      => Extract,

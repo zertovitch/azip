@@ -132,6 +132,7 @@ package body AZip_GWin.MDI_Child is
           Lst.Set_Sub_Item(To_Lower(PKZip_method'Wide_Image(method)), row, cidx(Format)-1);
           Lst.Set_Sub_Item(Hexadecimal(crc_32), row, cidx(CRC32)-1);
           if simple_name_idx > name'First then
+            Window.any_path_in_zip:= True;
             Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), name_encoding), row, cidx(Path)-1);
           end if;
           Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, cidx(Encoding)-1);
@@ -142,9 +143,9 @@ package body AZip_GWin.MDI_Child is
             Message_Check;
           end if;
         end if;
+        -- This is equal to row if the list is unsorted.
         unsorted_index(row):= Lst.Item_Data(row).index_before_sorting;
         result_code(row):= user_code;
-        -- This is equal to row if the list is unsorted.
       end Process_row;
 
       procedure Traverse is new Zip.Traverse_verbose(Process_row);
@@ -159,6 +160,10 @@ package body AZip_GWin.MDI_Child is
         return;
       end if;
       Window.refreshing_list:= True;
+      if need in first_display .. archive_changed then
+        -- This will be set to True if there is any path during the listing
+        Window.any_path_in_zip:= False;
+      end if;
       -- Performance is meant to be better with the All_Items mode.
       Window.Directory_List.Color_mode(AZip_LV_Ex.All_Items);
       Traverse(Window.zif);
@@ -841,20 +846,22 @@ package body AZip_GWin.MDI_Child is
     begin
       if dir /= "" then
         Window.extract_dir:= G2GU(dir);
-        if Window.opt.ignore_extract_path then
-          box_kind:= Yes_No_Def_Box;
-        else
-          box_kind:= Yes_No_Box;
+        if Window.any_path_in_zip then
+          if Window.opt.ignore_extract_path then
+            box_kind:= Yes_No_Def_Box;
+          else
+            box_kind:= Yes_No_Box;
+          end if;
+          Window.opt.ignore_extract_path:=
+            Message_Box(
+              Window,
+              "Extract",
+              "Use archive's directories as seen on the ""Path"" column ?",
+              box_kind,
+              Question_Icon
+            )
+            = No;
         end if;
-        Window.opt.ignore_extract_path:=
-          Message_Box(
-            Window,
-            "Extract",
-            "Use archive's directories as seen on the ""Path"" column ?",
-            box_kind,
-            Question_Icon
-          )
-          = No;
         Process_archive_GWin(
           Window         => Window,
           operation      => Extract,

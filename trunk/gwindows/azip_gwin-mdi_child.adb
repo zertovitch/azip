@@ -1032,6 +1032,9 @@ package body AZip_GWin.MDI_Child is
   procedure On_Update(Window : in out MDI_Child_Type) is
     mem_dir: constant String:= Ada.Directories.Current_Directory;
     -- !! Not UTF-8 capable
+    new_dir: constant String:= Ada.Directories.Containing_Directory(
+      To_UTF_8(GU2G (Window.File_Name))
+    ); -- !! Not UTF-8 capable
   begin
     if not Is_Loaded(Window.zif) then
       return;
@@ -1058,9 +1061,7 @@ package body AZip_GWin.MDI_Child is
       Question_Icon
     ) = Yes
     then
-      Ada.Directories.Set_Directory(
-        Ada.Directories.Containing_Directory(To_UTF_8(GU2G (Window.File_Name)))
-      ); -- !! Not UTF-8 capable
+      Ada.Directories.Set_Directory(new_dir); -- !! Not UTF-8 capable
       Process_archive_GWin(
         Window         => Window,
         operation      => Update,

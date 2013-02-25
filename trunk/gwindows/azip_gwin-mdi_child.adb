@@ -82,6 +82,7 @@ package body AZip_GWin.MDI_Child is
         method           : PKZip_method;
         name_encoding    : Zip_name_encoding;
         read_only        : Boolean;
+        encrypted_2_x    : Boolean; -- PKZip 2.x encryption
         user_code        : in out Integer
       )
       is
@@ -90,6 +91,14 @@ package body AZip_GWin.MDI_Child is
         extension_idx: Positive:= name'Last + 1;
         R_mark: constant array (Boolean) of Character:= (' ', 'R');
         payload_access: AZip_LV_Ex.Data_Access;
+        function Encryption_suffix return String is
+        begin
+          if encrypted_2_x then
+            return " *";
+          else
+            return "";
+          end if;
+        end Encryption_suffix;
       begin
         for i in name'Range loop
           case name(i) is
@@ -113,9 +122,18 @@ package body AZip_GWin.MDI_Child is
         end if;
         row:= row + 1;
         if need in first_display .. archive_changed then
-          Lst.Insert_Item(To_UTF_16(name(simple_name_idx..name'Last), name_encoding), row);
+          Lst.Insert_Item(
+            To_UTF_16(
+              name(simple_name_idx..name'Last) & Encryption_suffix,
+              name_encoding),
+            row
+          );
+          --
+          -- Payload
+          --
           payload_access:= new LV_payload'(index_before_sorting => row); -- !! small leak here...
           Lst.Item_Data(row, payload_access);
+          --
           Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, cidx(FType)-1);
           begin
             Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, cidx(Modified)-1);
@@ -1012,8 +1030,21 @@ package body AZip_GWin.MDI_Child is
   end On_Test;
 
   procedure On_Update(Window : in out MDI_Child_Type) is
+    mem_dir: constant String:= Ada.Directories.Current_Directory;
+    -- !! Not UTF-8 capable
   begin
     if not Is_Loaded(Window.zif) then
+      return;
+    end if;
+    if Has_Zip_archive_encrypted_entries(Window.zif) then
+      Message_Box(
+        Window,
+        "Archive update",
+        "Archives with encryption (even on some entries only) are" & NL &
+        "currently not supported for the Update operation.",
+        OK_Box,
+        Stop_Icon
+      );
       return;
     end if;
     if Message_Box(
@@ -1027,16 +1058,24 @@ package body AZip_GWin.MDI_Child is
       Question_Icon
     ) = Yes
     then
+      Ada.Directories.Set_Directory(
+        Ada.Directories.Containing_Directory(To_UTF_8(GU2G (Window.File_Name)))
+      ); -- !! Not UTF-8 capable
       Process_archive_GWin(
         Window         => Window,
         operation      => Update,
         file_names     => Empty_Array_Of_File_Names,
         base_folder    => "", -- !! could be a different folder
         search_pattern => "",
-        output_folder  => "",
+        output_folder  =>
+          To_UTF_16(
+            "", -- !! Not UTF-8 capable
+            UTF_8
+          ),
         ignore_path    => False,
         new_temp_name  => Temp_AZip_name(Window)
       );
+      Ada.Directories.Set_Directory(mem_dir); -- !! Not UTF-8 capable
     end if;
   end On_Update;
 

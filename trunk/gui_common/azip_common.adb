@@ -461,6 +461,35 @@ package body AZip_Common is
       return False;
   end Is_valid_Zip_archive;
 
+  function Has_Zip_archive_encrypted_entries(info: Zip_info) return Boolean is
+    encrypted: Boolean:= False;
+    procedure Detect_encryption(
+      name             : String; -- 'name' is compressed entry's name
+      file_index       : Positive;
+      comp_size        : File_size_type;
+      uncomp_size      : File_size_type;
+      crc_32           : Interfaces.Unsigned_32;
+      date_time        : Time;
+      method           : PKZip_method;
+      name_encoding    : Zip_name_encoding;
+      read_only        : Boolean;
+      encrypted_2_x    : Boolean; -- PKZip 2.x encryption
+      user_code        : in out Integer
+    ) is
+    pragma Unreferenced (
+      name, file_index, comp_size, uncomp_size, crc_32, date_time, method,
+      name_encoding, read_only, user_code
+    );
+    begin
+      encrypted:= encrypted or encrypted_2_x;
+    end Detect_encryption;
+    procedure Scan_encryption is new Traverse_verbose(Detect_encryption);
+  begin
+    Scan_encryption(info);
+    return encrypted;
+  end Has_Zip_archive_encrypted_entries;
+
+
 begin
   Zip_Streams.Form_For_IO_Open_and_Create:= To_Unbounded_String("encoding=utf8");
 end AZip_Common;

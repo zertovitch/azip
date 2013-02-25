@@ -71,4 +71,6 @@ package AZip_Common is
 
   function Is_valid_Zip_archive(file_name: String) return Boolean;
 
+  function Has_Zip_archive_encrypted_entries(info: Zip_info) return Boolean;
+
 end AZip_Common;

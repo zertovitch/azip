@@ -202,10 +202,11 @@ package body AZip_Common.Operations is
       method           : Zip.PKZip_method;
       name_encoding    : Zip.Zip_name_encoding;
       read_only        : Boolean;
+      encrypted_2_x    : Boolean; -- PKZip 2.x encryption
       user_code        : in out Integer
     )
     is
-    pragma Unreferenced (file_index, comp_size, uncomp_size, crc_32, date_time, method, name_encoding, read_only);
+    pragma Unreferenced (file_index, comp_size, uncomp_size, crc_32, date_time, method, name_encoding, read_only, encrypted_2_x);
     begin
       Zip.Set_user_code(to, name, user_code);
     end Copy_user_code;
@@ -408,10 +409,11 @@ package body AZip_Common.Operations is
       method           : Zip.PKZip_method;
       name_encoding    : Zip.Zip_name_encoding;
       read_only        : Boolean;
+      encrypted_2_x    : Boolean; -- PKZip 2.x encryption
       user_code        : in out Integer
     )
     is
-      pragma Unreferenced(comp_size, uncomp_size, method, read_only);
+      pragma Unreferenced(comp_size, uncomp_size, method, read_only, encrypted_2_x);
       name_utf_16: constant UTF_16_String:= To_UTF_16(name, name_encoding);
       name_utf_8_as_in_archive: constant UTF_8_String:= To_UTF_8(name_utf_16);
       name_utf_8_with_extra_folder: constant UTF_8_String:= Add_extract_directory(name, name_encoding);
@@ -925,13 +927,14 @@ package body AZip_Common.Operations is
       method           : Zip.PKZip_method;
       name_encoding    : Zip.Zip_name_encoding;
       read_only        : Boolean;
+      encrypted_2_x    : Boolean; -- PKZip 2.x encryption
       user_code        : in out Integer
     )
     is
     pragma Unreferenced (
       name, file_index, comp_size, uncomp_size, crc_32,
-      date_time, method, name_encoding, read_only
-    );
+      date_time, method, name_encoding, read_only,
+      encrypted_2_x);
     begin
       case user_code is
         when success => count_ok:= count_ok + 1;

@@ -24,6 +24,7 @@ with Ada.Exceptions;
 with Ada.IO_Exceptions;
 with Ada.Sequential_IO;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
+with Ada.Strings.Wide_Unbounded;
 with Ada.Unchecked_Deallocation;
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 
@@ -825,6 +826,7 @@ package body AZip_GWin.MDI_Child is
     items: constant Natural:= Window.Directory_List.Item_Count;
     names: Array_Of_File_Names(1..items);
     j: Natural:= 0;
+    use Ada.Strings.Wide_Unbounded;
   begin
     for i in 0..items - 1 loop -- 0-based
       if Window.Directory_List.Is_Selected(i) then
@@ -833,10 +835,29 @@ package body AZip_GWin.MDI_Child is
           Window.Directory_List.Text(i, subitem => 9) & -- path
           Window.Directory_List.Text(i, subitem => 0)   -- simple name
           );
+        if Element(names(j), Length(names(j))) = '*' then
+          -- Remove the " *" appended on encrypted entries.
+          names(j):= Unbounded_Slice(names(j), 1, Length(names(j))-2);
+        end if;
       end if;
     end loop;
     return names(1..j);
   end Get_selected_entry_list;
+
+  function Any_path_in_selection(Window: MDI_Child_Type)
+  return Boolean
+  is
+    items: constant Natural:= Window.Directory_List.Item_Count;
+    any_path: Boolean:= False;
+  begin
+    for i in 0..items - 1 loop -- 0-based
+      if Window.Directory_List.Is_Selected(i) then
+        any_path:= any_path or
+          Window.Directory_List.Text(i, subitem => 9)'Length /= 0;
+      end if;
+    end loop;
+    return any_path;
+  end Any_path_in_selection;
 
   procedure On_Extract(Window : in out MDI_Child_Type) is
     list: constant Array_Of_File_Names:= Get_selected_entry_list(Window);
@@ -861,10 +882,16 @@ package body AZip_GWin.MDI_Child is
         Dialog_Title => Archive_extract_msg,
         Initial_Path => GU2G(Window.extract_dir) );
       box_kind: Message_Box_Type;
+      ask: Boolean;
     begin
       if dir /= "" then
         Window.extract_dir:= G2GU(dir);
-        if Window.any_path_in_zip then
+        if list'Length > 0 then
+          ask:= Any_path_in_selection(Window);
+        else
+          ask:= Window.any_path_in_zip;
+        end if;
+        if ask then
           if Window.opt.ignore_extract_path then
             box_kind:= Yes_No_Def_Box;
           else

@@ -1103,7 +1103,12 @@ package body AZip_GWin.MDI_Child is
         ignore_path    => False,
         new_temp_name  => Temp_AZip_name(Window)
       );
-      Ada.Directories.Set_Directory(mem_dir); -- !! Not UTF-8 capable
+      if mem_dir'Length > 0 and then mem_dir(mem_dir'Last) =':' then
+        -- Bug in GNAT up to GPL 2011 - cf issue [L216-021 public], fixed in 2012.
+        Ada.Directories.Set_Directory(mem_dir & '\'); -- !! Check if UTF-8 capable
+      else
+        Ada.Directories.Set_Directory(mem_dir); -- !! Check if UTF-8 capable
+      end if;
     end if;
   end On_Update;
 

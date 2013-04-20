@@ -9,6 +9,7 @@ package body AZip_Common.User_options is
         sort_direction,
         win_left, win_top, win_width, win_height,
         maximized, children_maximized,
+        tree_portion,
         mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
         show_passwords,
         ignore_extract_path
@@ -53,6 +54,8 @@ package body AZip_Common.User_options is
                 opt.MDI_main_maximized:= Boolean'Wide_Value(s);
               when children_maximized =>
                 opt.MDI_childen_maximized:= Boolean'Wide_Value(s);
+              when tree_portion =>
+                opt.tree_portion:= Float'Wide_Value(s);
               when mru1..mru9 =>
                 opt.mru( Key'Pos(k)-Key'Pos(mru1)+1 ):=
                   To_Unbounded_Wide_String(s);
@@ -109,6 +112,8 @@ package body AZip_Common.User_options is
               R(Boolean'Wide_Image(opt.MDI_main_maximized));
             when children_maximized =>
               R(Boolean'Wide_Image(opt.MDI_childen_maximized));
+            when tree_portion =>
+              R(Float'Wide_Image(opt.tree_portion));
             when mru1..mru9 =>
               R( To_Wide_String(opt.mru( Key'Pos(k)-Key'Pos(mru1)+1 )) );
             when show_passwords =>

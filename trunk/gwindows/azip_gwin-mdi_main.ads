@@ -37,6 +37,7 @@ package AZip_GWin.MDI_Main is
         User_maximize_restore  : Boolean:= True;
         -- ^ Detect user-triggered max/restore commands
         record_dimensions      : Boolean:= False; -- in On_Move, On_Size
+        -- Options of a "model" child window.
         opt                    : AZip_Common.User_options.Option_Pack_Type;
       end record;
 

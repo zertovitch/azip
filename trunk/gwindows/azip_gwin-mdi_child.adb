@@ -348,6 +348,31 @@ package body AZip_GWin.MDI_Child is
     end if;
   end On_Compare;
 
+  procedure Change_View (
+        Window   : in out MDI_Child_Type;
+        new_view :        View_Mode_Type;
+        force    :        Boolean
+  )
+  is
+  begin
+    if Window.opt.view_mode = new_view and not force then
+      return;
+    end if;
+    Window.opt.view_mode:= new_view;
+    case new_view is
+      when Flat =>
+        Window.opt.tree_portion:= Float(Window.Folder_Tree.Width) / Float(Window.Client_Area_Width);
+        Window.Directory_List.Left (0);
+        Window.Directory_List.Width (Window.Client_Area_Width);
+      when Tree =>
+        Window.Folder_Tree.Width (Integer(Window.opt.tree_portion * Float(Window.Client_Area_Width)));
+        Window.Folder_Tree.Height (Window.Directory_List.Height);
+        Window.Directory_List.Left (Window.Folder_Tree.Width);
+        Window.Directory_List.Width (Window.Client_Area_Width - Window.Folder_Tree.Width);
+    end case;
+    Update_display(Window, archive_changed);
+  end Change_View;
+
   ---------------
   -- On_Create --
   ---------------
@@ -372,6 +397,9 @@ package body AZip_GWin.MDI_Child is
     Window.Status_Bar.Dock(At_Bottom);
 
     Window.Dock_Children;
+    if Window.opt.view_mode = Tree then
+      Change_View(Window, Tree, Force => True);
+    end if;
 
     AZip_Resource_GUI.Create_Full_Menu(Window.Menu);
     Window.MDI_Menu(Window.Menu.Main, Window_Menu => 5);
@@ -1137,6 +1165,10 @@ package body AZip_GWin.MDI_Child is
         On_Update(Window);
       when IDM_FIND_IN_ARCHIVE =>
         On_Find(Window);
+      when IDM_FLAT_VIEW =>
+        Change_View(Window, Flat, Force => False);
+      when IDM_TREE_VIEW =>
+        Change_View(Window, Tree, Force => False);
       when others =>
         On_Menu_Select (Window_Type (Window), Item);
     end case;
@@ -1176,7 +1208,7 @@ package body AZip_GWin.MDI_Child is
       end loop;
     end if;
     if Can_Close then
-      -- Remember column widths
+      -- Memorize column widths
       for e in Entry_topic'Range loop
         Window.Parent.opt.column_width(e):=
           Window.Directory_List.Column_Width(Entry_topic'Pos(e));
@@ -1190,6 +1222,9 @@ package body AZip_GWin.MDI_Child is
         AZip_Common.User_options.Sort_Direction_Type'Value(
            AZip_LV_Ex.Sort_Direction_Type'Image(sd)
         );
+      -- Pass view mode and the tree width portion to parent (memorize choice of last closed window)
+      Window.Parent.opt.view_mode:= Window.opt.view_mode;
+      Window.Parent.opt.tree_portion:= Window.opt.tree_portion;
     end if;
   end On_Close;
 

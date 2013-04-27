@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2013/03/04   16:23:10
+-- Transcription time: 2013/04/27   22:46:55
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -292,9 +292,11 @@ package azip_Resource_GUI is
     Archive_Progress: Progress_Control_Type;
     Cancel_button: Dialog_Button_Type;    -- closes parent window after click
     Cancel_button_permanent: Button_Type; -- doesn't close parent window after click
+    Comment_1: Label_Type;
+    Comment_2: Label_Type;
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 238
+  -- Dialog at resource line 240
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -332,7 +334,7 @@ package azip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  -- Dialog at resource line 250
+  -- Dialog at resource line 252
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -359,7 +361,7 @@ package azip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager";
-    FileVersion: constant String:= "1.16";
+    FileVersion: constant String:= "1.17";
     LegalCopyright: constant String:= "© 2012..2013 G. de Montmollin (MIT license)";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
@@ -405,6 +407,8 @@ package azip_Resource_GUI is
   Entry_name                : constant:=   1005;
   Password_edit             : constant:=   1005;
   Overwrite_Yes             : constant:=   1006;
+  Comment_2                 : constant:=   1007;
+  Comment_1                 : constant:=   1008;
   Overwrite_No              : constant:=   1008;
   IDM_NEW_ARCHIVE           : constant:=  40000;
   IDM_OPEN_ARCHIVE          : constant:=  40001;
@@ -456,6 +460,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return GString;
 
 
-  -- Last line of resource script file: 330
+  -- Last line of resource script file: 332
 
 end azip_Resource_GUI;

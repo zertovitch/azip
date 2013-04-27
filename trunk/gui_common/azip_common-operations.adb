@@ -266,6 +266,8 @@ package body AZip_Common.Operations is
     current_entry_name: UTF_16_Unbounded_String;
     current_operation: Entry_operation;
     current_skip_hint: Boolean;
+    total_occurences: Natural:= 0;
+    total_files_with_occurence: Natural:= 0;
     --
     procedure Entry_feedback(
       percents_done:  in Natural;  -- %'s completed
@@ -286,6 +288,7 @@ package body AZip_Common.Operations is
         archive_percents_done,
         To_Wide_String(current_entry_name),
         current_operation,
+        "", "",
         current_skip_hint,
         user_abort
       );
@@ -599,6 +602,7 @@ package body AZip_Common.Operations is
               archive_percents_done,
               short_name_utf_16,
               Skip,
+              "", "",
               True,
               dummy_user_abort
             );
@@ -693,12 +697,18 @@ package body AZip_Common.Operations is
                 archive_percents_done,
                 short_name_utf_16,
                 Search,
+                "Occurences found so far:" & Integer'Image(total_occurences),
+                "Entries with occurences:" & Integer'Image(total_files_with_occurence),
                 False,
                 dummy_user_abort
               );
               begin
                 -- We need to search the string in the compressed entry...
                 Search_1_file(name => name, occ  => user_code);
+                if user_code > 0 then
+                  total_files_with_occurence:= total_files_with_occurence + 1;
+                  total_occurences:= total_occurences + user_code;
+                end if;
               exception
                 when UnZip.Wrong_password =>
                   user_code:= wrong_pwd;

@@ -546,6 +546,7 @@ package body AZip_GWin.MDI_Child is
       archive_percents_done : Natural;
       entry_being_processed : GString;
       e_operation           : Entry_Operation;
+      comment_1, comment_2  : String; -- e.g. #found so far, time elpased,...
       skip_hint             : Boolean;
       user_abort            : out Boolean
     )
@@ -564,6 +565,8 @@ package body AZip_GWin.MDI_Child is
         box.Entry_operation_name.Text(
           Description(e_operation, operation, skip_hint)
         );
+        box.Comment_1.Text(S2G(comment_1));
+        box.Comment_2.Text(S2G(comment_2));
         Message_Check;
         tick:= now;
       end if;

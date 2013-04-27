@@ -33,6 +33,8 @@
 #define Entry_name                              1005
 #define Password_edit                           1005
 #define Overwrite_Yes                           1006
+#define Comment_2                               1007
+#define Comment_1                               1008
 #define Overwrite_No                            1008
 #define IDM__NEW_ARCHIVE                        40000
 #define IDM__OPEN_ARCHIVE                       40001

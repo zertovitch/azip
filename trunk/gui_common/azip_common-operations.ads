@@ -107,6 +107,7 @@ package AZip_Common.Operations is
       archive_percents_done : Natural;
       entry_being_processed : UTF_16_String;
       operation             : Entry_Operation;
+      comment_1, comment_2  : String; -- e.g. #found so far, time elpased,...
       skip_hint             : Boolean;
       user_abort            : out Boolean
     );

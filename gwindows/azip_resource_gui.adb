@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2013/03/04   16:23:10
+-- Transcription time: 2013/04/27   22:46:55
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -755,11 +755,11 @@ package body azip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  7, 12, 218, 10, x,y,w,h);
+    Dlg_to_Scn(  7, 6, 218, 10, x,y,w,h);
     Create( Window.Entry_operation_name, Window, "Adding...", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Entry_operation_name);
-    Dlg_to_Scn(  7, 30, 228, 8, x,y,w,h);
+    Dlg_to_Scn(  7, 19, 228, 10, x,y,w,h);
     Create( Window.Entry_name, Window, "Some file", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Entry_name);
-    Dlg_to_Scn(  7, 52, 227, 9, x,y,w,h);
+    Dlg_to_Scn(  7, 57, 227, 9, x,y,w,h);
     Create( Window.File_Progress, Window, x,y,w,h, HORIZONTAL, FALSE);
     Dlg_to_Scn(  7, 74, 227, 17, x,y,w,h);
     Create( Window.Archive_Progress, Window, x,y,w,h, HORIZONTAL, FALSE);
@@ -774,10 +774,14 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Cancel_button);
     end if;
+    Dlg_to_Scn(  7, 32, 228, 10, x,y,w,h);
+    Create( Window.Comment_1, Window, "Comment 1", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Comment_1);
+    Dlg_to_Scn(  7, 45, 228, 10, x,y,w,h);
+    Create( Window.Comment_2, Window, "Comment 2", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Comment_2);
   end Create_Contents; -- Progress_box_Type
 
 
-  -- Dialog at resource line 247
+  -- Dialog at resource line 249
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -950,6 +954,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 330
+  -- Last line of resource script file: 332
 
 end azip_Resource_GUI;

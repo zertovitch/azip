@@ -12,6 +12,7 @@ with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 
 with Ada.Numerics.Float_Random;
+with AZip_Common;
 
 package AZip_GWin.MDI_Child is
 
@@ -76,6 +77,7 @@ package AZip_GWin.MDI_Child is
         Directory_List   : MDI_Child_List_View_Control_Type;
         Folder_Tree      : Tree_View_Control_Type;
         zif              : Zip.Zip_info;
+        path_map         : AZip_Common.Path_Catalogues.Map;
         opt              : Option_Pack_Type;
         Status_deamon    : Daemons.Status_display;
         Status_Bar       : MDI_Child_Status_Bar_Type;

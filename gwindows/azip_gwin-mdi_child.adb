@@ -89,9 +89,11 @@ package body AZip_GWin.MDI_Child is
       is
         pragma Unreferenced (file_index);
         simple_name_idx: Positive:= name'First;
+        previous_idx: Positive:= name'First;
         extension_idx: Positive:= name'Last + 1;
         R_mark: constant array (Boolean) of Character:= (' ', 'R');
         payload_access: AZip_LV_Ex.Data_Access;
+        --
         function Encryption_suffix return String is
         begin
           if encrypted_2_x then
@@ -100,12 +102,30 @@ package body AZip_GWin.MDI_Child is
             return "";
           end if;
         end Encryption_suffix;
-      begin
+        --
+        w_node, w_parent: Tree_Item_Node;
+      begin -- Process_row
         for i in name'Range loop
           case name(i) is
             when '/' | '\' =>
               -- Directory separator, ok with Unicode UTF-8 names
+              previous_idx:= simple_name_idx;
               simple_name_idx:= i + 1;
+              if Window.opt.view_mode = Tree then
+                declare
+                  partial_path: constant UTF_16_String(name'First..i):= To_UTF_16(name(name'First..i), name_encoding);
+                begin
+                  if not Window.path_map.Contains(G2GU(partial_path)) then
+                    if previous_idx = name'First then
+                      w_parent:= Tree_Item_Node(Window.path_map.Element(root_key));
+                    else
+                      w_parent:= Tree_Item_Node(Window.path_map.Element(G2GU(partial_path(name'First..previous_idx-1))));
+                    end if;
+                    Window.Folder_Tree.Insert_Item(partial_path(previous_idx..i), w_parent, w_node);
+                    Window.path_map.Insert(G2GU(partial_path), Integer(w_node));
+                  end if;
+                end;
+              end if;
             when '.' =>
               -- Last dot is the extension separator
               extension_idx:= i + 1;
@@ -221,6 +241,7 @@ package body AZip_GWin.MDI_Child is
 
     sel: Natural;
     non_empty: constant Boolean:= Is_Loaded(Window.zif) and then Entries(Window.zif) > 0;
+    w_root: Tree_Item_Node;
 
   begin
     Define_columns;
@@ -233,10 +254,14 @@ package body AZip_GWin.MDI_Child is
         Check(Window.Menu.Main, Command, IDM_FLAT_VIEW, True);
         Check(Window.Menu.Main, Command, IDM_TREE_VIEW, False);
       when Tree =>
-        -- all stuff
-        -- if Is_Loaded(Window.zif) then
-        --   Feed_directory_list([selected path]);
-        -- end if;
+        if Is_Loaded(Window.zif) then
+          if need in first_display .. archive_changed then
+            Window.path_map.Clear;
+            Window.Folder_Tree.Insert_Item("Archive", 0, w_root, As_a_root);
+            Window.path_map.Insert(root_key, Integer(w_root));
+          end if;
+          Feed_directory_list(""); -- !! [selected path]
+        end if;
         Window.Folder_Tree.Show;
         Check(Window.Menu.Main, Command, IDM_FLAT_VIEW, False);
         Check(Window.Menu.Main, Command, IDM_TREE_VIEW, True);

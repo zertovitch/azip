@@ -72,7 +72,7 @@ package body azip_Resource_GUI is
     Append_Menu(Menu.Main, "&View", Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "&Flat view", IDM_FLAT_VIEW);
     Append_Item(Menu.Popup_0005, "&Tree view", IDM_TREE_VIEW);
-    State(Menu.Popup_0005, Command, IDM_TREE_VIEW, Grayed);
+    -- State(Menu.Popup_0005, Command, IDM_TREE_VIEW, Grayed);
     Menu.Popup_0006:= Create_Popup;
     Append_Menu(Menu.Main, "&Window", Menu.Popup_0006);
     Append_Item(Menu.Popup_0006, "&Cascade", IDM_WINDOW_CASCADE);

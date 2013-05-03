@@ -8,6 +8,10 @@ with Zip;
 with GWindows;                          use GWindows;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Common_Controls.Ex_List_View;
+with GWindows.GControls.GSize_Bars;
+with GWindows.Packing_Boxes;
+with GWindows.Panels;
+with GWindows.Static_Controls;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 
@@ -64,6 +68,14 @@ package AZip_GWin.MDI_Child is
                Value1 : in GString;
                Value2 : in GString) return Integer;
 
+  type MDI_Child_Tree_View_Control_Type is new Tree_View_Control_Type with null record;
+
+  overriding procedure On_Selection_Change (Control : in out MDI_Child_Tree_View_Control_Type);
+
+  type MDI_Child_GSize_Bar_Type is new GWindows.GControls.GSize_Bars.GSize_Bar_Type with null record;
+
+  overriding procedure On_Bar_Moved (Window : in out MDI_Child_GSize_Bar_Type);
+
   type MDI_Child_Type is
     new GWindows.Windows.MDI.MDI_Child_Window_Type with
       record
@@ -74,10 +86,16 @@ package AZip_GWin.MDI_Child is
         Extra_first_doc  : Boolean:= False;
         -- ^ new file closed if kept virgin when opening another one (like blank Excel sheet).
         Menu             : Menu_MDI_Child_Type;
+        Tree_Bar_and_List: GWindows.Packing_Boxes.Packing_Box_Type;
+        Bar_and_List     : GWindows.Panels.Panel_Type;
         Directory_List   : MDI_Child_List_View_Control_Type;
-        Folder_Tree      : Tree_View_Control_Type;
+        Splitter         : MDI_Child_GSize_Bar_Type;
+        Splitter_dashes  : GWindows.Static_Controls.Label_Type;
+        Folder_Tree      : MDI_Child_Tree_View_Control_Type;
         zif              : Zip.Zip_info;
         path_map         : AZip_Common.Path_Catalogues.Map;
+        node_map         : AZip_Common.Node_Catalogues.Map;
+        selected_path    : GString_Unbounded:= Null_GString_Unbounded;
         opt              : Option_Pack_Type;
         Status_deamon    : Daemons.Status_display;
         Status_Bar       : MDI_Child_Status_Bar_Type;
@@ -117,6 +135,7 @@ package AZip_GWin.MDI_Child is
   type Update_need is
     (first_display,   -- first display ever, no columns set
      archive_changed, -- directory list needs to be refilled
+     node_selected,   -- same archive, but partial directory list needs to be refilled
      results_refresh, -- same directory, only results changed
      status_bar,      -- status bar and topics listed below
      toolbar_and_menu -- update enable/disable of toolbar items and menu items

@@ -17,3 +17,4 @@ gw - "[Rename]" dans les conflits de nom
 Recompress
 Compare
 Merge
+Touch (time stamp)

@@ -17,6 +17,8 @@ with GWindows.Windows;                  use GWindows.Windows;
 
 with Ada.Numerics.Float_Random;
 with AZip_Common;
+with GWindows.Drawing;
+with GWindows.Types;
 
 package AZip_GWin.MDI_Child is
 
@@ -69,11 +71,29 @@ package AZip_GWin.MDI_Child is
                Value2 : in GString) return Integer;
 
   type MDI_Child_Tree_View_Control_Type is new Tree_View_Control_Type with null record;
-
   overriding procedure On_Selection_Change (Control : in out MDI_Child_Tree_View_Control_Type);
 
-  type MDI_Child_GSize_Bar_Type is new GWindows.GControls.GSize_Bars.GSize_Bar_Type with null record;
+  type MDI_Child_Packing_Box_Type is new GWindows.Packing_Boxes.Packing_Box_Type with null record;
+  overriding procedure On_Erase_Background
+     (Window : in out MDI_Child_Packing_Box_Type;
+      Canvas : in out GWindows.Drawing.Canvas_Type;
+      Area   : in     GWindows.Types.Rectangle_Type) is null;
+  overriding procedure On_Paint
+     (Window : in out MDI_Child_Packing_Box_Type;
+      Canvas : in out GWindows.Drawing.Canvas_Type;
+      Area   : in     GWindows.Types.Rectangle_Type) is null;
 
+  type MDI_Child_Panel_Type is new GWindows.Panels.Panel_Type with null record;
+  overriding procedure On_Erase_Background
+     (Window : in out MDI_Child_Panel_Type;
+      Canvas : in out GWindows.Drawing.Canvas_Type;
+      Area   : in     GWindows.Types.Rectangle_Type) is null;
+  overriding procedure On_Paint
+     (Window : in out MDI_Child_Panel_Type;
+      Canvas : in out GWindows.Drawing.Canvas_Type;
+      Area   : in     GWindows.Types.Rectangle_Type) is null;
+
+  type MDI_Child_GSize_Bar_Type is new GWindows.GControls.GSize_Bars.GSize_Bar_Type with null record;
   overriding procedure On_Bar_Moved (Window : in out MDI_Child_GSize_Bar_Type);
 
   type MDI_Child_Type is
@@ -86,8 +106,8 @@ package AZip_GWin.MDI_Child is
         Extra_first_doc  : Boolean:= False;
         -- ^ new file closed if kept virgin when opening another one (like blank Excel sheet).
         Menu             : Menu_MDI_Child_Type;
-        Tree_Bar_and_List: GWindows.Packing_Boxes.Packing_Box_Type;
-        Bar_and_List     : GWindows.Panels.Panel_Type;
+        Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
+        Bar_and_List     : MDI_Child_Panel_Type;
         Directory_List   : MDI_Child_List_View_Control_Type;
         Splitter         : MDI_Child_GSize_Bar_Type;
         Splitter_dashes  : GWindows.Static_Controls.Label_Type;
@@ -156,6 +176,15 @@ package AZip_GWin.MDI_Child is
     Width  : in     Integer;
     Height : in     Integer
   );
+
+  overriding procedure On_Erase_Background
+     (Window : in out MDI_Child_Type;
+      Canvas : in out GWindows.Drawing.Canvas_Type;
+      Area   : in     GWindows.Types.Rectangle_Type) is null;
+  overriding procedure On_Paint
+     (Window : in out MDI_Child_Type;
+      Canvas : in out GWindows.Drawing.Canvas_Type;
+      Area   : in     GWindows.Types.Rectangle_Type) is null;
 
   overriding procedure On_Menu_Select (
     Window : in out MDI_Child_Type;

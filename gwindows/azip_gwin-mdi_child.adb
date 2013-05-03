@@ -14,7 +14,6 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
-with GWindows.Types;
 
 with Ada.Calendar;
 with Ada.Directories;
@@ -387,7 +386,13 @@ package body AZip_GWin.MDI_Child is
 
   procedure Memorize_splitter(Window: in out MDI_Child_Type) is
   begin
-    Window.opt.tree_portion:= Float(Window.Folder_Tree.Width) / Float(Window.Client_Area_Width);
+    case Window.opt.view_mode is
+      when Flat =>
+        null; -- do nothing: the splitter is invisible and not used
+      when Tree =>
+        Window.opt.tree_portion:=
+          Float(Window.Folder_Tree.Width) / Float(Window.Client_Area_Width);
+    end case;
   end Memorize_splitter;
 
   overriding procedure On_Bar_Moved (Window : in out MDI_Child_GSize_Bar_Type) is
@@ -456,7 +461,7 @@ package body AZip_GWin.MDI_Child is
     Window.Splitter.Dock(At_Left);
     Window.Splitter_dashes.Create(Window.Splitter,
       Alignment => GWindows.Static_Controls.Center,
-      Text => S2G(100 * ". ")
+      Text => S2G(1000 * ". ") -- A cheap grip design for the split bar...
     );
     Window.Splitter_dashes.Dock(Fill);
     Window.Splitter_dashes.Enabled(False); -- Just give a grey look...

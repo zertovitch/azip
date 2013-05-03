@@ -1,6 +1,7 @@
 with Zip;                               use Zip;
 
 with Ada.Containers.Hashed_Maps;
+with Ada.Containers.Ordered_Maps;
 with Ada.Strings.UTF_Encoding;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 with Ada.Strings.Wide_Unbounded.Wide_Hash;
@@ -43,17 +44,27 @@ package AZip_Common is
   function To_IBM_437(s: UTF_16_String) return String;
   Cannot_encode_to_IBM_437: exception;
 
-  -------------------------------------------------------------
-  -- Maps of paths, for navigating through paths (tree view) --
-  -------------------------------------------------------------
+  --------------------------------------------------------------------------
+  -- Maps of paths and nodes, for navigating through paths in a tree view --
+  --------------------------------------------------------------------------
+
+  -- Find quickly a node number given a path name.
 
   package Path_Catalogues is new Ada.Containers.Hashed_Maps
     (Key_Type        => UTF_16_Unbounded_String,
      Element_Type    => Integer,                  -- an Item ID in any GUI system
      Hash            => Ada.Strings.Wide_Unbounded.Wide_Hash,
-     Equivalent_Keys => Ada.Strings.Wide_Unbounded."=");
+     Equivalent_Keys => Ada.Strings.Wide_Unbounded."="
+    );
 
-  root_key: constant UTF_16_Unbounded_String:= To_Unbounded_Wide_String("/");
+  root_key: constant UTF_16_Unbounded_String:= To_Unbounded_Wide_String("");
+
+  -- Find quickly a path name given a node number.
+
+  package Node_Catalogues is new Ada.Containers.Ordered_Maps
+    (Key_Type        => Integer,
+     Element_Type    => UTF_16_Unbounded_String
+    );
 
   --------------------------
   -- Text display helpers --

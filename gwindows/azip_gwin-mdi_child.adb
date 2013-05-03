@@ -24,7 +24,7 @@ with Ada.Exceptions;
 with Ada.IO_Exceptions;
 with Ada.Sequential_IO;
 with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
-with Ada.Strings.Wide_Unbounded;
+with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 with Ada.Unchecked_Deallocation;
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 
@@ -50,7 +50,7 @@ package body AZip_GWin.MDI_Child is
               Entry_topic'Pos(topic),
               Window.Parent.opt.column_width(topic)
             );
-          when archive_changed =>
+          when archive_changed | node_selected =>
             Lst.Clear;
             Lst.Set_Column(
               Image(topic),
@@ -65,7 +65,7 @@ package body AZip_GWin.MDI_Child is
 
     -- Window.zif is assumed to be loaded
     --
-    procedure Feed_directory_list(prefix_path: String) is
+    procedure Feed_directory_list(prefix_path: GString) is
       row, last_row: Integer:= -1;
       Lst: MDI_Child_List_View_Control_Type renames Window.Directory_List;
       cidx: Column_integer_array renames Window.opt.column_index;
@@ -74,7 +74,7 @@ package body AZip_GWin.MDI_Child is
       sorted_index, unsorted_index, result_code: array(0..max_entries-1) of Integer;
       --
       procedure Process_row(
-        name             : String; -- 'name' is compressed entry's name
+        name_8_bit       : String; -- 'name' is compressed entry's name, with Zip encoding
         file_index       : Positive;
         comp_size        : File_size_type;
         uncomp_size      : File_size_type;
@@ -88,13 +88,14 @@ package body AZip_GWin.MDI_Child is
       )
       is
         pragma Unreferenced (file_index);
+        name: constant UTF_16_String:= To_UTF_16(name_8_bit, name_encoding);
         simple_name_idx: Positive:= name'First;
         previous_idx: Positive:= name'First;
         extension_idx: Positive:= name'Last + 1;
         R_mark: constant array (Boolean) of Character:= (' ', 'R');
         payload_access: AZip_LV_Ex.Data_Access;
         --
-        function Encryption_suffix return String is
+        function Encryption_suffix return GString is
         begin
           if encrypted_2_x then
             return " *";
@@ -111,18 +112,20 @@ package body AZip_GWin.MDI_Child is
               -- Directory separator, ok with Unicode UTF-8 names
               previous_idx:= simple_name_idx;
               simple_name_idx:= i + 1;
-              if Window.opt.view_mode = Tree then
+              if Window.opt.view_mode = Tree and need in first_display .. archive_changed then
                 declare
-                  partial_path: constant UTF_16_String(name'First..i):= To_UTF_16(name(name'First..i), name_encoding);
+                  partial_path: UTF_16_String renames name(name'First..i-1);
+                  partial_path_u: constant GString_Unbounded:= G2GU(partial_path);
                 begin
-                  if not Window.path_map.Contains(G2GU(partial_path)) then
+                  if not Window.path_map.Contains(partial_path_u) then
                     if previous_idx = name'First then
                       w_parent:= Tree_Item_Node(Window.path_map.Element(root_key));
                     else
-                      w_parent:= Tree_Item_Node(Window.path_map.Element(G2GU(partial_path(name'First..previous_idx-1))));
+                      w_parent:= Tree_Item_Node(Window.path_map.Element(G2GU(partial_path(name'First..previous_idx-2))));
                     end if;
-                    Window.Folder_Tree.Insert_Item(partial_path(previous_idx..i), w_parent, w_node);
-                    Window.path_map.Insert(G2GU(partial_path), Integer(w_node));
+                    Window.Folder_Tree.Insert_Item(partial_path(previous_idx..i-1), w_parent, w_node);
+                    Window.path_map.Insert(partial_path_u, Integer(w_node));
+                    Window.node_map.Insert(Integer(w_node), partial_path_u);
                   end if;
                 end;
               end if;
@@ -136,26 +139,19 @@ package body AZip_GWin.MDI_Child is
         if simple_name_idx > name'Last then -- skip directory entries
           return;
         end if;
-        if name'Length < prefix_path'Length or else
-          prefix_path /=  name(name'First..name'First+prefix_path'Length-1)
-        then -- not in a part of the tree to be displayed
-          return;
+        if Window.opt.view_mode = Tree and then prefix_path /=  name(name'First..simple_name_idx-2) then
+          return; -- not in a part of the tree to be displayed
         end if;
         row:= row + 1;
-        if need in first_display .. archive_changed then
-          Lst.Insert_Item(
-            To_UTF_16(
-              name(simple_name_idx..name'Last) & Encryption_suffix,
-              name_encoding),
-            row
-          );
+        if need in first_display .. node_selected then
+          Lst.Insert_Item(name(simple_name_idx..name'Last) & Encryption_suffix, row);
           --
           -- Payload
           --
           payload_access:= new LV_payload'(index_before_sorting => row); -- !! small leak here...
           Lst.Item_Data(row, payload_access);
           --
-          Lst.Set_Sub_Item(S2G(name(extension_idx..name'Last)), row, cidx(FType)-1);
+          Lst.Set_Sub_Item(name(extension_idx..name'Last), row, cidx(FType)-1);
           begin
             Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, cidx(Modified)-1);
           exception
@@ -172,7 +168,7 @@ package body AZip_GWin.MDI_Child is
           Lst.Set_Sub_Item(Hexadecimal(crc_32), row, cidx(CRC32)-1);
           if simple_name_idx > name'First then
             Window.any_path_in_zip:= True;
-            Lst.Set_Sub_Item(To_UTF_16(name(name'First..simple_name_idx - 1), name_encoding), row, cidx(Path)-1);
+            Lst.Set_Sub_Item(name(name'First..simple_name_idx - 1), row, cidx(Path)-1);
           end if;
           Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, cidx(Encoding)-1);
           --
@@ -199,7 +195,7 @@ package body AZip_GWin.MDI_Child is
         return;
       end if;
       Window.refreshing_list:= True;
-      if need in first_display .. archive_changed then
+      if need in first_display .. node_selected then
         -- This will be set to True if there is any path during the listing
         Window.any_path_in_zip:= False;
       end if;
@@ -247,22 +243,26 @@ package body AZip_GWin.MDI_Child is
     Define_columns;
     case Window.opt.view_mode is
       when Flat =>
-        Window.Folder_Tree.Hide;
         if Is_Loaded(Window.zif) then
           Feed_directory_list("");
         end if;
         Check(Window.Menu.Main, Command, IDM_FLAT_VIEW, True);
         Check(Window.Menu.Main, Command, IDM_TREE_VIEW, False);
       when Tree =>
+        if need in first_display .. archive_changed then
+          Window.path_map.Clear;
+          Window.node_map.Clear;
+        end if;
         if Is_Loaded(Window.zif) then
           if need in first_display .. archive_changed then
-            Window.path_map.Clear;
+            Window.Folder_Tree.Delete_Item(Window.Folder_Tree.Get_Root_Item);
             Window.Folder_Tree.Insert_Item("Archive", 0, w_root, As_a_root);
             Window.path_map.Insert(root_key, Integer(w_root));
+            Window.node_map.Insert(Integer(w_root), root_key);
+            Window.selected_path:= Null_GString_Unbounded;
           end if;
-          Feed_directory_list(""); -- !! [selected path]
+          Feed_directory_list(GU2G(Window.selected_path));
         end if;
-        Window.Folder_Tree.Show;
         Check(Window.Menu.Main, Command, IDM_FLAT_VIEW, False);
         Check(Window.Menu.Main, Command, IDM_TREE_VIEW, True);
     end case;
@@ -282,7 +282,7 @@ package body AZip_GWin.MDI_Child is
     else
       Text(Window.Status_Bar,"No archive loaded",0);
     end if;
-    if need in first_display .. archive_changed and then
+    if need in first_display .. node_selected and then
       Window.Parent.opt.sort_column >= 0
     then
       Window.Directory_List.Sort(
@@ -302,7 +302,7 @@ package body AZip_GWin.MDI_Child is
   end Update_display;
 
   procedure On_Item_Changed (Control : in out MDI_Child_List_View_Control_Type) is
-    PW: MDI_Child_Type renames MDI_Child_Type(Control.Parent.all);
+    PW: MDI_Child_Type renames MDI_Child_Type(Control.Parent.Parent.Parent.all);
   begin
     if PW.refreshing_list then
       null;
@@ -324,7 +324,7 @@ package body AZip_GWin.MDI_Child is
     i1, i2: Integer;
   begin
     for t in Entry_topic loop
-      if Column = MDI_Child_Type(Control.Parent.all).opt.column_index(t)-1 then
+      if Column = MDI_Child_Type(Control.Parent.Parent.Parent.all).opt.column_index(t)-1 then
         case t is
           when Size | Packed => -- 3 KB
             i1:= Integer(File_Size_Value(Value1));
@@ -373,12 +373,36 @@ package body AZip_GWin.MDI_Child is
     end if;
   end On_Compare;
 
+  overriding procedure On_Selection_Change (Control : in out MDI_Child_Tree_View_Control_Type) is
+    w_node: constant Tree_Item_Node:= Control.Selected_Item;
+    parent_window: MDI_Child_Type renames MDI_Child_Type(Control.Parent.Parent.all);
+    new_path: constant GString_Unbounded:= parent_window.node_map.Element(Integer(w_node));
+  begin
+    if new_path = parent_window.selected_path then
+      return; -- the same node as before has been select, no refresh needed.
+    end if;
+    parent_window.selected_path:= new_path;
+    Update_display(parent_window, node_selected);
+  end On_Selection_Change;
+
+  procedure Memorize_splitter(Window: in out MDI_Child_Type) is
+  begin
+    Window.opt.tree_portion:= Float(Window.Folder_Tree.Width) / Float(Window.Client_Area_Width);
+  end Memorize_splitter;
+
+  overriding procedure On_Bar_Moved (Window : in out MDI_Child_GSize_Bar_Type) is
+  begin
+    Memorize_splitter(MDI_Child_Type(Window.Parent.Parent.Parent.all));
+    GWindows.GControls.GSize_Bars.GSize_Bar_Type(Window).On_Bar_Moved;
+  end On_Bar_Moved;
+
   procedure Change_View (
         Window   : in out MDI_Child_Type;
         new_view :        View_Mode_Type;
         force    :        Boolean
   )
   is
+    mem_sel_path: constant GString_Unbounded:= Window.selected_path;
   begin
     if Window.opt.view_mode = new_view and not force then
       return;
@@ -386,16 +410,22 @@ package body AZip_GWin.MDI_Child is
     Window.opt.view_mode:= new_view;
     case new_view is
       when Flat =>
-        Window.opt.tree_portion:= Float(Window.Folder_Tree.Width) / Float(Window.Client_Area_Width);
-        Window.Directory_List.Left (0);
-        Window.Directory_List.Width (Window.Client_Area_Width);
+        if not force then
+          Memorize_splitter(Window);
+          -- Remember tree portion for user persistence or for next time we toggle back to tree view.
+        end if;
+        Window.Splitter.Hide;
+        Window.Folder_Tree.Hide;
       when Tree =>
-        Window.Folder_Tree.Width (Integer(Window.opt.tree_portion * Float(Window.Client_Area_Width)));
-        Window.Folder_Tree.Height (Window.Directory_List.Height);
-        Window.Directory_List.Left (Window.Folder_Tree.Width);
-        Window.Directory_List.Width (Window.Client_Area_Width - Window.Folder_Tree.Width);
+        Window.Splitter.Show;
+        Window.Folder_Tree.Show;
     end case;
+    Window.On_Size(Window.Width, Window.Height);
     Update_display(Window, archive_changed);
+    if Is_Loaded(Window.zif) then
+      Window.Folder_Tree.Select_Item(Tree_Item_Node(Window.path_map.Element(mem_sel_path)));
+      Window.Folder_Tree.Focus;
+    end if;
   end Change_View;
 
   ---------------
@@ -403,19 +433,38 @@ package body AZip_GWin.MDI_Child is
   ---------------
 
   procedure On_Create (Window : in out MDI_Child_Type) is
+    use GWindows.Packing_Boxes;
   begin
     Window.Small_Icon("Box_Closed_Icon_Name");
 
     -- Filial feelings:
     Window.parent:= MDI_Main_Access(Controlling_Parent(Window));
-    -- Copy options to child level:
+    -- We copy options to child level:
     Window.opt:= Window.Parent.opt;
 
-    Window.Directory_List.Create(Window, 50,1,20,20, Multiple, Report_View, Sort_Custom);
+    Window.Tree_Bar_and_List.Create(Window, Direction => Horizontal);
+    Window.Tree_Bar_and_List.Dock(At_Top);
+
+    Window.Folder_Tree.Create(Window.Tree_Bar_and_List, 1,1,20,20);
+    Window.Folder_Tree.Dock(Fill);
+
+    -- Panel with split bar and list
+    Window.Bar_and_List.Create(Window.Tree_Bar_and_List, 1,1,20,20);
+    Window.Bar_and_List.Dock(At_Right);
+
+    Window.Splitter.Create(Window.Bar_and_List, Fill);
+    Window.Splitter.Dock(At_Left);
+    Window.Splitter_dashes.Create(Window.Splitter,
+      Alignment => GWindows.Static_Controls.Center,
+      Text => S2G(100 * ". ")
+    );
+    Window.Splitter_dashes.Dock(Fill);
+    Window.Splitter_dashes.Enabled(False); -- Just give a grey look...
+
+    Window.Directory_List.Create(Window.Bar_and_List, 50,1,20,20, Multiple, Report_View, Sort_Custom);
     Window.Directory_List.Set_Extended_Style(AZip_LV_Ex.Full_Row_Select);
     Window.Directory_List.Color_mode(AZip_LV_Ex.Subitem);
-
-    Window.Folder_Tree.Create(Window, 1,1,20,20);
+    Window.Directory_List.Dock(Fill);
 
     Window.Status_Bar.Create(Window, "No archive");
     Window.Status_Bar.Parts((1 => 200, 2 => -1));
@@ -852,26 +901,26 @@ package body AZip_GWin.MDI_Child is
     pragma Warnings (Off, Height);  -- only client area is considered
     w: constant Natural:= Window.Client_Area_Width;
     h: constant Natural:= Window.Client_Area_Height - Window.Status_Bar.Height;
+    splitter_w: constant:= 4; -- between tree and list
+    tree_w: constant Integer:= Integer(Window.opt.tree_portion * Float(w)) - splitter_w / 2;
+    use GWindows.Types;
   begin
     if Window.Parent.user_maximize_restore then
       Window.Parent.opt.MDI_childen_maximized:= Zoom(Window);
     end if;
+    Window.Tree_Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
     case Window.opt.view_mode is
       when Flat =>
-        Window.Directory_List.Location(
-            GWindows.Types.Rectangle_Type'
-            (0, 0, w, h)
-        );
+        Window.Folder_Tree.Location(Rectangle_Type'(0, 0, 1, h));
+        Window.Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
+        Window.Splitter.Location(Rectangle_Type'(0, 0, 1, h));
+        Window.Directory_List.Location(Rectangle_Type'(0, 0, w, h));
       when Tree =>
-        Window.Folder_Tree.Location(
-            GWindows.Types.Rectangle_Type'
-            (0, 0, w/2, h)
-        );
-        Window.Directory_List.Location(
-            GWindows.Types.Rectangle_Type'
-            (w/2+1, 0, w, h)
-        );
-        null;
+        Window.Folder_Tree.Location(Rectangle_Type'(0, 0, tree_w, h));
+        Window.Bar_and_List.Location(Rectangle_Type'(tree_w, 0, w, h));
+        -- Splitter bar and directory list are inside the Bar_and_List panel
+        Window.Splitter.Location(Rectangle_Type'(0, 0, splitter_w, h));
+        Window.Directory_List.Location(Rectangle_Type'(splitter_w, 0, Window.Bar_and_List.Width, h));
     end case;
     Dock_Children (Window);
   end On_Size;
@@ -882,7 +931,6 @@ package body AZip_GWin.MDI_Child is
     items: constant Natural:= Window.Directory_List.Item_Count;
     names: Array_Of_File_Names(1..items);
     j: Natural:= 0;
-    use Ada.Strings.Wide_Unbounded;
   begin
     for i in 0..items - 1 loop -- 0-based
       if Window.Directory_List.Is_Selected(i) then
@@ -1252,6 +1300,7 @@ package body AZip_GWin.MDI_Child is
         );
       -- Pass view mode and the tree width portion to parent (memorize choice of last closed window)
       Window.Parent.opt.view_mode:= Window.opt.view_mode;
+      Memorize_splitter(Window);
       Window.Parent.opt.tree_portion:= Window.opt.tree_portion;
     end if;
   end On_Close;

@@ -13,7 +13,7 @@ package AZip_Common.User_options is
   --
   type Option_Pack_Type is record
     view_mode    : View_Mode_Type:= Flat;
-    tree_portion : Float:= 0.75;
+    tree_portion : Float:= 0.25;
       -- Horizontal portion of the window for the tree, when view_mode = Tree
     column_width : Column_integer_array:=
       -- Defaults for GWindows. May be scaled for different GUI metrics.

@@ -39,6 +39,15 @@ package body AZip_GWin.MDI_Child is
 
     procedure Define_columns is
       Lst: MDI_Child_List_View_Control_Type renames Window.Directory_List;
+      --
+      function Smart_column_width(topic: Entry_topic) return Natural is
+      begin
+        if topic = Path and Window.opt.view_mode = Tree then
+          return 0;
+        else
+          return Window.Parent.opt.column_width(topic);
+        end if;
+      end Smart_column_width;
     begin
       for topic in Entry_topic loop
         case need is
@@ -47,14 +56,14 @@ package body AZip_GWin.MDI_Child is
             Lst.Insert_Column(
               Image(topic),
               Entry_topic'Pos(topic),
-              Window.Parent.opt.column_width(topic)
+              Smart_column_width(topic)
             );
           when archive_changed | node_selected =>
             Lst.Clear;
             Lst.Set_Column(
               Image(topic),
               Entry_topic'Pos(topic),
-              Window.Parent.opt.column_width(topic)
+              Smart_column_width(topic)
             );
           when results_refresh | status_bar | toolbar_and_menu =>
             null;
@@ -123,6 +132,7 @@ package body AZip_GWin.MDI_Child is
                       w_parent:= Tree_Item_Node(Window.path_map.Element(G2GU(partial_path(name'First..previous_idx-2))));
                     end if;
                     Window.Folder_Tree.Insert_Item(partial_path(previous_idx..i-1), w_parent, w_node);
+                    Window.Folder_Tree.Set_Image(w_node, 2, 3);
                     Window.path_map.Insert(partial_path_u, Integer(w_node));
                     Window.node_map.Insert(Integer(w_node), partial_path_u);
                   end if;
@@ -254,8 +264,10 @@ package body AZip_GWin.MDI_Child is
         end if;
         if Is_Loaded(Window.zif) then
           if need in first_display .. archive_changed then
+            Window.Folder_Tree.Set_Image_List(Window.Parent.Folders_Images);
             Window.Folder_Tree.Delete_Item(Window.Folder_Tree.Get_Root_Item);
-            Window.Folder_Tree.Insert_Item("Archive", 0, w_root, As_a_root);
+            Window.Folder_Tree.Insert_Item(GU2G(Window.Short_Name), 0, w_root, As_a_root);
+            Window.Folder_Tree.Set_Image(w_root, 0, 1);
             Window.path_map.Insert(root_key, Integer(w_root));
             Window.node_map.Insert(Integer(w_root), root_key);
             Window.selected_path:= Null_GString_Unbounded;
@@ -427,10 +439,18 @@ package body AZip_GWin.MDI_Child is
     end case;
     Window.On_Size(Window.Width, Window.Height);
     Update_display(Window, archive_changed);
-    if Is_Loaded(Window.zif) then
-      Window.Folder_Tree.Select_Item(Tree_Item_Node(Window.path_map.Element(mem_sel_path)));
-      Window.Folder_Tree.Focus;
-    end if;
+    Window.selected_path:= mem_sel_path;
+    case new_view is
+      when Flat =>
+        null;
+      when Tree =>
+        if Is_Loaded(Window.zif) then
+          Window.Folder_Tree.Select_Item(Tree_Item_Node(Window.path_map.Element(mem_sel_path)));
+          Update_display(Window, node_selected); -- !! update done twice, once for remapping folders
+          Window.Folder_Tree.Expand(Window.Folder_Tree.Get_Root_Item);
+          Window.Folder_Tree.Focus;
+        end if;
+    end case;
   end Change_View;
 
   ---------------
@@ -450,7 +470,11 @@ package body AZip_GWin.MDI_Child is
     Window.Tree_Bar_and_List.Create(Window, Direction => Horizontal);
     Window.Tree_Bar_and_List.Dock(At_Top);
 
-    Window.Folder_Tree.Create(Window.Tree_Bar_and_List, 1,1,20,20);
+    Window.Folder_Tree.Create(
+      Window.Tree_Bar_and_List,
+      1,1,20,20,
+      Lines_At_Root => False
+    );
     Window.Folder_Tree.Dock(Fill);
 
     -- Panel with split bar and list
@@ -585,7 +609,7 @@ package body AZip_GWin.MDI_Child is
     Window.Text(GU2G(File_Title));
     Window.Short_Name:= File_Title;
     Window.Update_Common_Menus(GU2G(New_File_Name));
-    Window.Load_archive_catalogue(False);
+    Window.Load_archive_catalogue(copy_codes => False);
   end On_Save_As;
 
   procedure Set_Modification_Time_B (Name : in String;
@@ -768,7 +792,7 @@ package body AZip_GWin.MDI_Child is
       );
       Window.last_operation:= operation;
       if operation in Modifying_Operation then
-        Window.Load_archive_catalogue(operation /= Remove);
+        Window.Load_archive_catalogue(copy_codes => operation /= Remove);
       else
         Update_display(Window, results_refresh);
       end if;
@@ -820,12 +844,26 @@ package body AZip_GWin.MDI_Child is
 
   procedure Go_for_adding (Window     : in out MDI_Child_Type;
                            File_Names : in     Array_Of_File_Names) is
+    function Eventual_folder return GString is
+      sel_path: constant GString:= GU2G(Window.selected_path);
+    begin
+      case Window.opt.view_mode is
+        when Flat =>
+          return "";
+        when Tree =>
+          if sel_path = "" then
+            return "";  -- root
+          else
+            return sel_path & '/'; -- need a separator here
+          end if;
+      end case;
+    end Eventual_folder;
   begin
     Process_archive_GWin(
       Window         => Window,
       operation      => Add,
       file_names     => File_Names,
-      base_folder    => "",           -- !! only for flat view
+      base_folder    => Eventual_folder,
       search_pattern => "",
       output_folder  => "",
       ignore_path    => False,
@@ -835,6 +873,15 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_File_Drop (Window     : in out MDI_Child_Type;
                           File_Names : in     Array_Of_File_Names) is
+    function Eventual_folder return GString is
+    begin
+      case Window.opt.view_mode is
+        when Flat =>
+          return "";
+        when Tree =>
+          return NL & "Current folder is " & GU2G(Window.selected_path);
+      end case;
+    end Eventual_folder;
   begin
     Window.Focus;
     if Confirm_archives_if_all_Zip_files(Window, File_Names) then
@@ -848,7 +895,7 @@ package body AZip_GWin.MDI_Child is
       if Message_Box(
         Window,
         "File(s) dropped",
-        "Add dropped file(s) to archive """ & GU2G(Window.Short_Name) & """ ?",
+        "Add dropped file(s) to archive """ & GU2G(Window.Short_Name) & """ ?" & Eventual_folder,
         Yes_No_Box,
         Question_Icon) = Yes
       then
@@ -895,7 +942,8 @@ package body AZip_GWin.MDI_Child is
       Zip.Delete(Window.zif);
     end if;
     Window.zif:= new_zif;
-    Update_display(Window, archive_changed);
+    Change_View(Window, Window.opt.view_mode, Force => True);
+    -- Update_display(Window, archive_changed); -- included in Change_View
     -- Window.Status_deamon.Display(Window'Unchecked_Access);
   end Load_archive_catalogue;
 
@@ -1291,8 +1339,10 @@ package body AZip_GWin.MDI_Child is
     if Can_Close then
       -- Memorize column widths
       for e in Entry_topic'Range loop
-        Window.Parent.opt.column_width(e):=
-          Window.Directory_List.Column_Width(Entry_topic'Pos(e));
+        if Window.opt.view_mode /= Tree or e /= Path then
+          Window.Parent.opt.column_width(e):=
+            Window.Directory_List.Column_Width(Entry_topic'Pos(e));
+        end if;
       end loop;
       Window.Directory_List.Sort_Info(
         Window.Parent.opt.sort_column,

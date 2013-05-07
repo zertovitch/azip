@@ -255,7 +255,10 @@ package body AZip_GWin.MDI_Main is
 
     -- ** Main tool bar (add / remove / ...) at top left of the main window:
 
-    AZip_GWin.Toolbars.Init_Main_toolbar(Window.Tool_Bar, Window.Images, Window);
+    AZip_GWin.Toolbars.Init_Main_toolbar(Window.Tool_Bar, Window.Toolbar_Images, Window);
+
+    -- ** Other resources
+    Window.Folders_Images.Create (Num_resource(Folders_Bmp), 16);
 
     -- ** Resize according to options:
 

@@ -15,8 +15,7 @@
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Toolbar_BMP        BITMAP         "ico_bmp/az_tools.bmp"
-
-
+Folders_BMP        BITMAP         "ico_bmp/folders.bmp"
 
 //
 // Menu resources
@@ -69,7 +68,7 @@ Menu_MDI_Child MENU
     POPUP "&View"
     {
         MENUITEM "&Flat view", IDM__FLAT_VIEW
-        MENUITEM "&Tree view", IDM__TREE_VIEW, GRAYED
+        MENUITEM "&Tree view", IDM__TREE_VIEW
     }
     POPUP "&Window"
     {
@@ -305,8 +304,8 @@ AZip_Icon          ICON           "ico_bmp/azip.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     1,1,7,0
-    PRODUCTVERSION  1,1,7,0
+    FILEVERSION     1,2,0,0
+    PRODUCTVERSION  1,2,0,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -319,7 +318,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager"
-            VALUE "FileVersion", "1.17"
+            VALUE "FileVersion", "1.20"
             VALUE "LegalCopyright", "© 2012..2013 G. de Montmollin (MIT license)"
             VALUE "ProductName", "AZip"
         }

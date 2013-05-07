@@ -11,6 +11,8 @@ with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Image_Lists;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
+with GWindows.Drawing;
+with GWindows.Types;
 
 package AZip_GWin.MDI_Main is
 
@@ -31,7 +33,8 @@ package AZip_GWin.MDI_Main is
         -- Menu ID's stored into a handy array
         IDM_MRU                : IDM_MRU_List;
         Tool_Bar               : MDI_Toolbar_Type;
-        Images                 : GWindows.Image_Lists.Image_List_Type;
+        Toolbar_Images         : GWindows.Image_Lists.Image_List_Type;
+        Folders_Images         : GWindows.Image_Lists.Image_List_Type;
         Menu                   : Menu_MDI_Main_Type;
         -- record_dimensions      : Boolean:= False; -- in On_Move, On_Size
         User_maximize_restore  : Boolean:= True;
@@ -59,6 +62,15 @@ package AZip_GWin.MDI_Main is
 
   overriding procedure On_File_Drop (Window     : in out MDI_Main_Type;
                                      File_Names : in     Array_Of_File_Names);
+
+  overriding procedure On_Erase_Background
+     (Window : in out MDI_Main_Type;
+      Canvas : in out GWindows.Drawing.Canvas_Type;
+      Area   : in     GWindows.Types.Rectangle_Type) is null;
+  overriding procedure On_Paint
+     (Window : in out MDI_Main_Type;
+      Canvas : in out GWindows.Drawing.Canvas_Type;
+      Area   : in     GWindows.Types.Rectangle_Type) is null;
 
   procedure Open_Child_Window_And_Load (
     Window     : in out MDI_Main_Type;

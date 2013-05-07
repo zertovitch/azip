@@ -573,7 +573,7 @@ package body AZip_Common.Operations is
               Add_File(
                 Info               => new_zip,
                 Name               => external_file_name,
-                Name_in_archive    => To_UTF_8(short_name_utf_16),
+                Name_in_archive    => To_UTF_8(base_folder & short_name_utf_16),
                 Delete_file_after  => False,
                 Name_encoding      => UTF_8,
                 Modification_time  => Zip.Convert(Modification_Time(external_file_name)),

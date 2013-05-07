@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2013/04/27   22:46:55
+-- Transcription time: 2013/05/07   20:44:45
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -39,7 +39,7 @@ package azip_Resource_GUI is
     Popup_0007: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Child_Type
 
-  -- Menu at line 84
+  -- Menu at line 83
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -51,7 +51,7 @@ package azip_Resource_GUI is
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Main_Type
 
-  -- Menu at line 122
+  -- Menu at line 121
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -78,7 +78,7 @@ package azip_Resource_GUI is
     Credits_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 152
+  -- Dialog at resource line 151
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -121,7 +121,7 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- Credits_box_Type
 
-  -- Dialog at resource line 169
+  -- Dialog at resource line 168
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -165,7 +165,7 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- File_exists_box_Type
 
-  -- Dialog at resource line 189
+  -- Dialog at resource line 188
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -208,7 +208,7 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- Find_box_Type
 
-  -- Dialog at resource line 205
+  -- Dialog at resource line 204
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -253,7 +253,7 @@ package azip_Resource_GUI is
     Static_0003: Group_Box_Type;
   end record; -- Password_input_box_Type
 
-  -- Dialog at resource line 223
+  -- Dialog at resource line 222
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -296,7 +296,7 @@ package azip_Resource_GUI is
     Comment_2: Label_Type;
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 240
+  -- Dialog at resource line 239
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -334,7 +334,7 @@ package azip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  -- Dialog at resource line 252
+  -- Dialog at resource line 251
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -361,7 +361,7 @@ package azip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager";
-    FileVersion: constant String:= "1.17";
+    FileVersion: constant String:= "1.20";
     LegalCopyright: constant String:= "© 2012..2013 G. de Montmollin (MIT license)";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
@@ -387,6 +387,7 @@ package azip_Resource_GUI is
   Password_input_box        : constant:=    119;
   Credits_box               : constant:=    121;
   Toolbar_BMP               : constant:=    123;
+  Folders_BMP               : constant:=    124;
   Wait_refresh_box          : constant:=    125;
   Archive_Progress          : constant:=   1000;
   Conflict_simple_name      : constant:=   1000;
@@ -460,6 +461,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return GString;
 
 
-  -- Last line of resource script file: 332
+  -- Last line of resource script file: 331
 
 end azip_Resource_GUI;

@@ -13,6 +13,7 @@
 #define Password_input_box                      119
 #define Credits_box                             121
 #define Toolbar_BMP                             123
+#define Folders_BMP                             124
 #define Wait_refresh_box                        125
 #define Archive_Progress                        1000
 #define Conflict_simple_name                    1000

@@ -565,17 +565,17 @@ package body AZip_Common.Operations is
           when Add =>
             current_operation:= Replace;
             current_entry_name:= U(short_name_utf_16);
+            -- Here we compress new contents for an existing entry
             declare
               external_file_name: constant UTF_8_String:=
                 To_UTF_8(To_Wide_String(entry_name(idx).str));
             begin
-              -- !! try IBM_437 (same as Append below)
               Add_File(
                 Info               => new_zip,
                 Name               => external_file_name,
-                Name_in_archive    => To_UTF_8(base_folder & short_name_utf_16),
+                Name_in_archive    => name,
                 Delete_file_after  => False,
-                Name_encoding      => UTF_8,
+                Name_encoding      => name_encoding,
                 Modification_time  => Zip.Convert(Modification_Time(external_file_name)),
                 Is_read_only       => False, -- !!
                 Feedback           => Entry_feedback'Unrestricted_Access

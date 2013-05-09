@@ -460,7 +460,7 @@ package body AZip_GWin.MDI_Main is
   begin
     box.Create_Full_Dialog(Window);
     box.Version_label.Text(S2G(Version_info.FileVersion));
-    Create_and_Swap(url_azip, box.AZip_URL, box, "http://sf.net/projects/azip");
+    Create_and_Swap(url_azip, box.AZip_URL, box, "http://azip.sf.net/");
     Create_and_Swap(url_gnat, box.GNAT_URL, box, "http://libre.adacore.com");
     Text(box.GNAT_Version, S2G("version " & CVer.Version));
     Create_and_Swap(url_gnavi, box.GNAVI_URL, box, "http://sf.net/projects/gnavi");

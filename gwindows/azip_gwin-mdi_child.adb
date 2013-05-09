@@ -999,6 +999,7 @@ package body AZip_GWin.MDI_Child is
       end if;
     end loop;
     return names(1..j);
+    -- !! create one when none selected but mode is Tree view
   end Get_selected_entry_list;
 
   function Any_path_in_selection(Window: MDI_Child_Type)
@@ -1054,15 +1055,28 @@ package body AZip_GWin.MDI_Child is
           else
             box_kind:= Yes_No_Box;
           end if;
-          Window.opt.ignore_extract_path:=
-            Message_Box(
-              Window,
-              "Extract",
-              "Use archive's directories as seen on the ""Path"" column ?",
-              box_kind,
-              Question_Icon
-            )
-            = No;
+          case Window.opt.view_mode is
+            when Flat =>
+              Window.opt.ignore_extract_path:=
+                Message_Box(
+                  Window,
+                  "Extract",
+                  "Use archive's directories as seen on the ""Path"" column ?",
+                  box_kind,
+                  Question_Icon
+                )
+                = No;
+            when Tree =>
+              Window.opt.ignore_extract_path:=
+                Message_Box(
+                  Window,
+                  "Extract",
+                  "Use archive's folder names for output ?",
+                  box_kind,
+                  Question_Icon
+                )
+                = No;
+          end case;
         end if;
         Process_archive_GWin(
           Window         => Window,

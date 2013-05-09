@@ -874,12 +874,17 @@ package body AZip_GWin.MDI_Child is
   procedure On_File_Drop (Window     : in out MDI_Child_Type;
                           File_Names : in     Array_Of_File_Names) is
     function Eventual_folder return GString is
+      sel_path: constant GString:= GU2G(Window.selected_path);
     begin
       case Window.opt.view_mode is
         when Flat =>
           return "";
         when Tree =>
-          return NL & "Current folder is " & GU2G(Window.selected_path);
+          if sel_path = "" then
+            return NL & "Current folder is archive's root";
+          else
+            return NL & "Current folder is " & sel_path;
+          end if;
       end case;
     end Eventual_folder;
   begin

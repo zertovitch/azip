@@ -12,7 +12,7 @@ package AZip_Common.User_options is
   -- The GUI-agnostic part of user options are stored in this record
   --
   type Option_Pack_Type is record
-    view_mode    : View_Mode_Type:= Flat;
+    view_mode    : View_Mode_Type:= Tree;
     tree_portion : Float:= 0.25;
       -- Horizontal portion of the window for the tree, when view_mode = Tree
     column_width : Column_integer_array:=

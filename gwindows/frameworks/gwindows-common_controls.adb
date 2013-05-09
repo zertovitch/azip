@@ -1923,7 +1923,7 @@ package body GWindows.Common_Controls is
       LVS_LIST                : constant := 16#0003#;
       --  LVS_TYPEMASK            : constant := 16#0003#;
       LVS_SINGLESEL           : constant := 16#0004#;
-      --  LVS_SHOWSELALWAYS       : constant := 16#0008#;
+      LVS_SHOWSELALWAYS       : constant := 16#0008#;
       LVS_SORTASCENDING       : constant := 16#0010#;
       LVS_SORTDESCENDING      : constant := 16#0020#;
       --  LVS_SHAREIMAGELISTS     : constant := 16#0040#;
@@ -1938,7 +1938,7 @@ package body GWindows.Common_Controls is
       --  LVS_NOCOLUMNHEADER      : constant := 16#4000#;
       LVS_NOSORTHEADER        : constant := 16#8000#;
 
-      Styles     : Interfaces.C.unsigned := 0;
+      Styles     : Interfaces.C.unsigned := LVS_SHOWSELALWAYS;
    begin
       if Selection = Single then
          Styles := Styles or LVS_SINGLESEL;

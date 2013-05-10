@@ -983,9 +983,7 @@ package body AZip_GWin.MDI_Child is
     Dock_Children (Window);
   end On_Size;
 
-  function Get_selected_entry_list(Window: MDI_Child_Type)
-  return Array_Of_File_Names
-  is
+  function Get_selected_entry_list(Window: MDI_Child_Type) return Array_Of_File_Names is
     items: constant Natural:= Window.Directory_List.Item_Count;
     names: Array_Of_File_Names(1..items);
     j: Natural:= 0;
@@ -1004,35 +1002,81 @@ package body AZip_GWin.MDI_Child is
       end if;
     end loop;
     return names(1..j);
-    -- !! create one when none selected but mode is Tree view
   end Get_selected_entry_list;
 
-  function Any_path_in_selection(Window: MDI_Child_Type)
-  return Boolean
-  is
-    items: constant Natural:= Window.Directory_List.Item_Count;
+  -- Selected folder's and subfolder's contents (Tree view)
+  function Get_selected_folder_entry_list(Window: MDI_Child_Type) return Array_Of_File_Names is
+    items: constant Natural:= Entries(Window.Zif);
+    names: Array_Of_File_Names(1..items);
+    prefix: GString:= GU2G(Window.selected_path);
+    j: Natural:= 0;
+    procedure Process_entry(
+      name_8_bit       : String; -- 'name' is compressed entry's name, with Zip encoding
+      file_index       : Positive;
+      comp_size        : File_size_type;
+      uncomp_size      : File_size_type;
+      crc_32           : Interfaces.Unsigned_32;
+      date_time        : Time;
+      method           : PKZip_method;
+      name_encoding    : Zip_name_encoding;
+      read_only        : Boolean;
+      encrypted_2_x    : Boolean; -- PKZip 2.x encryption
+      user_code        : in out Integer
+    )
+    is
+      name: constant UTF_16_String:= To_UTF_16(name_8_bit, name_encoding);
+    begin
+      if name'Length >= prefix'Length and then
+         name(name'First..name'First+prefix'Length-1) = prefix then
+        j:= j+1;
+        names(j):= G2GU(name);
+      end if;
+    end Process_entry;
+    procedure Traverse_names is new Zip.Traverse_verbose(Process_entry);
+  begin
+    Traverse_names(Window.zif);
+    return names(1..j);
+  end Get_selected_folder_entry_list;
+
+  function Any_path_in_list(names: Array_Of_File_Names) return Boolean is
     any_path: Boolean:= False;
   begin
-    for i in 0..items - 1 loop -- 0-based
-      if Window.Directory_List.Is_Selected(i) then
-        any_path:= any_path or
-          Window.Directory_List.Text(i, subitem => 9)'Length /= 0;
-      end if;
+    for i in names'Range loop
+      any_path:= any_path or (Index(names(i), "/") > 0) or (Index(names(i), "\") > 0);
     end loop;
     return any_path;
-  end Any_path_in_selection;
+  end Any_path_in_list;
 
   procedure On_Extract(Window : in out MDI_Child_Type) is
-    list: constant Array_Of_File_Names:= Get_selected_entry_list(Window);
+    sel_list: constant Array_Of_File_Names:= Get_selected_entry_list(Window);
+    --
+    function Smart_list return Array_Of_File_Names is
+    begin
+      if sel_list'Length > 0 then
+        return sel_list;
+      else
+        case Window.opt.view_mode is
+          when Flat =>
+            return sel_list; -- We return the empty list (-> whole archive will be extracted)
+          when Tree =>
+            return Get_selected_folder_entry_list(Window);
+        end case;
+      end if;
+    end Smart_list;
+    --
+    list: constant Array_Of_File_Names:= Smart_list;
     --
     function Archive_extract_msg return GString is
     begin
-      if list'Length = 0 then
-        return "Extract entire archive to...";
+      if sel_list'Length > 0 then
+        return "Extract the" & Integer'Wide_Image(sel_list'Length) & " selected entrie(s) to...";
       else
-        return
-          "Extract the" & Integer'Wide_Image(list'Length) &
-          " selected entrie(s) to...";
+        case Window.opt.view_mode is
+          when Flat =>
+            return "Extract entire archive to...";
+          when Tree =>
+            return "Extract current folder's contents to...";
+        end case;
       end if;
     end Archive_extract_msg;
   begin
@@ -1050,13 +1094,13 @@ package body AZip_GWin.MDI_Child is
       if dir /= "" then
         Window.extract_dir:= G2GU(dir);
         if list'Length > 0 then
-          ask:= Any_path_in_selection(Window);
+          ask:= Any_path_in_list(list);
         else
           ask:= Window.any_path_in_zip;
         end if;
         if ask then
           if Window.opt.ignore_extract_path then
-            box_kind:= Yes_No_Def_Box;
+            box_kind:= Yes_No_Def_Box; -- Previous answer was "no", we take this as default
           else
             box_kind:= Yes_No_Box;
           end if;
@@ -1269,7 +1313,7 @@ package body AZip_GWin.MDI_Child is
         Window         => Window,
         operation      => Update,
         file_names     => Empty_Array_Of_File_Names,
-        base_folder    => "", -- !! could be a different folder
+        base_folder    => "", -- We update the whole archive
         search_pattern => "",
         output_folder  =>
           To_UTF_16(

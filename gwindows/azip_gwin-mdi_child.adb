@@ -958,7 +958,7 @@ package body AZip_GWin.MDI_Child is
     pragma Warnings (Off, Width);   -- only client area is considered
     pragma Warnings (Off, Height);  -- only client area is considered
     w: constant Natural:= Window.Client_Area_Width;
-    h: constant Natural:= Window.Client_Area_Height - Window.Status_Bar.Height;
+    h: constant Natural:= Integer'Max(2, Window.Client_Area_Height - Window.Status_Bar.Height);
     splitter_w: constant:= 4; -- between tree and list
     tree_w: constant Integer:= Integer(Window.opt.tree_portion * Float(w)) - splitter_w / 2;
     use GWindows.Types;
@@ -1008,20 +1008,11 @@ package body AZip_GWin.MDI_Child is
   function Get_selected_folder_entry_list(Window: MDI_Child_Type) return Array_Of_File_Names is
     items: constant Natural:= Entries(Window.Zif);
     names: Array_Of_File_Names(1..items);
-    prefix: GString:= GU2G(Window.selected_path);
+    prefix: constant GString:= GU2G(Window.selected_path);
     j: Natural:= 0;
     procedure Process_entry(
       name_8_bit       : String; -- 'name' is compressed entry's name, with Zip encoding
-      file_index       : Positive;
-      comp_size        : File_size_type;
-      uncomp_size      : File_size_type;
-      crc_32           : Interfaces.Unsigned_32;
-      date_time        : Time;
-      method           : PKZip_method;
-      name_encoding    : Zip_name_encoding;
-      read_only        : Boolean;
-      encrypted_2_x    : Boolean; -- PKZip 2.x encryption
-      user_code        : in out Integer
+      name_encoding    : Zip_name_encoding
     )
     is
       name: constant UTF_16_String:= To_UTF_16(name_8_bit, name_encoding);
@@ -1032,7 +1023,7 @@ package body AZip_GWin.MDI_Child is
         names(j):= G2GU(name);
       end if;
     end Process_entry;
-    procedure Traverse_names is new Zip.Traverse_verbose(Process_entry);
+    procedure Traverse_names is new Zip.Traverse_Unicode(Process_entry);
   begin
     Traverse_names(Window.zif);
     return names(1..j);

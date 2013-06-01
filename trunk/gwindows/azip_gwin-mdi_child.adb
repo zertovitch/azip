@@ -22,7 +22,7 @@ with Ada.Environment_Variables;         use Ada.Environment_Variables;
 with Ada.Exceptions;
 with Ada.IO_Exceptions;
 with Ada.Sequential_IO;
-with Ada.Strings.Fixed;                 use Ada.Strings.Fixed;
+with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 with Ada.Unchecked_Deallocation;
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
@@ -420,6 +420,7 @@ package body AZip_GWin.MDI_Child is
   )
   is
     mem_sel_path: constant GString_Unbounded:= Window.selected_path;
+    sel_node: Tree_Item_Node;
   begin
     if Window.opt.view_mode = new_view and not force then
       return;
@@ -445,9 +446,27 @@ package body AZip_GWin.MDI_Child is
         null;
       when Tree =>
         if Is_Loaded(Window.zif) then
-          Window.Folder_Tree.Select_Item(Tree_Item_Node(Window.path_map.Element(mem_sel_path)));
+          loop
+            declare
+              idx: Integer;
+            begin
+              sel_node:= Tree_Item_Node(Window.path_map.Element(Window.selected_path));
+              exit;
+            exception
+              when Constraint_Error =>
+                -- Element fails: the selected path doesn't exist anymore.
+                -- We try going one folder up.
+                idx:= Index(Window.selected_path, "/", Backward);
+                if idx = 0 then
+                  Window.selected_path:= Null_GString_Unbounded;
+                else
+                  Window.selected_path:= Unbounded_Slice(Window.selected_path, 1, idx-1);
+                end if;
+            end;
+          end loop;
+          Window.Folder_Tree.Select_Item(sel_node);
           Update_display(Window, node_selected); -- !! update done twice, once for remapping folders
-          Window.Folder_Tree.Expand(Window.Folder_Tree.Get_Root_Item);
+          Window.Folder_Tree.Expand(sel_node);
           Window.Folder_Tree.Focus;
         end if;
     end case;

@@ -63,15 +63,16 @@ package AZip_GWin.MDI_Child is
 
   overriding procedure On_Item_Changed
     (Control : in out MDI_Child_List_View_Control_Type);
-
   overriding function On_Compare(
                Control: in MDI_Child_List_View_Control_Type;
                Column : in Natural;
                Value1 : in GString;
                Value2 : in GString) return Integer;
+  overriding procedure On_Focus (Control : in out MDI_Child_List_View_Control_Type);
 
   type MDI_Child_Tree_View_Control_Type is new Tree_View_Control_Type with null record;
   overriding procedure On_Selection_Change (Control : in out MDI_Child_Tree_View_Control_Type);
+  overriding procedure On_Focus (Control : in out MDI_Child_Tree_View_Control_Type);
 
   type MDI_Child_Packing_Box_Type is new GWindows.Packing_Boxes.Packing_Box_Type with null record;
   overriding procedure On_Erase_Background
@@ -111,7 +112,7 @@ package AZip_GWin.MDI_Child is
         Directory_List   : MDI_Child_List_View_Control_Type;
         Splitter         : MDI_Child_GSize_Bar_Type;
         Splitter_dashes  : GWindows.Static_Controls.Label_Type;
-        Folder_Tree      : MDI_Child_Tree_View_Control_Type;
+        Folder_Tree      : aliased MDI_Child_Tree_View_Control_Type;
         zif              : Zip.Zip_info;
         path_map         : AZip_Common.Path_Catalogues.Map;
         node_map         : AZip_Common.Node_Catalogues.Map;

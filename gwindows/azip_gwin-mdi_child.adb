@@ -31,6 +31,46 @@ with Interfaces;
 
 package body AZip_GWin.MDI_Child is
 
+  procedure Update_status_bar(Window : in out MDI_Child_Type) is
+    sel: Natural;
+  begin
+    if not Is_Loaded(Window.zif) then
+      Text(Window.Status_Bar,"No archive loaded",0);
+      return;
+    end if;
+    if Window.opt.view_mode = Tree and then
+      Window.Focus = Window.Folder_Tree'Unchecked_Access
+    then
+      Text(Window.Status_Bar,"Folder selected",0);
+      return;
+    end if;
+    -- Here the non trivial case.
+    sel:= Window.Directory_List.Selected_Item_Count;
+    if sel > 0 then
+      Text( Window.Status_Bar,
+        Integer'Wide_Image(Window.Directory_List.Item_Count) &
+          " files," & Integer'Wide_Image(sel) & " selected", 0
+       );
+    else
+      Text( Window.Status_Bar,
+         Integer'Wide_Image(Window.Directory_List.Item_Count) &
+          " files, none selected", 0
+       );
+    end if;
+  end Update_status_bar;
+
+  procedure Update_tool_bar(Window : in out MDI_Child_Type) is
+    not_empty_archive: constant Boolean:=
+      Is_Loaded(Window.zif) and then Entries(Window.zif) > 0;
+    bar: MDI_Toolbar_Type renames Window.Parent.Tool_Bar;
+  begin
+    Bar.Enabled(IDM_EXTRACT, not_empty_archive);
+    Bar.Enabled(IDM_Delete_selected, not_empty_archive);
+    Bar.Enabled(IDM_FIND_IN_ARCHIVE, not_empty_archive);
+    Bar.Enabled(IDM_TEST_ARCHIVE, not_empty_archive);
+    Bar.Enabled(IDM_UPDATE_ARCHIVE, not_empty_archive);
+  end Update_tool_bar;
+
   procedure Update_display(
     Window : in out MDI_Child_Type;
     need   :        Update_need
@@ -244,8 +284,6 @@ package body AZip_GWin.MDI_Child is
       Window.refreshing_list:= False;
     end Feed_directory_list;
 
-    sel: Natural;
-    non_empty: constant Boolean:= Is_Loaded(Window.zif) and then Entries(Window.zif) > 0;
     w_root: Tree_Item_Node;
 
   begin
@@ -277,22 +315,6 @@ package body AZip_GWin.MDI_Child is
         Check(Window.Menu.Main, Command, IDM_FLAT_VIEW, False);
         Check(Window.Menu.Main, Command, IDM_TREE_VIEW, True);
     end case;
-    if Is_Loaded(Window.zif) then
-      sel:= Window.Directory_List.Selected_Item_Count;
-      if sel > 0 then
-        Text( Window.Status_Bar,
-          Integer'Wide_Image(Window.Directory_List.Item_Count) &
-            " files," & Integer'Wide_Image(sel) & " selected", 0
-         );
-      else
-        Text( Window.Status_Bar,
-          Integer'Wide_Image(Window.Directory_List.Item_Count) &
-            " files, none selected", 0
-         );
-      end if;
-    else
-      Text(Window.Status_Bar,"No archive loaded",0);
-    end if;
     if need in first_display .. node_selected and then
       Window.Parent.opt.sort_column >= 0
     then
@@ -305,11 +327,8 @@ package body AZip_GWin.MDI_Child is
          )
        );
     end if;
-    Window.Parent.Tool_Bar.Enabled(IDM_EXTRACT, non_empty);
-    Window.Parent.Tool_Bar.Enabled(IDM_Delete_selected, non_empty);
-    Window.Parent.Tool_Bar.Enabled(IDM_FIND_IN_ARCHIVE, non_empty);
-    Window.Parent.Tool_Bar.Enabled(IDM_TEST_ARCHIVE, non_empty);
-    Window.Parent.Tool_Bar.Enabled(IDM_UPDATE_ARCHIVE, non_empty);
+    Update_status_bar(Window);
+    Update_tool_bar(Window);
   end Update_display;
 
   procedure On_Item_Changed (Control : in out MDI_Child_List_View_Control_Type) is
@@ -384,17 +403,28 @@ package body AZip_GWin.MDI_Child is
     end if;
   end On_Compare;
 
+  overriding procedure On_Focus (Control : in out MDI_Child_List_View_Control_Type) is
+  begin
+    Update_status_bar(MDI_Child_Type(Control.Parent.Parent.Parent.all));
+  end On_Focus;
+
   overriding procedure On_Selection_Change (Control : in out MDI_Child_Tree_View_Control_Type) is
     w_node: constant Tree_Item_Node:= Control.Selected_Item;
     parent_window: MDI_Child_Type renames MDI_Child_Type(Control.Parent.Parent.all);
     new_path: constant GString_Unbounded:= parent_window.node_map.Element(Integer(w_node));
   begin
     if new_path = parent_window.selected_path then
-      return; -- the same node as before has been select, no refresh needed.
+      Update_status_bar(parent_window);
+      return; -- the same node as before has been selected, no further refresh needed.
     end if;
     parent_window.selected_path:= new_path;
     Update_display(parent_window, node_selected);
   end On_Selection_Change;
+
+  overriding procedure On_Focus (Control : in out MDI_Child_Tree_View_Control_Type) is
+  begin
+    Update_status_bar(MDI_Child_Type(Control.Parent.Parent.all));
+  end On_Focus;
 
   procedure Memorize_splitter(Window: in out MDI_Child_Type) is
   begin

@@ -31,6 +31,13 @@ with Interfaces;
 
 package body AZip_GWin.MDI_Child is
 
+  function Folder_Focus(Window : in MDI_Child_Type) return Boolean is
+  begin
+    return
+      Window.opt.view_mode = Tree and then
+      Window.Focus = Window.Folder_Tree'Unrestricted_Access;
+  end Folder_Focus;
+
   procedure Update_status_bar(Window : in out MDI_Child_Type) is
     sel: Natural;
   begin
@@ -38,9 +45,7 @@ package body AZip_GWin.MDI_Child is
       Text(Window.Status_Bar,"No archive loaded",0);
       return;
     end if;
-    if Window.opt.view_mode = Tree and then
-      Window.Focus = Window.Folder_Tree'Unchecked_Access
-    then
+    if Folder_Focus(Window) then
       Text(Window.Status_Bar,"Folder selected",0);
       return;
     end if;
@@ -1059,6 +1064,7 @@ package body AZip_GWin.MDI_Child is
     names: Array_Of_File_Names(1..items);
     prefix: constant GString:= GU2G(Window.selected_path);
     j: Natural:= 0;
+    --
     procedure Process_entry(
       name_8_bit       : String; -- 'name' is compressed entry's name, with Zip encoding
       name_encoding    : Zip_name_encoding
@@ -1092,33 +1098,33 @@ package body AZip_GWin.MDI_Child is
     --
     function Smart_list return Array_Of_File_Names is
     begin
-      if sel_list'Length > 0 then
-        return sel_list;
+      if Folder_focus(Window) then
+        return Get_selected_folder_entry_list(Window);
       else
-        case Window.opt.view_mode is
-          when Flat =>
-            return sel_list; -- We return the empty list (-> whole archive will be extracted)
-          when Tree =>
-            return Get_selected_folder_entry_list(Window);
-        end case;
+        return sel_list; -- If the list is empty list, whole archive will be extracted
       end if;
     end Smart_list;
     --
-    list: constant Array_Of_File_Names:= Smart_list;
-    --
     function Archive_extract_msg return GString is
     begin
-      if sel_list'Length > 0 then
-        return "Extract the" & Integer'Wide_Image(sel_list'Length) & " selected entrie(s) to...";
+      if Folder_focus(Window) then
+        return "Extract current folder's contents to...";
+      elsif sel_list'Length > 0 then
+        return "Extract the" & Integer'Wide_Image(sel_list'Length) & " selected item(s) to...";
       else
-        case Window.opt.view_mode is
-          when Flat =>
-            return "Extract entire archive to...";
-          when Tree =>
-            return "Extract current folder's contents to...";
-        end case;
+        return "Extract entire archive to...";
       end if;
     end Archive_extract_msg;
+    --
+    function Use_path_question return GString is
+    begin
+      case Window.opt.view_mode is
+        when Flat =>
+          return "Use archive's directories as seen on the ""Path"" column ?";
+        when Tree =>
+          return "Use archive's folder names for output ?";
+      end case;
+    end Use_path_question;
   begin
     if not Is_Loaded(Window.zif) then
       return; -- No archive, then nothing to do
@@ -1130,6 +1136,7 @@ package body AZip_GWin.MDI_Child is
         Initial_Path => GU2G(Window.extract_dir) );
       box_kind: Message_Box_Type;
       ask: Boolean;
+      list: constant Array_Of_File_Names:= Smart_list;
     begin
       if dir /= "" then
         Window.extract_dir:= G2GU(dir);
@@ -1140,32 +1147,12 @@ package body AZip_GWin.MDI_Child is
         end if;
         if ask then
           if Window.opt.ignore_extract_path then
-            box_kind:= Yes_No_Def_Box; -- Previous answer was "no", we take this as default
+            box_kind:= Yes_No_Def_Box; -- Previous answer was "No", so we take "No" as default
           else
             box_kind:= Yes_No_Box;
           end if;
-          case Window.opt.view_mode is
-            when Flat =>
-              Window.opt.ignore_extract_path:=
-                Message_Box(
-                  Window,
-                  "Extract",
-                  "Use archive's directories as seen on the ""Path"" column ?",
-                  box_kind,
-                  Question_Icon
-                )
-                = No;
-            when Tree =>
-              Window.opt.ignore_extract_path:=
-                Message_Box(
-                  Window,
-                  "Extract",
-                  "Use archive's folder names for output ?",
-                  box_kind,
-                  Question_Icon
-                )
-                = No;
-          end case;
+          Window.opt.ignore_extract_path:=
+            Message_Box( Window, "Extract", Use_path_question, box_kind, Question_Icon ) = No;
         end if;
         Process_archive_GWin(
           Window         => Window,
@@ -1182,22 +1169,35 @@ package body AZip_GWin.MDI_Child is
   end On_Extract;
 
   procedure On_Delete(Window : in out MDI_Child_Type) is
+    sel_list: constant Array_Of_File_Names:= Get_selected_entry_list(Window);
+    --
+    function Smart_list return Array_Of_File_Names is
+    begin
+      if Folder_focus(Window) then
+        return Get_selected_folder_entry_list(Window);
+      else
+        return sel_list;
+      end if;
+    end Smart_list;
+    --
+    function Delete_msg return GString is
+    begin
+      if Folder_focus(Window) then
+        return "Do you want to remove the entire selected FOLDER and subfolders ?";
+      else
+        return "Do you want to remove the" & Integer'Wide_Image(sel_list'Length) &
+          " selected item(s) ?";
+      end if;
+    end Delete_msg;
   begin
-    if Window.Directory_List.Selected_Item_Count = 0 then
-      return;
+    if Window.Directory_List.Selected_Item_Count = 0 and not Folder_focus(Window) then
+      return; -- not item -> do nothing (different from On_Extract's behaviour)
     end if;
-    if Message_Box(
-        Window,
-        "Delete",
-        "Do you want to remove the selected item(s) from the archive ?",
-        Yes_No_Box,
-        Question_Icon)
-      = Yes
-    then
+    if Message_Box(Window, "Delete", Delete_msg, Yes_No_Box, Question_Icon) = Yes then
       Process_archive_GWin(
         Window         => Window,
         operation      => Remove,
-        file_names     => Get_selected_entry_list(Window),
+        file_names     => Smart_list,
         base_folder    => "",
         search_pattern => "",
         output_folder  => "",

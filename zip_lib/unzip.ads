@@ -23,7 +23,7 @@
 
 -- Legal licensing note:
 
---  Copyright (c) 1999..2010 Gautier de Montmollin
+--  Copyright (c) 1999..2013 Gautier de Montmollin
 
 --  Permission is hereby granted, free of charge, to any person obtaining a copy
 --  of this software and associated documentation files (the "Software"), to deal
@@ -308,11 +308,14 @@ private
     ( write_to_binary_file,
       write_to_text_file,
       write_to_memory,
+      write_to_stream,
       just_test
     );
 
   subtype Write_to_file is Write_mode
     range write_to_binary_file..write_to_text_file;
+
+  type p_Stream is access all Ada.Streams.Root_Stream_Type'Class;
 
   type p_Stream_Element_Array is access all Ada.Streams.Stream_Element_Array;
 

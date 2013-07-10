@@ -465,7 +465,7 @@ package body AZip_Common is
     encrypted: Boolean:= False;
     procedure Detect_encryption(
       name             : String; -- 'name' is compressed entry's name
-      file_index       : Positive;
+      file_index       : Zip_Streams.ZS_Index_Type;
       comp_size        : File_size_type;
       uncomp_size      : File_size_type;
       crc_32           : Interfaces.Unsigned_32;

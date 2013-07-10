@@ -1,13 +1,27 @@
 -- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
 -- for the AZip project ( http://azip.sf.net/ ), version using GWindows.
--- Build me with "gnatmake -P azip_gwindows.gpr", or open me with GPS
+-- Build me with "gnatmake -P azip_gwindows", or open me with GPS
+
+-- External libraries.
+--   You need to make the following source files visible to GNAT through the
+--   Ada_Include_Path environment variable.
 --
+-- GWindows and contributions:
+--   [gnavi]\gwindows\framework
+--   [gnavi]\gwindows\contrib
+--   [gnavi]\gnatcom\framework
+--   Project URL: http://sf.net/projects/gnavi/
+--
+-- Zip-Ada:
+--   [zip-ada]\zip_lib
+--   Project URL: http://unzip-ada.sf.net
+
 project AZip_GWindows is
 
    type Build_Mode_Type is
       ("Debug", "Fast", "Profiling");
    Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
-   for Source_Dirs use ("../gui_common", "../zip_lib", ".", "frameworks", "win_special");
+   for Source_Dirs use ("../gui_common", ".", "win_special");
    for Exec_Dir use ".";
    for Main use ("azip.adb");
 
@@ -52,7 +66,7 @@ project AZip_GWindows is
    end Compiler;
 
    package Builder is
-      for Default_Switches ("ada") use ("-j7", "-C");
+      for Default_Switches ("ada") use ("-j7", "-C", "-x");
    end Builder;
    
 end AZip_GWindows;

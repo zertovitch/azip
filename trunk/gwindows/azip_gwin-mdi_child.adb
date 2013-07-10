@@ -128,7 +128,7 @@ package body AZip_GWin.MDI_Child is
       --
       procedure Process_row(
         name_8_bit       : String; -- 'name' is compressed entry's name, with Zip encoding
-        file_index       : Positive;
+        file_index       : Zip_Streams.ZS_Index_Type;
         comp_size        : File_size_type;
         uncomp_size      : File_size_type;
         crc_32           : Interfaces.Unsigned_32;

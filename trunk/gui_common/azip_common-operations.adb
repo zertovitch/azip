@@ -5,7 +5,6 @@ with Ada.Directories;                   use Ada.Directories;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
-with Ada.Streams.Stream_IO;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 
 with Interfaces;
@@ -194,7 +193,7 @@ package body AZip_Common.Operations is
   procedure Copy_user_codes(from, to: Zip.Zip_info) is
     procedure Copy_user_code(
       name             : String; -- 'name' is compressed entry's full name
-      file_index       : Positive;
+      file_index       : Zip_Streams.ZS_Index_Type;
       comp_size        : Zip.File_size_type;
       uncomp_size      : Zip.File_size_type;
       crc_32           : Interfaces.Unsigned_32;
@@ -404,7 +403,7 @@ package body AZip_Common.Operations is
     --
     procedure Action(
       name             : String; -- 'name' is compressed entry's full name
-      file_index       : Positive;
+      file_index       : Zip_Streams.ZS_Index_Type;
       comp_size        : Zip.File_size_type;
       uncomp_size      : Zip.File_size_type;
       crc_32           : Interfaces.Unsigned_32;
@@ -446,7 +445,7 @@ package body AZip_Common.Operations is
         this_file_fzs: aliased Zip_Streams.File_Zipstream;
         this_file_zif: Zip.Zip_info;
         dummy_name_encoding  : Zip_name_encoding;
-        file_index     : Ada.Streams.Stream_IO.Positive_Count;
+        file_index     : Zip_Streams.ZS_Index_Type;
         dummy_comp_size      : Zip.File_size_type;
         dummy_uncomp_size    : Zip.File_size_type;
         new_crc_32     : Interfaces.Unsigned_32;
@@ -488,8 +487,8 @@ package body AZip_Common.Operations is
           user_code:= nothing;
         else
           Zip_Streams.Set_Name(this_file_fzs, this_file_zip_name);
-          Zip_Streams.Open(this_file_fzs, Ada.Streams.Stream_IO.In_File);
-          Zip_Streams.Set_Index(this_file_fzs, Positive(file_index));
+          Zip_Streams.Open(this_file_fzs, Zip_Streams.In_File);
+          Zip_Streams.Set_Index(this_file_fzs, file_index);
           Zip.Create.Add_Compressed_Stream(
             Info     => new_zip,
             Stream   => this_file_fzs,
@@ -747,7 +746,7 @@ package body AZip_Common.Operations is
     case operation is
       when Modifying_Operation =>
         Zip_Streams.Set_Name(old_fzs, Zip.Zip_Name(zif));
-        Zip_Streams.Open(old_fzs, Ada.Streams.Stream_IO.In_File);
+        Zip_Streams.Open(old_fzs, Zip_Streams.In_File);
         Zip.Create.Create(new_zip, new_fzs'Unchecked_Access, new_temp_name);
       when Read_Only_Operation =>
         null;
@@ -929,7 +928,7 @@ package body AZip_Common.Operations is
   is
     procedure Action(
       name             : String; -- 'name' is compressed entry's full name
-      file_index       : Positive;
+      file_index       : Zip_Streams.ZS_Index_Type;
       comp_size        : Zip.File_size_type;
       uncomp_size      : Zip.File_size_type;
       crc_32           : Interfaces.Unsigned_32;

@@ -2,17 +2,17 @@
 -- for the AZip project ( http://azip.sf.net/ ), version using GWindows.
 -- Build me with "gnatmake -P azip_gwindows", or open me with GPS
 
--- External libraries.
---   You need to make the following source files visible to GNAT through the
---   Ada_Include_Path environment variable.
+-- *** External libraries ***
+--   You need to make the following projects' source files visible to this project
+--   through the ad-hoc GNAT_SOURCE_PATH environment variable:
 --
--- GWindows and contributions:
+-- * GWindows and contributions:
 --   [gnavi]\gwindows\framework
 --   [gnavi]\gwindows\contrib
 --   [gnavi]\gnatcom\framework
 --   Project URL: http://sf.net/projects/gnavi/
 --
--- Zip-Ada:
+-- * Zip-Ada:
 --   [zip-ada]\zip_lib
 --   Project URL: http://unzip-ada.sf.net
 
@@ -21,7 +21,7 @@ project AZip_GWindows is
    type Build_Mode_Type is
       ("Debug", "Fast", "Profiling");
    Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
-   for Source_Dirs use ("../gui_common", ".", "win_special");
+   for Source_Dirs use ("../gui_common", ".", "win_special") & external_as_list("GNAT_SOURCE_PATH", ";");
    for Exec_Dir use ".";
    for Main use ("azip.adb");
 

@@ -14,8 +14,13 @@
 // Bitmap resources
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Toolbar_BMP        BITMAP         "ico_bmp/az_tools.bmp"
 Folders_BMP        BITMAP         "ico_bmp/folders.bmp"
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Toolbar_BMP        BITMAP         "ico_bmp/az_tools.bmp"
+
+
 
 //
 // Menu resources
@@ -134,8 +139,8 @@ FONT 8, "Ms Shell Dlg"
 {
     ICON            AZip_Icon, IDC_STATIC, 12, 14, 87, 80, SS_ICON | SS_RIGHTJUST | SS_CENTERIMAGE | SS_SUNKEN | SS_REALSIZEIMAGE
     LTEXT           "AZip - A portable Zip Archive Manager", IDC_STATIC, 110, 14, 165, 8, SS_LEFT
-    LTEXT           "Copyright © Gautier de Montmollin 2012 .. 2013", IDC_STATIC, 110, 29, 173, 8, SS_LEFT
-    LTEXT           "MIT Open Source License", IDC_STATIC, 110, 44, 100, 8, SS_LEFT
+    LTEXT           "Copyright © Gautier de Montmollin 2012 .. 2014", IDC_STATIC, 110, 29, 165, 8, SS_LEFT
+    LTEXT           "MIT Open Source License", IDC_STATIC, 110, 44, 120, 8, SS_LEFT
     LTEXT           "Internet:", IDC_STATIC, 110, 61, 30, 8, SS_LEFT
     LTEXT           "http://azip.sf.net/", AZip_URL, 157, 61, 89, 8, SS_LEFT
     LTEXT           "Version:", IDC_STATIC, 110, 81, 30, 8, SS_LEFT
@@ -160,12 +165,13 @@ CAPTION "Credits"
 FONT 8, "Ms Shell Dlg"
 {
     DEFPUSHBUTTON   "Close", IDOK, 107, 177, 88, 18
-    GROUPBOX        "GWindows - native MS Windows framework", IDC_STATIC, 11, 54, 284, 62
-    LTEXT           "David Botton: main author", IDC_STATIC, 24, 69, 237, 8, SS_LEFT
-    LTEXT           "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", IDC_STATIC, 24, 83, 260, 8, SS_LEFT
-    GROUPBOX        "Zip-Ada", IDC_STATIC, 11, 4, 283, 44
-    LTEXT           "Stratégies Software team: intensive profiling and contributions", IDC_STATIC, 25, 17, 234, 8, SS_LEFT
-    LTEXT           "ITEC team at NXP Semiconductors: contributions", IDC_STATIC, 25, 31, 226, 8, SS_LEFT
+    GROUPBOX        "Zip-Ada - Zip archive management library", IDC_STATIC, 11, 4, 283, 44
+    LTEXT           "Stratégies Software team: intensive profiling and contributions", IDC_STATIC, 25, 18, 260, 8, SS_LEFT
+    LTEXT           "ITEC team at NXP Semiconductors: contributions", IDC_STATIC, 25, 32, 260, 8, SS_LEFT
+    GROUPBOX        "GWindows - native MS Windows framework", IDC_STATIC, 11, 54, 284, 76
+    LTEXT           "David Botton: main author", IDC_STATIC, 25, 69, 260, 8, SS_LEFT
+    LTEXT           "André van Splunter", IDC_STATIC, 25, 83, 260, 8, SS_LEFT
+    LTEXT           "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", IDC_STATIC, 25, 97, 260, 8, SS_LEFT
 }
 
 

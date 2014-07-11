@@ -1147,12 +1147,18 @@ package body AZip_GWin.MDI_Child is
         end if;
         if ask then
           if Window.opt.ignore_extract_path then
-            box_kind:= Yes_No_Def_Box; -- Previous answer was "No", so we take "No" as default
+            box_kind:= Yes_No_Def_Cancel_Box; -- Previous answer was "No", so we take "No" as default
           else
-            box_kind:= Yes_No_Box;
+            box_kind:= Yes_No_Cancel_Box;
           end if;
-          Window.opt.ignore_extract_path:=
-            Message_Box( Window, "Extract", Use_path_question, box_kind, Question_Icon ) = No;
+          case Message_Box( Window, "Extract", Use_path_question, box_kind, Question_Icon ) is
+            when No =>
+              Window.opt.ignore_extract_path:= True;
+            when Yes =>
+              Window.opt.ignore_extract_path:= False;
+            when others =>
+              return;
+          end case;
         end if;
         Process_archive_GWin(
           Window         => Window,

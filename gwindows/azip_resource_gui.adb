@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2013/06/08   02:39:05
+-- Transcription time: 2014/07/14  23:09:00
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 25-Nov-2012
+-- RC Grammar version: 22-Apr-2014
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -21,7 +21,7 @@ package body azip_Resource_GUI is
   -- ** Generated code begins here \/ \/ \/.
 
 
-  -- Menu at line 24
+  -- Menu at line 29
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type)
   is
@@ -84,7 +84,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Child_Type
 
 
-  -- Menu at line 89
+  -- Menu at line 94
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -120,7 +120,7 @@ package body azip_Resource_GUI is
   end Create_Full_Menu; -- Menu_MDI_Main_Type
 
 
-  -- Dialog at resource line 133
+  -- Dialog at resource line 138
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -194,9 +194,9 @@ package body azip_Resource_GUI is
     Create( Window.Static_0001, Window, Num_resource(AZip_Icon), x,y,w,h, GWindows.Static_Controls.STATIC_SIZE, HALF_SUNKEN);
     Dlg_to_Scn(  110, 14, 165, 8, x,y,w,h);
     Create_label( Window, "AZip - A portable Zip Archive Manager", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  110, 29, 173, 8, x,y,w,h);
-    Create_label( Window, "Copyright © Gautier de Montmollin 2012 .. 2013", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  110, 44, 100, 8, x,y,w,h);
+    Dlg_to_Scn(  110, 29, 165, 8, x,y,w,h);
+    Create_label( Window, "Copyright © Gautier de Montmollin 2012 .. 2014", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  110, 44, 120, 8, x,y,w,h);
     Create_label( Window, "MIT Open Source License", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  110, 61, 30, 8, x,y,w,h);
     Create_label( Window, "Internet:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
@@ -245,7 +245,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- About_box_Type
 
 
-  -- Dialog at resource line 160
+  -- Dialog at resource line 165
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -312,22 +312,24 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  11, 54, 284, 62, x,y,w,h);
-    Create( Window.Static_0001, Window, "GWindows - native MS Windows framework", x,y,w,h);
-    Dlg_to_Scn(  24, 69, 237, 8, x,y,w,h);
-    Create_label( Window, "David Botton: main author", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  24, 83, 260, 8, x,y,w,h);
-    Create_label( Window, "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  11, 4, 283, 44, x,y,w,h);
-    Create( Window.Static_0004, Window, "Zip-Ada", x,y,w,h);
-    Dlg_to_Scn(  25, 17, 234, 8, x,y,w,h);
+    Create( Window.Static_0001, Window, "Zip-Ada - Zip archive management library", x,y,w,h);
+    Dlg_to_Scn(  25, 18, 260, 8, x,y,w,h);
     Create_label( Window, "Stratégies Software team: intensive profiling and contributions", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  25, 31, 226, 8, x,y,w,h);
+    Dlg_to_Scn(  25, 32, 260, 8, x,y,w,h);
     Create_label( Window, "ITEC team at NXP Semiconductors: contributions", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  11, 54, 284, 76, x,y,w,h);
+    Create( Window.Static_0004, Window, "GWindows - native MS Windows framework", x,y,w,h);
+    Dlg_to_Scn(  25, 69, 260, 8, x,y,w,h);
+    Create_label( Window, "David Botton: main author", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  25, 83, 260, 8, x,y,w,h);
+    Create_label( Window, "André van Splunter", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  25, 97, 260, 8, x,y,w,h);
+    Create_label( Window, "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
   end Create_Contents; -- Credits_box_Type
 
 
-  -- Dialog at resource line 177
+  -- Dialog at resource line 183
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -474,7 +476,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- File_exists_box_Type
 
 
-  -- Dialog at resource line 197
+  -- Dialog at resource line 203
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -577,7 +579,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Find_box_Type
 
 
-  -- Dialog at resource line 213
+  -- Dialog at resource line 219
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -684,7 +686,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Password_input_box_Type
 
 
-  -- Dialog at resource line 231
+  -- Dialog at resource line 237
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -780,7 +782,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Progress_box_Type
 
 
-  -- Dialog at resource line 248
+  -- Dialog at resource line 254
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -953,6 +955,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 331
+  -- Last line of resource script file: 337
 
 end azip_Resource_GUI;

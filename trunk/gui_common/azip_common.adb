@@ -367,14 +367,19 @@ package body AZip_Common is
   function File_Size_Value(s: UTF_16_String) return Zip.File_size_type is
     use type File_size_type;
   begin
-    if Index(s, "KB") > 0 then
-      return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024;
-    elsif Index(s, "MB") > 0 then
-      return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024**2;
-    elsif Index(s, "GB") > 0 then
-      return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024**3;
-    else
+    if s'Length < 4 then
       return File_size_type'Wide_Value(s);
+    else
+      case s(s'Last-1) is
+        when 'K' =>
+          return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024;
+        when 'M' =>
+          return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024**2;
+        when 'G' =>
+          return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024**3;
+        when others =>
+          return File_size_type'Wide_Value(s);
+      end case;
     end if;
   end File_Size_Value;
 
@@ -488,7 +493,6 @@ package body AZip_Common is
     Scan_encryption(info);
     return encrypted;
   end Has_Zip_archive_encrypted_entries;
-
 
 begin
   Zip_Streams.Form_For_IO_Open_and_Create:= To_Unbounded_String("encoding=utf8");

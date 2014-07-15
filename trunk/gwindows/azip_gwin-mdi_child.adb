@@ -165,6 +165,9 @@ package body AZip_GWin.MDI_Child is
               -- Directory separator, ok with Unicode UTF-8 names
               previous_idx:= simple_name_idx;
               simple_name_idx:= i + 1;
+              --
+              -- Feed eventual folder tree
+              --
               if Window.opt.view_mode = Tree and need in first_display .. archive_changed then
                 declare
                   partial_path: UTF_16_String renames name(name'First..i-1);
@@ -190,8 +193,12 @@ package body AZip_GWin.MDI_Child is
               null;
           end case;
         end loop;
-        if simple_name_idx > name'Last then -- skip directory entries
+        if simple_name_idx > name'Last then -- skip directory entries (names end with '/' or '\')
           return;
+        end if;
+        if extension_idx < simple_name_idx then
+          -- last dot was in a directory name (like: .svn/entries)
+          extension_idx:= name'Last + 1; -- will be empty
         end if;
         if Window.opt.view_mode = Tree and then prefix_path /=  name(name'First..simple_name_idx-2) then
           return; -- not in a part of the tree to be displayed

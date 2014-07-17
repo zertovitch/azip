@@ -445,7 +445,6 @@ package body AZip_GWin.MDI_Main is
   procedure On_About(Window : in out MDI_Main_Type) is
     box: About_Box_Type;
     url_azip, url_gnat, url_gnavi, url_resedit, url_zipada: URL_Type;
-    package CVer is new GNAT.Compiler_Version;
     --
     procedure Credits_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
       credits_box: Credits_box_Type;
@@ -457,12 +456,23 @@ package body AZip_GWin.MDI_Main is
       Show_Dialog(credits_Box, box);
     end Credits_clicked;
     --
+    function GNAT_Version_string return String is
+      package CVer is new GNAT.Compiler_Version;
+      v: constant String:= CVer.Version;
+    begin
+      if v(v'First..v'First+2) = "GPL" then
+        return v;
+      else
+        return "GMGPL " & v & " (MinGW)";
+      end if;
+    end GNAT_Version_string;
+    --
   begin
     box.Create_Full_Dialog(Window);
     box.Version_label.Text(S2G(Version_info.FileVersion));
     Create_and_Swap(url_azip, box.AZip_URL, box, "http://azip.sf.net/");
     Create_and_Swap(url_gnat, box.GNAT_URL, box, "http://libre.adacore.com");
-    Text(box.GNAT_Version, S2G("version " & CVer.Version));
+    Text(box.GNAT_Version, S2G("version " & GNAT_Version_string));
     Create_and_Swap(url_gnavi, box.GNAVI_URL, box, "http://sf.net/projects/gnavi");
     Create_and_Swap(url_resedit, box.ResEdit_URL, box, "http://resedit.net");
     Create_and_Swap(url_zipada, box.ZipAda_URL, box, S2G(Zip.web));

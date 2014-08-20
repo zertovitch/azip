@@ -3,7 +3,7 @@ with AZip_Common;                       use AZip_Common;
 with Zip;                               use Zip;
 with Zip_Streams;
 with UnZip;
-with Time_Display;
+with Zip_Time_Display;
 
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
@@ -209,12 +209,12 @@ package body AZip_GWin.MDI_Child is
           --
           -- Payload
           --
-          payload_access:= new LV_payload'(index_before_sorting => row); -- !! small leak here...
+          payload_access:= new LV_payload'(index_before_sorting => row);
           Lst.Item_Data(row, payload_access);
           --
           Lst.Set_Sub_Item(name(extension_idx..name'Last), row, cidx(FType)-1);
           begin
-            Lst.Set_Sub_Item(S2G(Time_Display(Convert(date_time))), row, cidx(Modified)-1);
+            Lst.Set_Sub_Item(S2G(Zip_Time_Display(date_time)), row, cidx(Modified)-1);
           exception
             when Zip_Streams.Calendar.Time_Error =>
               Lst.Set_Sub_Item("(invalid)", row, cidx(Modified)-1);
@@ -330,6 +330,7 @@ package body AZip_GWin.MDI_Child is
     if need in first_display .. node_selected and then
       Window.Parent.opt.sort_column >= 0
     then
+      -- Peform an initial sorting according to current options.
       Window.Directory_List.Sort(
         Window.Parent.opt.sort_column,
         AZip_LV_Ex.Sort_Direction_Type'Value(
@@ -419,6 +420,17 @@ package body AZip_GWin.MDI_Child is
   begin
     Update_status_bar(MDI_Child_Type(Control.Parent.Parent.Parent.all));
   end On_Focus;
+
+  -- !! Missing in EX_LV: freeing internal tables on Delete_Item, Clear.
+  --    Rem. 20-Aug-2014
+  -- !! Missing in EX_LV: a On_Free_Payload that one can override
+  -- overriding procedure On_Free_Payload(
+  --              Control: in out MDI_Child_List_View_Control_Type;
+  --              Payload: out AZip_LV_Ex.Data_access) is
+  --   procedure Dispose is new Ada.Unchecked_Deallocation(LV_Payload, AZip_LV_Ex.Data_Access);
+  -- begin
+  --   Dispose(Payload);
+  -- end On_Free_Payload;
 
   overriding procedure On_Selection_Change (Control : in out MDI_Child_Tree_View_Control_Type) is
     w_node: constant Tree_Item_Node:= Control.Selected_Item;
@@ -1453,6 +1465,9 @@ package body AZip_GWin.MDI_Child is
       end loop;
     end if;
     if Can_Close then
+      if Is_loaded(Window.zif) then
+        Zip.Delete(Window.zif);
+      end if;
       -- Memorize column widths
       for e in Entry_topic'Range loop
         if Window.opt.view_mode /= Tree or e /= Path then
@@ -1464,7 +1479,7 @@ package body AZip_GWin.MDI_Child is
         Window.Parent.opt.sort_column,
         sd
       );
-      -- We pass the Up/Down direction from the GWindows type to our.
+      -- We pass the Up/Down direction from the GWindows type to ours.
       Window.Parent.opt.sort_direction:=
         AZip_Common.User_options.Sort_Direction_Type'Value(
            AZip_LV_Ex.Sort_Direction_Type'Image(sd)

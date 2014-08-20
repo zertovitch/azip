@@ -8,17 +8,16 @@ with Zip;
 with GWindows;                          use GWindows;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Common_Controls.Ex_List_View;
+with GWindows.Drawing;
 with GWindows.GControls.GSize_Bars;
 with GWindows.Packing_Boxes;
 with GWindows.Panels;
 with GWindows.Static_Controls;
+with GWindows.Types;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 
 with Ada.Numerics.Float_Random;
-with AZip_Common;
-with GWindows.Drawing;
-with GWindows.Types;
 
 package AZip_GWin.MDI_Child is
 
@@ -69,7 +68,9 @@ package AZip_GWin.MDI_Child is
                Value1 : in GString;
                Value2 : in GString) return Integer;
   overriding procedure On_Focus (Control : in out MDI_Child_List_View_Control_Type);
-
+  -- overriding procedure On_Free_Payload(
+  --              Control: in out MDI_Child_List_View_Control_Type;
+  --              Payload: out AZip_LV_Ex.Data_access);
   type MDI_Child_Tree_View_Control_Type is new Tree_View_Control_Type with null record;
   overriding procedure On_Selection_Change (Control : in out MDI_Child_Tree_View_Control_Type);
   overriding procedure On_Focus (Control : in out MDI_Child_Tree_View_Control_Type);

@@ -40,7 +40,7 @@ package AZip_Common.User_options is
     MDI_main_maximized    : Boolean := False;
     mru                   : MRU_List:= (others => Null_Unbounded_Wide_String);
     show_passwords        : Boolean := False;
-    sort_column           : Integer := -1; -- 0-based; -1 if none
+    sort_column           : Integer := -1; -- column index is 0-based; -1 if no sorting column
     sort_direction        : Sort_Direction_Type:= Up;
     ignore_extract_path   : Boolean := False;
   end record;

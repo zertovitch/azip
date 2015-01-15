@@ -44,7 +44,7 @@ package body AZip_Common.Operations is
           when only_archive =>
             return "File only in archive";
           when nothing =>
-            return "Newer date or same data in archive";
+            return "Same data or more recent timestamp in archive";
           when others =>
             null;
         end case;

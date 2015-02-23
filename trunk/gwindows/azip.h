@@ -15,7 +15,8 @@
 #define Toolbar_BMP                             123
 #define Folders_BMP                             124
 #define Wait_refresh_box                        125
-#define Find_Icon                               129
+#define Key_Icon                                131
+#define Binoculars_Icon                         132
 #define Archive_Progress                        1000
 #define Conflict_simple_name                    1000
 #define Encrypted_entry                         1000
@@ -38,6 +39,7 @@
 #define Comment_2                               1007
 #define Comment_1                               1008
 #define Overwrite_No                            1008
+#define Copyright_label                         40000
 #define IDM__NEW_ARCHIVE                        40000
 #define IDM__OPEN_ARCHIVE                       40001
 #define IDM_MRU_1                               40002

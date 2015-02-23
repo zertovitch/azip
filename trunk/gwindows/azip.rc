@@ -139,7 +139,7 @@ FONT 8, "Ms Shell Dlg"
 {
     ICON            AZip_Icon, IDC_STATIC, 12, 14, 87, 80, SS_ICON | SS_RIGHTJUST | SS_CENTERIMAGE | SS_SUNKEN | SS_REALSIZEIMAGE, WS_EX_LEFT
     LTEXT           "AZip - A portable Zip Archive Manager", IDC_STATIC, 110, 14, 165, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "Copyright © Gautier de Montmollin 2012 .. 2014", IDC_STATIC, 110, 29, 165, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Copyright © Gautier de Montmollin 2012 .. 2071", Copyright_label, 110, 29, 165, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "MIT Open Source License", IDC_STATIC, 110, 44, 120, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "Internet:", IDC_STATIC, 110, 61, 30, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "http://azip.sf.net/", AZip_URL, 157, 61, 89, 8, SS_LEFT, WS_EX_LEFT
@@ -202,10 +202,10 @@ STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VIS
 CAPTION "Find"
 FONT 8, "Ms Shell Dlg"
 {
-    ICON            Find_Icon, 0, 9, 12, 22, 22, SS_ICON, WS_EX_LEFT
+    ICON            Binoculars_Icon, 0, 9, 12, 22, 22, SS_ICON, WS_EX_LEFT
     LTEXT           "Entry &name ( if empty: all names )", IDC_STATIC, 44, 7, 172, 8, SS_LEFT, WS_EX_LEFT
     EDITTEXT        Name_to_be_searched, 44, 20, 172, 12, ES_AUTOHSCROLL, WS_EX_LEFT
-    ICON            Find_Icon, 1, 9, 46, 22, 22, SS_ICON, WS_EX_LEFT
+    ICON            Binoculars_Icon, 1, 9, 46, 22, 22, SS_ICON, WS_EX_LEFT
     LTEXT           "&Content ( if empty: any content )", IDC_STATIC, 44, 41, 172, 8, SS_LEFT, WS_EX_LEFT
     EDITTEXT        Content_to_be_searched, 44, 54, 172, 12, ES_AUTOHSCROLL, WS_EX_LEFT
     DEFPUSHBUTTON   "OK", IDOK, 111, 76, 50, 14, 0, WS_EX_LEFT
@@ -220,14 +220,15 @@ STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VIS
 CAPTION "Password"
 FONT 8, "Ms Shell Dlg"
 {
+    GROUPBOX        "This entry is encrypted.", IDC_STATIC, 12, 10, 206, 26, 0, WS_EX_LEFT
+    LTEXT           "(name)", Encrypted_entry, 26, 21, 175, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "The current password is invalid.", IDC_STATIC, 12, 42, 159, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Please enter a new password:", IDC_STATIC, 12, 58, 159, 8, SS_LEFT, WS_EX_LEFT
+    ICON            Key_Icon, 0, 12, 70, 22, 22, SS_ICON, WS_EX_LEFT
+    EDITTEXT        Password_edit, 46, 73, 172, 13, ES_AUTOHSCROLL | ES_PASSWORD, WS_EX_LEFT
+    AUTOCHECKBOX    "Show password", Show_password_box, 12, 97, 96, 8, 0, WS_EX_LEFT
     DEFPUSHBUTTON   "OK", IDOK, 112, 119, 50, 14, 0, WS_EX_LEFT
     PUSHBUTTON      "Cancel", IDCANCEL, 167, 119, 50, 14, 0, WS_EX_LEFT
-    EDITTEXT        Password_edit, 14, 73, 204, 13, ES_AUTOHSCROLL | ES_PASSWORD, WS_EX_LEFT
-    LTEXT           "The current password is invalid.", IDC_STATIC, 13, 42, 157, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "Please enter a new password:", IDC_STATIC, 14, 56, 159, 8, SS_LEFT, WS_EX_LEFT
-    AUTOCHECKBOX    "Show password", Show_password_box, 13, 97, 96, 8, 0, WS_EX_LEFT
-    LTEXT           "(name)", Encrypted_entry, 26, 21, 175, 8, SS_LEFT, WS_EX_LEFT
-    GROUPBOX        "This entry is encrypted.", IDC_STATIC, 12, 10, 203, 26, 0, WS_EX_LEFT
 }
 
 
@@ -307,7 +308,11 @@ AZip_Icon          ICON           "ico_bmp/azip.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Find_Icon          ICON           "ico_bmp/find.ico"
+Binoculars_Icon    ICON           "ico_bmp/find.ico"
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Key_Icon           ICON           "ico_bmp/key.ico"
 
 
 
@@ -329,9 +334,9 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         BLOCK "040901B5"
         {
             VALUE "Authors", "Gautier de Montmollin"
-            VALUE "FileDescription", "AZip - A portable Zip Archive Manager"
+            VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
             VALUE "FileVersion", "1.26"
-            VALUE "LegalCopyright", "© 2012..2015 G. de Montmollin (MIT license)"
+            VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2015"
             VALUE "ProductName", "AZip"
         }
     }

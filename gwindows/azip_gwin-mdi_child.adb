@@ -816,6 +816,7 @@ package body AZip_GWin.MDI_Child is
       box.On_Destroy_Handler(Get_Data'Unrestricted_Access);
       box.Show_password_box.On_Click_Handler(Show_or_Hide_Password'Unrestricted_Access);
       Show_or_Hide_Password(box);
+      box.Password_edit.Set_Selection(0,Length(password));
       case Show_Dialog(box, progress_box) is
         when IDOK =>
           password:= pwd_candidate;

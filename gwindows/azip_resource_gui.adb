@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2015/02/23  17:07:14
+-- Transcription time: 2015/02/23  19:00:52
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -195,7 +195,7 @@ package body azip_Resource_GUI is
     Dlg_to_Scn(  110, 14, 165, 8, x,y,w,h);
     Create_label( Window, "AZip - A portable Zip Archive Manager", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  110, 29, 165, 8, x,y,w,h);
-    Create_label( Window, "Copyright © Gautier de Montmollin 2012 .. 2014", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create( Window.Copyright_label, Window, "Copyright © Gautier de Montmollin 2012 .. 2071", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Copyright_label);
     Dlg_to_Scn(  110, 44, 120, 8, x,y,w,h);
     Create_label( Window, "MIT Open Source License", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  110, 61, 30, 8, x,y,w,h);
@@ -207,7 +207,7 @@ package body azip_Resource_GUI is
     Dlg_to_Scn(  157, 81, 118, 8, x,y,w,h);
     Create( Window.Version_label, Window, "(ver)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Version_label);
     Dlg_to_Scn(  5, 105, 278, 78, x,y,w,h);
-    Create( Window.Static_0007, Window, "Software made with the following free, open source components:", x,y,w,h);
+    Create( Window.Static_0006, Window, "Software made with the following free, open source components:", x,y,w,h);
     Dlg_to_Scn(  23, 119, 100, 8, x,y,w,h);
     Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAT_URL);
     Dlg_to_Scn(  132, 119, 147, 8, x,y,w,h);
@@ -547,13 +547,13 @@ package body azip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  9, 12, 22, 22, x,y,w,h);
-    Create( Window.RC_item_0, Window, Num_resource(Find_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create( Window.RC_item_0, Window, Num_resource(Binoculars_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  44, 7, 172, 8, x,y,w,h);
     Create_label( Window, "Entry &name ( if empty: all names )", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  44, 20, 172, 12, x,y,w,h);
     Create( Window.Name_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Name_to_be_searched);
     Dlg_to_Scn(  9, 46, 22, 22, x,y,w,h);
-    Create( Window.RC_item_1, Window, Num_resource(Find_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create( Window.RC_item_1, Window, Num_resource(Binoculars_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  44, 41, 172, 8, x,y,w,h);
     Create_label( Window, "&Content ( if empty: any content )", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  44, 54, 172, 12, x,y,w,h);
@@ -653,6 +653,20 @@ package body azip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
+    Dlg_to_Scn(  12, 10, 206, 26, x,y,w,h);
+    Create( Window.Static_0001, Window, "This entry is encrypted.", x,y,w,h);
+    Dlg_to_Scn(  26, 21, 175, 8, x,y,w,h);
+    Create( Window.Encrypted_entry, Window, "(name)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Encrypted_entry);
+    Dlg_to_Scn(  12, 42, 159, 8, x,y,w,h);
+    Create_label( Window, "The current password is invalid.", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  12, 58, 159, 8, x,y,w,h);
+    Create_label( Window, "Please enter a new password:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  12, 70, 22, 22, x,y,w,h);
+    Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  46, 73, 172, 13, x,y,w,h);
+    Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Password_edit);
+    Dlg_to_Scn(  12, 97, 96, 8, x,y,w,h);
+    Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
     Dlg_to_Scn(  112, 119, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -675,22 +689,10 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  14, 73, 204, 13, x,y,w,h);
-    Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Password_edit);
-    Dlg_to_Scn(  13, 42, 157, 8, x,y,w,h);
-    Create_label( Window, "The current password is invalid.", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  14, 56, 159, 8, x,y,w,h);
-    Create_label( Window, "Please enter a new password:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  13, 97, 96, 8, x,y,w,h);
-    Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
-    Dlg_to_Scn(  26, 21, 175, 8, x,y,w,h);
-    Create( Window.Encrypted_entry, Window, "(name)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Encrypted_entry);
-    Dlg_to_Scn(  12, 10, 203, 26, x,y,w,h);
-    Create( Window.Static_0003, Window, "This entry is encrypted.", x,y,w,h);
   end Create_Contents; -- Password_input_box_Type
 
 
-  -- Dialog at resource line 239
+  -- Dialog at resource line 240
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -786,7 +788,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Progress_box_Type
 
 
-  -- Dialog at resource line 256
+  -- Dialog at resource line 257
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -959,6 +961,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 343
+  -- Last line of resource script file: 348
 
 end azip_Resource_GUI;

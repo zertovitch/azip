@@ -706,7 +706,7 @@ package body AZip_GWin.MDI_Child is
   )
   is
     az_names: Name_list(File_Names'Range);
-    box: Progress_Box_Type;
+    progress_box: Progress_Box_Type;
     aborted: Boolean:= False;
     --
     procedure Abort_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
@@ -735,14 +735,14 @@ package body AZip_GWin.MDI_Child is
       -- takes much more time due to the display. Typical case: an archive
       -- with many small files - GWin.zip or Java run-time Jar's for instance.
       if now - tick >= 0.02 then
-        box.File_Progress.Position(file_percents_done);
-        box.Archive_Progress.Position(archive_percents_done);
-        box.Entry_name.Text(entry_being_processed);
-        box.Entry_operation_name.Text(
+        progress_box.File_Progress.Position(file_percents_done);
+        progress_box.Archive_Progress.Position(archive_percents_done);
+        progress_box.Entry_name.Text(entry_being_processed);
+        progress_box.Entry_operation_name.Text(
           Description(e_operation, operation, skip_hint)
         );
-        box.Comment_1.Text(S2G(comment_1));
-        box.Comment_2.Text(S2G(comment_2));
+        progress_box.Comment_1.Text(S2G(comment_1));
+        progress_box.Comment_2.Text(S2G(comment_2));
         Message_Check;
         tick:= now;
       end if;
@@ -761,13 +761,13 @@ package body AZip_GWin.MDI_Child is
       box: File_exists_box_Type;
       use UnZip;
     begin
-      box.Create_Full_Dialog(Window);
+      box.Create_Full_Dialog(progress_box);
       box.Conflict_simple_name.Text(Remove_path(To_UTF_16(name, name_encoding)));
       box.Conflict_location.Text(output_folder);
       box.Overwrite_Rename.Disable;
       -- !! ^ Needs some effort to make an idiot-proof name query ;-)
       box.Center;
-      case Show_Dialog(box, Window) is
+      case Show_Dialog(box, progress_box) is
         when Overwrite_Yes    =>  action:= yes;
         when Overwrite_No     =>  action:= no;
         when Overwrite_All    =>  action:= yes_to_all;
@@ -792,7 +792,7 @@ package body AZip_GWin.MDI_Child is
         Window.Parent.opt.show_passwords:= box.Show_password_box.State = Checked;
       end Get_Data;
       --
-      procedure Show_or_Hide ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
+      procedure Show_or_Hide_Password ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
         pragma Warnings(off, dummy);
       begin
         if box.Show_password_box.State = Checked then
@@ -802,9 +802,9 @@ package body AZip_GWin.MDI_Child is
         end if;
         box.Password_edit.Redraw;
         box.Password_edit.Focus;
-      end Show_or_Hide;
+      end Show_or_Hide_Password;
     begin
-      box.Create_Full_Dialog(Window);
+      box.Create_Full_Dialog(progress_box);
       box.Encrypted_entry.Text(entry_name);
       box.Password_edit.Text(GU2G(password));
       if Window.Parent.opt.show_passwords then
@@ -814,9 +814,9 @@ package body AZip_GWin.MDI_Child is
       end if;
       box.Center;
       box.On_Destroy_Handler(Get_Data'Unrestricted_Access);
-      box.Show_password_box.On_Click_Handler(Show_or_Hide'Unrestricted_Access);
-      Show_or_Hide(Window);
-      case Show_Dialog(box, Window) is
+      box.Show_password_box.On_Click_Handler(Show_or_Hide_Password'Unrestricted_Access);
+      Show_or_Hide_Password(box);
+      case Show_Dialog(box, progress_box) is
         when IDOK =>
           password:= pwd_candidate;
         when others =>
@@ -838,15 +838,15 @@ package body AZip_GWin.MDI_Child is
       az_names(i).str:= File_Names(i);
     end loop;
     tick:= Ada.Calendar."-"(Ada.Calendar.Clock, 1.0);
-    box.Create_Full_Dialog(Window);
-    box.File_Progress.Position(0);
-    box.Archive_Progress.Position(0);
-    box.Cancel_button.Hide;
-    box.Cancel_button_permanent.Show;
-    box.Cancel_button_permanent.On_Click_Handler(Abort_clicked'Unrestricted_Access);
-    box.Center;
-    box.Redraw;
-    box.Show;
+    progress_box.Create_Full_Dialog(Window);
+    progress_box.File_Progress.Position(0);
+    progress_box.Archive_Progress.Position(0);
+    progress_box.Cancel_button.Hide;
+    progress_box.Cancel_button_permanent.Show;
+    progress_box.Cancel_button_permanent.On_Click_Handler(Abort_clicked'Unrestricted_Access);
+    progress_box.Center;
+    progress_box.Redraw;
+    progress_box.Show;
     Window.Parent.Disable;
     begin
       Archive_processing(
@@ -886,7 +886,7 @@ package body AZip_GWin.MDI_Child is
         Message_Box(
           Window,
           "Processing failed",
-          "Archive cannot be modified (read-only ?)," & NL &
+          "Archive cannot be modified (perhaps read-only ?)," & NL &
           "or a new file cannot be written." &
           NL & "-----" & NL &
           S2G(Ada.Exceptions.Exception_Name (E)) & NL &
@@ -896,6 +896,7 @@ package body AZip_GWin.MDI_Child is
         );
     end;
     Window.Parent.Enable;
+    Window.Parent.Focus;
   end Process_archive_GWin;
 
   function Temp_AZip_name(Window: MDI_Child_Type) return String is

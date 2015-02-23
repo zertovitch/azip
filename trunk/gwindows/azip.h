@@ -15,6 +15,7 @@
 #define Toolbar_BMP                             123
 #define Folders_BMP                             124
 #define Wait_refresh_box                        125
+#define Find_Icon                               129
 #define Archive_Progress                        1000
 #define Conflict_simple_name                    1000
 #define Encrypted_entry                         1000

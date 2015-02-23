@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2014/07/14  23:09:00
+-- Transcription time: 2015/02/23  17:07:14
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -507,7 +507,7 @@ package body azip_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 191, 95, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 227, 95, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -541,12 +541,24 @@ package body azip_Resource_GUI is
     x,y,w,h: Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 191, 95, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 227, 95, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  76, 76, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  9, 12, 22, 22, x,y,w,h);
+    Create( Window.RC_item_0, Window, Num_resource(Find_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  44, 7, 172, 8, x,y,w,h);
+    Create_label( Window, "Entry &name ( if empty: all names )", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  44, 20, 172, 12, x,y,w,h);
+    Create( Window.Name_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Name_to_be_searched);
+    Dlg_to_Scn(  9, 46, 22, 22, x,y,w,h);
+    Create( Window.RC_item_1, Window, Num_resource(Find_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  44, 41, 172, 8, x,y,w,h);
+    Create_label( Window, "&Content ( if empty: any content )", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  44, 54, 172, 12, x,y,w,h);
+    Create( Window.Content_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Content_to_be_searched);
+    Dlg_to_Scn(  111, 76, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -557,7 +569,7 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  129, 76, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  164, 76, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -568,18 +580,10 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  9, 20, 172, 12, x,y,w,h);
-    Create( Window.Name_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Name_to_be_searched);
-    Dlg_to_Scn(  9, 7, 172, 8, x,y,w,h);
-    Create_label( Window, "Entry &name ( if empty: all names )", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  9, 54, 172, 12, x,y,w,h);
-    Create( Window.Content_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Content_to_be_searched);
-    Dlg_to_Scn(  9, 41, 172, 8, x,y,w,h);
-    Create_label( Window, "&Content ( if empty: any content )", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
   end Create_Contents; -- Find_box_Type
 
 
-  -- Dialog at resource line 219
+  -- Dialog at resource line 221
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -686,7 +690,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Password_input_box_Type
 
 
-  -- Dialog at resource line 237
+  -- Dialog at resource line 239
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -782,7 +786,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Progress_box_Type
 
 
-  -- Dialog at resource line 254
+  -- Dialog at resource line 256
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -955,6 +959,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 337
+  -- Last line of resource script file: 343
 
 end azip_Resource_GUI;

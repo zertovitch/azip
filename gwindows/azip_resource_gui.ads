@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2015/02/23  19:00:52
+-- Transcription time: 2015/02/24  19:09:32
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -39,7 +39,7 @@ package azip_Resource_GUI is
     Popup_0007: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Child_Type
 
-  -- Menu at line 88
+  -- Menu at line 90
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -51,7 +51,7 @@ package azip_Resource_GUI is
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Main_Type
 
-  -- Menu at line 126
+  -- Menu at line 128
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -78,7 +78,7 @@ package azip_Resource_GUI is
     Credits_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 156
+  -- Dialog at resource line 158
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -122,7 +122,7 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- Credits_box_Type
 
-  -- Dialog at resource line 174
+  -- Dialog at resource line 176
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -166,7 +166,7 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- File_exists_box_Type
 
-  -- Dialog at resource line 194
+  -- Dialog at resource line 196
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -211,7 +211,7 @@ package azip_Resource_GUI is
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Find_box_Type
 
-  -- Dialog at resource line 212
+  -- Dialog at resource line 214
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -242,7 +242,7 @@ package azip_Resource_GUI is
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      );
 
-  type Password_input_box_Type is new Window_type with record
+  type Password_decryption_box_Type is new Window_type with record
 
     Static_0001: Group_Box_Type;
     Encrypted_entry: Label_Type;
@@ -255,23 +255,23 @@ package azip_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
     IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
-  end record; -- Password_input_box_Type
+  end record; -- Password_decryption_box_Type
 
-  -- Dialog at resource line 231
+  -- Dialog at resource line 233
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
   --
-  procedure On_Pre_Create (Window    : in out Password_input_box_Type;
+  procedure On_Pre_Create (Window    : in out Password_decryption_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned);
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
-     (Window      : in out Password_input_box_Type;
+     (Window      : in out Password_decryption_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "Password";
+      Title       : in     GString := "Password for decryption";
       Left        : in     Integer := Use_Default; -- Default = as designed
       Top         : in     Integer := Use_Default; -- Default = as designed
       Width       : in     Integer := Use_Default; -- Default = as designed
@@ -283,7 +283,50 @@ package azip_Resource_GUI is
   --      already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
-     ( Window      : in out Password_input_box_Type;
+     ( Window      : in out Password_decryption_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     );
+
+  type Password_encryption_box_Type is new Window_type with record
+
+    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
+    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    Show_password_box: Check_Box_Type;
+    Password_edit: Edit_Box_Type;
+    RC_item_0: Icon_Type;
+    -- Label: IDC_STATIC
+  end record; -- Password_encryption_box_Type
+
+  -- Dialog at resource line 249
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out Password_encryption_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Password_encryption_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Password for encryption";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Password_encryption_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      );
@@ -300,7 +343,7 @@ package azip_Resource_GUI is
     Comment_2: Label_Type;
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 248
+  -- Dialog at resource line 266
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -338,7 +381,7 @@ package azip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  -- Dialog at resource line 260
+  -- Dialog at resource line 278
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -388,13 +431,14 @@ package azip_Resource_GUI is
   AZip_Doc_Icon             : constant:=    112;
   AZip_Icon                 : constant:=    114;
   File_exists_box           : constant:=    118;
-  Password_input_box        : constant:=    119;
   Credits_box               : constant:=    121;
   Toolbar_BMP               : constant:=    123;
   Folders_BMP               : constant:=    124;
   Wait_refresh_box          : constant:=    125;
   Key_Icon                  : constant:=    131;
   Binoculars_Icon           : constant:=    132;
+  Password_decryption_box   : constant:=    133;
+  Password_encryption_box   : constant:=    135;
   Archive_Progress          : constant:=   1000;
   Conflict_simple_name      : constant:=   1000;
   Encrypted_entry           : constant:=   1000;
@@ -445,10 +489,12 @@ package azip_Resource_GUI is
   IDM_WINDOW_CLOSE_ALL      : constant:=  40023;
   IDM_MERGE_ARCHIVES        : constant:=  40024;
   AZip_URL                  : constant:=  40025;
+  IDM_Touch_Time_Stamps     : constant:=  40025;
   IDM_Delete_selected       : constant:=  40026;
   IDM_ADD_FILES             : constant:=  40027;
   IDM_UPDATE_ARCHIVE        : constant:=  40028;
   IDM_CLOSE_ARCHIVE         : constant:=  40029;
+  IDM_Encrypt_Archive       : constant:=  40030;
   Overwrite_All             : constant:=  40032;
   Overwrite_None            : constant:=  40034;
   Overwrite_Rename          : constant:=  40036;
@@ -468,6 +514,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
 
-  -- Last line of resource script file: 348
+  -- Last line of resource script file: 366
 
 end azip_Resource_GUI;

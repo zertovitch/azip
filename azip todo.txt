@@ -18,7 +18,12 @@ copy_file et rename qui marchent avec utf-8 (virer Ada.Directories)
 
 gw - "[Rename]" dans les conflits de nom
 
-Recompress
+Actions to be implemented:
+
+Recompress (see ReZip in Zip-Ada)
+Touch (time stamp)
+Encrypt
+
+(2 or more archives) :
 Compare
 Merge
-Touch (time stamp)

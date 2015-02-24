@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2015/02/24  19:09:32
+-- Transcription time: 2015/02/24  21:31:15
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -296,11 +296,14 @@ package azip_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
     Show_password_box: Check_Box_Type;
     Password_edit: Edit_Box_Type;
+    Password_confirm_edit: Edit_Box_Type;
+    Confirm_Icon: Icon_Type;
+    Confirm_Password_Label: Label_Type;
     RC_item_0: Icon_Type;
     -- Label: IDC_STATIC
   end record; -- Password_encryption_box_Type
 
-  -- Dialog at resource line 249
+  -- Dialog at resource line 252
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -343,7 +346,7 @@ package azip_Resource_GUI is
     Comment_2: Label_Type;
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 266
+  -- Dialog at resource line 269
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -381,7 +384,7 @@ package azip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  -- Dialog at resource line 278
+  -- Dialog at resource line 281
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -461,11 +464,14 @@ package azip_Resource_GUI is
   Comment_2                 : constant:=   1007;
   Comment_1                 : constant:=   1008;
   Overwrite_No              : constant:=   1008;
+  Confirm_Password_Label    : constant:=  40000;
   Copyright_label           : constant:=  40000;
   IDM_NEW_ARCHIVE           : constant:=  40000;
+  Confirm_Icon              : constant:=  40001;
   IDM_OPEN_ARCHIVE          : constant:=  40001;
   IDM_MRU_1                 : constant:=  40002;
   IDM_Unselect_all          : constant:=  40002;
+  Password_confirm_edit     : constant:=  40002;
   IDM_ABOUT                 : constant:=  40003;
   IDM_TEST_ARCHIVE          : constant:=  40004;
   IDM_QUIT                  : constant:=  40005;
@@ -514,6 +520,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
 
-  -- Last line of resource script file: 366
+  -- Last line of resource script file: 369
 
 end azip_Resource_GUI;

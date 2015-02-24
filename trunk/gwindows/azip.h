@@ -40,11 +40,14 @@
 #define Comment_2                               1007
 #define Comment_1                               1008
 #define Overwrite_No                            1008
+#define Confirm_Password_Label                  40000
 #define Copyright_label                         40000
 #define IDM__NEW_ARCHIVE                        40000
+#define Confirm_Icon                            40001
 #define IDM__OPEN_ARCHIVE                       40001
 #define IDM_MRU_1                               40002
 #define IDM_Unselect_all                        40002
+#define Password_confirm_edit                   40002
 #define IDM__ABOUT                              40003
 #define IDM_TEST_ARCHIVE                        40004
 #define IDM__QUIT                               40005

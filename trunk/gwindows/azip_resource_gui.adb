@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2015/02/24  19:09:32
+-- Transcription time: 2015/02/24  21:31:15
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -790,16 +790,22 @@ package body azip_Resource_GUI is
     end if;
     Dlg_to_Scn(  12, 97, 96, 8, x,y,w,h);
     Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
-    Dlg_to_Scn(  46, 73, 172, 13, x,y,w,h);
+    Dlg_to_Scn(  46, 33, 172, 13, x,y,w,h);
     Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Password_edit);
+    Dlg_to_Scn(  46, 73, 172, 13, x,y,w,h);
+    Create( Window.Password_confirm_edit, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Password_confirm_edit);
     Dlg_to_Scn(  12, 70, 21, 20, x,y,w,h);
+    Create( Window.Confirm_Icon, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  12, 58, 153, 8, x,y,w,h);
+    Create( Window.Confirm_Password_Label, Window, "Confirm password:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Confirm_Password_Label);
+    Dlg_to_Scn(  12, 30, 21, 20, x,y,w,h);
     Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  12, 58, 151, 8, x,y,w,h);
-    Create_label( Window, "Please enter a password:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  12, 18, 151, 8, x,y,w,h);
+    Create_label( Window, "Enter password:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
   end Create_Contents; -- Password_encryption_box_Type
 
 
-  -- Dialog at resource line 258
+  -- Dialog at resource line 261
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -895,7 +901,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Progress_box_Type
 
 
-  -- Dialog at resource line 275
+  -- Dialog at resource line 278
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1068,6 +1074,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 366
+  -- Last line of resource script file: 369
 
 end azip_Resource_GUI;

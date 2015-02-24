@@ -782,7 +782,7 @@ package body AZip_GWin.MDI_Child is
       password   : in out GString_Unbounded
     )
     is
-      box: Password_input_box_Type;
+      box: Password_decryption_box_Type;
       pwd_candidate: GString_Unbounded:= Window.current_password;
       --
       procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is

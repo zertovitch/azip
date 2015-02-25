@@ -65,6 +65,7 @@ package body AZip_GWin.Toolbars is
       use GWindows.Common_Controls;
       use type GString_Unbounded;
     begin
+      -- The tool tip is the menu text.
       tb.Add_String(Filter(Text(Fake_Menu.Main, Command, Command_ID)));
       tb.Add_Button(Image_Index, Command_ID, string_count);
       string_count:= string_count + 1;
@@ -86,6 +87,7 @@ package body AZip_GWin.Toolbars is
     Add_Button_with_Tip (2, IDM_EXTRACT);
     Add_Separator(tb, sep_width);
     Add_Button_with_Tip (0, IDM_ADD_FILES);
+    Add_Button_with_Tip (6, IDM_Add_Files_Encryption);
     Add_Button_with_Tip (1, IDM_Delete_selected);
     Add_Separator(tb, sep_width);
     Add_Button_with_Tip (4, IDM_TEST_ARCHIVE);

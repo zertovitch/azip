@@ -58,6 +58,7 @@ Menu_MDI_Child MENU
         MENUITEM SEPARATOR
         MENUITEM "Delete entries\tDel / -", IDM_Delete_selected
         MENUITEM "A&dd files...\t+", IDM_ADD_FILES
+        MENUITEM "Add files with encr&yption...", IDM_Add_Files_Encryption, GRAYED
     }
     POPUP "&Tools"
     {

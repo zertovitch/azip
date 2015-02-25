@@ -77,6 +77,7 @@
 #define IDM_UPDATE_ARCHIVE                      40028
 #define IDM__CLOSE_ARCHIVE                      40029
 #define IDM_Encrypt_Archive                     40030
+#define IDM_Add_Files_Encryption                40031
 #define Overwrite_All                           40032
 #define Overwrite_None                          40034
 #define Overwrite_Rename                        40036

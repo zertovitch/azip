@@ -74,6 +74,10 @@ package body AZip_GWin.MDI_Child is
     Bar.Enabled(IDM_FIND_IN_ARCHIVE, not_empty_archive);
     Bar.Enabled(IDM_TEST_ARCHIVE, not_empty_archive);
     Bar.Enabled(IDM_UPDATE_ARCHIVE, not_empty_archive);
+    if not Window.is_closing then
+      Bar.Enabled(IDM_ADD_FILES, True);
+      Bar.Enabled(IDM_Add_Files_Encryption, False); -- !! True when impl.
+    end if;
   end Update_tool_bar;
 
   procedure Update_display(
@@ -1234,7 +1238,7 @@ package body AZip_GWin.MDI_Child is
     end if;
   end On_Delete;
 
-  procedure On_Add_files(Window : in out MDI_Child_Type) is
+  procedure On_Add_files(Window : in out MDI_Child_Type; encrypted: Boolean) is
     Success: Boolean;
     File_Title : GString_Unbounded;
     File_Names: Array_Of_File_Names_Access;
@@ -1415,7 +1419,9 @@ package body AZip_GWin.MDI_Child is
       when IDM_EXTRACT =>
         On_Extract(Window);
       when IDM_ADD_FILES =>
-        On_Add_files(Window);
+        On_Add_files(Window, encrypted => False);
+      when IDM_Add_Files_Encryption =>
+        On_Add_files(Window, encrypted => True);
       when IDM_Delete_selected =>
         On_Delete(Window);
       when IDM_TEST_ARCHIVE =>
@@ -1438,7 +1444,7 @@ package body AZip_GWin.MDI_Child is
     Update_display(Window, toolbar_and_menu);
   end On_Focus;
 
-  procedure On_Close (Window    : in out MDI_Child_Type;
+  overriding procedure On_Close (Window    : in out MDI_Child_Type;
                       Can_Close :    out Boolean) is
     sd: AZip_LV_Ex.Sort_Direction_Type;
   begin
@@ -1486,10 +1492,16 @@ package body AZip_GWin.MDI_Child is
         AZip_Common.User_options.Sort_Direction_Type'Value(
            AZip_LV_Ex.Sort_Direction_Type'Image(sd)
         );
-      -- Pass view mode and the tree width portion to parent (memorize choice of last closed window)
+      -- Pass view mode and the tree width portion to parent,
+      -- this will memorize choice of last closed window.
       Window.Parent.opt.view_mode:= Window.opt.view_mode;
       Memorize_splitter(Window);
       Window.Parent.opt.tree_portion:= Window.opt.tree_portion;
+      -- In case there is no more child window, disable toolbar items.
+      -- This is reversed if another child window is focused.
+      Window.Parent.Tool_Bar.Enabled(IDM_ADD_FILES, False);
+      Window.Parent.Tool_Bar.Enabled(IDM_Add_Files_Encryption, False);
+      Window.is_closing:= True;
     end if;
   end On_Close;
 

@@ -855,6 +855,8 @@ pragma Eliminate (GWindows.Drawing, DrawIcon, Source_Location => "gwindows-drawi
 pragma Eliminate (GWindows.Drawing, GDI_BitBlt, Source_Location => "gwindows-drawing.adb:951");
 -- pragma Eliminate (GWindows.Drawing, StretchBlt, Source_Location => "gwindows-drawing.ads:381");
 pragma Eliminate (GWindows.Drawing, GDI_StretchBlt, Source_Location => "gwindows-drawing.adb:980");
+pragma Eliminate (GWindows.Drawing, AlphaBlend);
+pragma Eliminate (GWindows.Drawing, Paint_Transparent_Bitmap);
 pragma Eliminate (GWindows.Drawing, CreateCompatibleDC, Source_Location => "gwindows-drawing.adb:1004");
 pragma Eliminate (GWindows.Drawing, Set_Mix_Mode, Source_Location => "gwindows-drawing.ads:333");
 pragma Eliminate (GWindows.Drawing, SetROP2, Source_Location => "gwindows-drawing.adb:1031");

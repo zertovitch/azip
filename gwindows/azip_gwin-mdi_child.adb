@@ -1,3 +1,4 @@
+with AZip_GWin.Password_dialogs;        use AZip_GWin.Password_dialogs;
 with AZip_Common;                       use AZip_Common;
 
 with Zip;                               use Zip;
@@ -781,60 +782,26 @@ package body AZip_GWin.MDI_Child is
       end case;
     end Name_conflict_resolution;
     --
-    procedure Get_password(
-      entry_name : in GString;
+    procedure Get_password_decrypt_for_Common(
+      entry_name : in     GString;
       password   : in out GString_Unbounded
     )
     is
-      box: Password_decryption_box_Type;
-      pwd_candidate: GString_Unbounded:= Window.current_password;
-      --
-      procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-        pragma Warnings(off, dummy);
-      begin
-        pwd_candidate:= G2GU(box.Password_edit.Text);
-        Window.Parent.opt.show_passwords:= box.Show_password_box.State = Checked;
-      end Get_Data;
-      --
-      procedure Show_or_Hide_Password ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-        pragma Warnings(off, dummy);
-      begin
-        if box.Show_password_box.State = Checked then
-          box.Password_edit.Password(Off);
-        else
-          box.Password_edit.Password('=');
-        end if;
-        box.Password_edit.Redraw;
-        box.Password_edit.Focus;
-      end Show_or_Hide_Password;
     begin
-      box.Create_Full_Dialog(progress_box);
-      box.Encrypted_entry.Text(entry_name);
-      box.Password_edit.Text(GU2G(password));
-      if Window.Parent.opt.show_passwords then
-        box.Show_password_box.State(Checked);
-      else
-        box.Show_password_box.State(Unchecked);
-      end if;
-      box.Center;
-      box.On_Destroy_Handler(Get_Data'Unrestricted_Access);
-      box.Show_password_box.On_Click_Handler(Show_or_Hide_Password'Unrestricted_Access);
-      Show_or_Hide_Password(box);
-      box.Password_edit.Set_Selection(0,Length(password));
-      case Show_Dialog(box, progress_box) is
-        when IDOK =>
-          password:= pwd_candidate;
-        when others =>
-          null; -- abandond pwd change
-      end case;
-    end Get_password;
+      Get_password_decrypt(
+        Window     => Window,
+        Parent     => progress_box,
+        entry_name => entry_name,
+        password   => password
+      );
+    end Get_password_decrypt_for_Common;
     --
     -- Instanciation of the GUI-agnostic processing
     --
     procedure Archive_processing is
       new AZip_Common.Operations.Process_archive(
         Boxed_Feedback,
-        Get_password
+        Get_password_decrypt_for_Common
       );
     --
   begin -- Process_archive_GWin

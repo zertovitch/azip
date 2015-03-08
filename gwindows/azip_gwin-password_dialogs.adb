@@ -8,7 +8,7 @@ with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 
-package body azip_gwin.password_dialogs is
+package body AZip_GWin.Password_dialogs is
 
   procedure Get_password_decrypt(
     Window     : in     MDI_Child_Type;
@@ -61,4 +61,4 @@ package body azip_gwin.password_dialogs is
       end case;
     end Get_password_decrypt;
 
-end azip_gwin.password_dialogs;
+end AZip_GWin.Password_dialogs;

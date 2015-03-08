@@ -3,7 +3,7 @@ with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
 with GWindows;                          use GWindows;
 with GWindows.Base;                     use GWindows.Base;
 
-package azip_gwin.password_dialogs is
+package AZip_GWin.Password_dialogs is
 
   procedure Get_password_decrypt(
     Window     : in     MDI_Child_Type;
@@ -13,4 +13,4 @@ package azip_gwin.password_dialogs is
     password   : in out GString_Unbounded
   );
 
-end azip_gwin.password_dialogs;
+end AZip_GWin.Password_dialogs;

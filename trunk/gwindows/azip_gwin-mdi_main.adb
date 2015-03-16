@@ -418,7 +418,8 @@ package body AZip_GWin.MDI_Main is
     then
       On_File_New (Window, extra_first_doc => False, New_Window => New_Window);
       New_Window.On_Save_As;
-      New_Window.Go_for_adding(File_Names);
+      New_Window.Go_for_adding(File_Names, Encrypt => False);
+      -- !! Need special Yes-No box with encryption checkbox (@ 3 places)
     end if;
   end On_File_Drop;
 

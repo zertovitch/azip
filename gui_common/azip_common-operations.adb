@@ -253,6 +253,7 @@ package body AZip_Common.Operations is
     Name_conflict   :        UnZip.Resolve_conflict_proc;
     password        : in out Unbounded_Wide_String;
     ignore_path     :        Boolean; -- ignore directories upon extraction
+    encrypt         :        Boolean;
     max_code        :    out Integer
   )
   is
@@ -390,6 +391,15 @@ package body AZip_Common.Operations is
       pwd:=  To_Unbounded_String(To_String(To_Wide_String(password)));
     end Get_password_internal;
     --
+    function Encryption_password return String is
+    begin
+      if encrypt then
+        return To_String(To_Wide_String(password));
+      else
+        return "";
+      end if;
+    end Encryption_password;
+    --
     Extract_FS_routines: constant UnZip.FS_routines_type:=
       ( Create_Path         => Ada.Directories.Create_Path'Access,
         Set_Time_Stamp      => Set_Time_Stamp,
@@ -468,7 +478,10 @@ package body AZip_Common.Operations is
           Name_encoding      => UTF_8,
           Modification_time  => stamp,
           Is_read_only       => False,
-          Feedback           => Entry_feedback'Unrestricted_Access
+          Feedback           => Entry_feedback'Unrestricted_Access,
+          Password           => ""
+          --  !! Update op. with password not supported. So we renounce
+          --     encrypting accidentally.
         );
         Finish(this_file_zip);
         -- We load the one-file zip file's information
@@ -483,6 +496,7 @@ package body AZip_Common.Operations is
           crc_32        => new_crc_32
         );
         if new_crc_32 = crc_32 then
+          --  Nothing to do, file is the same with 1 / 2**32 probability.
           Preserve_entry;
           user_code:= nothing;
         else
@@ -564,7 +578,7 @@ package body AZip_Common.Operations is
           when Add =>
             current_operation:= Replace;
             current_entry_name:= U(short_name_utf_16);
-            -- Here we compress new contents for an existing entry
+            -- Here we compress new contents for replacing an existing entry
             declare
               external_file_name: constant UTF_8_String:=
                 To_UTF_8(To_Wide_String(entry_name(idx).str));
@@ -577,7 +591,8 @@ package body AZip_Common.Operations is
                 Name_encoding      => name_encoding,
                 Modification_time  => Zip.Convert(Modification_Time(external_file_name)),
                 Is_read_only       => False, -- !!
-                Feedback           => Entry_feedback'Unrestricted_Access
+                Feedback           => Entry_feedback'Unrestricted_Access,
+                Password           => Encryption_password
               );
               user_code:= success;
             exception
@@ -794,7 +809,8 @@ package body AZip_Common.Operations is
                   Name_encoding      => IBM_437,
                   Modification_time  => Zip.Convert(Modification_Time(To_UTF_8(name))),
                   Is_read_only       => False, -- !!
-                  Feedback           => Entry_feedback'Unrestricted_Access
+                  Feedback           => Entry_feedback'Unrestricted_Access,
+                  Password           => Encryption_password
                 );
               exception
                 when Cannot_encode_to_IBM_437 =>
@@ -806,7 +822,8 @@ package body AZip_Common.Operations is
                     Name_encoding      => UTF_8,
                     Modification_time  => Zip.Convert(Modification_Time(To_UTF_8(name))),
                     Is_read_only       => False, -- !!
-                    Feedback           => Entry_feedback'Unrestricted_Access
+                    Feedback           => Entry_feedback'Unrestricted_Access,
+                    Password           => Encryption_password
                   );
               end;
             end if;

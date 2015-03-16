@@ -6,8 +6,15 @@ package AZip_Common.Operations is
   -- Blocking, visible processing of an archive --
   ------------------------------------------------
 
-  type Archive_Operation is (Add, Update, Remove, Test, Extract, Search);
+  type Archive_Operation is (
+    Add, Update, Remove,
+    Test, Extract, Search
+  );
 
+  --  Two kinds of operations: those that modify an archive (a copy needs
+  --  to be created and replaces the original in the end); those that only
+  --  read informations form the archive.
+  --
   subtype Modifying_Operation is Archive_Operation range Add .. Remove;
   subtype Read_Only_Operation is Archive_Operation range Test .. Search;
 
@@ -127,6 +134,7 @@ package AZip_Common.Operations is
     Name_conflict   :        UnZip.Resolve_conflict_proc;
     password        : in out Unbounded_Wide_String;
     ignore_path     :        Boolean; -- ignore directories upon extraction
+    encrypt         :        Boolean;
     max_code        :    out Integer
   );
 

@@ -77,7 +77,7 @@ package body AZip_GWin.MDI_Child is
     Bar.Enabled(IDM_UPDATE_ARCHIVE, not_empty_archive);
     if not Window.is_closing then
       Bar.Enabled(IDM_ADD_FILES, True);
-      Bar.Enabled(IDM_Add_Files_Encryption, False); -- !! True when impl.
+      Bar.Enabled(IDM_Add_Files_Encryption, True);
     end if;
   end Update_tool_bar;
 
@@ -707,6 +707,7 @@ package body AZip_GWin.MDI_Child is
     search_pattern : GString;
     output_folder  : Wide_String;
     ignore_path    : Boolean; -- ignore directories upon extraction
+    encrypt        : Boolean;
     new_temp_name  : String
   )
   is
@@ -788,7 +789,7 @@ package body AZip_GWin.MDI_Child is
     )
     is
     begin
-      Get_password_decrypt(
+      Get_password_for_decryption(
         Window     => Window,
         Parent     => progress_box,
         entry_name => entry_name,
@@ -833,6 +834,7 @@ package body AZip_GWin.MDI_Child is
         Name_conflict    => Name_conflict_resolution'Unrestricted_Access,
         password         => Window.current_password,
         ignore_path      => ignore_path,
+        encrypt          => encrypt,
         max_code         => Window.last_max_code
       );
       Window.last_operation:= operation;
@@ -888,8 +890,12 @@ package body AZip_GWin.MDI_Child is
     end loop;
   end Temp_AZip_name;
 
-  procedure Go_for_adding (Window     : in out MDI_Child_Type;
-                           File_Names : in     Array_Of_File_Names) is
+  procedure Go_for_adding (
+    Window     : in out MDI_Child_Type;
+    File_Names : in     Array_Of_File_Names;
+    Encrypt    : in     Boolean
+  )
+  is
     function Eventual_folder return GString is
       sel_path: constant GString:= GU2G(Window.selected_path);
     begin
@@ -913,6 +919,7 @@ package body AZip_GWin.MDI_Child is
       search_pattern => "",
       output_folder  => "",
       ignore_path    => False,
+      encrypt        => Encrypt,
       new_temp_name  => Temp_AZip_name(Window)
     );
   end Go_for_adding;
@@ -950,7 +957,8 @@ package body AZip_GWin.MDI_Child is
         Yes_No_Box,
         Question_Icon) = Yes
       then
-        Window.Go_for_adding(File_Names);
+        Window.Go_for_adding(File_Names, Encrypt => False);
+        -- !! Need special Yes-No box with encryption checkbox (@ 3 places)
       end if;
     else
       if Message_Box(
@@ -964,7 +972,8 @@ package body AZip_GWin.MDI_Child is
       then
         Window.On_Save_As;
         if Is_Loaded(Window.zif) then
-          Window.Go_for_adding(File_Names);
+          Window.Go_for_adding(File_Names, Encrypt => False);
+          -- !! Need special Yes-No box with encryption checkbox (@ 3 places)
         end if;
       end if;
     end if;
@@ -1160,6 +1169,7 @@ package body AZip_GWin.MDI_Child is
           search_pattern => "",
           output_folder  => dir,
           ignore_path    => Window.opt.ignore_extract_path,
+          encrypt        => False,
           new_temp_name  => ""
         );
       end if;
@@ -1200,6 +1210,7 @@ package body AZip_GWin.MDI_Child is
         search_pattern => "",
         output_folder  => "",
         ignore_path    => False,
+        encrypt        => False,
         new_temp_name  => Temp_AZip_name(Window)
       );
     end if;
@@ -1235,8 +1246,11 @@ package body AZip_GWin.MDI_Child is
         );
         Window.On_Save_As;
       end if;
+      if encrypted then
+        Get_password_for_encryption(Window);
+      end if;
       if Is_Loaded(Window.zif) then -- We test again (in case Save As failed)
-        Window.Go_for_adding(File_Names.all);
+        Window.Go_for_adding(File_Names.all, encrypted);
         Dispose(File_Names);
       end if;
     end if;
@@ -1268,6 +1282,7 @@ package body AZip_GWin.MDI_Child is
         search_pattern => GU2G(Window.Content_search),
         output_folder  => "",
         ignore_path    => False,
+        encrypt        => False,
         new_temp_name  => ""
       );
     end if;
@@ -1292,6 +1307,7 @@ package body AZip_GWin.MDI_Child is
       search_pattern => "",
       output_folder  => "",
       ignore_path    => False,
+      encrypt        => False,
       new_temp_name  => ""
     );
     Count_test_totals(Window.zif, count_ok, count_ko, count_nt);
@@ -1359,6 +1375,7 @@ package body AZip_GWin.MDI_Child is
             UTF_8
           ),
         ignore_path    => False,
+        encrypt        => False,
         new_temp_name  => Temp_AZip_name(Window)
       );
       if mem_dir'Length > 0 and then mem_dir(mem_dir'Last) =':' then

@@ -96,9 +96,13 @@ package body AZip_GWin.Password_dialogs is
       if box.Show_password_box.State = Checked then
         box.Password_edit.Password(Off);
         box.Password_confirm_edit.Disable;
+        box.Confirm_Icon.Hide;
+        box.Confirm_Password_Label.Disable;
       else
         box.Password_edit.Password('=');
         box.Password_confirm_edit.Enable;
+        box.Confirm_Icon.Show;
+        box.Confirm_Password_Label.Enable;
       end if;
       box.Password_confirm_edit.Text("");
       box.Password_confirm_edit.Redraw;

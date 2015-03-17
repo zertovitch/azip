@@ -312,6 +312,7 @@ package body AZip_Common.Operations is
       i, bup: Buffer_range:= 0;
       j: Natural;
       ignore_case: constant Boolean:= True; -- !! as option
+      cancelled: Boolean;
     begin
       -- First we copy the string
       -- !! wide or not : what to do ? --
@@ -334,7 +335,10 @@ package body AZip_Common.Operations is
             if attempt = UnZip.tolerance_wrong_password then
               raise;
             end if;
-            Change_password(To_Wide_String(current_entry_name), password);
+            Change_password(To_Wide_String(current_entry_name), password, cancelled);
+            if cancelled then
+              raise UnZip.User_Abort;
+            end if;
         end;
       end loop;
       s:= Stream(f);
@@ -384,9 +388,12 @@ package body AZip_Common.Operations is
     end Add_extract_directory;
     --
     procedure Get_password_internal(pwd: out Unbounded_String) is
-      use UnZip;
+      cancelled: Boolean;
     begin
-      Change_password(To_Wide_String(current_entry_name), password);
+      Change_password(To_Wide_String(current_entry_name), password, cancelled);
+      if cancelled then
+        raise UnZip.User_Abort;
+      end if;
       -- persistence over entries + wide strings...
       pwd:=  To_Unbounded_String(To_String(To_Wide_String(password)));
     end Get_password_internal;
@@ -724,6 +731,8 @@ package body AZip_Common.Operations is
                   total_occurences:= total_occurences + user_code;
                 end if;
               exception
+                when UnZip.User_Abort =>
+                  abort_rest_of_operation:= True;
                 when UnZip.Wrong_password =>
                   user_code:= wrong_pwd;
                   abort_rest_of_operation:= True;

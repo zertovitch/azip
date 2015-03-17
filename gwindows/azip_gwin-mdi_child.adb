@@ -785,7 +785,8 @@ package body AZip_GWin.MDI_Child is
     --
     procedure Get_password_decrypt_for_Common(
       entry_name : in     GString;
-      password   : in out GString_Unbounded
+      password   : in out GString_Unbounded;
+      cancelled  :    out Boolean
     )
     is
     begin
@@ -793,7 +794,8 @@ package body AZip_GWin.MDI_Child is
         Window     => Window,
         Parent     => progress_box,
         entry_name => entry_name,
-        password   => password
+        password   => password,
+        cancelled  => cancelled
       );
     end Get_password_decrypt_for_Common;
     --
@@ -1217,7 +1219,7 @@ package body AZip_GWin.MDI_Child is
   end On_Delete;
 
   procedure On_Add_files(Window : in out MDI_Child_Type; encrypted: Boolean) is
-    Success: Boolean;
+    Success, cancelled: Boolean;
     File_Title : GString_Unbounded;
     File_Names: Array_Of_File_Names_Access;
     procedure Dispose is new Ada.Unchecked_Deallocation(
@@ -1247,9 +1249,11 @@ package body AZip_GWin.MDI_Child is
         Window.On_Save_As;
       end if;
       if encrypted then
-        Get_password_for_encryption(Window);
+        Get_password_for_encryption(Window, cancelled);
+      else
+        cancelled:= False;
       end if;
-      if Is_Loaded(Window.zif) then -- We test again (in case Save As failed)
+      if Is_Loaded(Window.zif) and not cancelled then -- Is_Loaded: we test again (in case Save As failed)
         Window.Go_for_adding(File_Names.all, encrypted);
         Dispose(File_Names);
       end if;

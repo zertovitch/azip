@@ -10,9 +10,13 @@ package AZip_GWin.Password_dialogs is
     Parent     : in out GWindows.Base.Base_Window_Type'Class;
                  --  Immediate UI parent
     entry_name : in     GString;
-    password   : in out GString_Unbounded
+    password   : in out GString_Unbounded;
+    cancelled  :    out Boolean
   );
 
-  procedure Get_password_for_encryption(Window: in out MDI_Child_Type);
+  procedure Get_password_for_encryption(
+    Window     : in out MDI_Child_Type;
+    cancelled  :    out Boolean
+  );
 
 end AZip_GWin.Password_dialogs;

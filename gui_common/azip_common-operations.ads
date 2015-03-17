@@ -119,8 +119,9 @@ package AZip_Common.Operations is
       user_abort            : out Boolean
     );
     with procedure Change_password(
-      entry_name : in UTF_16_String;
-      password   : in out Unbounded_Wide_String
+      entry_name : in     UTF_16_String;
+      password   : in out Unbounded_Wide_String;
+      cancelled  :    out Boolean
     );
   procedure Process_archive(
     zif             :        Zip.Zip_Info; -- preserved, even after modifying operation

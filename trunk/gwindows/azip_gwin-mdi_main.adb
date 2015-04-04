@@ -401,6 +401,8 @@ package body AZip_GWin.MDI_Main is
   procedure On_File_Drop (Window     : in out MDI_Main_Type;
                           File_Names : in     Array_Of_File_Names) is
     New_Window : constant MDI_Child_Access := new MDI_Child_Type;
+    encrypt   : Boolean:= False;
+    yes       : Boolean;
   begin
     Window.Focus;
     if Confirm_archives_if_all_Zip_files(Window, File_Names) then
@@ -410,17 +412,19 @@ package body AZip_GWin.MDI_Main is
           File_Names(i)
         );
       end loop;
-    elsif Message_Box(
-      Window,
-      "Files dropped",
-      "Create new archive with dropped files ?",
-      Yes_No_Box,
-      Question_Icon) = Yes
-    then
-      On_File_New (Window, extra_first_doc => False, New_Window => New_Window);
-      New_Window.On_Save_As;
-      New_Window.Go_for_adding(File_Names, Encrypt => False);
-      -- !! Need special Yes-No box with encryption checkbox (@ 3 places)
+    else
+      Do_drop_file_dialog(
+        Parent         => Window,
+        archive_name   => "(A new Zip archive)",
+        new_archive    => True,
+        encrypt        => encrypt,
+        yes            => yes
+      );
+      if yes then
+        On_File_New (Window, extra_first_doc => False, New_Window => New_Window);
+        New_Window.On_Save_As;
+        New_Window.Go_for_adding(File_Names, Encrypt => encrypt);
+      end if;
     end if;
   end On_File_Drop;
 

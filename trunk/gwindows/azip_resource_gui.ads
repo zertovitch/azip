@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2015/04/04  17:16:32
+-- Transcription time: 2015/04/04  18:21:20
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -161,6 +161,13 @@ package azip_Resource_GUI is
   end record; -- Drop_files_Type
 
   -- Dialog at resource line 195
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out Drop_files_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --

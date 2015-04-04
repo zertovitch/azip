@@ -180,19 +180,19 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-Drop_files DIALOG 0, 0, 337, 133
-STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+Drop_files DIALOG 0, 0, 337, 119
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "File(s) dropped"
 FONT 8, "Ms Shell Dlg"
 {
     ICON            Plus_icon, 1, 17, 10, 21, 20, SS_ICON, WS_EX_LEFT
-    AUTOCHECKBOX    " Encrypt data in archive", Encrypt_check_box, 206, 110, 123, 16, 0, WS_EX_LEFT
-    LTEXT           "Add dropped file(s) to...", 0, 53, 17, 250, 14, SS_LEFT, WS_EX_LEFT
-    ICON            Key_Icon, 0, 179, 108, 21, 20, SS_ICON, WS_EX_LEFT
-    LTEXT           "(Archive name here)", Drop_archive_name, 17, 36, 294, 23, SS_LEFT, WS_EX_LEFT
-    LTEXT           "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", New_archive_msg, 45, 68, 239, 27, SS_LEFT, WS_EX_STATICEDGE
-    PUSHBUTTON      "No", IDCANCEL, 73, 111, 50, 14, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Yes", IDOK, 11, 111, 50, 14, 0, WS_EX_LEFT
+    AUTOCHECKBOX    " Encrypt data in archive", Encrypt_check_box, 205, 100, 123, 16, 0, WS_EX_LEFT
+    LTEXT           "Add dropped file(s) to...", 0, 50, 14, 250, 14, SS_LEFT, WS_EX_LEFT
+    ICON            Key_Icon, 0, 178, 98, 21, 20, SS_ICON, WS_EX_LEFT
+    LTEXT           "(Archive name here)", Drop_archive_name, 35, 36, 285, 29, SS_LEFT, WS_EX_LEFT
+    LTEXT           "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", New_archive_msg, 45, 71, 272, 21, NOT WS_VISIBLE | SS_LEFT, WS_EX_STATICEDGE
+    PUSHBUTTON      "No", IDCANCEL, 72, 101, 50, 14, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Yes", IDOK, 10, 101, 50, 14, 0, WS_EX_LEFT
 }
 
 
@@ -356,7 +356,7 @@ Key_Icon           ICON           "ico_bmp/key.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Plus_icon          ICON           ".\\ico_bmp\\plus.ico"
+Plus_icon          ICON           "ico_bmp/plus.ico"
 
 
 

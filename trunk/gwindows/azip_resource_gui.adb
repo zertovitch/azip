@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2015/04/04  17:16:32
+-- Transcription time: 2015/04/04  18:21:20
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -336,6 +336,20 @@ package body azip_Resource_GUI is
 
   -- Dialog at resource line 186
 
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out Drop_files_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
@@ -351,7 +365,7 @@ package body azip_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 337, 133, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 337, 119, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -385,24 +399,24 @@ package body azip_Resource_GUI is
     x,y,w,h: Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 337, 133, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 337, 119, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  17, 10, 21, 20, x,y,w,h);
     Create( Window.RC_item_1, Window, Num_resource(Plus_icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  206, 110, 123, 16, x,y,w,h);
+    Dlg_to_Scn(  205, 100, 123, 16, x,y,w,h);
     Create( Window.Encrypt_check_box, Window, " Encrypt data in archive", x,y,w,h, ID => Encrypt_check_box);
-    Dlg_to_Scn(  53, 17, 250, 14, x,y,w,h);
+    Dlg_to_Scn(  50, 14, 250, 14, x,y,w,h);
     Create_label( Window, "Add dropped file(s) to...", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  179, 108, 21, 20, x,y,w,h);
+    Dlg_to_Scn(  178, 98, 21, 20, x,y,w,h);
     Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  17, 36, 294, 23, x,y,w,h);
+    Dlg_to_Scn(  35, 36, 285, 29, x,y,w,h);
     Create( Window.Drop_archive_name, Window, "(Archive name here)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Drop_archive_name);
-    Dlg_to_Scn(  45, 68, 239, 27, x,y,w,h);
+    Dlg_to_Scn(  45, 71, 272, 21, x,y,w,h);
     Create( Window.New_archive_msg, Window, "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", x,y,w,h, GWindows.Static_Controls.LEFT, HALF_SUNKEN, ID => New_archive_msg);
-    Dlg_to_Scn(  73, 111, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  72, 101, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -413,7 +427,7 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  11, 111, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  10, 101, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.

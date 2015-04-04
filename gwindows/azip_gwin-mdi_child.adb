@@ -1,5 +1,6 @@
-with AZip_GWin.Password_dialogs;        use AZip_GWin.Password_dialogs;
 with AZip_Common;                       use AZip_Common;
+with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
+with AZip_GWin.Password_dialogs;        use AZip_GWin.Password_dialogs;
 
 with Zip;                               use Zip;
 with Zip_Streams;
@@ -942,6 +943,9 @@ package body AZip_GWin.MDI_Child is
           end if;
       end case;
     end Eventual_folder;
+    encrypt   : Boolean:= False;
+    yes       : Boolean;
+    cancelled : Boolean;
   begin
     Window.Focus;
     if Confirm_archives_if_all_Zip_files(Window, File_Names) then
@@ -951,31 +955,28 @@ package body AZip_GWin.MDI_Child is
           File_Names(i)
         );
       end loop;
-    elsif Is_Loaded(Window.zif) then
-      if Message_Box(
-        Window,
-        "File(s) dropped",
-        "Add dropped file(s) to archive """ & GU2G(Window.Short_Name) & """ ?" & Eventual_folder,
-        Yes_No_Box,
-        Question_Icon) = Yes
-      then
-        Window.Go_for_adding(File_Names, Encrypt => False);
-        -- !! Need special Yes-No box with encryption checkbox (@ 3 places)
-      end if;
     else
-      if Message_Box(
-        Window,
-        "File(s) dropped",
-          "Add dropped file(s) to new archive (" &  GU2G(Window.Short_Name) &
-          ") ?" &  NL &
-          "You'll be asked first under which name the archive will be created.",
-        Yes_No_Box,
-        Question_Icon) = Yes
-      then
-        Window.On_Save_As;
+      Do_drop_file_dialog(
+        Parent         => Window,
+        archive_name   => GU2G(Window.Short_Name) & Eventual_folder,
+        new_archive    => not Is_Loaded(Window.zif),
+        archive_window => True,
+        encrypt        => encrypt,
+        yes            => yes
+      );
+      if yes then
+        if not Is_Loaded(Window.zif) then
+          Window.On_Save_As;
+        end if;
         if Is_Loaded(Window.zif) then
-          Window.Go_for_adding(File_Names, Encrypt => False);
-          -- !! Need special Yes-No box with encryption checkbox (@ 3 places)
+          if encrypt then
+            Get_password_for_encryption(Window, cancelled);
+          else
+            cancelled:= False;
+          end if;
+          if not cancelled then
+            Window.Go_for_adding(File_Names, Encrypt => encrypt);
+          end if;
         end if;
       end if;
     end if;

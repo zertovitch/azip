@@ -18,6 +18,8 @@
 #define Binoculars_Icon                         132
 #define Password_decryption_box                 133
 #define Password_encryption_box                 135
+#define Plus_icon                               137
+#define Drop_files                              138
 #define Archive_Progress                        1000
 #define Conflict_simple_name                    1000
 #define Encrypted_entry                         1000
@@ -43,8 +45,11 @@
 #define Confirm_Password_Label                  40000
 #define Copyright_label                         40000
 #define IDM__NEW_ARCHIVE                        40000
+#define New_archive_msg                         40000
 #define Confirm_Icon                            40001
+#define Drop_archive_name                       40001
 #define IDM__OPEN_ARCHIVE                       40001
+#define Encrypt_check_box                       40002
 #define IDM_MRU_1                               40002
 #define IDM_Unselect_all                        40002
 #define Password_confirm_edit                   40002

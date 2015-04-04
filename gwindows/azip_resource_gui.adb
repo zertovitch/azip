@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2015/03/17  14:17:15
+-- Transcription time: 2015/04/04  17:16:32
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 25-Nov-2012
+-- RC Grammar version: 22-Apr-2014
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -336,6 +336,99 @@ package body azip_Resource_GUI is
 
   -- Dialog at resource line 186
 
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Drop_files_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "File(s) dropped";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 337, 133, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- Drop_files_Type
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Drop_files_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 337, 133, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  17, 10, 21, 20, x,y,w,h);
+    Create( Window.RC_item_1, Window, Num_resource(Plus_icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  206, 110, 123, 16, x,y,w,h);
+    Create( Window.Encrypt_check_box, Window, " Encrypt data in archive", x,y,w,h, ID => Encrypt_check_box);
+    Dlg_to_Scn(  53, 17, 250, 14, x,y,w,h);
+    Create_label( Window, "Add dropped file(s) to...", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  179, 108, 21, 20, x,y,w,h);
+    Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Dlg_to_Scn(  17, 36, 294, 23, x,y,w,h);
+    Create( Window.Drop_archive_name, Window, "(Archive name here)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Drop_archive_name);
+    Dlg_to_Scn(  45, 68, 239, 27, x,y,w,h);
+    Create( Window.New_archive_msg, Window, "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", x,y,w,h, GWindows.Static_Controls.LEFT, HALF_SUNKEN, ID => New_archive_msg);
+    Dlg_to_Scn(  73, 111, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDCANCEL, Window, "No", x,y,w,h, ID => IDCANCEL);
+    Create( Window.IDCANCEL_permanent, Window, "No", x,y,w,h, ID => IDCANCEL);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDCANCEL_permanent);
+    else -- hide the closing button
+      Hide(Window.IDCANCEL);
+    end if;
+    Dlg_to_Scn(  11, 111, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDOK, Window, "Yes", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "Yes", x,y,w,h, ID => IDOK);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDOK_permanent);
+    else -- hide the closing button
+      Hide(Window.IDOK);
+    end if;
+  end Create_Contents; -- Drop_files_Type
+
+
+  -- Dialog at resource line 204
+
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
   --
@@ -481,7 +574,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- File_exists_box_Type
 
 
-  -- Dialog at resource line 206
+  -- Dialog at resource line 224
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -588,7 +681,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Find_box_Type
 
 
-  -- Dialog at resource line 224
+  -- Dialog at resource line 242
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -697,7 +790,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Password_decryption_box_Type
 
 
-  -- Dialog at resource line 243
+  -- Dialog at resource line 261
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -806,7 +899,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Password_encryption_box_Type
 
 
-  -- Dialog at resource line 262
+  -- Dialog at resource line 280
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -902,7 +995,7 @@ package body azip_Resource_GUI is
   end Create_Contents; -- Progress_box_Type
 
 
-  -- Dialog at resource line 279
+  -- Dialog at resource line 297
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1075,6 +1168,6 @@ package body azip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 370
+  -- Last line of resource script file: 392
 
 end azip_Resource_GUI;

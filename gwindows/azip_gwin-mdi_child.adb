@@ -960,7 +960,6 @@ package body AZip_GWin.MDI_Child is
         Parent         => Window,
         archive_name   => GU2G(Window.Short_Name) & Eventual_folder,
         new_archive    => not Is_Loaded(Window.zif),
-        archive_window => True,
         encrypt        => encrypt,
         yes            => yes
       );

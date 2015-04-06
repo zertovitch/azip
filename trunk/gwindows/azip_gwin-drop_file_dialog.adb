@@ -14,7 +14,7 @@ package body AZip_GWin.Drop_file_dialog is
     yes            :    out Boolean
   )
   is
-    box: Drop_files_Type;
+    box: Drop_files_box_Type;
     procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
       pragma Warnings(off, dummy);
     begin

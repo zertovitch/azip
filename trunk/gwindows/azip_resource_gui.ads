@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2015/04/04  18:21:20
+-- Transcription time: 2015/04/06  21:49:59
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 22-Apr-2014
+-- RC Grammar version: 05-Apr-2015
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -39,7 +39,7 @@ package azip_Resource_GUI is
     Popup_0007: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Child_Type
 
-  -- Menu at line 91
+  -- Menu at line 93
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -51,7 +51,7 @@ package azip_Resource_GUI is
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
   end record; -- Menu_MDI_Main_Type
 
-  -- Menu at line 129
+  -- Menu at line 131
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -78,7 +78,7 @@ package azip_Resource_GUI is
     Credits_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 159
+  -- Dialog at resource line 161
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -122,7 +122,7 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- Credits_box_Type
 
-  -- Dialog at resource line 177
+  -- Dialog at resource line 179
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -146,7 +146,7 @@ package azip_Resource_GUI is
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      );
 
-  type Drop_files_Type is new Window_type with record
+  type Drop_files_box_Type is new Window_type with record
 
     RC_item_1: Icon_Type;
     Encrypt_check_box: Check_Box_Type;
@@ -158,21 +158,21 @@ package azip_Resource_GUI is
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-  end record; -- Drop_files_Type
+  end record; -- Drop_files_box_Type
 
-  -- Dialog at resource line 195
+  -- Dialog at resource line 197
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
   --
-  procedure On_Pre_Create (Window    : in out Drop_files_Type;
+  procedure On_Pre_Create (Window    : in out Drop_files_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned);
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
-     (Window      : in out Drop_files_Type;
+     (Window      : in out Drop_files_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
       Title       : in     GString := "File(s) dropped";
       Left        : in     Integer := Use_Default; -- Default = as designed
@@ -186,7 +186,7 @@ package azip_Resource_GUI is
   --      already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
-     ( Window      : in out Drop_files_Type;
+     ( Window      : in out Drop_files_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      );
@@ -211,7 +211,7 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- File_exists_box_Type
 
-  -- Dialog at resource line 215
+  -- Dialog at resource line 217
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -256,7 +256,7 @@ package azip_Resource_GUI is
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Find_box_Type
 
-  -- Dialog at resource line 233
+  -- Dialog at resource line 235
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -302,7 +302,7 @@ package azip_Resource_GUI is
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Password_decryption_box_Type
 
-  -- Dialog at resource line 252
+  -- Dialog at resource line 254
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -348,7 +348,7 @@ package azip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- Password_encryption_box_Type
 
-  -- Dialog at resource line 271
+  -- Dialog at resource line 273
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -391,7 +391,7 @@ package azip_Resource_GUI is
     Comment_2: Label_Type;
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 288
+  -- Dialog at resource line 290
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -422,6 +422,51 @@ package azip_Resource_GUI is
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      );
 
+  type Properties_box_Type is new Window_type with record
+
+    -- Label: 0
+    Uncomp_size: Label_Type;
+    -- Label: 1
+    Comp_size: Label_Type;
+    Comp_ratio: Label_Type;
+    -- Label: 02
+    Numb_entries: Label_Type;
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    Stats_list: List_View_Control_Type;
+  end record; -- Properties_box_Type
+
+  -- Dialog at resource line 309
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out Properties_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Properties_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Archive properties";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Properties_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     );
+
   type Wait_refresh_box_Type is new Window_type with record
 
     -- Label: IDC_STATIC
@@ -429,7 +474,7 @@ package azip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  -- Dialog at resource line 300
+  -- Dialog at resource line 321
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -488,7 +533,8 @@ package azip_Resource_GUI is
   Password_decryption_box   : constant:=    133;
   Password_encryption_box   : constant:=    135;
   Plus_icon                 : constant:=    137;
-  Drop_files                : constant:=    138;
+  Properties_box            : constant:=    139;
+  Drop_files_box            : constant:=    140;
   Archive_Progress          : constant:=   1000;
   Conflict_simple_name      : constant:=   1000;
   Encrypted_entry           : constant:=   1000;
@@ -511,6 +557,7 @@ package azip_Resource_GUI is
   Comment_2                 : constant:=   1007;
   Comment_1                 : constant:=   1008;
   Overwrite_No              : constant:=   1008;
+  Comp_size                 : constant:=  40000;
   Confirm_Password_Label    : constant:=  40000;
   Copyright_label           : constant:=  40000;
   IDM_NEW_ARCHIVE           : constant:=  40000;
@@ -518,12 +565,16 @@ package azip_Resource_GUI is
   Confirm_Icon              : constant:=  40001;
   Drop_archive_name         : constant:=  40001;
   IDM_OPEN_ARCHIVE          : constant:=  40001;
+  Uncomp_size               : constant:=  40001;
+  Comp_ratio                : constant:=  40002;
   Encrypt_check_box         : constant:=  40002;
   IDM_MRU_1                 : constant:=  40002;
   IDM_Unselect_all          : constant:=  40002;
   Password_confirm_edit     : constant:=  40002;
   IDM_ABOUT                 : constant:=  40003;
+  Stats_list                : constant:=  40003;
   IDM_TEST_ARCHIVE          : constant:=  40004;
+  Numb_entries              : constant:=  40004;
   IDM_QUIT                  : constant:=  40005;
   IDM_RECOMPRESS_ARCHIVE    : constant:=  40006;
   IDM_EXTRACT               : constant:=  40007;
@@ -552,6 +603,7 @@ package azip_Resource_GUI is
   IDM_CLOSE_ARCHIVE         : constant:=  40029;
   IDM_Encrypt_Archive       : constant:=  40030;
   IDM_Add_Files_Encryption  : constant:=  40031;
+  IDM_Properties            : constant:=  40032;
   Overwrite_All             : constant:=  40032;
   Overwrite_None            : constant:=  40034;
   Overwrite_Rename          : constant:=  40036;
@@ -571,6 +623,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
 
-  -- Last line of resource script file: 392
+  -- Last line of resource script file: 413
 
 end azip_Resource_GUI;

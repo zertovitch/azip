@@ -19,7 +19,8 @@
 #define Password_decryption_box                 133
 #define Password_encryption_box                 135
 #define Plus_icon                               137
-#define Drop_files                              138
+#define Properties_box                          139
+#define Drop_files_box                          140
 #define Archive_Progress                        1000
 #define Conflict_simple_name                    1000
 #define Encrypted_entry                         1000
@@ -42,6 +43,7 @@
 #define Comment_2                               1007
 #define Comment_1                               1008
 #define Overwrite_No                            1008
+#define Comp_size                               40000
 #define Confirm_Password_Label                  40000
 #define Copyright_label                         40000
 #define IDM__NEW_ARCHIVE                        40000
@@ -49,12 +51,16 @@
 #define Confirm_Icon                            40001
 #define Drop_archive_name                       40001
 #define IDM__OPEN_ARCHIVE                       40001
+#define Uncomp_size                             40001
+#define Comp_ratio                              40002
 #define Encrypt_check_box                       40002
 #define IDM_MRU_1                               40002
 #define IDM_Unselect_all                        40002
 #define Password_confirm_edit                   40002
 #define IDM__ABOUT                              40003
+#define Stats_list                              40003
 #define IDM_TEST_ARCHIVE                        40004
+#define Numb_entries                            40004
 #define IDM__QUIT                               40005
 #define IDM__RECOMPRESS_ARCHIVE                 40006
 #define IDM_EXTRACT                             40007
@@ -83,6 +89,7 @@
 #define IDM__CLOSE_ARCHIVE                      40029
 #define IDM_Encrypt_Archive                     40030
 #define IDM_Add_Files_Encryption                40031
+#define IDM_Properties                          40032
 #define Overwrite_All                           40032
 #define Overwrite_None                          40034
 #define Overwrite_Rename                        40036

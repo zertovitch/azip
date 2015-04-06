@@ -1,6 +1,7 @@
 with AZip_Common;                       use AZip_Common;
 with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
 with AZip_GWin.Password_dialogs;        use AZip_GWin.Password_dialogs;
+with AZip_GWin.Properties;
 
 with Zip;                               use Zip;
 with Zip_Streams;
@@ -1400,6 +1401,8 @@ package body AZip_GWin.MDI_Child is
         Window.On_Save_As;
       when IDM_CLOSE_ARCHIVE =>
         Window.Close;
+      when IDM_Properties =>
+        AZip_GWin.Properties(Window);
       when IDM_Select_all =>
         Full_Select(Window, True);
       when IDM_Unselect_all =>

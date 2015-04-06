@@ -35,6 +35,8 @@ Menu_MDI_Child MENU
         MENUITEM "&Save archive as...\tF12", IDM_SAVE_ARCHIVE_AS
         MENUITEM "&Close archive\tCtrl+W / Ctrl+F4", IDM__CLOSE_ARCHIVE
         MENUITEM SEPARATOR
+        MENUITEM "&Properties", IDM_Properties
+        MENUITEM SEPARATOR
         POPUP "&Recent"
         {
             MENUITEM "mru_1", IDM_MRU_1
@@ -180,7 +182,7 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-Drop_files DIALOG 0, 0, 337, 119
+Drop_files_box DIALOG 0, 0, 337, 119
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "File(s) dropped"
 FONT 8, "Ms Shell Dlg"
@@ -286,6 +288,25 @@ FONT 8, "Ms Shell Dlg"
     PUSHBUTTON      "Cancel", Cancel_button, 96, 96, 50, 14, 0, WS_EX_LEFT
     LTEXT           "Comment 1", Comment_1, 7, 32, 228, 10, SS_LEFT, WS_EX_LEFT
     LTEXT           "Comment 2", Comment_2, 7, 45, 228, 10, SS_LEFT, WS_EX_LEFT
+}
+
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Properties_box DIALOG 0, 0, 239, 145
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+CAPTION "Archive properties"
+FONT 8, "Ms Shell Dlg"
+{
+    LTEXT           "Uncompressed size", 0, 14, 6, 78, 13, SS_LEFT, WS_EX_LEFT
+    LTEXT           "U MB", Uncomp_size, 97, 6, 50, 12, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Compressed size", 1, 14, 23, 78, 13, SS_LEFT, WS_EX_LEFT
+    LTEXT           "C MB", Comp_size, 97, 23, 50, 12, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Ratio %", Comp_ratio, 183, 23, 27, 16, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Entries", 02, 14, 40, 78, 13, SS_LEFT, WS_EX_LEFT
+    LTEXT           "# entries", Numb_entries, 97, 40, 50, 12, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 95, 128, 50, 14, 0, WS_EX_LEFT
+    CONTROL         "", Stats_list, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 14, 56, 212, 65, WS_EX_LEFT
 }
 
 

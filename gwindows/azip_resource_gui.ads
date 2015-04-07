@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2015/04/06  21:49:59
+-- Transcription time: 2015/04/07  20:05:51
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -501,7 +501,7 @@ package azip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion: constant String:= "1.26";
+    FileVersion: constant String:= "1.27";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2015";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;

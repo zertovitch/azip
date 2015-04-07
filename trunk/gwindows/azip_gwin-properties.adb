@@ -1,3 +1,4 @@
+with AZip_Common;                       use AZip_Common;
 with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
 
@@ -67,17 +68,18 @@ begin
   if Is_Loaded(Window.zif) then
     Gather_stats(Window.zif);
     box.Numb_entries.Text(Trim(Natural'Wide_Image(Entries(Window.zif)), Left));
-    box.Uncomp_size.Text(Trim(File_size_type'Wide_Image(total_uncompressed), Left));
-    box.Comp_size.Text(Trim(File_size_type'Wide_Image(total_compressed), Left));
+    box.Uncomp_size.Text(
+      File_Size_Image(total_uncompressed) & " (" &
+      Trim(File_size_type'Wide_Image(total_uncompressed), Left)
+      & ')'
+    );
+    box.Comp_size.Text(
+      File_Size_Image(total_compressed) & " (" &
+      Trim(File_size_type'Wide_Image(total_compressed), Left)
+      & ')'
+    );
     if total_uncompressed > 0 then
-      box.Comp_ratio.Text(
-        Integer'Wide_Image(
-          Natural(
-            (100.0 * Long_Float(total_compressed)) /
-             Long_Float(total_uncompressed)
-            )
-        ) & '%'
-      );
+      box.Comp_ratio.Text(Ratio_pct_Image(total_compressed, total_uncompressed));
     end if;
     for m in files_per_method'Range loop
       if files_per_method(m) > 0 then
@@ -86,21 +88,11 @@ begin
         box.Stats_list.Set_Sub_Item(Integer'Wide_Image(files_per_method(m)),row,1);
         if uncompressed_per_method(m) > 0 then
           box.Stats_list.Set_Sub_Item(
-            Integer'Wide_Image(
-              Natural(
-                (100.0 * Long_Float(uncompressed_per_method(m))) /
-                 Long_Float(total_uncompressed)
-                )
-            ) & '%',
+            Ratio_pct_Image(uncompressed_per_method(m), total_uncompressed),
             row, 2
           );
           box.Stats_list.Set_Sub_Item(
-            Integer'Wide_Image(
-              Natural(
-                (100.0 * Long_Float(compressed_per_method(m))) /
-                Long_Float(uncompressed_per_method(m))
-              )
-            ) & '%',
+            Ratio_pct_Image(compressed_per_method(m), uncompressed_per_method(m)),
             row, 3
           );
         end if;

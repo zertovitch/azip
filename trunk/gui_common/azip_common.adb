@@ -389,7 +389,7 @@ package body AZip_Common is
     if d = 0 then
       return "--";
     else
-      return Trim(Integer'Wide_Image(Integer(100.0 * Float(n) / Float(d))), Left) & '%';
+      return Trim(Integer'Wide_Image(Integer(100.0 * Long_Float(n) / Long_Float(d))), Left) & '%';
     end if;
   end Ratio_pct_Image;
 

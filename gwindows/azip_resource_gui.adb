@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2015/04/07  20:05:51
+-- Transcription time: 2015/04/10  10:22:45
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -1043,7 +1043,7 @@ package body azip_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 253, 157, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 265, 157, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -1077,26 +1077,26 @@ package body azip_Resource_GUI is
     x,y,w,h: Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 253, 157, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 265, 157, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  14, 6, 78, 13, x,y,w,h);
     Create_label( Window, "Uncompressed size", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  97, 6, 83, 12, x,y,w,h);
+    Dlg_to_Scn(  97, 6, 112, 12, x,y,w,h);
     Create( Window.Uncomp_size, Window, "U MB", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Uncomp_size);
     Dlg_to_Scn(  14, 23, 78, 13, x,y,w,h);
     Create_label( Window, "Compressed size", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  97, 23, 80, 12, x,y,w,h);
+    Dlg_to_Scn(  97, 23, 112, 12, x,y,w,h);
     Create( Window.Comp_size, Window, "C MB", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Comp_size);
-    Dlg_to_Scn(  183, 23, 27, 16, x,y,w,h);
-    Create( Window.Comp_ratio, Window, "Ratio %", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Comp_ratio);
+    Dlg_to_Scn(  211, 23, 48, 16, x,y,w,h);
+    Create( Window.Comp_ratio, Window, "Ratio: 100%", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Comp_ratio);
     Dlg_to_Scn(  14, 40, 78, 13, x,y,w,h);
     Create_label( Window, "Entries", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  97, 40, 50, 12, x,y,w,h);
+    Dlg_to_Scn(  97, 40, 84, 12, x,y,w,h);
     Create( Window.Numb_entries, Window, "# entries", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Numb_entries);
-    Dlg_to_Scn(  103, 139, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  111, 139, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -1107,7 +1107,7 @@ package body azip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  14, 56, 226, 79, x,y,w,h);
+    Dlg_to_Scn(  14, 56, 236, 79, x,y,w,h);
     Create( Window.Stats_list, Window, x,y,w,h, MULTIPLE, REPORT_VIEW, NO_SORTING, FALSE, ALIGN_LEFT);
   end Create_Contents; -- Properties_box_Type
 

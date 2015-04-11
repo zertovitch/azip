@@ -383,6 +383,44 @@ package body AZip_Common is
     end if;
   end File_Size_Value;
 
+  function Image_1000(r: Zip.File_size_type; separator: Wide_Character) return Wide_String is
+    s: constant Wide_String:= Zip.File_size_type'Wide_Image(r);
+    t: Wide_String(s'First..s'First+(s'Length*4)/3);
+    j, c: Natural;
+    use Interfaces;
+  begin
+    --  For signed integers
+    --
+    --  if r < 0 then
+    --    return '-' & Image_1000(abs r, separator);
+    --  end if;
+    --
+    --  We build result string t from right to left
+    j:= t'Last + 1;
+    c:= 0;
+    for i in reverse s'First..s'Last loop
+      exit when s(i) = ' ' or s(i) = '-';
+      if c > 0 and then c mod 3 = 0 then
+        j:= j - 1;
+        t(j):= separator;
+      end if;
+      j:= j - 1;
+      t(j):= s(i);
+      c:= c + 1;
+    end loop;
+    return t(j..t'Last);
+  end Image_1000;
+
+  function Long_file_size_image(x: Zip.File_size_type; separator: Wide_Character) return UTF_16_String is
+    use Interfaces;
+  begin
+    if x < 1024 then
+      return Image_1000(x, separator) & " bytes";
+    else
+      return File_size_image(x) & " (" & Image_1000(x, separator) & " bytes)";
+    end if;
+  end Long_file_size_image;
+
   function Ratio_pct_Image(n,d: Zip.File_size_type) return UTF_16_String is
     use type Zip.File_size_type;
   begin

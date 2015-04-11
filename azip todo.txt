@@ -10,7 +10,6 @@ gw - disable sorting on large lists
 gw - drag & drop entre fenêtres, et vers explorer
 gw - copy/paste entre fenêtres
   
-gw - property box with stats about compression, like UnZipAda
 gw - list of supported formats in "about" box
 gw - sélection: somme des tailles compressées et non compressées
 gw - double-clic / return (ouvrir un fichier dans un rép. temporaire)

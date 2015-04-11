@@ -8,6 +8,7 @@ with Zip_Streams;
 
 with GWindows;                          use GWindows;
 with GWindows.Application;              use GWindows.Application;
+with GWindows.Locales;
 
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 with Ada.Strings;                       use Ada.Strings;
@@ -21,6 +22,8 @@ procedure AZip_GWin.Properties(Window: in out MDI_Child_Type) is
   files_per_method: array(UnZip.PKZip_method) of Natural:= (others => 0);
   uncompressed_per_method,
   compressed_per_method: array(UnZip.PKZip_method) of UnZip.File_size_type:= (others => 0);
+  sep_str: constant GString:= GWindows.Locales.Get_Thousands_Separator;
+  sep: constant Wide_Character:= sep_str(sep_str'First);
 
   use Interfaces;
 
@@ -62,24 +65,16 @@ begin
   box.Stats_list.Insert_Column("Entries",1,50);
   box.Stats_list.Insert_Column("% of data",2,60);
   box.Stats_list.Insert_Column("Ratio",3,50);
-  box.Uncomp_size.Text("0");
-  box.Comp_size.Text("0");
+  box.Uncomp_size.Text("0 byte");
+  box.Comp_size.Text("0 byte");
   box.Comp_ratio.Text("");
   if Is_Loaded(Window.zif) then
     Gather_stats(Window.zif);
     box.Numb_entries.Text(Trim(Natural'Wide_Image(Entries(Window.zif)), Left));
-    box.Uncomp_size.Text(
-      File_Size_Image(total_uncompressed) & " (" &
-      Trim(File_size_type'Wide_Image(total_uncompressed), Left)
-      & ')'
-    );
-    box.Comp_size.Text(
-      File_Size_Image(total_compressed) & " (" &
-      Trim(File_size_type'Wide_Image(total_compressed), Left)
-      & ')'
-    );
+    box.Uncomp_size.Text(Long_file_size_image(total_uncompressed, sep));
+    box.Comp_size.Text(Long_file_size_image(total_compressed, sep));
     if total_uncompressed > 0 then
-      box.Comp_ratio.Text(Ratio_pct_Image(total_compressed, total_uncompressed));
+      box.Comp_ratio.Text("Ratio: " & Ratio_pct_Image(total_compressed, total_uncompressed));
     end if;
     for m in files_per_method'Range loop
       if files_per_method(m) > 0 then

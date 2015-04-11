@@ -72,9 +72,12 @@ package AZip_Common is
 
   function Image(topic: Entry_topic) return UTF_16_String;
   function Hexadecimal(x: Interfaces.Unsigned_32) return UTF_16_String;
-  -- File sizes
+  -- File sizes (in GB, MB, KB or bytes)
   function File_Size_Image(x: Zip.File_size_type) return UTF_16_String;
   function File_Size_Value(s: UTF_16_String) return Zip.File_size_type;
+  -- Image with thousands separator
+  function Image_1000(r: Zip.File_size_type; separator: Wide_Character) return Wide_String;
+  function Long_file_size_image(x: Zip.File_size_type; separator: Wide_Character) return UTF_16_String;
   -- Percentages
   function Ratio_pct_Image(n,d: Zip.File_size_type) return UTF_16_String;
   function Pct_Value(s: UTF_16_String) return Natural; -- 0..100

@@ -293,20 +293,20 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Properties_box DIALOG 0, 0, 253, 157
+Properties_box DIALOG 0, 0, 265, 157
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "Archive properties"
 FONT 8, "Ms Shell Dlg"
 {
     LTEXT           "Uncompressed size", 0, 14, 6, 78, 13, SS_LEFT, WS_EX_LEFT
-    LTEXT           "U MB", Uncomp_size, 97, 6, 83, 12, SS_LEFT, WS_EX_LEFT
+    LTEXT           "U MB", Uncomp_size, 97, 6, 112, 12, SS_LEFT, WS_EX_LEFT
     LTEXT           "Compressed size", 1, 14, 23, 78, 13, SS_LEFT, WS_EX_LEFT
-    LTEXT           "C MB", Comp_size, 97, 23, 80, 12, SS_LEFT, WS_EX_LEFT
-    LTEXT           "Ratio %", Comp_ratio, 183, 23, 27, 16, SS_LEFT, WS_EX_LEFT
+    LTEXT           "C MB", Comp_size, 97, 23, 112, 12, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Ratio: 100%", Comp_ratio, 211, 23, 48, 16, SS_LEFT, WS_EX_LEFT
     LTEXT           "Entries", 02, 14, 40, 78, 13, SS_LEFT, WS_EX_LEFT
-    LTEXT           "# entries", Numb_entries, 97, 40, 50, 12, SS_LEFT, WS_EX_LEFT
-    DEFPUSHBUTTON   "OK", IDOK, 103, 139, 50, 14, 0, WS_EX_LEFT
-    CONTROL         "", Stats_list, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 14, 56, 226, 79, WS_EX_LEFT
+    LTEXT           "# entries", Numb_entries, 97, 40, 84, 12, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 111, 139, 50, 14, 0, WS_EX_LEFT
+    CONTROL         "", Stats_list, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 14, 56, 236, 79, WS_EX_LEFT
 }
 
 

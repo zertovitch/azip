@@ -13,15 +13,6 @@ copy obj\fast\libwin32ada.a obj_ming\fast
 copy obj\debug\debug.pra obj_ming\debug
 copy obj\debug\libwin32ada.a obj_ming\debug
 
-rem make Ming object directories the active ones
-ren obj  obj_gpl
-ren obj_ming obj
 cd gwindows
 
 call build "-march=i686"
-
-cd ..
-rem make GPL object directories the active ones
-ren obj obj_ming
-ren obj_gpl  obj
-cd gwindows

@@ -69,8 +69,8 @@ project AZip_GWindows is
               "-gnat05", "-gnatwa", "-O2", "-gnatpn", 
               "-funroll-loops", "-fpeel-loops", "-funswitch-loops", "-ftracer", "-fweb", "-frename-registers", 
               "-fpredictive-commoning", "-fgcse-after-reload", "-ftree-vectorize", "-fipa-cp-clone",
-              "-ffunction-sections" 
-              -- "-gnatec../../gwindows/azip_elim.pra"
+              "-ffunction-sections",
+              "-gnatec../../gwindows/azip_elim.pra"
               );
          when "Profiling" =>
             for Default_Switches ("ada") use (

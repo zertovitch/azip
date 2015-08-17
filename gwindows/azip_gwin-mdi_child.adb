@@ -715,12 +715,12 @@ package body AZip_GWin.MDI_Child is
   is
     az_names: Name_list(File_Names'Range);
     progress_box: Progress_Box_Type;
-    aborted: Boolean:= False;
+    is_aborted: Boolean:= False;
     --
     procedure Abort_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
       pragma Warnings(off, dummy);
     begin
-      aborted:= True;
+      is_aborted:= True;  --  Will propagate user_abort upon next Boxed_Feedback.
     end Abort_clicked;
     --
     tick: Ada.Calendar.Time;
@@ -742,7 +742,7 @@ package body AZip_GWin.MDI_Child is
       -- Otherwise Windows may be overflown by messages and the operation
       -- takes much more time due to the display. Typical case: an archive
       -- with many small files - GWin.zip or Java run-time Jar's for instance.
-      if now - tick >= 0.02 then
+      if now - tick >= 0.02 or else archive_percents_done = 100 then
         progress_box.File_Progress.Position(file_percents_done);
         progress_box.Archive_Progress.Position(archive_percents_done);
         progress_box.Entry_name.Text(entry_being_processed);
@@ -751,10 +751,14 @@ package body AZip_GWin.MDI_Child is
         );
         progress_box.Comment_1.Text(S2G(comment_1));
         progress_box.Comment_2.Text(S2G(comment_2));
+        if archive_percents_done = 100 and then comment_1 /= "" then
+          Window.last_op_comment_1:= G2GU(S2G(comment_1));
+          Window.last_op_comment_2:= G2GU(S2G(comment_2));
+        end if;
         Message_Check;
         tick:= now;
       end if;
-      user_abort:= aborted;
+      user_abort:= is_aborted;
     end Boxed_Feedback;
     --
     procedure Name_conflict_resolution(
@@ -1290,6 +1294,19 @@ package body AZip_GWin.MDI_Child is
         encrypt        => False,
         new_temp_name  => ""
       );
+      if Message_Box(Window,
+          "Find in archive",
+          "Search completed." & NL & NL &
+          GU2G(Window.last_op_comment_1) & NL &
+          GU2G(Window.last_op_comment_2) & NL & NL &
+          "Do you want to see full results (flat view & result sort) ?",
+          Yes_No_Box,
+          Question_Icon)
+        = Yes
+      then
+        Change_View(Window, Flat, Force => False);
+        Window.Directory_List.Sort(Window.opt.column_index(Result) - 1, AZip_LV_Ex.Down);
+      end if;
     end if;
   end On_Find;
 
@@ -1388,6 +1405,17 @@ package body AZip_GWin.MDI_Child is
         Ada.Directories.Set_Directory(mem_dir & '\'); -- !! Check if UTF-8 capable
       else
         Ada.Directories.Set_Directory(mem_dir); -- !! Check if UTF-8 capable
+      end if;
+      if Message_Box(Window,
+          "Archive update",
+          "Update completed." & NL &
+          "Do you want to see full results (flat view & result sort) ?",
+          Yes_No_Box,
+          Question_Icon)
+        = Yes
+      then
+        Change_View(Window, Flat, Force => False);
+        Window.Directory_List.Sort(Window.opt.column_index(Result) - 1, AZip_LV_Ex.Down);
       end if;
     end if;
   end On_Update;

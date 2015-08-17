@@ -527,8 +527,8 @@ package body AZip_Common.Operations is
       if abort_rest_of_operation then
         return;
       end if;
-      archive_percents_done:= (100 * processed_entries) / total_entries;
       processed_entries:= processed_entries + 1;
+      archive_percents_done:= (100 * processed_entries) / total_entries;
       file_percents_done:= 0;
       --
       -- !! use hashed maps either for searching
@@ -713,16 +713,6 @@ package body AZip_Common.Operations is
               -- for just 1 instruction !
               user_code:= 1;
             else
-              Feedback(
-                file_percents_done,
-                archive_percents_done,
-                short_name_utf_16,
-                Search,
-                "Occurences found so far:" & Integer'Image(total_occurences),
-                "Entries with occurences:" & Integer'Image(total_files_with_occurence),
-                False,
-                dummy_user_abort
-              );
               begin
                 -- We need to search the string in the compressed entry...
                 Search_1_file(name => name, occ  => user_code);
@@ -741,6 +731,16 @@ package body AZip_Common.Operations is
                 when Zip.Zip_file_Error =>
                   user_code:= corrupt;
               end;
+              Feedback(
+                file_percents_done,
+                archive_percents_done,
+                short_name_utf_16,
+                Search,
+                "Occurences found so far:" & Integer'Image(total_occurences),
+                "Entries with occurences:" & Integer'Image(total_files_with_occurence),
+                False,
+                dummy_user_abort
+              );
             end if;
             max_code:= Integer'Max(max_code, user_code);
         end case;

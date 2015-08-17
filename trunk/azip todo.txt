@@ -2,10 +2,6 @@ console mode through command lines options (no GUI then)
   -a for Add, -d for Delete, etc.
   -q: quiet: neither console output, nor gui
 
-find: in tree mode: if any hit outside current directory,
-  mention it and offer to switch to flat mode
-
-gw - Suggest to turn flat view on, on completion of any archive tools
 gw - disable sorting on large lists
 gw - drag & drop entre fenêtres, et vers explorer
 gw - copy/paste entre fenêtres

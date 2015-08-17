@@ -133,6 +133,8 @@ package AZip_GWin.MDI_Child is
         last_sort_direc  : AZip_LV_Ex.Sort_Direction_Type;
         refreshing_list  : Boolean:= False;
         is_closing       : Boolean:= False;
+        last_op_comment_1: GString_Unbounded;
+        last_op_comment_2: GString_Unbounded;
       end record;
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);

@@ -352,15 +352,30 @@ package body AZip_Common is
 
   function File_size_image(x: Zip.File_size_type) return UTF_16_String is
     use type Zip.File_size_type;
+    function Img_dec(x: Zip.File_size_type; try_decimals: Boolean) return UTF_16_String is
+      s: constant UTF_16_String:= Zip.File_size_type'Wide_Image(x);
+    begin
+      if try_decimals then --  x is 100x too large on purpose
+        if s(s'Last-1..s'Last)="00" then
+          return s(s'First+1..s'Last-2);
+        elsif s(s'Last)='0' then
+          return s(s'First+1..s'Last-2) & '.' & s(s'Last-1);
+        else
+          return s(s'First+1..s'Last-2) & '.' & s(s'Last-1..s'Last);
+        end if;
+      else
+        return s(s'First+1..s'Last);
+      end if;
+    end Img_dec;
   begin
     if x >= 1024 ** 3 then
-      return File_size_image(x / (1024 ** 3)) & " GB";
+      return Img_dec(x / (1024 ** 3), False) & " GB";
     elsif x >= 1024 ** 2 then
-      return File_size_image(x / (1024 ** 2)) & " MB";
+      return Img_dec(x / (1024 ** 2), False) & " MB";
     elsif x >= 1024 then
-      return File_size_image(x / 1024) & " KB";
+      return Img_dec((x * 100) / 1024, True) & " KB";
     else
-      return Trim(Zip.File_size_type'Wide_Image(x), Left);
+      return Img_dec(x, False);
     end if;
   end File_size_image;
 

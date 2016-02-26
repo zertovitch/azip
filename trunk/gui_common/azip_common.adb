@@ -350,15 +350,15 @@ package body AZip_Common is
     return str(Index(str,"#")+1..11);
   end Hexadecimal;
 
-  function File_size_image(x: Zip.File_size_type) return UTF_16_String is
+  function File_Size_Image(x: Zip.File_size_type) return UTF_16_String is
     use type Zip.File_size_type;
     function Img_dec(x: Zip.File_size_type; try_decimals: Boolean) return UTF_16_String is
       s: constant UTF_16_String:= Zip.File_size_type'Wide_Image(x);
     begin
-      if try_decimals then --  x is 100x too large on purpose
-        if s(s'Last-1..s'Last)="00" then
+      if try_decimals then --  x is 100x too large, on purpose
+        if s(s'Last-1..s'Last) = "00" then
           return s(s'First+1..s'Last-2);
-        elsif s(s'Last)='0' then
+        elsif s(s'Last) = '0' then
           return s(s'First+1..s'Last-2) & '.' & s(s'Last-1);
         else
           return s(s'First+1..s'Last-2) & '.' & s(s'Last-1..s'Last);
@@ -370,32 +370,46 @@ package body AZip_Common is
   begin
     if x >= 1024 ** 3 then
       return Img_dec(x / (1024 ** 3), False) & " GB";
-    elsif x >= 1024 ** 2 then
+    elsif x >= 100 * (1024 ** 2) then  --  100 MB
       return Img_dec(x / (1024 ** 2), False) & " MB";
-    elsif x >= 1024 then
+    elsif x >= 1024 ** 2 then  --  1 MB
+      return Img_dec((x * 100) / (1024 ** 2), True) & " MB";
+    elsif x >= 1024 then  --  1 KB
       return Img_dec((x * 100) / 1024, True) & " KB";
     else
       return Img_dec(x, False);
     end if;
-  end File_size_image;
+  end File_Size_Image;
 
   function File_Size_Value(s: UTF_16_String) return Zip.File_size_type is
     use type File_size_type;
   begin
-    if s'Length < 4 then
-      return File_size_type'Wide_Value(s);
-    else
-      case s(s'Last-1) is
-        when 'K' =>
-          return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024;
-        when 'M' =>
-          return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024**2;
-        when 'G' =>
-          return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024**3;
-        when others =>
-          return File_size_type'Wide_Value(s);
-      end case;
+    if s'Length >= 4 and then (s(s'Last-1) = 'K' or s(s'Last-1) = 'M' or s(s'Last-1) = 'G') then
+      if Index(s, ".") > 0 then
+        case s(s'Last-1) is
+          when 'K' =>
+            return File_size_type(Long_Float'Wide_Value(s(s'First..s'Last-3)) * 1024.0);
+          when 'M' =>
+            return File_size_type(Long_Float'Wide_Value(s(s'First..s'Last-3)) * 1024.0**2);
+          when 'G' =>
+            return File_size_type(Long_Float'Wide_Value(s(s'First..s'Last-3)) * 1024.0**3);
+          when others =>
+            null;
+        end case;
+      else
+        case s(s'Last-1) is
+          when 'K' =>
+            return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024;
+          when 'M' =>
+            return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024**2;
+          when 'G' =>
+            return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024**3;
+          when others =>
+            null;
+        end case;
+      end if;
     end if;
+    return File_size_type'Wide_Value(s);
   end File_Size_Value;
 
   function Image_1000(r: Zip.File_size_type; separator: Wide_Character) return Wide_String is

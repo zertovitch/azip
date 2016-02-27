@@ -5,6 +5,7 @@ console mode through command lines options (GUI not started then)
 gw - disable sorting on large lists
 gw - drag & drop entre fenêtres, et vers explorer
 gw - copy/paste entre fenêtres
+gw - "copy" saves directory list into text clipboard
   
 gw - list of supported formats in "about" box
 gw - sélection: somme des tailles compressées et non compressées

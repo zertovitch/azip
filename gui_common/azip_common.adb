@@ -352,32 +352,35 @@ package body AZip_Common is
 
   function File_Size_Image(x: Zip.File_size_type) return UTF_16_String is
     use type Zip.File_size_type;
-    function Img_dec(x: Zip.File_size_type; try_decimals: Boolean) return UTF_16_String is
+    function Img_dec(x: Zip.File_size_type; decimals: Natural) return UTF_16_String is
       s: constant UTF_16_String:= Zip.File_size_type'Wide_Image(x);
     begin
-      if try_decimals then --  x is 100x too large, on purpose
-        if s(s'Last-1..s'Last) = "00" then
-          return s(s'First+1..s'Last-2);
-        elsif s(s'Last) = '0' then
-          return s(s'First+1..s'Last-2) & '.' & s(s'Last-1);
-        else
-          return s(s'First+1..s'Last-2) & '.' & s(s'Last-1..s'Last);
-        end if;
-      else
-        return s(s'First+1..s'Last);
-      end if;
+      case decimals is
+        when 2 => --  x is 100x too large, on purpose
+          if s(s'Last-1..s'Last) = "00" then
+            return s(s'First+1..s'Last-2);
+          elsif s(s'Last) = '0' then
+            return s(s'First+1..s'Last-2) & '.' & s(s'Last-1);
+          else
+            return s(s'First+1..s'Last-2) & '.' & s(s'Last-1..s'Last);
+          end if;
+        when others =>
+          return s(s'First+1..s'Last);
+      end case;
     end Img_dec;
   begin
     if x >= 1024 ** 3 then
-      return Img_dec(x / (1024 ** 3), False) & " GB";
-    elsif x >= 100 * (1024 ** 2) then  --  100 MB
-      return Img_dec(x / (1024 ** 2), False) & " MB";
-    elsif x >= 1024 ** 2 then  --  1 MB
-      return Img_dec((x * 100) / (1024 ** 2), True) & " MB";
-    elsif x >= 1024 then  --  1 KB
-      return Img_dec((x * 100) / 1024, True) & " KB";
+      return Img_dec(x / (1024 ** 3), 0) & " GB";
+    elsif x >= 10 * (1024 ** 2) then  --  10 MB
+      return Img_dec(x / (1024 ** 2), 0) & " MB";
+    elsif x >= 2  * (1024 ** 2) then  --  2 MB
+      return Img_dec((x * 100) / (1024 ** 2), 2) & " MB";
+    elsif x >= 10 * 1024 then         --  10 KB
+      return Img_dec(x / 1024, 0) & " KB";
+    elsif x >= 1024 then              --  1 KB
+      return Img_dec((x * 100) / 1024, 2) & " KB";
     else
-      return Img_dec(x, False);
+      return Img_dec(x, 0);
     end if;
   end File_Size_Image;
 

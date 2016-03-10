@@ -356,6 +356,12 @@ package body AZip_Common is
       s: constant UTF_16_String:= Zip.File_size_type'Wide_Image(x);
     begin
       case decimals is
+        when 1 => --  x is 10x too large, on purpose
+          if s(s'Last) = '0' then
+            return s(s'First+1..s'Last-1);
+          else
+            return s(s'First+1..s'Last-1) & '.' & s(s'Last);
+          end if;
         when 2 => --  x is 100x too large, on purpose
           if s(s'Last-1..s'Last) = "00" then
             return s(s'First+1..s'Last-2);
@@ -368,17 +374,24 @@ package body AZip_Common is
           return s(s'First+1..s'Last);
       end case;
     end Img_dec;
+    GB: constant:= 1024 ** 3;
+    MB: constant:= 1024 ** 2;
+    KB: constant:= 1024;
   begin
-    if x >= 1024 ** 3 then
-      return Img_dec(x / (1024 ** 3), 0) & " GB";
-    elsif x >= 10 * (1024 ** 2) then  --  10 MB
-      return Img_dec(x / (1024 ** 2), 0) & " MB";
-    elsif x >= 2  * (1024 ** 2) then  --  2 MB
-      return Img_dec((x * 100) / (1024 ** 2), 2) & " MB";
-    elsif x >= 10 * 1024 then         --  10 KB
-      return Img_dec(x / 1024, 0) & " KB";
-    elsif x >= 1024 then              --  1 KB
-      return Img_dec((x * 100) / 1024, 2) & " KB";
+    if x >= GB then
+      return Img_dec(x / GB, 0) & " GB";
+    elsif x >= 100 * MB then
+      return Img_dec(x / MB, 0) & " MB";
+    elsif x >= 10 * MB then
+      return Img_dec((x * 10) / MB, 1) & " MB";
+    elsif x >= 2  * MB then
+      return Img_dec((x * 100) / MB, 2) & " MB";
+    elsif x >= 100 * KB then
+      return Img_dec(x / KB, 0) & " KB";
+    elsif x >= 10 * KB then
+      return Img_dec((x * 10) / KB, 1) & " KB";
+    elsif x >= KB then
+      return Img_dec((x * 100) / KB, 2) & " KB";
     else
       return Img_dec(x, 0);
     end if;

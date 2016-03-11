@@ -8,7 +8,7 @@ gw - copy/paste entre fenêtres
 gw - "copy" saves directory list into text clipboard
   
 gw - list of supported formats in "about" box
-gw - sélection: somme des tailles compressées et non compressées
+gw - !! sélection: somme des tailles compressées et non compressées en #octets
 gw - double-clic / return (ouvrir un fichier dans un rép. temporaire)
 copy_file et rename qui marchent avec utf-8 (virer Ada.Directories)
 

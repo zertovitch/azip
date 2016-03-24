@@ -98,7 +98,8 @@ package AZip_Common is
   -- to determine whether AZip has to open the files as archives,
   -- or it is meant to add the files into an archive.
 
-  function Is_valid_Zip_archive(file_name: String) return Boolean;
+  type Archive_validity is (valid, with_case_sensitive_duplicates, invalid);
+  function Is_valid_Zip_archive(file_name: String) return Archive_validity;
 
   function Has_Zip_archive_encrypted_entries(info: Zip_info) return Boolean;
 

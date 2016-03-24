@@ -525,16 +525,16 @@ package body AZip_Common is
     );
   exception
     when Duplicate_name =>
-      -- Perhaps a .jar with a.txt and A.txt
       Zip.Load(
-        info           => info,
-        from           => from,
-        case_sensitive => True
+        info            => info,
+        from            => from,
+        case_sensitive  => True,  --  Perhaps a .jar with a.txt and A.txt
+        duplicate_names => admit_duplicates  --  twice a.txt (check with Is_valid_Zip_archive)
       );
       -- If Duplicate_name is raised again, well, it is really invalid!
   end Load_insensitive_if_possible;
 
-  function Is_valid_Zip_archive(file_name: String) return Boolean is
+  function Is_valid_Zip_archive(file_name: String) return Archive_validity is
     info: Zip.Zip_info;
   begin
     Zip.Load(
@@ -543,10 +543,24 @@ package body AZip_Common is
       case_sensitive => True
     );
     Zip.Delete(info);
-    return True;
+    return valid;
   exception
+    when Duplicate_name =>
+      begin
+        Zip.Load(
+          info            => info,
+          from            => file_name,
+          case_sensitive  => True,
+          duplicate_names => admit_duplicates
+        );
+        Zip.Delete(info);
+        return with_case_sensitive_duplicates;
+      exception
+        when others =>
+          return invalid;
+      end;
     when others =>
-      return False;
+      return invalid;
   end Is_valid_Zip_archive;
 
   function Has_Zip_archive_encrypted_entries(info: Zip_info) return Boolean is

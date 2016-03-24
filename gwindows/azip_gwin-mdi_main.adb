@@ -111,17 +111,34 @@ package body AZip_GWin.MDI_Main is
     if is_open then
       return;        -- nothing to do, archive already in a window
     end if;
-    if not Is_valid_Zip_archive(To_UTF_8(GU2G(File_Name))) then
-      Message_Box(
-        Window,
-        "Invalid zip archive",
-        "File " & GU2G(File_Name) & NL &
-        "doesn't exist, or is not a valid zip archive.",
-        OK_Box,
-        Error_Icon
-      );
-      return;
-    end if;
+    case Is_valid_Zip_archive(To_UTF_8(GU2G(File_Name))) is
+      when valid =>
+        null;
+      when with_case_sensitive_duplicates =>
+        --  Added 24-Mar-2016. Some crazenuts use archives with identical entry names...
+        if Message_Box(
+          Window,
+          "Zip archive with duplicate full names",
+          "Archive " & GU2G(File_Name) & NL &
+          "contains at least one case of a pair of identical names; this may cause problems." &
+          NL & NL &
+          "Continue opening ?",
+          Yes_No_Box,
+          Warning_Icon
+        ) = No then
+          return;
+        end if;
+      when invalid =>
+        Message_Box(
+          Window,
+          "Invalid zip archive",
+          "File " & GU2G(File_Name) & NL &
+          "doesn't exist, or is not a valid zip archive.",
+          OK_Box,
+          Error_Icon
+        );
+        return;
+    end case;
     declare
       New_Window : constant MDI_Child_Access := new MDI_Child_Type;
     begin
@@ -649,7 +666,7 @@ package body AZip_GWin.MDI_Main is
     for i in File_Names'Range loop
       empty:= False;
       all_valid:= all_valid and
-        Is_valid_Zip_archive(To_UTF_8(GU2G(File_Names(i))));
+        Is_valid_Zip_archive(To_UTF_8(GU2G(File_Names(i)))) = valid;
     end loop;
     return all_valid and not empty;
   end All_Zip_files;

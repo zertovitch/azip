@@ -1,7 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2016/03/24  04:44:25
--- GWenerator project file: azip.gwen
+-- Transcription time: 2016/04/24  12:28:09
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -624,6 +623,6 @@ package azip_Resource_GUI is
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
 
-  -- Last line of resource script file: 413
+  -- Last line of resource script file: 414
 
 end azip_Resource_GUI;

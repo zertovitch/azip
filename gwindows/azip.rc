@@ -35,7 +35,7 @@ Menu_MDI_Child MENU
         MENUITEM "&Save archive as...\tF12", IDM_SAVE_ARCHIVE_AS
         MENUITEM "&Close archive\tCtrl+W / Ctrl+F4", IDM__CLOSE_ARCHIVE
         MENUITEM SEPARATOR
-        MENUITEM "&Properties", IDM_Properties
+        MENUITEM "&Properties\tCtrl+D", IDM_Properties
         MENUITEM SEPARATOR
         POPUP "&Recent"
         {
@@ -341,6 +341,7 @@ Main_Menu ACCELERATORS
     VK_ADD,        IDM_ADD_FILES, VIRTKEY
     VK_F12,        IDM_SAVE_ARCHIVE_AS, VIRTKEY
     "P",            IDM_UPDATE_ARCHIVE, VIRTKEY, CONTROL
+    "D",            IDM_Properties, VIRTKEY, CONTROL
 }
 
 

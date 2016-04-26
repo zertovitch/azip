@@ -1,6 +1,7 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2016/04/24  12:28:09
+-- Transcription time: 2016/04/26  20:53:15
+-- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -666,13 +667,13 @@ package body azip_Resource_GUI is
     Dlg_to_Scn(  44, 7, 172, 8, x,y,w,h);
     Create_label( Window, "Entry &name ( if empty: all names )", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  44, 20, 172, 12, x,y,w,h);
-    Create( Window.Name_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Name_to_be_searched);
+    Create( Window.Name_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Name_to_be_searched);
     Dlg_to_Scn(  9, 46, 21, 20, x,y,w,h);
     Create( Window.RC_item_1, Window, Num_resource(Binoculars_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  44, 41, 172, 8, x,y,w,h);
     Create_label( Window, "&Content ( if empty: any content )", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  44, 54, 172, 12, x,y,w,h);
-    Create( Window.Content_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Content_to_be_searched);
+    Create( Window.Content_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Content_to_be_searched);
     Dlg_to_Scn(  111, 76, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -779,7 +780,7 @@ package body azip_Resource_GUI is
     Dlg_to_Scn(  12, 70, 21, 20, x,y,w,h);
     Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  46, 73, 172, 13, x,y,w,h);
-    Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Password_edit);
+    Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Password_edit);
     Dlg_to_Scn(  12, 97, 96, 8, x,y,w,h);
     Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
     Dlg_to_Scn(  112, 119, 50, 14, x,y,w,h);
@@ -902,9 +903,9 @@ package body azip_Resource_GUI is
     Dlg_to_Scn(  12, 97, 96, 8, x,y,w,h);
     Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
     Dlg_to_Scn(  46, 33, 172, 13, x,y,w,h);
-    Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Password_edit);
+    Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Password_edit);
     Dlg_to_Scn(  46, 73, 172, 13, x,y,w,h);
-    Create( Window.Password_confirm_edit, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Password_confirm_edit);
+    Create( Window.Password_confirm_edit, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Password_confirm_edit);
     Dlg_to_Scn(  12, 70, 21, 20, x,y,w,h);
     Create( Window.Confirm_Icon, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  12, 58, 153, 8, x,y,w,h);
@@ -991,9 +992,9 @@ package body azip_Resource_GUI is
     Dlg_to_Scn(  7, 19, 228, 10, x,y,w,h);
     Create( Window.Entry_name, Window, "Some file", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Entry_name);
     Dlg_to_Scn(  7, 57, 227, 9, x,y,w,h);
-    Create( Window.File_Progress, Window, x,y,w,h, HORIZONTAL, FALSE);
+    Create( Window.File_Progress, Window, x,y,w,h, HORIZONTAL, False);
     Dlg_to_Scn(  7, 74, 227, 17, x,y,w,h);
-    Create( Window.Archive_Progress, Window, x,y,w,h, HORIZONTAL, FALSE);
+    Create( Window.Archive_Progress, Window, x,y,w,h, HORIZONTAL, False);
     Dlg_to_Scn(  96, 96, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -1108,7 +1109,7 @@ package body azip_Resource_GUI is
       Hide(Window.IDOK);
     end if;
     Dlg_to_Scn(  14, 56, 236, 79, x,y,w,h);
-    Create( Window.Stats_list, Window, x,y,w,h, MULTIPLE, REPORT_VIEW, NO_SORTING, FALSE, ALIGN_LEFT);
+    Create( Window.Stats_list, Window, x,y,w,h, MULTIPLE, REPORT_VIEW, NO_SORTING, False, ALIGN_LEFT);
   end Create_Contents; -- Properties_box_Type
 
 

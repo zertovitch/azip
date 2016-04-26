@@ -39,7 +39,7 @@ project AZip_GWindows is
    package Binder is
       case Build_Mode is
          when "Debug" =>
-            for Default_Switches ("ada") use ("-E");
+            for Default_Switches ("ada") use ("-E", "-d40m");
          when "Fast_GPL" | "Fast_MinGW" =>
          when "Profiling" =>
       end case;
@@ -48,11 +48,11 @@ project AZip_GWindows is
    package Linker is
       case Build_Mode is
          when "Debug" =>
-            for Default_Switches ("ada") use ("-g", "azip.rbj");
+            for Default_Switches ("ada") use ("-g",                                   "azip.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
          when "Fast_GPL" | "Fast_MinGW" =>
-            for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections", "azip.rbj");
+            for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections", "azip.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
          when "Profiling" =>
-            for Default_Switches ("ada") use ("-mwindows", "-pg", "azip.rbj");
+            for Default_Switches ("ada") use ("-mwindows", "-pg",                     "azip.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
       end case;
    end Linker;
 

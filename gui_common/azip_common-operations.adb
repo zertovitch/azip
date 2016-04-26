@@ -417,6 +417,9 @@ package body AZip_Common.Operations is
     use Zip.Create, UnZip;
     abort_rest_of_operation: Boolean:= False;
     none_updated: Boolean:= True;
+    quick_method: constant Zip.Compress.Compression_Method:= Zip.Compress.Deflate_1;
+    --
+    --  Action for entry 'name' in current archive being traversed.
     --
     procedure Action(
       name             : String; -- 'name' is compressed entry's full name
@@ -476,7 +479,12 @@ package body AZip_Common.Operations is
         current_operation:= Replace;
         current_entry_name:= U(short_name_utf_16);
         -- We write a one-file zip file first with the new data
-        Zip.Create.Create(this_file_zip, this_file_fzs'Unchecked_Access, this_file_zip_name);
+        Zip.Create.Create(
+          this_file_zip,
+          this_file_fzs'Unchecked_Access,
+          this_file_zip_name,
+          quick_method
+        );
         Add_File(
           Info               => this_file_zip,
           Name               => name_utf_8_with_extra_folder,
@@ -503,7 +511,7 @@ package body AZip_Common.Operations is
           crc_32        => new_crc_32
         );
         if new_crc_32 = crc_32 then
-          --  Nothing to do, file is the same with 1 / 2**32 probability.
+          --  Nothing to do, file is the same, or different with 1 / 2**32 probability.
           Preserve_entry;
           user_code:= nothing;
         else
@@ -754,7 +762,7 @@ package body AZip_Common.Operations is
       end if;
     end Action;
 
-  procedure Traverse_archive is new Zip.Traverse_verbose(Action);
+    procedure Traverse_archive is new Zip.Traverse_verbose(Action);
 
   begin -- Process_archive
     max_code:= 0;
@@ -771,7 +779,12 @@ package body AZip_Common.Operations is
       when Modifying_Operation =>
         Zip_Streams.Set_Name(old_fzs, Zip.Zip_Name(zif));
         Zip_Streams.Open(old_fzs, Zip_Streams.In_File);
-        Zip.Create.Create(new_zip, new_fzs'Unchecked_Access, new_temp_name);
+        Zip.Create.Create(
+          new_zip,
+          new_fzs'Unchecked_Access,
+          new_temp_name,
+          quick_method
+        );
       when Read_Only_Operation =>
         null;
         -- Read-only operation, doesn't need a new archive file;

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2016/04/26  20:53:15
+-- Transcription time: 2016/04/28  15:22:01
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 05-Apr-2015
+-- RC Grammar version: 28-Apr-2016
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -426,9 +426,9 @@ package azip_Resource_GUI is
   type Properties_box_Type is new Window_type with record
 
     -- Label: 0
-    Uncomp_size: Label_Type;
+    Uncomp_size: Edit_Box_Type;
     -- Label: 1
-    Comp_size: Label_Type;
+    Comp_size: Edit_Box_Type;
     Comp_ratio: Label_Type;
     -- Label: 02
     Numb_entries: Label_Type;

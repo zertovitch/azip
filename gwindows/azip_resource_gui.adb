@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: azip.rc
--- Transcription time: 2016/04/26  20:53:15
+-- Transcription time: 2016/04/28  15:22:01
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 05-Apr-2015
+-- RC Grammar version: 28-Apr-2016
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -1086,11 +1086,13 @@ package body azip_Resource_GUI is
     Dlg_to_Scn(  14, 6, 78, 13, x,y,w,h);
     Create_label( Window, "Uncompressed size", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  97, 6, 112, 12, x,y,w,h);
-    Create( Window.Uncomp_size, Window, "U MB", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Uncomp_size);
+    Create( Window.Uncomp_size, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => True, ID => Uncomp_size);
+    Border (Window.Uncomp_size, False);
     Dlg_to_Scn(  14, 23, 78, 13, x,y,w,h);
     Create_label( Window, "Compressed size", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  97, 23, 112, 12, x,y,w,h);
-    Create( Window.Comp_size, Window, "C MB", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Comp_size);
+    Create( Window.Comp_size, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => True, ID => Comp_size);
+    Border (Window.Comp_size, False);
     Dlg_to_Scn(  211, 23, 48, 16, x,y,w,h);
     Create( Window.Comp_ratio, Window, "Ratio: 100%", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Comp_ratio);
     Dlg_to_Scn(  14, 40, 78, 13, x,y,w,h);

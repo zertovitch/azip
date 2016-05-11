@@ -18,6 +18,8 @@ package AZip_Common.Operations is
   subtype Modifying_Operation is Archive_Operation range Add .. Remove;
   subtype Read_Only_Operation is Archive_Operation range Test .. Search;
 
+  function Img is new Enum_Img_Mixed(Archive_Operation);
+
   appended    : constant:=  2;
   only_archive: constant:=  2;
   success     : constant:=  1;

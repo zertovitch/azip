@@ -485,6 +485,19 @@ package body AZip_Common is
     end if;
   end Pct_Value;
 
+  function Enum_Img_Mixed(e: Enum) return UTF_16_String is
+    s: UTF_16_String:= Enum'Wide_Image(e);
+    low: Boolean:= False;
+  begin
+    for i in s'Range loop
+      if low then
+        s(i):= To_Lower(s(i));
+      end if;
+      low:= s(i) /= '_';
+    end loop;
+    return s;
+  end Enum_Img_Mixed;
+
   function Give_path(s: UTF_16_String) return UTF_16_String is
     i: Positive;
   begin

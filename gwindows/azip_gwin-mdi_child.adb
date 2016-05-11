@@ -829,6 +829,7 @@ package body AZip_GWin.MDI_Child is
     progress_box.Redraw;
     progress_box.Show;
     Window.Parent.Disable;
+    progress_box.Text(progress_box.Text & " Operation: " & Img(operation));
     begin
       Archive_processing(
         zif              => Window.zif,

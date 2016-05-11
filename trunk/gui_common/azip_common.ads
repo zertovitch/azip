@@ -83,6 +83,11 @@ package AZip_Common is
   function Pct_Value(s: UTF_16_String) return Natural; -- 0..100
   -- Results: see AZip_Common.Operations.
 
+  --  "Correct" casing for <Enum>'Image
+  generic
+    type Enum is (<>);
+  function Enum_Img_Mixed(e: Enum) return UTF_16_String;
+
   ---------------------
   -- Various helpers --
   ---------------------

@@ -1,4 +1,4 @@
-with Zip.Create, Zip.Compress, UnZip.Streams, Zip_Streams;
+with Zip.Compress, Zip.Create, Zip.Headers, UnZip.Streams, Zip_Streams;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;                   use Ada.Directories;
@@ -657,7 +657,7 @@ package body AZip_Common.Operations is
                 abort_rest_of_operation:= True;
               when UnZip.CRC_Error =>
                 user_code:= bad_crc;
-              when Zip.Zip_file_Error =>
+              when Zip.Zip_file_Error | Zip.Headers.bad_local_header =>
                 user_code:= corrupt;
               when UnZip.Wrong_password =>
                 user_code:= wrong_pwd;
@@ -707,7 +707,7 @@ package body AZip_Common.Operations is
                 abort_rest_of_operation:= True;
               when UnZip.CRC_Error =>
                 user_code:= bad_crc;
-              when Zip.Zip_file_Error =>
+              when Zip.Zip_file_Error | Zip.Headers.bad_local_header =>
                 user_code:= corrupt;
               when UnZip.Wrong_password =>
                 user_code:= wrong_pwd;
@@ -736,7 +736,7 @@ package body AZip_Common.Operations is
                   abort_rest_of_operation:= True;
                 when UnZip.CRC_Error =>
                   user_code:= bad_crc;
-                when Zip.Zip_file_Error =>
+                when Zip.Zip_file_Error | Zip.Headers.bad_local_header =>
                   user_code:= corrupt;
               end;
               Feedback(

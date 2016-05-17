@@ -462,7 +462,7 @@ package body AZip_Common is
     if x < 1024 then
       return Image_1000(x, separator) & " bytes";
     else
-      return File_size_image(x) & " (" & Image_1000(x, separator) & " bytes)";
+      return File_Size_Image(x) & " (" & Image_1000(x, separator) & " bytes)";
     end if;
   end Long_file_size_image;
 

@@ -23,8 +23,8 @@ package body AZip_Common.User_options is
       for k in Key loop
         begin
           declare
-            ks: constant Wide_String:= key'Wide_Image(k);
-            s : constant Wide_String:= Read_Key(ks);
+            ks: constant Wide_String:= Key'Wide_Image(k);
+            s : constant Wide_String:= Read_key(ks);
           begin
             case k is
               when view_mode =>
@@ -79,7 +79,7 @@ package body AZip_Common.User_options is
     begin
       for k in Key loop
         declare
-          ks: constant Wide_String:= key'Wide_Image(k);
+          ks: constant Wide_String:= Key'Wide_Image(k);
           procedure R( v: Wide_String ) is
           begin
             Write_key(ks, v);

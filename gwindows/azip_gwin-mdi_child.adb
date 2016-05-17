@@ -6,7 +6,7 @@ with AZip_GWin.Properties;
 with Zip;                               use Zip;
 with Zip_Streams;
 with UnZip;
-with Zip_Time_Display;
+with Zip_time_display;
 
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
@@ -44,7 +44,7 @@ package body AZip_GWin.MDI_Child is
   procedure Update_status_bar(Window : in out MDI_Child_Type) is
     sel: Natural;
   begin
-    if not Is_Loaded(Window.zif) then
+    if not Is_loaded(Window.zif) then
       Text(Window.Status_Bar,"No archive loaded",0);
       return;
     end if;
@@ -69,17 +69,17 @@ package body AZip_GWin.MDI_Child is
 
   procedure Update_tool_bar(Window : in out MDI_Child_Type) is
     not_empty_archive: constant Boolean:=
-      Is_Loaded(Window.zif) and then Entries(Window.zif) > 0;
+      Is_loaded(Window.zif) and then Entries(Window.zif) > 0;
     bar: MDI_Toolbar_Type renames Window.Parent.Tool_Bar;
   begin
-    Bar.Enabled(IDM_EXTRACT, not_empty_archive);
-    Bar.Enabled(IDM_Delete_selected, not_empty_archive);
-    Bar.Enabled(IDM_FIND_IN_ARCHIVE, not_empty_archive);
-    Bar.Enabled(IDM_TEST_ARCHIVE, not_empty_archive);
-    Bar.Enabled(IDM_UPDATE_ARCHIVE, not_empty_archive);
+    bar.Enabled(IDM_EXTRACT, not_empty_archive);
+    bar.Enabled(IDM_Delete_selected, not_empty_archive);
+    bar.Enabled(IDM_FIND_IN_ARCHIVE, not_empty_archive);
+    bar.Enabled(IDM_TEST_ARCHIVE, not_empty_archive);
+    bar.Enabled(IDM_UPDATE_ARCHIVE, not_empty_archive);
     if not Window.is_closing then
-      Bar.Enabled(IDM_ADD_FILES, True);
-      Bar.Enabled(IDM_Add_Files_Encryption, True);
+      bar.Enabled(IDM_ADD_FILES, True);
+      bar.Enabled(IDM_Add_Files_Encryption, True);
     end if;
   end Update_tool_bar;
 
@@ -216,12 +216,12 @@ package body AZip_GWin.MDI_Child is
           --
           -- Payload
           --
-          payload_access:= new LV_payload'(index_before_sorting => row);
+          payload_access:= new LV_Payload'(index_before_sorting => row);
           Lst.Item_Data(row, payload_access);
           --
           Lst.Set_Sub_Item(name(extension_idx..name'Last), row, cidx(FType)-1);
           begin
-            Lst.Set_Sub_Item(S2G(Zip_Time_Display(date_time)), row, cidx(Modified)-1);
+            Lst.Set_Sub_Item(S2G(Zip_time_display(date_time)), row, cidx(Modified)-1);
           exception
             when Zip_Streams.Calendar.Time_Error =>
               Lst.Set_Sub_Item("(invalid)", row, cidx(Modified)-1);
@@ -229,9 +229,9 @@ package body AZip_GWin.MDI_Child is
           if read_only then -- any attribute
             Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, cidx(Attributes)-1);
           end if;
-          Lst.Set_Sub_Item(File_size_image(uncomp_size), row, cidx(Size)-1);
-          Lst.Set_Sub_Item(File_size_image(comp_size), row, cidx(Packed)-1);
-          Lst.Set_Sub_Item(Ratio_pct_image(comp_size, uncomp_size), row, cidx(Ratio)-1);
+          Lst.Set_Sub_Item(File_Size_Image(uncomp_size), row, cidx(Size)-1);
+          Lst.Set_Sub_Item(File_Size_Image(comp_size), row, cidx(Packed)-1);
+          Lst.Set_Sub_Item(Ratio_pct_Image(comp_size, uncomp_size), row, cidx(Ratio)-1);
           Lst.Set_Sub_Item(To_Lower(PKZip_method'Wide_Image(method)), row, cidx(Format)-1);
           Lst.Set_Sub_Item(Hexadecimal(crc_32), row, cidx(CRC32)-1);
           if simple_name_idx > name'First then
@@ -268,7 +268,7 @@ package body AZip_GWin.MDI_Child is
         Window.any_path_in_zip:= False;
       end if;
       -- Performance is meant to be better with the All_Items mode.
-      Window.Directory_List.Color_mode(AZip_LV_Ex.All_Items);
+      Window.Directory_List.Color_Mode(AZip_LV_Ex.All_Items);
       Traverse(Window.zif);
       last_row:= row;
       for i in 0..last_row loop
@@ -299,7 +299,7 @@ package body AZip_GWin.MDI_Child is
           Message_Check;
         end if;
       end loop;
-      Window.Directory_List.Color_mode(AZip_LV_Ex.Subitem);
+      Window.Directory_List.Color_Mode(AZip_LV_Ex.Subitem);
       Window.refreshing_list:= False;
     end Feed_directory_list;
 
@@ -309,7 +309,7 @@ package body AZip_GWin.MDI_Child is
     Define_columns;
     case Window.opt.view_mode is
       when Flat =>
-        if Is_Loaded(Window.zif) then
+        if Is_loaded(Window.zif) then
           Feed_directory_list("");
         end if;
         Check(Window.Menu.Main, Command, IDM_FLAT_VIEW, True);
@@ -319,11 +319,11 @@ package body AZip_GWin.MDI_Child is
           Window.path_map.Clear;
           Window.node_map.Clear;
         end if;
-        if Is_Loaded(Window.zif) then
+        if Is_loaded(Window.zif) then
           if need in first_display .. archive_changed then
             Window.Folder_Tree.Set_Image_List(Window.Parent.Folders_Images);
             Window.Folder_Tree.Delete_Item(Window.Folder_Tree.Get_Root_Item);
-            Window.Folder_Tree.Insert_Item(GU2G(Window.Short_Name), 0, w_root, As_a_root);
+            Window.Folder_Tree.Insert_Item(GU2G(Window.Short_Name), 0, w_root, As_A_Root);
             Window.Folder_Tree.Set_Image(w_root, 0, 1);
             Window.path_map.Insert(root_key, Integer(w_root));
             Window.node_map.Insert(Integer(w_root), root_key);
@@ -387,8 +387,8 @@ package body AZip_GWin.MDI_Child is
               return -1;
             end if;
           when Ratio => -- 77%
-            i1:= Pct_value(Value1);
-            i2:= Pct_value(Value2);
+            i1:= Pct_Value(Value1);
+            i2:= Pct_Value(Value2);
             if i1 = i2 then
               return 0;
             elsif i1 > i2 then
@@ -398,8 +398,8 @@ package body AZip_GWin.MDI_Child is
             end if;
           when Result => -- 1234
             -- Message_Box("Falk forever", "Waaaah!");
-            i1:= Result_Value(Value1);
-            i2:= Result_Value(Value2);
+            i1:= Result_value(Value1);
+            i2:= Result_value(Value2);
             if i1 = i2 then
               return 0;
             elsif i1 > i2 then
@@ -506,7 +506,7 @@ package body AZip_GWin.MDI_Child is
       when Flat =>
         null;
       when Tree =>
-        if Is_Loaded(Window.zif) then
+        if Is_loaded(Window.zif) then
           loop
             declare
               idx: Integer;
@@ -543,7 +543,7 @@ package body AZip_GWin.MDI_Child is
     Window.Small_Icon("Box_Closed_Icon_Name");
 
     -- Filial feelings:
-    Window.parent:= MDI_Main_Access(Controlling_Parent(Window));
+    Window.Parent:= MDI_Main_Access(Controlling_Parent(Window));
     -- We copy options to child level:
     Window.opt:= Window.Parent.opt;
 
@@ -572,7 +572,7 @@ package body AZip_GWin.MDI_Child is
 
     Window.Directory_List.Create(Window.Bar_and_List, 50,1,20,20, Multiple, Report_View, Sort_Custom);
     Window.Directory_List.Set_Extended_Style(AZip_LV_Ex.Full_Row_Select);
-    Window.Directory_List.Color_mode(AZip_LV_Ex.Subitem);
+    Window.Directory_List.Color_Mode(AZip_LV_Ex.Subitem);
     Window.Directory_List.Dock(Fill);
 
     Window.Status_Bar.Create(Window, "No archive");
@@ -581,7 +581,7 @@ package body AZip_GWin.MDI_Child is
 
     Window.Dock_Children;
     if Window.opt.view_mode = Tree then
-      Change_View(Window, Tree, Force => True);
+      Change_View(Window, Tree, force => True);
     end if;
 
     AZip_Resource_GUI.Create_Full_Menu(Window.Menu);
@@ -590,23 +590,23 @@ package body AZip_GWin.MDI_Child is
     -- Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare
       memo_unmaximized_children: constant Boolean:=
-        not Window.parent.opt.MDI_childen_maximized;
+        not Window.Parent.opt.MDI_childen_maximized;
     begin
       if memo_unmaximized_children then
         Window.Parent.Freeze;
         Window.Zoom;
       end if;
-      On_Size(Window,Width(Window),Height(window));
+      On_Size(Window,Width(Window),Height(Window));
       if memo_unmaximized_children then
         Window.Parent.Thaw; -- Before Zoom, otherwise uncomplete draw.
         Window.Zoom(False);
-        Window.parent.Tool_Bar.Redraw;
+        Window.Parent.Tool_Bar.Redraw;
       end if;
     end;
     Window.Status_deamon.Start;
     Window.Update_display(first_display);
     Window.Accept_File_Drag_And_Drop;
-    Ada.Numerics.Float_Random.Reset(Window.Temp_name_gen);
+    Ada.Numerics.Float_Random.Reset(Window.temp_name_gen);
   end On_Create;
 
   procedure On_Save (Window : in out MDI_Child_Type) is
@@ -713,8 +713,8 @@ package body AZip_GWin.MDI_Child is
     new_temp_name  : String
   )
   is
-    az_names: Name_list(File_Names'Range);
-    progress_box: Progress_Box_Type;
+    az_names: Name_list(file_names'Range);
+    progress_box: Progress_box_Type;
     is_aborted: Boolean:= False;
     --
     procedure Abort_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
@@ -816,7 +816,7 @@ package body AZip_GWin.MDI_Child is
   begin -- Process_archive_GWin
     -- Neutral conversion: GStrings (UTF-16) to UTF_16_String
     for i in az_names'Range loop
-      az_names(i).str:= File_Names(i);
+      az_names(i).str:= file_names(i);
     end loop;
     tick:= Ada.Calendar."-"(Ada.Calendar.Clock, 1.0);
     progress_box.Create_Full_Dialog(Window);
@@ -887,7 +887,7 @@ package body AZip_GWin.MDI_Child is
     loop
       declare
         num0: constant String:=
-          Float'Image(Ada.Numerics.Float_Random.Random(Window.Temp_name_gen));
+          Float'Image(Ada.Numerics.Float_Random.Random(Window.temp_name_gen));
         num: constant String:= num0(num0'First+1 .. num0'Last);
         -- ^ Skip the @#*% leading space
         test_name: constant String:= Value("TEMP") & "\AZip_Temp_" & num & ".zip";
@@ -965,15 +965,15 @@ package body AZip_GWin.MDI_Child is
       Do_drop_file_dialog(
         Parent         => Window,
         archive_name   => GU2G(Window.Short_Name) & Eventual_folder,
-        new_archive    => not Is_Loaded(Window.zif),
+        new_archive    => not Is_loaded(Window.zif),
         encrypt        => encrypt,
         yes            => yes
       );
       if yes then
-        if not Is_Loaded(Window.zif) then
+        if not Is_loaded(Window.zif) then
           Window.On_Save_As;
         end if;
-        if Is_Loaded(Window.zif) then
+        if Is_loaded(Window.zif) then
           if encrypt then
             Get_password_for_encryption(Window, cancelled);
           else
@@ -991,7 +991,7 @@ package body AZip_GWin.MDI_Child is
   procedure Update_Common_Menus(Window : MDI_Child_Type;
                                 top_entry : GString:= "" ) is
   begin
-    Update_Common_Menus( Window.parent.all, top_entry );
+    Update_Common_Menus( Window.Parent.all, top_entry );
   end Update_Common_Menus;
 
   procedure Load_archive_catalogue (
@@ -1010,7 +1010,7 @@ package body AZip_GWin.MDI_Child is
       Zip.Delete(Window.zif);
     end if;
     Window.zif:= new_zif;
-    Change_View(Window, Window.opt.view_mode, Force => True);
+    Change_View(Window, Window.opt.view_mode, force => True);
     -- Update_display(Window, archive_changed); -- included in Change_View
     -- Window.Status_deamon.Display(Window'Unchecked_Access);
   end Load_archive_catalogue;
@@ -1026,7 +1026,7 @@ package body AZip_GWin.MDI_Child is
     tree_w: constant Integer:= Integer(Window.opt.tree_portion * Float(w)) - splitter_w / 2;
     use GWindows.Types;
   begin
-    if Window.Parent.user_maximize_restore then
+    if Window.Parent.User_maximize_restore then
       Window.Parent.opt.MDI_childen_maximized:= Zoom(Window);
     end if;
     Window.Tree_Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
@@ -1055,8 +1055,8 @@ package body AZip_GWin.MDI_Child is
       if Window.Directory_List.Is_Selected(i) then
         j:= j + 1;
         names(j):= G2GU(
-          Window.Directory_List.Text(i, subitem => 9) & -- path
-          Window.Directory_List.Text(i, subitem => 0)   -- simple name
+          Window.Directory_List.Text(i, SubItem => 9) & -- path
+          Window.Directory_List.Text(i, SubItem => 0)   -- simple name
           );
         if Element(names(j), Length(names(j))) = '*' then
           -- Remove the " *" appended on encrypted entries.
@@ -1069,7 +1069,7 @@ package body AZip_GWin.MDI_Child is
 
   -- Selected folder's and subfolder's contents (Tree view)
   function Get_selected_folder_entry_list(Window: MDI_Child_Type) return Array_Of_File_Names is
-    items: constant Natural:= Entries(Window.Zif);
+    items: constant Natural:= Entries(Window.zif);
     names: Array_Of_File_Names(1..items);
     prefix: constant GString:= GU2G(Window.selected_path);
     j: Natural:= 0;
@@ -1082,7 +1082,8 @@ package body AZip_GWin.MDI_Child is
       name: constant UTF_16_String:= To_UTF_16(name_8_bit, name_encoding);
     begin
       if name'Length >= prefix'Length and then
-         name(name'First..name'First+prefix'Length-1) = prefix then
+         name(name'First..name'First+prefix'Length-1) = prefix
+      then
         j:= j+1;
         names(j):= G2GU(name);
       end if;
@@ -1107,7 +1108,7 @@ package body AZip_GWin.MDI_Child is
     --
     function Smart_list return Array_Of_File_Names is
     begin
-      if Folder_focus(Window) then
+      if Folder_Focus(Window) then
         return Get_selected_folder_entry_list(Window);
       else
         return sel_list; -- If the list is empty list, whole archive will be extracted
@@ -1116,7 +1117,7 @@ package body AZip_GWin.MDI_Child is
     --
     function Archive_extract_msg return GString is
     begin
-      if Folder_focus(Window) then
+      if Folder_Focus(Window) then
         return "Extract current folder's contents to...";
       elsif sel_list'Length > 0 then
         return "Extract the" & Integer'Wide_Image(sel_list'Length) & " selected item(s) to...";
@@ -1135,7 +1136,7 @@ package body AZip_GWin.MDI_Child is
       end case;
     end Use_path_question;
   begin
-    if not Is_Loaded(Window.zif) then
+    if not Is_loaded(Window.zif) then
       return; -- No archive, then nothing to do
     end if;
     declare
@@ -1189,7 +1190,7 @@ package body AZip_GWin.MDI_Child is
     --
     function Smart_list return Array_Of_File_Names is
     begin
-      if Folder_focus(Window) then
+      if Folder_Focus(Window) then
         return Get_selected_folder_entry_list(Window);
       else
         return sel_list;
@@ -1198,7 +1199,7 @@ package body AZip_GWin.MDI_Child is
     --
     function Delete_msg return GString is
     begin
-      if Folder_focus(Window) then
+      if Folder_Focus(Window) then
         return "Do you want to remove the entire selected FOLDER and subfolders ?";
       else
         return "Do you want to remove the" & Integer'Wide_Image(sel_list'Length) &
@@ -1206,7 +1207,7 @@ package body AZip_GWin.MDI_Child is
       end if;
     end Delete_msg;
   begin
-    if Window.Directory_List.Selected_Item_Count = 0 and not Folder_focus(Window) then
+    if Window.Directory_List.Selected_Item_Count = 0 and not Folder_Focus(Window) then
       return; -- not item -> do nothing (different from On_Extract's behaviour)
     end if;
     if Message_Box(Window, "Delete", Delete_msg, Yes_No_Box, Question_Icon) = Yes then
@@ -1244,7 +1245,7 @@ package body AZip_GWin.MDI_Child is
       Success
     );
     if Success then
-      if not Is_Loaded(Window.zif) then
+      if not Is_loaded(Window.zif) then
         Message_Box(
           Window,
           "New archive",
@@ -1259,7 +1260,7 @@ package body AZip_GWin.MDI_Child is
       else
         cancelled:= False;
       end if;
-      if Is_Loaded(Window.zif) and not cancelled then -- Is_Loaded: we test again (in case Save As failed)
+      if Is_loaded(Window.zif) and not cancelled then -- Is_Loaded: we test again (in case Save As failed)
         Window.Go_for_adding(File_Names.all, encrypted);
         Dispose(File_Names);
       end if;
@@ -1272,14 +1273,14 @@ package body AZip_GWin.MDI_Child is
     procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
       pragma Warnings(off, dummy);
     begin
-      Window.Name_search:= G2GU(box.Name_to_be_searched.Text);
-      Window.Content_search:= G2GU(box.Content_to_be_searched.Text);
+      Window.name_search:= G2GU(box.Name_to_be_searched.Text);
+      Window.content_search:= G2GU(box.Content_to_be_searched.Text);
     end Get_Data;
     --
   begin
     box.Create_Full_Dialog(Window);
-    box.Name_to_be_searched.Text(GU2G(Window.Name_search));
-    box.Content_to_be_searched.Text(GU2G(Window.Content_search));
+    box.Name_to_be_searched.Text(GU2G(Window.name_search));
+    box.Content_to_be_searched.Text(GU2G(Window.content_search));
     box.Center;
     box.On_Destroy_Handler(Get_Data'Unrestricted_Access);
     box.Name_to_be_searched.Focus;
@@ -1287,9 +1288,9 @@ package body AZip_GWin.MDI_Child is
       Process_archive_GWin(
         Window         => Window,
         operation      => Search,
-        file_names     => (1 => Window.Name_search),
+        file_names     => (1 => Window.name_search),
         base_folder    => "",
-        search_pattern => GU2G(Window.Content_search),
+        search_pattern => GU2G(Window.content_search),
         output_folder  => "",
         ignore_path    => False,
         encrypt        => False,
@@ -1305,7 +1306,7 @@ package body AZip_GWin.MDI_Child is
           Question_Icon)
         = Yes
       then
-        Change_View(Window, Flat, Force => False);
+        Change_View(Window, Flat, force => False);
         Window.Directory_List.Sort(Window.opt.column_index(Result) - 1, AZip_LV_Ex.Down);
       end if;
     end if;
@@ -1360,7 +1361,7 @@ package body AZip_GWin.MDI_Child is
       To_UTF_8(GU2G (Window.File_Name))
     ); -- !! Not UTF-8 capable
   begin
-    if not Is_Loaded(Window.zif) then
+    if not Is_loaded(Window.zif) then
       return;
     end if;
     if Has_Zip_archive_encrypted_entries(Window.zif) then
@@ -1415,7 +1416,7 @@ package body AZip_GWin.MDI_Child is
           Question_Icon)
         = Yes
       then
-        Change_View(Window, Flat, Force => False);
+        Change_View(Window, Flat, force => False);
         Window.Directory_List.Sort(Window.opt.column_index(Result) - 1, AZip_LV_Ex.Down);
       end if;
     end if;
@@ -1451,9 +1452,9 @@ package body AZip_GWin.MDI_Child is
       when IDM_FIND_IN_ARCHIVE =>
         On_Find(Window);
       when IDM_FLAT_VIEW =>
-        Change_View(Window, Flat, Force => False);
+        Change_View(Window, Flat, force => False);
       when IDM_TREE_VIEW =>
-        Change_View(Window, Tree, Force => False);
+        Change_View(Window, Tree, force => False);
       when others =>
         On_Menu_Select (Window_Type (Window), Item);
     end case;
@@ -1485,8 +1486,8 @@ package body AZip_GWin.MDI_Child is
           when Yes    => On_Save(Window);
                          exit when Is_file_saved(Window);
           when No     => exit;
-          when Cancel => Window.parent.Success_In_Enumerated_Close:= False;
-                         Can_close:= False;
+          when Cancel => Window.Parent.Success_in_enumerated_close:= False;
+                         Can_Close:= False;
                          exit;
           when others => null;
         end case;

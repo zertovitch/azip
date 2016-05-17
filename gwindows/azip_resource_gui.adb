@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
--- GUI contents of resource script file: azip.rc
--- Transcription time: 2016/04/28  15:22:01
+-- GUI contents of resource script file: AZip.rc
+-- Transcription time: 2016/05/17  14:40:51
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 28-Apr-2016
+-- RC Grammar version: > 10-May-2016
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -17,7 +17,7 @@ with GWindows.Drawing_Objects;
 with GWindows.GStrings;                 use GWindows.GStrings;
 with System;
 
-package body azip_Resource_GUI is
+package body AZip_Resource_GUI is
 
   -- ** Generated code begins here \/ \/ \/.
 
@@ -30,12 +30,12 @@ package body azip_Resource_GUI is
     Menu.Main:= Create_Menu;
     Menu.Popup_0001:= Create_Popup;
     Append_Menu(Menu.Main, "&File", Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&New archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+N", IDM_NEW_ARCHIVE);
-    Append_Item(Menu.Popup_0001, "&Open archive..." & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+O", IDM_OPEN_ARCHIVE);
-    Append_Item(Menu.Popup_0001, "&Save archive as..." & To_GString_from_String((1=>ASCII.HT)) & "F12", IDM_SAVE_ARCHIVE_AS);
-    Append_Item(Menu.Popup_0001, "&Close archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+W / Ctrl+F4", IDM_CLOSE_ARCHIVE);
+    Append_Item(Menu.Popup_0001, "&New archive" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+N", IDM_NEW_ARCHIVE);
+    Append_Item(Menu.Popup_0001, "&Open archive..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+O", IDM_OPEN_ARCHIVE);
+    Append_Item(Menu.Popup_0001, "&Save archive as..." & To_GString_From_String((1=>ASCII.HT)) & "F12", IDM_SAVE_ARCHIVE_AS);
+    Append_Item(Menu.Popup_0001, "&Close archive" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+W / Ctrl+F4", IDM_CLOSE_ARCHIVE);
     Append_Separator(Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&Properties" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+D", IDM_Properties);
+    Append_Item(Menu.Popup_0001, "&Properties" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+D", IDM_Properties);
     Append_Separator(Menu.Popup_0001);
     Menu.Popup_0002:= Create_Popup;
     Append_Menu(Menu.Popup_0001, "&Recent", Menu.Popup_0002);
@@ -49,22 +49,22 @@ package body azip_Resource_GUI is
     Append_Item(Menu.Popup_0002, "mru_8", IDM_MRU_8);
     Append_Item(Menu.Popup_0002, "mru_9", IDM_MRU_9);
     Append_Separator(Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&Quit" & To_GString_from_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
+    Append_Item(Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
     Menu.Popup_0003:= Create_Popup;
     Append_Menu(Menu.Main, "&Edit", Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "Select &all" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
-    Append_Item(Menu.Popup_0003, "&Unselect all" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+U", IDM_Unselect_all);
-    Append_Item(Menu.Popup_0003, "&Extract..." & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+E", IDM_EXTRACT);
+    Append_Item(Menu.Popup_0003, "Select &all" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+A", IDM_Select_all);
+    Append_Item(Menu.Popup_0003, "&Unselect all" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+U", IDM_Unselect_all);
+    Append_Item(Menu.Popup_0003, "&Extract..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+E", IDM_EXTRACT);
     Append_Separator(Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "Delete entries" & To_GString_from_String((1=>ASCII.HT)) & "Del / -", IDM_Delete_selected);
-    Append_Item(Menu.Popup_0003, "A&dd files..." & To_GString_from_String((1=>ASCII.HT)) & "+", IDM_ADD_FILES);
+    Append_Item(Menu.Popup_0003, "Delete entries" & To_GString_From_String((1=>ASCII.HT)) & "Del / -", IDM_Delete_selected);
+    Append_Item(Menu.Popup_0003, "A&dd files..." & To_GString_From_String((1=>ASCII.HT)) & "+", IDM_ADD_FILES);
     Append_Item(Menu.Popup_0003, "Add files with encr&yption...", IDM_Add_Files_Encryption);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Tools", Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&Test archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+T", IDM_TEST_ARCHIVE);
-    Append_Item(Menu.Popup_0004, "&Find in archive..." & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+F", IDM_FIND_IN_ARCHIVE);
+    Append_Item(Menu.Popup_0004, "&Test archive" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+T", IDM_TEST_ARCHIVE);
+    Append_Item(Menu.Popup_0004, "&Find in archive..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+F", IDM_FIND_IN_ARCHIVE);
     Append_Separator(Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&Update archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+P", IDM_UPDATE_ARCHIVE);
+    Append_Item(Menu.Popup_0004, "&Update archive" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+P", IDM_UPDATE_ARCHIVE);
     Append_Item(Menu.Popup_0004, "T&ouch time stamps", IDM_Touch_Time_Stamps);
     State(Menu.Popup_0004, Command, IDM_Touch_Time_Stamps, Grayed);
     Append_Item(Menu.Popup_0004, "Encr&ypt archive", IDM_Encrypt_Archive);
@@ -100,8 +100,8 @@ package body azip_Resource_GUI is
     Menu.Main:= Create_Menu;
     Menu.Popup_0001:= Create_Popup;
     Append_Menu(Menu.Main, "&File", Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&New archive" & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+N", IDM_NEW_ARCHIVE);
-    Append_Item(Menu.Popup_0001, "&Open archive..." & To_GString_from_String((1=>ASCII.HT)) & "Ctrl+O", IDM_OPEN_ARCHIVE);
+    Append_Item(Menu.Popup_0001, "&New archive" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+N", IDM_NEW_ARCHIVE);
+    Append_Item(Menu.Popup_0001, "&Open archive..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+O", IDM_OPEN_ARCHIVE);
     Append_Separator(Menu.Popup_0001);
     Menu.Popup_0002:= Create_Popup;
     Append_Menu(Menu.Popup_0001, "&Recent", Menu.Popup_0002);
@@ -115,7 +115,7 @@ package body azip_Resource_GUI is
     Append_Item(Menu.Popup_0002, "mru_8", IDM_MRU_8);
     Append_Item(Menu.Popup_0002, "mru_9", IDM_MRU_9);
     Append_Separator(Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&Quit" & To_GString_from_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
+    Append_Item(Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
     Menu.Popup_0003:= Create_Popup;
     Append_Menu(Menu.Main, "&Window", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "&Cascade", IDM_WINDOW_CASCADE);
@@ -187,7 +187,7 @@ package body azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out About_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
     x,y,w,h: Integer;
@@ -199,35 +199,35 @@ package body azip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  12, 14, 87, 80, x,y,w,h);
-    Create( Window.Static_0001, Window, Num_resource(AZip_Icon), x,y,w,h, GWindows.Static_Controls.STATIC_SIZE, HALF_SUNKEN);
+    Create( Window.Static_0001, Window, Num_resource(AZip_Icon), x,y,w,h, GWindows.Static_Controls.Static_Size, Half_Sunken);
     Dlg_to_Scn(  110, 14, 165, 8, x,y,w,h);
-    Create_label( Window, "AZip - A portable Zip Archive Manager", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "AZip - A portable Zip Archive Manager", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  110, 29, 165, 8, x,y,w,h);
-    Create( Window.Copyright_label, Window, "Copyright © Gautier de Montmollin 2012 .. 2071", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Copyright_label);
+    Create( Window.Copyright_label, Window, "Copyright © Gautier de Montmollin 2012 .. 2071", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Copyright_label);
     Dlg_to_Scn(  110, 44, 120, 8, x,y,w,h);
-    Create_label( Window, "MIT Open Source License", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "MIT Open Source License", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  110, 61, 30, 8, x,y,w,h);
-    Create_label( Window, "Internet:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Internet:", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  157, 61, 89, 8, x,y,w,h);
-    Create( Window.AZip_URL, Window, "http://azip.sf.net/", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => AZip_URL);
+    Create( Window.AZip_URL, Window, "http://azip.sf.net/", x,y,w,h, GWindows.Static_Controls.Left, None, ID => AZip_URL);
     Dlg_to_Scn(  110, 81, 30, 8, x,y,w,h);
-    Create_label( Window, "Version:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Version:", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  157, 81, 118, 8, x,y,w,h);
-    Create( Window.Version_label, Window, "(ver)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Version_label);
+    Create( Window.Version_label, Window, "(ver)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Version_label);
     Dlg_to_Scn(  5, 105, 278, 78, x,y,w,h);
     Create( Window.Static_0006, Window, "Software made with the following free, open source components:", x,y,w,h);
     Dlg_to_Scn(  23, 119, 100, 8, x,y,w,h);
-    Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAT_URL);
+    Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_URL);
     Dlg_to_Scn(  132, 119, 147, 8, x,y,w,h);
-    Create( Window.GNAT_Version, Window, "GNAT_Version", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAT_Version);
+    Create( Window.GNAT_Version, Window, "GNAT_Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_Version);
     Dlg_to_Scn(  23, 134, 118, 8, x,y,w,h);
-    Create( Window.GNAVI_URL, Window, "GNAVI / GWindows", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => GNAVI_URL);
+    Create( Window.GNAVI_URL, Window, "GNAVI / GWindows", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAVI_URL);
     Dlg_to_Scn(  23, 149, 170, 8, x,y,w,h);
-    Create( Window.ResEdit_URL, Window, "ResEdit", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ResEdit_URL);
+    Create( Window.ResEdit_URL, Window, "ResEdit", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ResEdit_URL);
     Dlg_to_Scn(  23, 164, 75, 8, x,y,w,h);
-    Create( Window.ZipAda_URL, Window, "Zip-Ada", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ZipAda_URL);
+    Create( Window.ZipAda_URL, Window, "Zip-Ada", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ZipAda_URL);
     Dlg_to_Scn(  132, 164, 147, 8, x,y,w,h);
-    Create( Window.ZipAda_Version, Window, "ZA_Version", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => ZipAda_Version);
+    Create( Window.ZipAda_Version, Window, "ZA_Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ZipAda_Version);
     Dlg_to_Scn(  87, 186, 115, 18, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -298,7 +298,7 @@ package body azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Credits_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
     x,y,w,h: Integer;
@@ -323,17 +323,17 @@ package body azip_Resource_GUI is
     Dlg_to_Scn(  11, 4, 283, 44, x,y,w,h);
     Create( Window.Static_0001, Window, "Zip-Ada - Zip archive management library", x,y,w,h);
     Dlg_to_Scn(  25, 18, 260, 8, x,y,w,h);
-    Create_label( Window, "Stratégies Software team: intensive profiling and contributions", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Stratégies Software team: intensive profiling and contributions", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  25, 32, 260, 8, x,y,w,h);
-    Create_label( Window, "ITEC team at NXP Semiconductors: contributions", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "ITEC team at NXP Semiconductors: contributions", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  11, 54, 284, 76, x,y,w,h);
     Create( Window.Static_0004, Window, "GWindows - native MS Windows framework", x,y,w,h);
     Dlg_to_Scn(  25, 69, 260, 8, x,y,w,h);
-    Create_label( Window, "David Botton: main author", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "David Botton: main author", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  25, 83, 260, 8, x,y,w,h);
-    Create_label( Window, "André van Splunter", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "André van Splunter", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  25, 97, 260, 8, x,y,w,h);
-    Create_label( Window, "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents; -- Credits_box_Type
 
 
@@ -396,7 +396,7 @@ package body azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Drop_files_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
     x,y,w,h: Integer;
@@ -408,17 +408,17 @@ package body azip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  17, 10, 21, 20, x,y,w,h);
-    Create( Window.RC_item_1, Window, Num_resource(Plus_icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create( Window.RC_item_1, Window, Num_resource(Plus_icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  205, 100, 123, 16, x,y,w,h);
     Create( Window.Encrypt_check_box, Window, " Encrypt data in archive", x,y,w,h, ID => Encrypt_check_box);
     Dlg_to_Scn(  50, 14, 250, 14, x,y,w,h);
-    Create_label( Window, "Add dropped file(s) to...", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Add dropped file(s) to...", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  178, 98, 21, 20, x,y,w,h);
-    Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  35, 36, 285, 29, x,y,w,h);
-    Create( Window.Drop_archive_name, Window, "(Archive name here)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Drop_archive_name);
+    Create( Window.Drop_archive_name, Window, "(Archive name here)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Drop_archive_name);
     Dlg_to_Scn(  45, 71, 272, 21, x,y,w,h);
-    Create( Window.New_archive_msg, Window, "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", x,y,w,h, GWindows.Static_Controls.LEFT, HALF_SUNKEN, ID => New_archive_msg);
+    Create( Window.New_archive_msg, Window, "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", x,y,w,h, GWindows.Static_Controls.Left, Half_Sunken, ID => New_archive_msg);
     Hide(Window.New_archive_msg);
     Dlg_to_Scn(  72, 101, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
@@ -504,7 +504,7 @@ package body azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out File_exists_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
     x,y,w,h: Integer;
@@ -582,13 +582,13 @@ package body azip_Resource_GUI is
       Hide(Window.IDCANCEL);
     end if;
     Dlg_to_Scn(  18, 26, 327, 8, x,y,w,h);
-    Create( Window.Conflict_simple_name, Window, "(name)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Conflict_simple_name);
+    Create( Window.Conflict_simple_name, Window, "(name)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Conflict_simple_name);
     Dlg_to_Scn(  18, 41, 319, 8, x,y,w,h);
-    Create( Window.Conflict_location, Window, "(location)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Conflict_location);
+    Create( Window.Conflict_location, Window, "(location)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Conflict_location);
     Dlg_to_Scn(  4, 7, 349, 63, x,y,w,h);
     Create( Window.Static_0001, Window, "A file with the same name exists on the target location.", x,y,w,h);
     Dlg_to_Scn(  12, 58, 156, 8, x,y,w,h);
-    Create_label( Window, "Do you want to replace this file ?", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Do you want to replace this file ?", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents; -- File_exists_box_Type
 
 
@@ -651,7 +651,7 @@ package body azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Find_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
     x,y,w,h: Integer;
@@ -663,15 +663,15 @@ package body azip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  9, 12, 21, 20, x,y,w,h);
-    Create( Window.RC_item_0, Window, Num_resource(Binoculars_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create( Window.RC_item_0, Window, Num_resource(Binoculars_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  44, 7, 172, 8, x,y,w,h);
-    Create_label( Window, "Entry &name ( if empty: all names )", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Entry &name ( if empty: all names )", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  44, 20, 172, 12, x,y,w,h);
     Create( Window.Name_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Name_to_be_searched);
     Dlg_to_Scn(  9, 46, 21, 20, x,y,w,h);
-    Create( Window.RC_item_1, Window, Num_resource(Binoculars_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create( Window.RC_item_1, Window, Num_resource(Binoculars_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  44, 41, 172, 8, x,y,w,h);
-    Create_label( Window, "&Content ( if empty: any content )", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "&Content ( if empty: any content )", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  44, 54, 172, 12, x,y,w,h);
     Create( Window.Content_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Content_to_be_searched);
     Dlg_to_Scn(  111, 76, 50, 14, x,y,w,h);
@@ -758,7 +758,7 @@ package body azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Password_decryption_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
     x,y,w,h: Integer;
@@ -772,13 +772,13 @@ package body azip_Resource_GUI is
     Dlg_to_Scn(  12, 10, 206, 26, x,y,w,h);
     Create( Window.Static_0001, Window, "This entry is encrypted.", x,y,w,h);
     Dlg_to_Scn(  26, 21, 175, 8, x,y,w,h);
-    Create( Window.Encrypted_entry, Window, "(name)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Encrypted_entry);
+    Create( Window.Encrypted_entry, Window, "(name)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Encrypted_entry);
     Dlg_to_Scn(  12, 42, 159, 8, x,y,w,h);
-    Create_label( Window, "The current password is invalid.", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "The current password is invalid.", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  12, 58, 159, 8, x,y,w,h);
-    Create_label( Window, "Please enter the correct password:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Please enter the correct password:", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  12, 70, 21, 20, x,y,w,h);
-    Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  46, 73, 172, 13, x,y,w,h);
     Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Password_edit);
     Dlg_to_Scn(  12, 97, 96, 8, x,y,w,h);
@@ -867,7 +867,7 @@ package body azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Password_encryption_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
     x,y,w,h: Integer;
@@ -907,13 +907,13 @@ package body azip_Resource_GUI is
     Dlg_to_Scn(  46, 73, 172, 13, x,y,w,h);
     Create( Window.Password_confirm_edit, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Password_confirm_edit);
     Dlg_to_Scn(  12, 70, 21, 20, x,y,w,h);
-    Create( Window.Confirm_Icon, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create( Window.Confirm_Icon, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  12, 58, 153, 8, x,y,w,h);
-    Create( Window.Confirm_Password_Label, Window, "Confirm password:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Confirm_Password_Label);
+    Create( Window.Confirm_Password_Label, Window, "Confirm password:", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Confirm_Password_Label);
     Dlg_to_Scn(  12, 30, 21, 20, x,y,w,h);
-    Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  12, 18, 151, 8, x,y,w,h);
-    Create_label( Window, "Enter password:", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Enter password:", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents; -- Password_encryption_box_Type
 
 
@@ -976,7 +976,7 @@ package body azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Progress_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
     x,y,w,h: Integer;
@@ -988,13 +988,13 @@ package body azip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  7, 6, 218, 10, x,y,w,h);
-    Create( Window.Entry_operation_name, Window, "Adding...", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Entry_operation_name);
+    Create( Window.Entry_operation_name, Window, "Adding...", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Entry_operation_name);
     Dlg_to_Scn(  7, 19, 228, 10, x,y,w,h);
-    Create( Window.Entry_name, Window, "Some file", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Entry_name);
+    Create( Window.Entry_name, Window, "Some file", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Entry_name);
     Dlg_to_Scn(  7, 57, 227, 9, x,y,w,h);
-    Create( Window.File_Progress, Window, x,y,w,h, HORIZONTAL, False);
+    Create( Window.File_Progress, Window, x,y,w,h, Horizontal, False);
     Dlg_to_Scn(  7, 74, 227, 17, x,y,w,h);
-    Create( Window.Archive_Progress, Window, x,y,w,h, HORIZONTAL, False);
+    Create( Window.Archive_Progress, Window, x,y,w,h, Horizontal, False);
     Dlg_to_Scn(  96, 96, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -1007,9 +1007,9 @@ package body azip_Resource_GUI is
       Hide(Window.Cancel_button);
     end if;
     Dlg_to_Scn(  7, 32, 228, 10, x,y,w,h);
-    Create( Window.Comment_1, Window, "Comment 1", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Comment_1);
+    Create( Window.Comment_1, Window, "Comment 1", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Comment_1);
     Dlg_to_Scn(  7, 45, 228, 10, x,y,w,h);
-    Create( Window.Comment_2, Window, "Comment 2", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Comment_2);
+    Create( Window.Comment_2, Window, "Comment 2", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Comment_2);
   end Create_Contents; -- Progress_box_Type
 
 
@@ -1072,7 +1072,7 @@ package body azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Properties_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
     x,y,w,h: Integer;
@@ -1084,21 +1084,21 @@ package body azip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  14, 6, 78, 13, x,y,w,h);
-    Create_label( Window, "Uncompressed size", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Uncompressed size", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  97, 6, 112, 12, x,y,w,h);
     Create( Window.Uncomp_size, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => True, ID => Uncomp_size);
     Border (Window.Uncomp_size, False);
     Dlg_to_Scn(  14, 23, 78, 13, x,y,w,h);
-    Create_label( Window, "Compressed size", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Compressed size", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  97, 23, 112, 12, x,y,w,h);
     Create( Window.Comp_size, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => True, ID => Comp_size);
     Border (Window.Comp_size, False);
     Dlg_to_Scn(  211, 23, 48, 16, x,y,w,h);
-    Create( Window.Comp_ratio, Window, "Ratio: 100%", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Comp_ratio);
+    Create( Window.Comp_ratio, Window, "Ratio: 100%", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Comp_ratio);
     Dlg_to_Scn(  14, 40, 78, 13, x,y,w,h);
-    Create_label( Window, "Entries", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Entries", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  97, 40, 84, 12, x,y,w,h);
-    Create( Window.Numb_entries, Window, "# entries", x,y,w,h, GWindows.Static_Controls.LEFT, NONE, ID => Numb_entries);
+    Create( Window.Numb_entries, Window, "# entries", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Numb_entries);
     Dlg_to_Scn(  111, 139, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -1111,7 +1111,7 @@ package body azip_Resource_GUI is
       Hide(Window.IDOK);
     end if;
     Dlg_to_Scn(  14, 56, 236, 79, x,y,w,h);
-    Create( Window.Stats_list, Window, x,y,w,h, MULTIPLE, REPORT_VIEW, NO_SORTING, False, ALIGN_LEFT);
+    Create( Window.Stats_list, Window, x,y,w,h, Multiple, Report_View, No_Sorting, False, Align_Left);
   end Create_Contents; -- Properties_box_Type
 
 
@@ -1160,7 +1160,7 @@ package body azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Wait_refresh_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
     x,y,w,h: Integer;
@@ -1172,9 +1172,9 @@ package body azip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  18, 12, 143, 8, x,y,w,h);
-    Create_label( Window, "Zip directory is loaded", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Zip directory is loaded", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  17, 37, 156, 8, x,y,w,h);
-    Create_label( Window, "Please wait for filling the List View", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "Please wait for filling the List View", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents; -- Wait_refresh_box_Type
 
 
@@ -1222,7 +1222,7 @@ package body azip_Resource_GUI is
   function Num_resource(id: Natural) return GString is
     img: constant String:= Integer'Image(id);
   begin
-    return To_GString_from_String('#' & img(img'first+1..img'Last));
+    return To_GString_From_String('#' & img(img'First+1..img'Last));
   end Num_resource;
 
   package body Common_Fonts is
@@ -1256,13 +1256,13 @@ package body azip_Resource_GUI is
      function GetObject
        (hgdiobj  : GWindows.Types.Handle  := GWindows.Drawing_Objects.Handle(GUI_Font);
         cbBufferl: Interfaces.C.int       := LOGFONT'Size / 8;
-        lpvObject: LPVOID                 := Log_of_Current_font'Address)
+        lpvObject: LPVOID                 := Log_of_current_font'Address)
        return Interfaces.C.int;
      pragma Import (StdCall, GetObject,
                       "GetObject" & Character_Mode_Identifier);
 
      function CreateFontIndirect
-       (lpvObject: LPVOID                 := Log_of_Current_font'Address)
+       (lpvObject: LPVOID                 := Log_of_current_font'Address)
        return GWindows.Types.Handle;
      pragma Import (StdCall, CreateFontIndirect,
                       "CreateFontIndirect" & Character_Mode_Identifier);
@@ -1278,8 +1278,8 @@ package body azip_Resource_GUI is
           14, Underline => True);
             -- !! ^ Not so nice (non-unsharpened font, size ~..., color ?)
       else
-        Log_of_Current_font.lfUnderline:= Interfaces.C.Char'Val(1);
-        GWindows.Drawing_Objects.Handle(URL_font, CreateFontIndirect);
+        Log_of_current_font.lfUnderline:= Interfaces.C.char'Val(1);
+        GWindows.Drawing_Objects.Handle(URL_Font, CreateFontIndirect);
       end if;
     end Create_Common_Fonts;
 
@@ -1290,4 +1290,4 @@ begin
 
   -- Last line of resource script file: 414
 
-end azip_Resource_GUI;
+end AZip_Resource_GUI;

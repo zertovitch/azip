@@ -29,7 +29,7 @@ procedure AZip is
     GWindows.Base.On_Exception_Handler (Handler => null); -- Avoid infinite recursion!
     Message_Box
       ("Crash in AZip (GWindows)",
-        To_GString_from_String(insult),
+        To_GString_From_String(insult),
         OK_Box
       );
   end Interactive_crash;

@@ -97,7 +97,7 @@ package body AZip_Common.Operations is
   end Result_value;
 
   max: constant Color_range:= Color_range'Last;
-  f_max: constant Float:= FLoat(max);
+  f_max: constant Float:= Float(max);
 
   procedure Result_color(
     op        : Archive_Operation;
@@ -242,7 +242,7 @@ package body AZip_Common.Operations is
   ------------------------------------------------
 
   procedure Process_archive(
-    zif             :        Zip.Zip_Info; -- preserved, even after modifying operation
+    zif             :        Zip.Zip_info; -- preserved, even after modifying operation
     operation       :        Archive_Operation;
     entry_name      :        Name_list;
     base_folder     :        UTF_16_String;
@@ -264,7 +264,7 @@ package body AZip_Common.Operations is
     archive_percents_done: Natural:= 0;
     processed_entries, total_entries: Natural:= 0;
     current_entry_name: UTF_16_Unbounded_String;
-    current_operation: Entry_operation;
+    current_operation: Entry_Operation;
     current_skip_hint: Boolean;
     total_occurences: Natural:= 0;
     total_files_with_occurence: Natural:= 0;
@@ -337,12 +337,12 @@ package body AZip_Common.Operations is
             end if;
             Change_password(To_Wide_String(current_entry_name), password, cancelled);
             if cancelled then
-              raise UnZip.User_Abort;
+              raise UnZip.User_abort;
             end if;
         end;
       end loop;
       s:= Stream(f);
-      while not End_of_file(f) loop
+      while not End_Of_File(f) loop
         Character'Read(s,c);
         if ignore_case then
           c:= To_Upper(c);
@@ -392,7 +392,7 @@ package body AZip_Common.Operations is
     begin
       Change_password(To_Wide_String(current_entry_name), password, cancelled);
       if cancelled then
-        raise UnZip.User_Abort;
+        raise UnZip.User_abort;
       end if;
       -- persistence over entries + wide strings...
       pwd:=  To_Unbounded_String(To_String(To_Wide_String(password)));
@@ -611,7 +611,7 @@ package body AZip_Common.Operations is
               );
               user_code:= success;
             exception
-              when Zip.Compress.User_Abort =>
+              when Zip.Compress.User_abort =>
                 abort_rest_of_operation:= True;
             end;
           when Update =>
@@ -653,7 +653,7 @@ package body AZip_Common.Operations is
               );
               user_code:= success;
             exception
-              when UnZip.User_Abort =>
+              when UnZip.User_abort =>
                 abort_rest_of_operation:= True;
               when UnZip.CRC_Error =>
                 user_code:= bad_crc;
@@ -703,7 +703,7 @@ package body AZip_Common.Operations is
                   null;
               end case;
             exception
-              when UnZip.User_Abort =>
+              when UnZip.User_abort =>
                 abort_rest_of_operation:= True;
               when UnZip.CRC_Error =>
                 user_code:= bad_crc;
@@ -729,7 +729,7 @@ package body AZip_Common.Operations is
                   total_occurences:= total_occurences + user_code;
                 end if;
               exception
-                when UnZip.User_Abort =>
+                when UnZip.User_abort =>
                   abort_rest_of_operation:= True;
                 when UnZip.Wrong_password =>
                   user_code:= wrong_pwd;
@@ -777,7 +777,7 @@ package body AZip_Common.Operations is
     end case;
     case operation is
       when Modifying_Operation =>
-        Zip_Streams.Set_Name(old_fzs, Zip.Zip_Name(zif));
+        Zip_Streams.Set_Name(old_fzs, Zip.Zip_name(zif));
         Zip_Streams.Open(old_fzs, Zip_Streams.In_File);
         Zip.Create.Create(
           new_zip,
@@ -850,7 +850,7 @@ package body AZip_Common.Operations is
               end;
             end if;
           exception
-            when Zip.Compress.User_Abort =>
+            when Zip.Compress.User_abort =>
               abort_rest_of_operation:= True;
               exit;
           end;
@@ -872,8 +872,8 @@ package body AZip_Common.Operations is
         then
           Delete_File(new_temp_name);
         else
-          Delete_File(Zip.Zip_Name(zif));
-          Rename(new_temp_name, Zip.Zip_Name(zif));
+          Delete_File(Zip.Zip_name(zif));
+          Rename(new_temp_name, Zip.Zip_name(zif));
         end if;
       when Read_Only_Operation =>
         null;
@@ -884,7 +884,7 @@ package body AZip_Common.Operations is
     --
     -- The challenge is to do it all without heap allocation :-)
     --
-    function Expand_one_entry(Name: Name_descriptor) return Name_List is
+    function Expand_one_entry(Name: Name_descriptor) return Name_list is
       --
       files, total_files: Natural:= 0;
       sep: Natural;
@@ -895,7 +895,7 @@ package body AZip_Common.Operations is
       -- This is a modified version of the Rosetta code example
       -- http://rosettacode.org/wiki/Walk_a_directory/Recursively#Ada
       --
-      procedure Full_Walk(Name : Wide_String; Count_only: Boolean; New_list: out Name_List) is
+      procedure Full_Walk(Name : Wide_String; Count_only: Boolean; New_list: out Name_list) is
         --
         procedure Walk (Name : Wide_String) is
           procedure Print (Item : Directory_Entry_Type) is
@@ -903,7 +903,7 @@ package body AZip_Common.Operations is
             if Simple_Name (Item) /= "." and then Simple_Name (Item) /= ".." then
               files:= files + 1;
               if not Count_only then
-                new_list(files):= (U((To_Wide_String(Full_Name (Item)))), sep);
+                New_list(files):= (U((To_Wide_String(Full_Name (Item)))), sep);
               end if;
             end if;
           end Print;

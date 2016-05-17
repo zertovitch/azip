@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
--- GUI contents of resource script file: azip.rc
--- Transcription time: 2016/04/28  15:22:01
+-- GUI contents of resource script file: AZip.rc
+-- Transcription time: 2016/05/17  14:40:51
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 28-Apr-2016
+-- RC Grammar version: > 10-May-2016
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -16,7 +16,7 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Windows;                  use GWindows.Windows;
 with GWindows.Buttons;                  use GWindows.Buttons;
 with GWindows.Buttons.Graphic;          use GWindows.Buttons.Graphic;
-with GWindows.Buttons.Owner_drawn;      use GWindows.Buttons.Owner_drawn;
+with GWindows.Buttons.Owner_Drawn;      use GWindows.Buttons.Owner_Drawn;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.List_Boxes;               use GWindows.List_Boxes;
 with GWindows.Combo_Boxes;              use GWindows.Combo_Boxes;
@@ -27,7 +27,7 @@ with GWindows.Menus;                    use GWindows.Menus;
 use GWindows;
 with Interfaces.C;                      use Interfaces.C;
 
-package azip_Resource_GUI is
+package AZip_Resource_GUI is
 
   type Menu_MDI_Child_Type is tagged record
     Main: Menu_Type; -- Root of the whole menu tree
@@ -56,7 +56,7 @@ package azip_Resource_GUI is
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
-  type About_box_Type is new Window_type with record
+  type About_box_Type is new Window_Type with record
 
     Static_0001: Icon_Type;
     -- Label: IDC_STATIC
@@ -107,10 +107,10 @@ package azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out About_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
-  type Credits_box_Type is new Window_type with record
+  type Credits_box_Type is new Window_Type with record
 
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
@@ -144,10 +144,10 @@ package azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Credits_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
-  type Drop_files_box_Type is new Window_type with record
+  type Drop_files_box_Type is new Window_Type with record
 
     RC_item_1: Icon_Type;
     Encrypt_check_box: Check_Box_Type;
@@ -189,10 +189,10 @@ package azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Drop_files_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
-  type File_exists_box_Type is new Window_type with record
+  type File_exists_box_Type is new Window_Type with record
 
     Overwrite_Yes: Dialog_Button_Type;    -- closes parent window after click
     Overwrite_Yes_permanent: Button_Type; -- doesn't close parent window after click
@@ -240,10 +240,10 @@ package azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out File_exists_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
-  type Find_box_Type is new Window_type with record
+  type Find_box_Type is new Window_Type with record
 
     RC_item_0: Icon_Type;
     -- Label: IDC_STATIC
@@ -285,10 +285,10 @@ package azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Find_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
-  type Password_decryption_box_Type is new Window_type with record
+  type Password_decryption_box_Type is new Window_Type with record
 
     Static_0001: Group_Box_Type;
     Encrypted_entry: Label_Type;
@@ -331,10 +331,10 @@ package azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Password_decryption_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
-  type Password_encryption_box_Type is new Window_type with record
+  type Password_encryption_box_Type is new Window_Type with record
 
     IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
@@ -377,10 +377,10 @@ package azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Password_encryption_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
-  type Progress_box_Type is new Window_type with record
+  type Progress_box_Type is new Window_Type with record
 
     Entry_operation_name: Label_Type;
     Entry_name: Label_Type;
@@ -420,10 +420,10 @@ package azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Progress_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
-  type Properties_box_Type is new Window_type with record
+  type Properties_box_Type is new Window_Type with record
 
     -- Label: 0
     Uncomp_size: Edit_Box_Type;
@@ -465,10 +465,10 @@ package azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Properties_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
-  type Wait_refresh_box_Type is new Window_type with record
+  type Wait_refresh_box_Type is new Window_Type with record
 
     -- Label: IDC_STATIC
     -- Label: IDC_STATIC
@@ -496,7 +496,7 @@ package azip_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Wait_refresh_box_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
   package Version_info is
@@ -626,4 +626,4 @@ package azip_Resource_GUI is
 
   -- Last line of resource script file: 414
 
-end azip_Resource_GUI;
+end AZip_Resource_GUI;

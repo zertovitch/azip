@@ -46,7 +46,7 @@ package body AZip_GWin.Toolbars is
   function Num_resource(id: Natural) return GString is
     img: constant String:= Integer'Image(id);
   begin
-    return To_GString_from_String('#' & img(img'first+1..img'Last));
+    return To_GString_From_String('#' & img(img'First+1..img'Last));
   end Num_resource;
 
   procedure Init_Main_toolbar(
@@ -77,7 +77,7 @@ package body AZip_GWin.Toolbars is
     Create (tb, parent, 0, 0, 0, 40);
     Dock (tb, GWindows.Base.At_Top);
 
-    Create (il, Num_resource(Toolbar_Bmp), 32);
+    Create (il, Num_resource(Toolbar_BMP), 32);
     Set_Image_List (tb, il);
     st:= Get_Style(tb);
     Set_Style(tb, TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST or st);

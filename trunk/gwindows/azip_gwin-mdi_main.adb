@@ -64,7 +64,7 @@ package body AZip_GWin.MDI_Main is
   begin
     Window.Redraw;
     -- Redraw(Window.Tool_bar);
-    Enumerate_Children(MDI_Client_Window (Window).all,Redraw_child'Access);
+    Enumerate_Children(MDI_Client_Window (Window).all,Redraw_Child'Access);
   end Redraw_all;
 
   procedure Close_extra_first_child(Window : GWindows.Base.Pointer_To_Base_Window_Class)
@@ -91,7 +91,7 @@ package body AZip_GWin.MDI_Main is
     c : in out MDI_Child_Type )
   is
   begin
-    m.user_maximize_restore:= True;
+    m.User_maximize_restore:= True;
     if m.opt.MDI_childen_maximized then
       Zoom(c);
       Redraw_all(m);
@@ -125,7 +125,8 @@ package body AZip_GWin.MDI_Main is
           "Continue opening ?",
           Yes_No_Box,
           Warning_Icon
-        ) = No then
+        ) = No
+        then
           return;
         end if;
       when invalid =>
@@ -145,7 +146,7 @@ package body AZip_GWin.MDI_Main is
       -- We do here like Excel or Word: close the unused blank window
       Close_extra_first_child(Window);
       --
-      Window.user_maximize_restore:= False;
+      Window.User_maximize_restore:= False;
       New_Window.File_Name:= File_Name;
       New_Window.extract_dir:= G2GU(Give_path(GU2G(File_Name)));
       Create_MDI_Child (New_Window.all,
@@ -276,7 +277,7 @@ package body AZip_GWin.MDI_Main is
     AZip_GWin.Toolbars.Init_Main_toolbar(Window.Tool_Bar, Window.Toolbar_Images, Window);
 
     -- ** Other resources
-    Window.Folders_Images.Create (Num_resource(Folders_Bmp), 16);
+    Window.Folders_Images.Create (Num_resource(Folders_BMP), 16);
 
     -- ** Resize according to options:
 
@@ -293,7 +294,7 @@ package body AZip_GWin.MDI_Main is
     Window.Dock_Children;
     Window.Show;
 
-    if Argument_count=0 then
+    if Argument_Count=0 then
       On_File_New (Window, extra_first_doc => True);
       -- ^ The MS Office-like first, empty document
     end if;
@@ -321,7 +322,8 @@ package body AZip_GWin.MDI_Main is
                      Top    : in     Integer) is
   begin
     if Window.record_dimensions and
-       not (Zoom(Window) or Minimized(Window)) then
+       not (Zoom(Window) or Minimized(Window))
+    then
       -- ^ Avoids recording dimensions before restoring them
       --   from previous session.
       Window.opt.win_left  := Left;
@@ -336,7 +338,8 @@ package body AZip_GWin.MDI_Main is
   begin
     Dock_Children(Window);
     if Window.record_dimensions and
-       not (Zoom(Window) or Minimized(Window)) then
+       not (Zoom(Window) or Minimized(Window))
+    then
       -- ^ Avoids recording dimensions before restoring them
       --   from previous session.
       Window.opt.win_width := Width;
@@ -370,8 +373,8 @@ package body AZip_GWin.MDI_Main is
     File_Title: constant GString:= "New Archive" & Suffix;
 
   begin
-    New_Window.extra_first_doc:= extra_first_doc;
-    Window.user_maximize_restore:= False;
+    New_Window.Extra_first_doc:= extra_first_doc;
+    Window.User_maximize_restore:= False;
     Create_MDI_Child (New_Window.all, Window, File_Title, Is_Dynamic => True);
     New_Window.Short_Name:= G2GU(File_Title);
     MDI_Active_Window (Window, New_Window.all);
@@ -394,7 +397,7 @@ package body AZip_GWin.MDI_Main is
   procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean) is
     New_Window : constant MDI_Child_Access := new MDI_Child_Type;
   begin
-    On_File_New(Window, extra_first_doc, New_window);
+    On_File_New(Window, extra_first_doc, New_Window);
   end On_File_New;
 
   ------------------
@@ -455,18 +458,19 @@ package body AZip_GWin.MDI_Main is
     is
     begin
       if Any_Window.all in MDI_Child_Type'Class and then
-        Main_Window.Success_In_Enumerated_Close then -- no [cancel] up to now
+        Main_Window.Success_in_enumerated_close
+      then  --  No [cancel] button was selected up to now.
         GWindows.Base.Close (Any_Window.all);
       end if;
     end My_Close_Win;
   begin
-    Main_Window.Success_In_Enumerated_Close:= True;
+    Main_Window.Success_in_enumerated_close:= True;
     GWindows.Base.Enumerate_Children (MDI_Client_Window (Main_Window).all,
                                       My_Close_Win'Unrestricted_Access);
   end My_MDI_Close_All;
 
   procedure On_About(Window : in out MDI_Main_Type) is
-    box: About_Box_Type;
+    box: About_box_Type;
     url_azip, url_gnat, url_gnavi, url_resedit, url_zipada: URL_Type;
     --
     procedure Credits_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
@@ -476,7 +480,7 @@ package body AZip_GWin.MDI_Main is
       credits_box.Create_Full_Dialog(box);
       credits_box.Small_Icon("AZip_Doc_Icon_Name");
       credits_box.Center;
-      Show_Dialog(credits_Box, box);
+      Show_Dialog(credits_box, box);
     end Credits_clicked;
     --
     function GNAT_Version_string return String is
@@ -527,13 +531,13 @@ package body AZip_GWin.MDI_Main is
         On_About (Window);
       when IDM_QUIT  =>
         Close (Window);
-      when IDM_Window_Cascade   =>
+      when IDM_WINDOW_CASCADE   =>
         MDI_Cascade (Window);
-      when IDM_Window_Tile_Horizontal =>
+      when IDM_WINDOW_TILE_HORIZONTAL =>
         MDI_Tile_Horizontal (Window);
-      when IDM_Window_Tile_Vertical =>
+      when IDM_WINDOW_TILE_VERTICAL =>
         MDI_Tile_Vertical (Window);
-      when IDM_Window_Close_All =>
+      when IDM_WINDOW_CLOSE_ALL =>
         My_MDI_Close_All(Window);
       when others =>
         for i_mru in Window.IDM_MRU'Range loop
@@ -568,7 +572,7 @@ package body AZip_GWin.MDI_Main is
     My_MDI_Close_All(Window);
     -- ^ Don't forget to save unsaved files !
     -- Operation can be cancelled by user for one unsaved picture.
-    Can_Close:= Window.success_in_enumerated_close;
+    Can_Close:= Window.Success_in_enumerated_close;
     --
     if Can_Close then
       Windows_persistence.Save(Window.opt);
@@ -620,11 +624,11 @@ package body AZip_GWin.MDI_Main is
 
   end Add_MRU;
 
-  procedure Update_MRU_Menu(Window: in out MDI_Main_Type; m: in Menu_type) is
+  procedure Update_MRU_Menu(Window: in out MDI_Main_Type; m: in Menu_Type) is
   begin
     for i in reverse Window.opt.mru'Range loop
       Text(
-        m, command, Window.IDM_MRU(i),
+        m, Command, Window.IDM_MRU(i),
          '&' &
          S2G(Ada.Strings.Fixed.Trim(Integer'Image(i),Ada.Strings.Left)) &
          ' ' &
@@ -640,7 +644,7 @@ package body AZip_GWin.MDI_Main is
       declare
         cw: MDI_Child_Type renames MDI_Child_Type(Window.all);
       begin
-        Update_MRU_Menu(cw.parent.all, cw.Menu.Popup_0001);
+        Update_MRU_Menu(cw.Parent.all, cw.Menu.Popup_0001);
         -- Update_Toolbar_Menu(cw.View_menu, cw.parent.Floating_toolbars);
       end;
     end if;

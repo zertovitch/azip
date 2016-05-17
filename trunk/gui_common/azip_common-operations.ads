@@ -126,7 +126,7 @@ package AZip_Common.Operations is
       cancelled  :    out Boolean
     );
   procedure Process_archive(
-    zif             :        Zip.Zip_Info; -- preserved, even after modifying operation
+    zif             :        Zip.Zip_info; -- preserved, even after modifying operation
     operation       :        Archive_Operation;
     entry_name      :        Name_list;
     base_folder     :        UTF_16_String;

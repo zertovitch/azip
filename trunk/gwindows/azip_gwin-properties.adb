@@ -68,7 +68,7 @@ begin
   box.Uncomp_size.Text("0 byte");
   box.Comp_size.Text("0 byte");
   box.Comp_ratio.Text("");
-  if Is_Loaded(Window.zif) then
+  if Is_loaded(Window.zif) then
     Gather_stats(Window.zif);
     box.Numb_entries.Text(Trim(Natural'Wide_Image(Entries(Window.zif)), Left));
     box.Uncomp_size.Text(Long_file_size_image(total_uncompressed, sep));

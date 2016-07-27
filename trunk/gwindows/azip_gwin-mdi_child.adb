@@ -1071,7 +1071,7 @@ package body AZip_GWin.MDI_Child is
   function Get_selected_folder_entry_list(Window: MDI_Child_Type) return Array_Of_File_Names is
     items: constant Natural:= Entries(Window.zif);
     names: Array_Of_File_Names(1..items);
-    prefix: constant GString:= GU2G(Window.selected_path);
+    prefix: constant GString:= GU2G(Window.selected_path) & '/';
     j: Natural:= 0;
     --
     procedure Process_entry(

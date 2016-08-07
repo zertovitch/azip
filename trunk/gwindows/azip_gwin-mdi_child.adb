@@ -738,11 +738,11 @@ package body AZip_GWin.MDI_Child is
       use Ada.Calendar;
       now: constant Ada.Calendar.Time:= Clock;
     begin
-      -- Display only at most every 2/100 second (i.e. max 50 fps).
+      -- Display only at most every 4/100 second (i.e. max 25 fps).
       -- Otherwise Windows may be overflown by messages and the operation
       -- takes much more time due to the display. Typical case: an archive
-      -- with many small files - GWin.zip or Java run-time Jar's for instance.
-      if now - tick >= 0.02 or else archive_percents_done = 100 then
+      -- with many small files - GWin.zip or Java run-time's Jar for instance.
+      if now - tick >= 0.04 or else archive_percents_done = 100 then
         progress_box.File_Progress.Position(file_percents_done);
         progress_box.Archive_Progress.Position(archive_percents_done);
         progress_box.Entry_name.Text(entry_being_processed);

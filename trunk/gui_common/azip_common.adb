@@ -350,52 +350,135 @@ package body AZip_Common is
     return str(Index(str,"#")+1..11);
   end Hexadecimal;
 
-  function File_Size_Image(x: Zip.File_size_type) return UTF_16_String is
-    use type Zip.File_size_type;
-    function Img_dec(x: Zip.File_size_type; decimals: Natural) return UTF_16_String is
-      s: constant UTF_16_String:= Zip.File_size_type'Wide_Image(x);
+  generic
+    type Size_type is mod <>;
+  package Gen_Size_Images is
+    function File_Size_Image(x: Size_type) return UTF_16_String;
+    function Image_1000(r: Size_type; separator: Wide_Character) return Wide_String;
+    function Long_file_size_image(x: Size_type; separator: Wide_Character) return UTF_16_String;
+    function Ratio_pct_Image(nom, den: Size_type) return UTF_16_String;
+  end;
+
+  package body Gen_Size_Images is
+
+    function File_Size_Image(x: Size_type) return UTF_16_String is
+      function Img_dec(x: Size_type; decimals: Natural) return UTF_16_String is
+        s: constant UTF_16_String:= Size_type'Wide_Image(x);
+      begin
+        case decimals is
+          when 1 => --  x is 10x too large, on purpose
+            if s(s'Last) = '0' then
+              return s(s'First+1..s'Last-1);
+            else
+              return s(s'First+1..s'Last-1) & '.' & s(s'Last);
+            end if;
+          when 2 => --  x is 100x too large, on purpose
+            if s(s'Last-1..s'Last) = "00" then
+              return s(s'First+1..s'Last-2);
+            elsif s(s'Last) = '0' then
+              return s(s'First+1..s'Last-2) & '.' & s(s'Last-1);
+            else
+              return s(s'First+1..s'Last-2) & '.' & s(s'Last-1..s'Last);
+            end if;
+          when others =>
+            return s(s'First+1..s'Last);
+        end case;
+      end Img_dec;
+      GB: constant:= 1024 ** 3;
+      MB: constant:= 1024 ** 2;
+      KB: constant:= 1024;
     begin
-      case decimals is
-        when 1 => --  x is 10x too large, on purpose
-          if s(s'Last) = '0' then
-            return s(s'First+1..s'Last-1);
-          else
-            return s(s'First+1..s'Last-1) & '.' & s(s'Last);
-          end if;
-        when 2 => --  x is 100x too large, on purpose
-          if s(s'Last-1..s'Last) = "00" then
-            return s(s'First+1..s'Last-2);
-          elsif s(s'Last) = '0' then
-            return s(s'First+1..s'Last-2) & '.' & s(s'Last-1);
-          else
-            return s(s'First+1..s'Last-2) & '.' & s(s'Last-1..s'Last);
-          end if;
-        when others =>
-          return s(s'First+1..s'Last);
-      end case;
-    end Img_dec;
-    GB: constant:= 1024 ** 3;
-    MB: constant:= 1024 ** 2;
-    KB: constant:= 1024;
-  begin
-    if x >= GB then
-      return Img_dec(x / GB, 0) & " GB";
-    elsif x >= 100 * MB then
-      return Img_dec(x / MB, 0) & " MB";
-    elsif x >= 10 * MB then
-      return Img_dec((x * 10) / MB, 1) & " MB";
-    elsif x >= 2  * MB then
-      return Img_dec((x * 100) / MB, 2) & " MB";
-    elsif x >= 100 * KB then
-      return Img_dec(x / KB, 0) & " KB";
-    elsif x >= 10 * KB then
-      return Img_dec((x * 10) / KB, 1) & " KB";
-    elsif x >= KB then
-      return Img_dec((x * 100) / KB, 2) & " KB";
-    else
-      return Img_dec(x, 0);
-    end if;
-  end File_Size_Image;
+      if x >= GB then
+        return Img_dec(x / GB, 0) & " GB";
+      elsif x >= 100 * MB then
+        return Img_dec(x / MB, 0) & " MB";
+      elsif x >= 10 * MB then
+        return Img_dec((x * 10) / MB, 1) & " MB";
+      elsif x >= 2  * MB then
+        return Img_dec((x * 100) / MB, 2) & " MB";
+      elsif x >= 100 * KB then
+        return Img_dec(x / KB, 0) & " KB";
+      elsif x >= 10 * KB then
+        return Img_dec((x * 10) / KB, 1) & " KB";
+      elsif x >= KB then
+        return Img_dec((x * 100) / KB, 2) & " KB";
+      else
+        return Img_dec(x, 0);
+      end if;
+    end File_Size_Image;
+
+    function Image_1000(r: Size_type; separator: Wide_Character) return Wide_String is
+      s: constant Wide_String:= Size_type'Wide_Image(r);
+      t: Wide_String(s'First..s'First+(s'Length*4)/3);
+      j, c: Natural;
+      use Interfaces;
+    begin
+      --  For signed integers
+      --
+      --  if r < 0 then
+      --    return '-' & Image_1000(abs r, separator);
+      --  end if;
+      --
+      --  We build result string t from right to left
+      j:= t'Last + 1;
+      c:= 0;
+      for i in reverse s'First..s'Last loop
+        exit when s(i) = ' ' or s(i) = '-';
+        if c > 0 and then c mod 3 = 0 then
+          j:= j - 1;
+          t(j):= separator;
+        end if;
+        j:= j - 1;
+        t(j):= s(i);
+        c:= c + 1;
+      end loop;
+      return t(j..t'Last);
+    end Image_1000;
+
+    function Long_file_size_image(x: Size_type; separator: Wide_Character) return UTF_16_String is
+      use Interfaces;
+    begin
+      if x < 1024 then
+        return Image_1000(x, separator) & " bytes";
+      else
+        return File_Size_Image(x) & " (" & Image_1000(x, separator) & " bytes)";
+      end if;
+    end Long_file_size_image;
+
+    function Ratio_pct_Image(nom, den: Size_type) return UTF_16_String is
+    begin
+      if den = 0 then
+        return "--";
+      else
+        return Trim(Integer'Wide_Image(
+          Integer(100.0 * Long_Float(nom) / Long_Float(den))),
+          Left
+        ) & '%';
+      end if;
+    end Ratio_pct_Image;
+
+  end Gen_Size_Images;
+
+  package Inst_Size_Images_32 is new Gen_Size_Images(Zip.File_size_type);
+  package Inst_Size_Images_64 is new Gen_Size_Images(Interfaces.Unsigned_64);
+
+  function File_Size_Image(x: Zip.File_size_type) return UTF_16_String
+    renames Inst_Size_Images_32.File_Size_Image;
+
+  function Image_1000(r: Zip.File_size_type; separator: Wide_Character) return Wide_String
+    renames Inst_Size_Images_32.Image_1000;
+
+  function Long_file_size_image(x: Zip.File_size_type; separator: Wide_Character) return UTF_16_String
+    renames Inst_Size_Images_32.Long_file_size_image;
+
+  function Long_file_size_image(x: Interfaces.Unsigned_64; separator: Wide_Character) return UTF_16_String
+    renames Inst_Size_Images_64.Long_file_size_image;
+
+  function Ratio_pct_Image(nom, den: Zip.File_size_type) return UTF_16_String
+    renames Inst_Size_Images_32.Ratio_pct_Image;
+
+  function Ratio_pct_Image(nom, den: Interfaces.Unsigned_64) return UTF_16_String
+    renames Inst_Size_Images_64.Ratio_pct_Image;
 
   function File_Size_Value(s: UTF_16_String) return Zip.File_size_type is
     use type File_size_type;
@@ -427,54 +510,6 @@ package body AZip_Common is
     end if;
     return File_size_type'Wide_Value(s);
   end File_Size_Value;
-
-  function Image_1000(r: Zip.File_size_type; separator: Wide_Character) return Wide_String is
-    s: constant Wide_String:= Zip.File_size_type'Wide_Image(r);
-    t: Wide_String(s'First..s'First+(s'Length*4)/3);
-    j, c: Natural;
-    use Interfaces;
-  begin
-    --  For signed integers
-    --
-    --  if r < 0 then
-    --    return '-' & Image_1000(abs r, separator);
-    --  end if;
-    --
-    --  We build result string t from right to left
-    j:= t'Last + 1;
-    c:= 0;
-    for i in reverse s'First..s'Last loop
-      exit when s(i) = ' ' or s(i) = '-';
-      if c > 0 and then c mod 3 = 0 then
-        j:= j - 1;
-        t(j):= separator;
-      end if;
-      j:= j - 1;
-      t(j):= s(i);
-      c:= c + 1;
-    end loop;
-    return t(j..t'Last);
-  end Image_1000;
-
-  function Long_file_size_image(x: Zip.File_size_type; separator: Wide_Character) return UTF_16_String is
-    use Interfaces;
-  begin
-    if x < 1024 then
-      return Image_1000(x, separator) & " bytes";
-    else
-      return File_Size_Image(x) & " (" & Image_1000(x, separator) & " bytes)";
-    end if;
-  end Long_file_size_image;
-
-  function Ratio_pct_Image(n,d: Zip.File_size_type) return UTF_16_String is
-    use type Zip.File_size_type;
-  begin
-    if d = 0 then
-      return "--";
-    else
-      return Trim(Integer'Wide_Image(Integer(100.0 * Long_Float(n) / Long_Float(d))), Left) & '%';
-    end if;
-  end Ratio_pct_Image;
 
   function Pct_Value(s: UTF_16_String) return Natural is -- 0..101
   begin

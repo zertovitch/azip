@@ -28,7 +28,6 @@ with Ada.Sequential_IO;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 with Ada.Unchecked_Deallocation;
-with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 
 with Interfaces;
 
@@ -232,7 +231,7 @@ package body AZip_GWin.MDI_Child is
           Lst.Set_Sub_Item(File_Size_Image(uncomp_size), row, cidx(Size)-1);
           Lst.Set_Sub_Item(File_Size_Image(comp_size), row, cidx(Packed)-1);
           Lst.Set_Sub_Item(Ratio_pct_Image(comp_size, uncomp_size), row, cidx(Ratio)-1);
-          Lst.Set_Sub_Item(To_Lower(PKZip_method'Wide_Image(method)), row, cidx(Format)-1);
+          Lst.Set_Sub_Item(S2G(Zip.Image(method)), row, cidx(Format)-1);
           Lst.Set_Sub_Item(Hexadecimal(crc_32), row, cidx(CRC32)-1);
           if simple_name_idx > name'First then
             Window.any_path_in_zip:= True;

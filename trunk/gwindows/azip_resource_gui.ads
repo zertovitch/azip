@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2016/05/17  14:40:51
+-- Transcription time: 2016/09/04  15:47:01
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: > 10-May-2016
+-- RC Grammar version: >= 19-May-2016
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -38,7 +38,7 @@ package AZip_Resource_GUI is
     Popup_0005: Menu_Type;  -- level 1; title: "&View"
     Popup_0006: Menu_Type;  -- level 1; title: "&Window"
     Popup_0007: Menu_Type;  -- level 1; title: "&Help"
-  end record; -- Menu_MDI_Child_Type
+  end record;  --  Menu_MDI_Child_Type
 
   -- Menu at line 93
   procedure Create_Full_Menu
@@ -50,7 +50,7 @@ package AZip_Resource_GUI is
     Popup_0002: Menu_Type;  -- level 2; title: "&Recent"
     Popup_0003: Menu_Type;  -- level 1; title: "&Window"
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
-  end record; -- Menu_MDI_Main_Type
+  end record;  --  Menu_MDI_Main_Type
 
   -- Menu at line 131
   procedure Create_Full_Menu
@@ -432,9 +432,9 @@ package AZip_Resource_GUI is
     Comp_ratio: Label_Type;
     -- Label: 02
     Numb_entries: Label_Type;
+    Stats_list: List_View_Control_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    Stats_list: List_View_Control_Type;
   end record; -- Properties_box_Type
 
   -- Dialog at resource line 309
@@ -507,7 +507,6 @@ package AZip_Resource_GUI is
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
   end Version_info;
-
 
   ------------------------------------------------
   -- Defined resource symbols --> Ada constants --
@@ -622,7 +621,6 @@ package AZip_Resource_GUI is
   procedure Use_GUI_Font(Window: in out GWindows.Base.Base_Window_Type'Class);
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
-
 
   -- Last line of resource script file: 414
 

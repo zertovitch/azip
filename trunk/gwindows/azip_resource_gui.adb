@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2016/05/17  14:40:51
+-- Transcription time: 2016/09/04  15:47:01
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: > 10-May-2016
+-- RC Grammar version: >= 19-May-2016
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -20,7 +20,6 @@ with System;
 package body AZip_Resource_GUI is
 
   -- ** Generated code begins here \/ \/ \/.
-
 
   -- Menu at line 29
   procedure Create_Full_Menu
@@ -89,8 +88,7 @@ package body AZip_Resource_GUI is
     Menu.Popup_0007:= Create_Popup;
     Append_Menu(Menu.Main, "&Help", Menu.Popup_0007);
     Append_Item(Menu.Popup_0007, "&About AZip", IDM_ABOUT);
-  end Create_Full_Menu; -- Menu_MDI_Child_Type
-
+  end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
   -- Menu at line 99
   procedure Create_Full_Menu
@@ -125,8 +123,7 @@ package body AZip_Resource_GUI is
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Help", Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&About AZip", IDM_ABOUT);
-  end Create_Full_Menu; -- Menu_MDI_Main_Type
-
+  end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
   -- Dialog at resource line 143
 
@@ -250,8 +247,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Credits_button);
     end if;
-  end Create_Contents; -- About_box_Type
-
+  end Create_Contents;  --  About_box_Type
 
   -- Dialog at resource line 170
 
@@ -334,8 +330,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "André van Splunter", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  25, 97, 260, 8, x,y,w,h);
     Create_Label( Window, "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", x,y,w,h, GWindows.Static_Controls.Left, None);
-  end Create_Contents; -- Credits_box_Type
-
+  end Create_Contents;  --  Credits_box_Type
 
   -- Dialog at resource line 188
 
@@ -442,8 +437,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-  end Create_Contents; -- Drop_files_box_Type
-
+  end Create_Contents;  --  Drop_files_box_Type
 
   -- Dialog at resource line 206
 
@@ -589,8 +583,7 @@ package body AZip_Resource_GUI is
     Create( Window.Static_0001, Window, "A file with the same name exists on the target location.", x,y,w,h);
     Dlg_to_Scn(  12, 58, 156, 8, x,y,w,h);
     Create_Label( Window, "Do you want to replace this file ?", x,y,w,h, GWindows.Static_Controls.Left, None);
-  end Create_Contents; -- File_exists_box_Type
-
+  end Create_Contents;  --  File_exists_box_Type
 
   -- Dialog at resource line 226
 
@@ -696,8 +689,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-  end Create_Contents; -- Find_box_Type
-
+  end Create_Contents;  --  Find_box_Type
 
   -- Dialog at resource line 244
 
@@ -805,8 +797,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-  end Create_Contents; -- Password_decryption_box_Type
-
+  end Create_Contents;  --  Password_decryption_box_Type
 
   -- Dialog at resource line 263
 
@@ -914,8 +905,7 @@ package body AZip_Resource_GUI is
     Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  12, 18, 151, 8, x,y,w,h);
     Create_Label( Window, "Enter password:", x,y,w,h, GWindows.Static_Controls.Left, None);
-  end Create_Contents; -- Password_encryption_box_Type
-
+  end Create_Contents;  --  Password_encryption_box_Type
 
   -- Dialog at resource line 282
 
@@ -1010,8 +1000,7 @@ package body AZip_Resource_GUI is
     Create( Window.Comment_1, Window, "Comment 1", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Comment_1);
     Dlg_to_Scn(  7, 45, 228, 10, x,y,w,h);
     Create( Window.Comment_2, Window, "Comment 2", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Comment_2);
-  end Create_Contents; -- Progress_box_Type
-
+  end Create_Contents;  --  Progress_box_Type
 
   -- Dialog at resource line 299
 
@@ -1099,7 +1088,9 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "Entries", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  97, 40, 84, 12, x,y,w,h);
     Create( Window.Numb_entries, Window, "# entries", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Numb_entries);
-    Dlg_to_Scn(  111, 139, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  14, 56, 236, 81, x,y,w,h);
+    Create( Window.Stats_list, Window, x,y,w,h, Multiple, Report_View, No_Sorting, False, Align_Left);
+    Dlg_to_Scn(  111, 140, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -1110,10 +1101,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  14, 56, 236, 79, x,y,w,h);
-    Create( Window.Stats_list, Window, x,y,w,h, Multiple, Report_View, No_Sorting, False, Align_Left);
-  end Create_Contents; -- Properties_box_Type
-
+  end Create_Contents;  --  Properties_box_Type
 
   -- Dialog at resource line 318
 
@@ -1175,8 +1163,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "Zip directory is loaded", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  17, 37, 156, 8, x,y,w,h);
     Create_Label( Window, "Please wait for filling the List View", x,y,w,h, GWindows.Static_Controls.Left, None);
-  end Create_Contents; -- Wait_refresh_box_Type
-
+  end Create_Contents;  --  Wait_refresh_box_Type
 
   -- ** Generated code ends here /\ /\ /\.
 

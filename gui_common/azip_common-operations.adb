@@ -418,6 +418,7 @@ package body AZip_Common.Operations is
     abort_rest_of_operation: Boolean:= False;
     none_updated: Boolean:= True;
     quick_method: constant Zip.Compress.Compression_Method:= Zip.Compress.Deflate_1;
+    single_entry_zip_for_update_name: constant String:= new_temp_name & ".single_entry_zip.tmp";
     --
     --  Action for entry 'name' in current archive being traversed.
     --
@@ -460,7 +461,6 @@ package body AZip_Common.Operations is
         stamp: constant Time:= Zip.Convert(Modification_Time(name_utf_8_with_extra_folder));
         -- Ada.Directories not utf-8 compatible !!
         use Zip_Streams.Calendar;
-        this_file_zip_name: constant String:= new_temp_name & ".one.zip";
         this_file_zip: Zip.Create.Zip_Create_info;
         this_file_fzs: aliased Zip_Streams.File_Zipstream;
         this_file_zif: Zip.Zip_info;
@@ -471,7 +471,7 @@ package body AZip_Common.Operations is
         new_crc_32     : Interfaces.Unsigned_32;
         use Interfaces;
       begin
-        if date_time > stamp then -- newer in archive -> preserve from archive
+        if date_time > stamp then -- newer in archive -> preserve enry in archive
           Preserve_entry;
           user_code:= nothing;
           return;
@@ -482,7 +482,7 @@ package body AZip_Common.Operations is
         Zip.Create.Create(
           this_file_zip,
           this_file_fzs'Unchecked_Access,
-          this_file_zip_name,
+          single_entry_zip_for_update_name,
           quick_method
         );
         Add_File(
@@ -495,12 +495,12 @@ package body AZip_Common.Operations is
           Is_read_only       => False,
           Feedback           => Entry_feedback'Unrestricted_Access,
           Password           => ""
-          --  !! Update op. with password not supported. So we renounce
-          --     encrypting accidentally.
+          --  !! Update op. with password not supported.
+          --     So we renounce doing an accidental encryption.
         );
         Finish(this_file_zip);
         -- We load the one-file zip file's information
-        Load(this_file_zif, this_file_zip_name);
+        Load(this_file_zif, single_entry_zip_for_update_name);
         Find_offset(
           info          => this_file_zif,
           name          => name_utf_8_as_in_archive,
@@ -511,11 +511,11 @@ package body AZip_Common.Operations is
           crc_32        => new_crc_32
         );
         if new_crc_32 = crc_32 then
-          --  Nothing to do, file is the same, or different with 1 / 2**32 probability.
+          --  Nothing to do: file is the same, or different with 1 / 2**32 probability.
           Preserve_entry;
           user_code:= nothing;
         else
-          Zip_Streams.Set_Name(this_file_fzs, this_file_zip_name);
+          Zip_Streams.Set_Name(this_file_fzs, single_entry_zip_for_update_name);
           Zip_Streams.Open(this_file_fzs, Zip_Streams.In_File);
           Zip_Streams.Set_Index(this_file_fzs, file_index);
           Zip.Create.Add_Compressed_Stream(
@@ -527,7 +527,6 @@ package body AZip_Common.Operations is
           user_code:= replaced;
           none_updated:= False;
         end if;
-        Delete_File(this_file_zip_name);
       end Update_entry;
       --
     begin -- Action
@@ -870,10 +869,14 @@ package body AZip_Common.Operations is
         if abort_rest_of_operation or
           (operation = Update and none_updated)
         then
+          --  New archive is discarded.
           Delete_File(new_temp_name);
         else
           Delete_File(Zip.Zip_name(zif));
           Rename(new_temp_name, Zip.Zip_name(zif));
+        end if;
+        if operation = Update and then Zip.Exists(single_entry_zip_for_update_name) then
+          Delete_File(single_entry_zip_for_update_name);
         end if;
       when Read_Only_Operation =>
         null;

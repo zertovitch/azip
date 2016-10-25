@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2016/10/23  01:59:27
+-- Transcription time: 2016/10/25  20:45:18
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -64,12 +64,11 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0004, "&Find in archive..." & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+F", IDM_FIND_IN_ARCHIVE);
     Append_Separator(Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Update archive" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+P", IDM_UPDATE_ARCHIVE);
+    Append_Item(Menu.Popup_0004, "&Recompress archive", IDM_RECOMPRESS_ARCHIVE);
     Append_Item(Menu.Popup_0004, "T&ouch time stamps", IDM_Touch_Time_Stamps);
     State(Menu.Popup_0004, Command, IDM_Touch_Time_Stamps, Grayed);
     Append_Item(Menu.Popup_0004, "Encr&ypt archive", IDM_Encrypt_Archive);
     State(Menu.Popup_0004, Command, IDM_Encrypt_Archive, Grayed);
-    Append_Item(Menu.Popup_0004, "&Recompress archive", IDM_RECOMPRESS_ARCHIVE);
-    State(Menu.Popup_0004, Command, IDM_RECOMPRESS_ARCHIVE, Grayed);
     Append_Separator(Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Compare archives", IDM_COMPARE_ARCHIVES);
     State(Menu.Popup_0004, Command, IDM_COMPARE_ARCHIVES, Grayed);

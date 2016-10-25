@@ -68,9 +68,9 @@ Menu_MDI_Child MENU
         MENUITEM "&Find in archive...\tCtrl+F", IDM_FIND_IN_ARCHIVE
         MENUITEM SEPARATOR
         MENUITEM "&Update archive\tCtrl+P", IDM_UPDATE_ARCHIVE
+        MENUITEM "&Recompress archive", IDM__RECOMPRESS_ARCHIVE
         MENUITEM "T&ouch time stamps", IDM_Touch_Time_Stamps, GRAYED
         MENUITEM "Encr&ypt archive", IDM_Encrypt_Archive, GRAYED
-        MENUITEM "&Recompress archive", IDM__RECOMPRESS_ARCHIVE, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "&Compare archives", IDM_COMPARE_ARCHIVES, GRAYED
         MENUITEM "&Merge archives", IDM_MERGE_ARCHIVES, GRAYED

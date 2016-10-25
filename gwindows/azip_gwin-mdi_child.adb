@@ -76,6 +76,7 @@ package body AZip_GWin.MDI_Child is
     bar.Enabled(IDM_FIND_IN_ARCHIVE, not_empty_archive);
     bar.Enabled(IDM_TEST_ARCHIVE, not_empty_archive);
     bar.Enabled(IDM_UPDATE_ARCHIVE, not_empty_archive);
+    bar.Enabled(IDM_RECOMPRESS_ARCHIVE, not_empty_archive);
     if not Window.is_closing then
       bar.Enabled(IDM_ADD_FILES, True);
       bar.Enabled(IDM_Add_Files_Encryption, True);
@@ -1379,9 +1380,9 @@ package body AZip_GWin.MDI_Child is
     if Message_Box(
       Window,
       "Archive update",
-      "You are about to start an archive update." & NL &
+      "You are about to start an archive update." & NL & NL &
       "Files that are newer and different (according to " &
-      "their CRC32) will replace those in the archive." & NL &
+      "their CRC32 code) will replace those in the archive." & NL & NL &
       "Proceed ?",
       Yes_No_Box,
       Question_Icon
@@ -1411,7 +1412,7 @@ package body AZip_GWin.MDI_Child is
       end if;
       if Message_Box(Window,
           "Archive update",
-          "Update completed." & NL &
+          "Update completed." & NL & NL &
           "Do you want to see full results (flat view & result sort) ?",
           Yes_No_Box,
           Question_Icon)

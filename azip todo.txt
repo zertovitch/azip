@@ -2,6 +2,7 @@ console mode through command lines options (GUI not started then)
   -a for Add, -d for Delete, etc.
   -q: quiet: neither console output, nor gui
 
+gw - open target directory after extraction
 gw - disable sorting on large lists
 gw - drag & drop entre fenêtres, et vers explorer
 gw - copy/paste entre fenêtres

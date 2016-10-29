@@ -1356,6 +1356,18 @@ package body AZip_GWin.MDI_Child is
     end if;
   end On_Test;
 
+  procedure Stop_msg_on_encrypted_archive(Window : MDI_Child_Type; op_title: GString) is
+  begin
+      Message_Box(
+        Window,
+        op_title,
+        "Archives with encryption (even on some entries only) are" & NL &
+        "currently not supported for this operation (" & op_title & ").",
+        OK_Box,
+        Stop_Icon
+      );
+  end Stop_msg_on_encrypted_archive;
+
   procedure On_Update(Window : in out MDI_Child_Type) is
     mem_dir: constant String:= Ada.Directories.Current_Directory;
     -- !! Not UTF-8 capable
@@ -1367,14 +1379,7 @@ package body AZip_GWin.MDI_Child is
       return;
     end if;
     if Has_Zip_archive_encrypted_entries(Window.zif) then
-      Message_Box(
-        Window,
-        "Archive update",
-        "Archives with encryption (even on some entries only) are" & NL &
-        "currently not supported for the Update operation.",
-        OK_Box,
-        Stop_Icon
-      );
+      Stop_msg_on_encrypted_archive(Window, "Archive update");
       return;
     end if;
     if Message_Box(
@@ -1395,11 +1400,7 @@ package body AZip_GWin.MDI_Child is
         file_names     => Empty_Array_Of_File_Names,
         base_folder    => "", -- We update the whole archive
         search_pattern => "",
-        output_folder  =>
-          To_UTF_16(
-            "", -- !! Not UTF-8 capable
-            UTF_8
-          ),
+        output_folder  => "",
         ignore_path    => False,
         encrypt        => False,
         new_temp_name  => Temp_AZip_name(Window)
@@ -1423,6 +1424,39 @@ package body AZip_GWin.MDI_Child is
       end if;
     end if;
   end On_Update;
+
+  procedure On_Recompress(Window : in out MDI_Child_Type) is
+  begin
+    if not Is_loaded(Window.zif) then
+      return;
+    end if;
+    if Has_Zip_archive_encrypted_entries(Window.zif) then
+      Stop_msg_on_encrypted_archive(Window, "Archive recompression");
+      return;
+    end if;
+    Process_archive_GWin(
+      Window         => Window,
+      operation      => Recompress,
+      file_names     => Empty_Array_Of_File_Names,
+      base_folder    => "", -- We recompress the whole archive
+      search_pattern => "",
+      output_folder  => "",
+      ignore_path    => False,
+      encrypt        => False,
+      new_temp_name  => Temp_AZip_name(Window)
+    );
+    if Message_Box(Window,
+      "Archive recompression",
+      "Recompression completed." & NL & NL &
+      "Do you want to see full results (flat view & result sort) ?",
+      Yes_No_Box,
+      Question_Icon)
+    = Yes
+    then
+      Change_View(Window, Flat, force => False);
+      Window.Directory_List.Sort(Window.opt.column_index(Result) - 1, AZip_LV_Ex.Down);
+    end if;
+  end On_Recompress;
 
   procedure On_Menu_Select (
         Window : in out MDI_Child_Type;
@@ -1451,6 +1485,8 @@ package body AZip_GWin.MDI_Child is
         On_Test(Window);
       when IDM_UPDATE_ARCHIVE =>
         On_Update(Window);
+      when IDM_RECOMPRESS_ARCHIVE =>
+        On_Recompress(Window);
       when IDM_FIND_IN_ARCHIVE =>
         On_Find(Window);
       when IDM_FLAT_VIEW =>

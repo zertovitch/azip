@@ -7,7 +7,7 @@ package AZip_Common.Operations is
   ------------------------------------------------
 
   type Archive_Operation is (
-    Add, Update, Remove,
+    Add, Update, Recompress, Remove,
     Test, Extract, Search
   );
 

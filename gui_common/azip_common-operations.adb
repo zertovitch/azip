@@ -68,6 +68,12 @@ package body AZip_Common.Operations is
         end case;
       when Search =>
         return Trim(Integer'Image(code), Left);
+      when Recompress =>
+        if code = 100 then
+          return "Cannot recompress more";
+        else
+          return "To" & Integer'Image(code) & " of previous";
+        end if;
     end case;
     --
     return "";
@@ -529,6 +535,13 @@ package body AZip_Common.Operations is
         end if;
       end Update_entry;
       --
+      procedure Recompress_entry is
+      begin
+        -- !! try recompression here !!
+        Preserve_entry;
+        user_code:= 100;  --  100% of original compression
+      end;
+      --
     begin -- Action
       user_code:= nothing;
       if abort_rest_of_operation then
@@ -551,7 +564,7 @@ package body AZip_Common.Operations is
               exit;
             end if;
           end loop;
-        when Update =>
+        when Update | Recompress | Test =>
           match:= True;
         when Remove | Extract =>
           if entry_name'Length = 0 then
@@ -565,8 +578,6 @@ package body AZip_Common.Operations is
               end if;
             end loop;
           end if;
-        when Test =>
-          match:= True;
         when Search =>
           if entry_name'Length = 0 then
             match:= True; -- empty name list -> we process the whole archive
@@ -624,6 +635,8 @@ package body AZip_Common.Operations is
                 user_code:= only_archive;
               end if;
             end if;
+          when Recompress =>
+            Recompress_entry;
           when Remove =>
             Feedback(
               file_percents_done,
@@ -771,7 +784,7 @@ package body AZip_Common.Operations is
     case operation is
       when Add =>
         total_entries:= Zip.Entries(zif) + entry_name'Length;
-      when Update | Remove | Read_Only_Operation =>
+      when Update | Recompress | Remove | Read_Only_Operation =>
         total_entries:= Zip.Entries(zif);
     end case;
     case operation is
@@ -854,9 +867,9 @@ package body AZip_Common.Operations is
               exit;
           end;
         end loop;
-      when Update | Remove =>
+      when Update | Remove | Recompress =>
         null;
-        -- There should be no file to be updated or removed which is
+        -- There should be no file to be updated, recompressed or removed which is
         -- not in original archive.
       when Read_Only_Operation =>
         null;

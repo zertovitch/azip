@@ -1413,12 +1413,13 @@ package body AZip_GWin.MDI_Child is
       end if;
       if Window.last_max_code <= only_archive then
         Message_Box(Window,
-        "Archive update",
-        "Update completed. No entry was updated.",
+        "Archive update completed",
+        "Update completed." & NL & 
+        "No entry needed to be updated.",
         OK_Box,
         Information_Icon);
       elsif Message_Box(Window,
-          "Archive update",
+          "Archive update completed",
           "Update completed." & NL & NL &
           "Do you want to see full results (flat view & result sort) ?",
           Yes_No_Box,
@@ -1453,12 +1454,13 @@ package body AZip_GWin.MDI_Child is
     );
     if Window.last_max_code = nothing then
       Message_Box(Window,
-      "Archive recompression",
-      "Recompression completed. No entry could be recompressed to a smalled size.",
+      "Archive recompression completed",
+      "Recompression completed." & NL & 
+      "No entry could be recompressed to a smaller size.",
       OK_Box,
       Information_Icon);
     elsif Message_Box(Window,
-      "Archive recompression",
+      "Archive recompression completed",
       "Recompression completed." & NL & NL &
       "Do you want to see full results (flat view & result sort) ?",
       Yes_No_Box,

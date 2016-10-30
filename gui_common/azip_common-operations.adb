@@ -39,12 +39,12 @@ package body AZip_Common.Operations is
         end case;
       when Update =>
         case code is
-          when replaced =>
-            return "Replaced";
-          when only_archive =>
-            return "File only in archive";
           when nothing =>
             return "Same data or more recent timestamp in archive";
+          when only_archive =>
+            return "Only in archive; no file";
+          when updated =>
+            return "Updated from file";
           when others =>
             null;
         end case;
@@ -69,10 +69,10 @@ package body AZip_Common.Operations is
       when Search =>
         return Trim(Integer'Image(code), Left);
       when Recompress =>
-        if code = 100 then
+        if code = nothing then
           return "Cannot recompress more";
         else
-          return "To" & Integer'Image(code) & " of previous";
+          return "To" & Integer'Image(100 - code) & "% of previous compression";
         end if;
     end case;
     --
@@ -84,6 +84,7 @@ package body AZip_Common.Operations is
     return Integer'Wide_Value(s);
   exception
     when others =>
+      --  !! Consider some hashing here...
       if s = "" then
         return nothing;
       elsif s = "OK" then
@@ -96,8 +97,10 @@ package body AZip_Common.Operations is
         return unsupported;
       elsif s = "Replaced" then
         return replaced;
-      elsif s = "File only in archive" then
+      elsif s = "Only in archive; no file" then
         return only_archive;
+      elsif s = "Updated from file" then
+        return updated;
       end if;
       return -100;
   end Result_value;
@@ -131,7 +134,7 @@ package body AZip_Common.Operations is
       -- For other operations, we have a simple color code: green or white
       when Update =>
         case code is
-          when success =>
+          when updated =>
             color:= green;
           when only_archive =>
             color:= yellow;
@@ -214,7 +217,11 @@ package body AZip_Common.Operations is
     pragma Unreferenced (file_index, comp_size, uncomp_size, crc_32, date_time, method, name_encoding, read_only, encrypted_2_x);
     begin
       Zip.Set_user_code(to, name, user_code);
+    exception
+      when File_name_not_found =>
+        null;  --  Nothing bad: 'name' is a directory name that was skipped on recompression.
     end Copy_user_code;
+    --
     procedure Do_it is new Zip.Traverse_verbose(Copy_user_code);
   begin
     Do_it(from);
@@ -423,6 +430,7 @@ package body AZip_Common.Operations is
     use Zip.Create, UnZip;
     abort_rest_of_operation: Boolean:= False;
     none_updated: Boolean:= True;
+    none_recompressed: Boolean:= True;
     quick_method: constant Zip.Compress.Compression_Method:= Zip.Compress.Deflate_1;
     single_entry_zip_for_update_name: constant String:= new_temp_name & ".single_entry_zip.tmp";
     --
@@ -442,7 +450,7 @@ package body AZip_Common.Operations is
       user_code        : in out Integer
     )
     is
-      pragma Unreferenced(comp_size, uncomp_size, method, read_only, encrypted_2_x);
+      pragma Unreferenced(comp_size, method, read_only, encrypted_2_x);
       name_utf_16: constant UTF_16_String:= To_UTF_16(name, name_encoding);
       name_utf_8_as_in_archive: constant UTF_8_String:= To_UTF_8(name_utf_16);
       name_utf_8_with_extra_folder: constant UTF_8_String:= Add_extract_directory(name, name_encoding);
@@ -530,18 +538,19 @@ package body AZip_Common.Operations is
             Feedback => Entry_feedback'Unrestricted_Access
           );
           Zip_Streams.Close(this_file_fzs);
-          user_code:= replaced;
+          user_code:= updated;
           none_updated:= False;
         end if;
       end Update_entry;
       --
       procedure Recompress_entry is
       begin
+        --  none_recompressed:= False;
         -- !! try recompression here !!
         Preserve_entry;
-        user_code:= 100;  --  100% of original compression
       end;
       --
+      use type Zip.File_size_type;
     begin -- Action
       user_code:= nothing;
       if abort_rest_of_operation then
@@ -627,16 +636,21 @@ package body AZip_Common.Operations is
           when Update =>
             if name = "" or else (name(name'Last)= '\' or name(name'Last)= '/') then
               Preserve_entry; -- copy: it is a directory name (not visible in AZip)
+            elsif Zip.Exists(name_utf_8_with_extra_folder) then
+              Update_entry;
             else
-              if Zip.Exists(name_utf_8_with_extra_folder) then
-                Update_entry;
-              else
-                Preserve_entry;
-                user_code:= only_archive;
-              end if;
+              Preserve_entry;
+              user_code:= only_archive;
             end if;
           when Recompress =>
-            Recompress_entry;
+            if name = "" or else (name(name'Last)= '\' or name(name'Last)= '/') then
+              --  Skip this: useless directory name.
+              none_recompressed:= False;  --  Indicate there is a kind of recompression done.
+            elsif uncomp_size < 6 then
+              Preserve_entry;
+            else
+              Recompress_entry;
+            end if;
           when Remove =>
             Feedback(
               file_percents_done,
@@ -762,8 +776,8 @@ package body AZip_Common.Operations is
                 dummy_user_abort
               );
             end if;
-            max_code:= Integer'Max(max_code, user_code);
         end case;
+        max_code:= Integer'Max(max_code, user_code);
       else -- archive entry name is not matched by a file name in the list
         case operation is
           when Modifying_Operation =>
@@ -880,7 +894,8 @@ package body AZip_Common.Operations is
         Zip_Streams.Close(old_fzs);
         Finish(new_zip);
         if abort_rest_of_operation or
-          (operation = Update and none_updated)
+          (operation = Update and none_updated) or
+          (operation = Recompress and none_recompressed)
         then
           --  New archive is discarded.
           Delete_File(new_temp_name);

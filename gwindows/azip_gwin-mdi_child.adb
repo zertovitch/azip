@@ -1414,8 +1414,7 @@ package body AZip_GWin.MDI_Child is
       if Window.last_max_code <= only_archive then
         Message_Box(Window,
         "Archive update completed",
-        "Update completed." & NL & 
-        "No entry needed to be updated.",
+        "Update completed." & NL & "No entry needed to be updated.",
         OK_Box,
         Information_Icon);
       elsif Message_Box(Window,
@@ -1455,8 +1454,7 @@ package body AZip_GWin.MDI_Child is
     if Window.last_max_code = nothing then
       Message_Box(Window,
       "Archive recompression completed",
-      "Recompression completed." & NL & 
-      "No entry could be recompressed to a smaller size.",
+      "Recompression completed." & NL & "No entry could be recompressed to a smaller size.",
       OK_Box,
       Information_Icon);
     elsif Message_Box(Window,

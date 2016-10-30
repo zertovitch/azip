@@ -8,6 +8,7 @@ with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 
 with Interfaces;
+with Ada.IO_Exceptions;
 
 package body AZip_Common.Operations is
 
@@ -433,6 +434,7 @@ package body AZip_Common.Operations is
     none_recompressed: Boolean:= True;
     quick_method: constant Zip.Compress.Compression_Method:= Zip.Compress.Deflate_1;
     temp_single_entry_zip_name: constant String:= new_temp_name & ".single_entry_zip.tmp";
+    temp_entry_data_name: constant String:= new_temp_name & ".entry_data.tmp";
     --
     --  Action for entry 'name' in current archive being traversed.
     --
@@ -450,7 +452,7 @@ package body AZip_Common.Operations is
       user_code        : in out Integer
     )
     is
-      pragma Unreferenced(comp_size, method, read_only, encrypted_2_x);
+      pragma Unreferenced(method, read_only, encrypted_2_x);
       name_utf_16: constant UTF_16_String:= To_UTF_16(name, name_encoding);
       name_utf_8_as_in_archive: constant UTF_8_String:= To_UTF_8(name_utf_16);
       name_utf_8_with_extra_folder: constant UTF_8_String:= Add_extract_directory(name, name_encoding);
@@ -503,14 +505,28 @@ package body AZip_Common.Operations is
         Finish(temp_single_entry_zip_zci);
       end Tentative_compress;
       --
+      procedure Add_tentatively_compressed(single_file_index: Zip_Streams.ZS_Index_Type)
+      is
+        temp_single_entry_zip_fzs : Zip_Streams.File_Zipstream;
+      begin
+        Zip_Streams.Set_Name(temp_single_entry_zip_fzs, temp_single_entry_zip_name);
+        Zip_Streams.Open(temp_single_entry_zip_fzs, Zip_Streams.In_File);
+        Zip_Streams.Set_Index(temp_single_entry_zip_fzs, single_file_index);
+        Zip.Create.Add_Compressed_Stream(
+          Info     => new_zip,
+          Stream   => temp_single_entry_zip_fzs,
+          Feedback => Entry_feedback'Unrestricted_Access
+        );
+        Zip_Streams.Close(temp_single_entry_zip_fzs);
+      end Add_tentatively_compressed;
+      --
       procedure Update_entry is
         stamp: constant Time:= Zip.Convert(Modification_Time(name_utf_8_with_extra_folder));
         -- Ada.Directories not utf-8 compatible !!
         use Zip_Streams.Calendar;
-        temp_single_entry_zip_fzs : Zip_Streams.File_Zipstream;
         temp_single_entry_zip_zif : Zip.Zip_info;
         dummy_name_encoding       : Zip_name_encoding;
-        file_index                : Zip_Streams.ZS_Index_Type;
+        single_file_index         : Zip_Streams.ZS_Index_Type;
         dummy_comp_size           : Zip.File_size_type;
         dummy_uncomp_size         : Zip.File_size_type;
         new_crc_32                : Interfaces.Unsigned_32;
@@ -531,7 +547,7 @@ package body AZip_Common.Operations is
           info          => temp_single_entry_zip_zif,
           name          => name_utf_8_as_in_archive,
           name_encoding => dummy_name_encoding,
-          file_index    => file_index,
+          file_index    => single_file_index,
           comp_size     => dummy_comp_size,
           uncomp_size   => dummy_uncomp_size,
           crc_32        => new_crc_32
@@ -541,26 +557,50 @@ package body AZip_Common.Operations is
           Preserve_entry;
           user_code:= nothing;
         else
-          Zip_Streams.Set_Name(temp_single_entry_zip_fzs, temp_single_entry_zip_name);
-          Zip_Streams.Open(temp_single_entry_zip_fzs, Zip_Streams.In_File);
-          Zip_Streams.Set_Index(temp_single_entry_zip_fzs, file_index);
-          Zip.Create.Add_Compressed_Stream(
-            Info     => new_zip,
-            Stream   => temp_single_entry_zip_fzs,
-            Feedback => Entry_feedback'Unrestricted_Access
-          );
-          Zip_Streams.Close(temp_single_entry_zip_fzs);
+          Add_tentatively_compressed(single_file_index);
           user_code:= updated;
           none_updated:= False;
         end if;
       end Update_entry;
       --
       procedure Recompress_entry is
+        temp_single_entry_zip_zif : Zip.Zip_info;
+        dummy_name_encoding       : Zip_name_encoding;
+        single_file_index         : Zip_Streams.ZS_Index_Type;
+        new_comp_size             : Zip.File_size_type;
+        dummy_uncomp_size         : Zip.File_size_type;
+        new_crc_32                : Interfaces.Unsigned_32;
+        use Interfaces;
       begin
-        --  none_recompressed:= False;
-        -- !! try recompression here !!
-        Preserve_entry;
-      end;
+        Extract(zif, name, temp_entry_data_name);
+        Tentative_compress(
+          date_time,
+          Zip.Compress.Preselection_Method'Last,
+          temp_entry_data_name
+        );
+        -- We load the one-file zip file's information
+        Load(temp_single_entry_zip_zif, temp_single_entry_zip_name);
+        Find_offset(
+          info          => temp_single_entry_zip_zif,
+          name          => name_utf_8_as_in_archive,
+          name_encoding => dummy_name_encoding,
+          file_index    => single_file_index,
+          comp_size     => new_comp_size,
+          uncomp_size   => dummy_uncomp_size,
+          crc_32        => new_crc_32
+        );
+        if new_crc_32 /= crc_32 then
+          raise Ada.IO_Exceptions.Data_Error
+            with "Data tampered between decompression and recompression";
+        end if;
+        if new_comp_size < comp_size then
+          Add_tentatively_compressed(single_file_index);
+          user_code:= 100 - Integer(100.0 * Float(comp_size) / Float(new_comp_size));
+          none_recompressed:= False;
+        else
+          Preserve_entry;
+        end if;
+      end Recompress_entry;
       --
       use type Zip.File_size_type;
     begin -- Action
@@ -915,10 +955,13 @@ package body AZip_Common.Operations is
           Delete_File(Zip.Zip_name(zif));
           Rename(new_temp_name, Zip.Zip_name(zif));
         end if;
-        if operation in Update .. Recompress and then
-          Zip.Exists(temp_single_entry_zip_name)
-        then
-          Delete_File(temp_single_entry_zip_name);
+        if operation in Update .. Recompress then
+          if Zip.Exists(temp_single_entry_zip_name) then
+            Delete_File(temp_single_entry_zip_name);
+          end if;
+          if Zip.Exists(temp_entry_data_name) then
+            Delete_File(temp_entry_data_name);
+          end if;
         end if;
       when Read_Only_Operation =>
         null;

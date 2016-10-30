@@ -70,6 +70,7 @@ package AZip_Common.Operations is
     -- Operations related to "Add"
     Append,  -- file is not in original archive and has to be added to new one
     Replace, -- file replaces an entry in original archive
+    Recompress,
     -- Operations related to "Remove"
     Skip,    -- file is in original archive but won't be copied (-> "deleted")
     -- Neutral (happens with both "Add" and "Remove")

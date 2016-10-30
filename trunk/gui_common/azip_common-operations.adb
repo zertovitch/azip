@@ -73,7 +73,7 @@ package body AZip_Common.Operations is
         if code = nothing then
           return "Cannot recompress more";
         else
-          return "To" & Integer'Image(100 - code) & "% of previous compression";
+          return "To" & Integer'Image(101 - code) & "% of previous compression";
         end if;
     end case;
     --
@@ -86,7 +86,7 @@ package body AZip_Common.Operations is
   exception
     when others =>
       --  !! Consider some hashing here...
-      if s = "" then
+      if s'Length < 2 then
         return nothing;
       elsif s = "OK" then
         return success;
@@ -102,6 +102,14 @@ package body AZip_Common.Operations is
         return only_archive;
       elsif s = "Updated from file" then
         return updated;
+      elsif s = "Cannot recompress more" then
+        return 0;
+      elsif s(s'First..s'First+1) = "To" then
+        for i in s'First+3 .. s'Last loop
+          if s(i)='%' then
+            return 101 - Integer'Wide_Value(s(s'First+3 .. i-1));
+          end if;
+        end loop;
       end if;
       return -100;
   end Result_value;
@@ -114,7 +122,7 @@ package body AZip_Common.Operations is
     code      : Integer;
     max_code  : Integer;
     color     : out RGB_type;
-    intensity : out Float
+    intensity : out Float      --  Useful for setting a font black or white given the background
   )
   is
     val: Color_range;
@@ -132,7 +140,6 @@ package body AZip_Common.Operations is
           val:= Color_range(Float'Floor(f_max * code_rel));
         end if;
         color:= (Red => max - val, Green => max - val, Blue => max - val / 4);
-      -- For other operations, we have a simple color code: green or white
       when Update =>
         case code is
           when updated =>
@@ -142,6 +149,16 @@ package body AZip_Common.Operations is
           when others =>
             color:= white;
         end case;
+      when Recompress =>
+        if max_code = 0 or code < 0 then
+          color:= white;
+        else
+          code_rel:= Float(code) / Float(max_code);
+          code_rel:= code_rel ** 0.5; -- we skew the value (visual effect)
+          val:= Color_range(Float'Floor(f_max * code_rel));
+          color:= (Red => max - val, Green => max, Blue => max - val);
+        end if;
+      -- For other operations, we have a simple color code: green or white
       when others =>
         case code is
           when success | appended =>
@@ -605,11 +622,16 @@ package body AZip_Common.Operations is
         end if;
         if new_comp_size < comp_size then
           Add_tentatively_compressed(single_file_index);
-          user_code:= 100 - Integer(100.0 * Float(comp_size) / Float(new_comp_size));
+          --  101: even a slight gain (< 1%) is recorded
+          user_code:= 101 - Integer(100.0 * Float(new_comp_size) / Float(comp_size));
           none_recompressed:= False;
         else
+          --  user code remains 0 (nothing)
           Preserve_entry;
         end if;
+      exception
+        when UnZip.User_abort | Zip.Compress.User_abort =>
+          abort_rest_of_operation:= True;
       end Recompress_entry;
       --
       use type Zip.File_size_type;

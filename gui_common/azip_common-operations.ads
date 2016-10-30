@@ -63,7 +63,7 @@ package AZip_Common.Operations is
     code      : Integer;
     max_code  : Integer;
     color     : out RGB_type;
-    intensity : out Float
+    intensity : out Float      --  Useful for setting a font black or white given the background
   );
 
   type Entry_Operation is (

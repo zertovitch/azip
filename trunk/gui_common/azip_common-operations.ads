@@ -21,8 +21,9 @@ package AZip_Common.Operations is
   function Img is new Enum_Img_Mixed(Archive_Operation);
 
   appended    : constant:=  2;
-  only_archive: constant:=  2;
+  updated     : constant:=  2;
   success     : constant:=  1;
+  only_archive: constant:=  1;
   replaced    : constant:=  1;
   nothing     : constant:=  0;
   bad_crc     : constant:= -1;
@@ -32,7 +33,7 @@ package AZip_Common.Operations is
 
   -- Convention for operation results set Zip_info's user_code:
   -- Add          : 0 = preserved; 1 = replaced; 2 = appended
-  -- Update       : 0 = preserved; 1 = replaced; 2 = file only in archive
+  -- Update       : 0 = preserved; 1 = file only in archive; 2 = updated
   -- Search       : number of strings found, or 1 for file
   --                     name found (no text search)
   -- Compare      : 0 = same; 1 = different; 2 = missing in the other archive

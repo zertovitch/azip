@@ -2,13 +2,13 @@ with Zip.Compress, Zip.Create, Zip.Headers, UnZip.Streams, Zip_Streams;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;                   use Ada.Directories;
+with Ada.IO_Exceptions;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 
 with Interfaces;
-with Ada.IO_Exceptions;
 
 package body AZip_Common.Operations is
 
@@ -183,6 +183,8 @@ package body AZip_Common.Operations is
         else
           return "Replacing...";
         end if;
+      when Recompress =>
+        return "Recompressing...";
       when Copy =>
         return "Copying...";
       when Skip =>
@@ -572,7 +574,15 @@ package body AZip_Common.Operations is
         new_crc_32                : Interfaces.Unsigned_32;
         use Interfaces;
       begin
-        Extract(zif, name, temp_entry_data_name);
+        Zip_Streams.Close(old_fzs);  --  Close the old_fzs stream
+        Extract(
+          from   => zif,
+          what   => name,
+          rename => temp_entry_data_name
+        );
+        Zip_Streams.Open(old_fzs, Zip_Streams.In_File);  --  Reopen the old_fzs stream
+        current_operation:= Recompress;
+        current_entry_name:= U(short_name_utf_16);
         Tentative_compress(
           date_time,
           Zip.Compress.Preselection_Method'Last,
@@ -1001,7 +1011,7 @@ package body AZip_Common.Operations is
               Walk (To_Wide_String(Full_Name (Item)));
             end if;
           exception
-            when Name_Error => null;
+            when Ada.IO_Exceptions.Name_Error => null;
           end Subdir;
         begin
           -- The files
@@ -1032,7 +1042,7 @@ package body AZip_Common.Operations is
         return new_list;
       end;
     exception
-      when Name_Error =>
+      when Ada.IO_Exceptions.Name_Error =>
         return (1 => Name);
     end Expand_one_entry;
     --

@@ -432,7 +432,7 @@ package body AZip_Common.Operations is
     none_updated: Boolean:= True;
     none_recompressed: Boolean:= True;
     quick_method: constant Zip.Compress.Compression_Method:= Zip.Compress.Deflate_1;
-    single_entry_zip_for_update_name: constant String:= new_temp_name & ".single_entry_zip.tmp";
+    temp_single_entry_zip_name: constant String:= new_temp_name & ".single_entry_zip.tmp";
     --
     --  Action for entry 'name' in current archive being traversed.
     --
@@ -471,18 +471,49 @@ package body AZip_Common.Operations is
         );
       end Preserve_entry;
       --
+      procedure Tentative_compress(
+        stamp              : Time;
+        method             : Zip.Compress.Compression_Method;
+        external_file_name : String
+      )
+      is
+        temp_single_entry_zip_zci: Zip.Create.Zip_Create_info;
+        temp_single_entry_zip_fzs: aliased Zip_Streams.File_Zipstream;
+      begin
+        Zip.Create.Create(
+          temp_single_entry_zip_zci,
+          temp_single_entry_zip_fzs'Unchecked_Access,
+          temp_single_entry_zip_name,
+          method
+        );
+        Add_File(
+          Info               => temp_single_entry_zip_zci,
+          Name               => external_file_name,
+          Name_in_archive    => name_utf_8_as_in_archive,
+          Delete_file_after  => False,
+          Name_encoding      => UTF_8,
+          Modification_time  => stamp,
+          Is_read_only       => False,
+          Feedback           => Entry_feedback'Unrestricted_Access,
+          Password           => ""
+          --  Update/recompress operation with password is not supported anyway.
+          --  So we renounce doing an accidental encryption.
+          --  !! To do: support encryption (perhaps just preserve encrypted entries)
+        );
+        Finish(temp_single_entry_zip_zci);
+      end Tentative_compress;
+      --
       procedure Update_entry is
         stamp: constant Time:= Zip.Convert(Modification_Time(name_utf_8_with_extra_folder));
         -- Ada.Directories not utf-8 compatible !!
         use Zip_Streams.Calendar;
-        this_file_zip: Zip.Create.Zip_Create_info;
-        this_file_fzs: aliased Zip_Streams.File_Zipstream;
-        this_file_zif: Zip.Zip_info;
-        dummy_name_encoding  : Zip_name_encoding;
-        file_index     : Zip_Streams.ZS_Index_Type;
-        dummy_comp_size      : Zip.File_size_type;
-        dummy_uncomp_size    : Zip.File_size_type;
-        new_crc_32     : Interfaces.Unsigned_32;
+        temp_single_entry_zip_fzs : Zip_Streams.File_Zipstream;
+        temp_single_entry_zip_zif : Zip.Zip_info;
+        dummy_name_encoding       : Zip_name_encoding;
+        file_index                : Zip_Streams.ZS_Index_Type;
+        dummy_comp_size           : Zip.File_size_type;
+        dummy_uncomp_size         : Zip.File_size_type;
+        new_crc_32                : Interfaces.Unsigned_32;
         use Interfaces;
       begin
         if date_time > stamp then -- newer in archive -> preserve enry in archive
@@ -492,31 +523,12 @@ package body AZip_Common.Operations is
         end if;
         current_operation:= Replace;
         current_entry_name:= U(short_name_utf_16);
-        -- We write a one-file zip file first with the new data
-        Zip.Create.Create(
-          this_file_zip,
-          this_file_fzs'Unchecked_Access,
-          single_entry_zip_for_update_name,
-          quick_method
-        );
-        Add_File(
-          Info               => this_file_zip,
-          Name               => name_utf_8_with_extra_folder,
-          Name_in_archive    => name_utf_8_as_in_archive,
-          Delete_file_after  => False,
-          Name_encoding      => UTF_8,
-          Modification_time  => stamp,
-          Is_read_only       => False,
-          Feedback           => Entry_feedback'Unrestricted_Access,
-          Password           => ""
-          --  !! Update op. with password not supported.
-          --     So we renounce doing an accidental encryption.
-        );
-        Finish(this_file_zip);
+        -- We write first a one-file zip file with the new data
+        Tentative_compress(stamp, quick_method, name_utf_8_with_extra_folder);
         -- We load the one-file zip file's information
-        Load(this_file_zif, single_entry_zip_for_update_name);
+        Load(temp_single_entry_zip_zif, temp_single_entry_zip_name);
         Find_offset(
-          info          => this_file_zif,
+          info          => temp_single_entry_zip_zif,
           name          => name_utf_8_as_in_archive,
           name_encoding => dummy_name_encoding,
           file_index    => file_index,
@@ -529,15 +541,15 @@ package body AZip_Common.Operations is
           Preserve_entry;
           user_code:= nothing;
         else
-          Zip_Streams.Set_Name(this_file_fzs, single_entry_zip_for_update_name);
-          Zip_Streams.Open(this_file_fzs, Zip_Streams.In_File);
-          Zip_Streams.Set_Index(this_file_fzs, file_index);
+          Zip_Streams.Set_Name(temp_single_entry_zip_fzs, temp_single_entry_zip_name);
+          Zip_Streams.Open(temp_single_entry_zip_fzs, Zip_Streams.In_File);
+          Zip_Streams.Set_Index(temp_single_entry_zip_fzs, file_index);
           Zip.Create.Add_Compressed_Stream(
             Info     => new_zip,
-            Stream   => this_file_fzs,
+            Stream   => temp_single_entry_zip_fzs,
             Feedback => Entry_feedback'Unrestricted_Access
           );
-          Zip_Streams.Close(this_file_fzs);
+          Zip_Streams.Close(temp_single_entry_zip_fzs);
           user_code:= updated;
           none_updated:= False;
         end if;
@@ -903,8 +915,10 @@ package body AZip_Common.Operations is
           Delete_File(Zip.Zip_name(zif));
           Rename(new_temp_name, Zip.Zip_name(zif));
         end if;
-        if operation = Update and then Zip.Exists(single_entry_zip_for_update_name) then
-          Delete_File(single_entry_zip_for_update_name);
+        if operation in Update .. Recompress and then
+          Zip.Exists(temp_single_entry_zip_name)
+        then
+          Delete_File(temp_single_entry_zip_name);
         end if;
       when Read_Only_Operation =>
         null;

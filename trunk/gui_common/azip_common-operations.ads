@@ -140,7 +140,8 @@ package AZip_Common.Operations is
     password        : in out Unbounded_Wide_String;
     ignore_path     :        Boolean; -- ignore directories upon extraction
     encrypt         :        Boolean;
-    max_code        :    out Integer
+    max_code        :    out Integer;
+    abort_operation :    out Boolean
   );
 
   ------------------

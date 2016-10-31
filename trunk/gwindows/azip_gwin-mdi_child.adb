@@ -710,7 +710,8 @@ package body AZip_GWin.MDI_Child is
     output_folder  : Wide_String;
     ignore_path    : Boolean; -- ignore directories upon extraction
     encrypt        : Boolean;
-    new_temp_name  : String
+    new_temp_name  : String;
+    aborted        : out Boolean
   )
   is
     az_names: Name_list(file_names'Range);
@@ -844,13 +845,16 @@ package body AZip_GWin.MDI_Child is
         password         => Window.current_password,
         ignore_path      => ignore_path,
         encrypt          => encrypt,
-        max_code         => Window.last_max_code
+        max_code         => Window.last_max_code,
+        abort_operation  => aborted
       );
       Window.last_operation:= operation;
-      if operation in Modifying_Operation then
-        Window.Load_archive_catalogue(copy_codes => operation /= Remove);
-      else
-        Update_display(Window, results_refresh);
+      if not aborted then
+        if operation in Modifying_Operation then
+          Window.Load_archive_catalogue(copy_codes => operation /= Remove);
+        else
+          Update_display(Window, results_refresh);
+        end if;
       end if;
     exception
       when E : Ada.IO_Exceptions.Name_Error =>
@@ -919,6 +923,7 @@ package body AZip_GWin.MDI_Child is
           end if;
       end case;
     end Eventual_folder;
+    aborted: Boolean;
   begin
     Process_archive_GWin(
       Window         => Window,
@@ -929,7 +934,8 @@ package body AZip_GWin.MDI_Child is
       output_folder  => "",
       ignore_path    => False,
       encrypt        => Encrypt,
-      new_temp_name  => Temp_AZip_name(Window)
+      new_temp_name  => Temp_AZip_name(Window),
+      aborted        => aborted
     );
   end Go_for_adding;
 
@@ -1137,6 +1143,7 @@ package body AZip_GWin.MDI_Child is
           return "Use archive's folder names for output ?";
       end case;
     end Use_path_question;
+    aborted: Boolean;
   begin
     if not Is_loaded(Window.zif) then
       return; -- No archive, then nothing to do
@@ -1181,7 +1188,8 @@ package body AZip_GWin.MDI_Child is
           output_folder  => dir,
           ignore_path    => Window.opt.ignore_extract_path,
           encrypt        => False,
-          new_temp_name  => ""
+          new_temp_name  => "",
+          aborted        => aborted
         );
       end if;
     end;
@@ -1208,6 +1216,7 @@ package body AZip_GWin.MDI_Child is
           " selected item(s) ?";
       end if;
     end Delete_msg;
+    aborted: Boolean;
   begin
     if Window.Directory_List.Selected_Item_Count = 0 and not Folder_Focus(Window) then
       return; -- not item -> do nothing (different from On_Extract's behaviour)
@@ -1222,7 +1231,8 @@ package body AZip_GWin.MDI_Child is
         output_folder  => "",
         ignore_path    => False,
         encrypt        => False,
-        new_temp_name  => Temp_AZip_name(Window)
+        new_temp_name  => Temp_AZip_name(Window),
+        aborted        => aborted
       );
     end if;
   end On_Delete;
@@ -1279,6 +1289,7 @@ package body AZip_GWin.MDI_Child is
       Window.content_search:= G2GU(box.Content_to_be_searched.Text);
     end Get_Data;
     --
+    aborted: Boolean;
   begin
     box.Create_Full_Dialog(Window);
     box.Name_to_be_searched.Text(GU2G(Window.name_search));
@@ -1296,7 +1307,8 @@ package body AZip_GWin.MDI_Child is
         output_folder  => "",
         ignore_path    => False,
         encrypt        => False,
-        new_temp_name  => ""
+        new_temp_name  => "",
+        aborted        => aborted
       );
       if Message_Box(Window,
           "Find in archive",
@@ -1324,6 +1336,7 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Test(Window : in out MDI_Child_Type) is
     count_ok, count_ko, count_nt: Natural;
+    aborted: Boolean;
   begin
     Process_archive_GWin(
       Window         => Window,
@@ -1334,7 +1347,8 @@ package body AZip_GWin.MDI_Child is
       output_folder  => "",
       ignore_path    => False,
       encrypt        => False,
-      new_temp_name  => ""
+      new_temp_name  => "",
+      aborted        => aborted
     );
     Count_test_totals(Window.zif, count_ok, count_ko, count_nt);
     if count_nt > 0 then
@@ -1374,6 +1388,7 @@ package body AZip_GWin.MDI_Child is
     new_dir: constant String:= Ada.Directories.Containing_Directory(
       To_UTF_8(GU2G (Window.File_Name))
     ); -- !! Not UTF-8 capable
+    aborted: Boolean;
   begin
     if not Is_loaded(Window.zif) then
       return;
@@ -1403,7 +1418,8 @@ package body AZip_GWin.MDI_Child is
         output_folder  => "",
         ignore_path    => False,
         encrypt        => False,
-        new_temp_name  => Temp_AZip_name(Window)
+        new_temp_name  => Temp_AZip_name(Window),
+        aborted        => aborted
       );
       if mem_dir'Length > 0 and then mem_dir(mem_dir'Last) =':' then
         -- Bug in GNAT up to GPL 2011 - cf issue [L216-021 public], fixed in 2012.
@@ -1411,7 +1427,9 @@ package body AZip_GWin.MDI_Child is
       else
         Ada.Directories.Set_Directory(mem_dir); -- !! Check if UTF-8 capable
       end if;
-      if Window.last_max_code <= only_archive then
+      if aborted then
+        null;
+      elsif Window.last_max_code <= only_archive then
         Message_Box(Window,
         "Archive update completed",
         "Update completed." & NL & "No entry needed to be updated.",
@@ -1432,6 +1450,7 @@ package body AZip_GWin.MDI_Child is
   end On_Update;
 
   procedure On_Recompress(Window : in out MDI_Child_Type) is
+    aborted: Boolean;
   begin
     if not Is_loaded(Window.zif) then
       return;
@@ -1460,9 +1479,12 @@ package body AZip_GWin.MDI_Child is
         output_folder  => "",
         ignore_path    => False,
         encrypt        => False,
-        new_temp_name  => Temp_AZip_name(Window)
+        new_temp_name  => Temp_AZip_name(Window),
+        aborted        => aborted
       );
-      if Window.last_max_code = nothing then
+      if aborted then
+        null;
+      elsif Window.last_max_code = nothing then
         Message_Box(Window,
         "Archive recompression completed",
         "Recompression completed." & NL & "No entry could be recompressed to a smaller size.",

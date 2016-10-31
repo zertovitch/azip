@@ -1440,33 +1440,45 @@ package body AZip_GWin.MDI_Child is
       Stop_msg_on_encrypted_archive(Window, "Archive recompression");
       return;
     end if;
-    Process_archive_GWin(
-      Window         => Window,
-      operation      => Recompress,
-      file_names     => Empty_Array_Of_File_Names,
-      base_folder    => "", -- We recompress the whole archive
-      search_pattern => "",
-      output_folder  => "",
-      ignore_path    => False,
-      encrypt        => False,
-      new_temp_name  => Temp_AZip_name(Window)
-    );
-    if Window.last_max_code = nothing then
-      Message_Box(Window,
-      "Archive recompression completed",
-      "Recompression completed." & NL & "No entry could be recompressed to a smaller size.",
-      OK_Box,
-      Information_Icon);
-    elsif Message_Box(Window,
-      "Archive recompression completed",
-      "Recompression completed." & NL & NL &
-      "Do you want to see full results (flat view & result sort) ?",
+    if Message_Box(
+      Window,
+      "Archive recompression",
+      "You are about to recompress this archive." & NL & NL &
+      "Contents will remain identical, but data compression may be better." & NL &
+      "This operation can take a long time depending on data size and content." & NL & NL &
+      "Proceed ?",
       Yes_No_Box,
-      Question_Icon)
-    = Yes
+      Question_Icon
+    ) = Yes
     then
-      Change_View(Window, Flat, force => False);
-      Window.Directory_List.Sort(Window.opt.column_index(Result) - 1, AZip_LV_Ex.Down);
+      Process_archive_GWin(
+        Window         => Window,
+        operation      => Recompress,
+        file_names     => Empty_Array_Of_File_Names,
+        base_folder    => "", -- We recompress the whole archive
+        search_pattern => "",
+        output_folder  => "",
+        ignore_path    => False,
+        encrypt        => False,
+        new_temp_name  => Temp_AZip_name(Window)
+      );
+      if Window.last_max_code = nothing then
+        Message_Box(Window,
+        "Archive recompression completed",
+        "Recompression completed." & NL & "No entry could be recompressed to a smaller size.",
+        OK_Box,
+        Information_Icon);
+      elsif Message_Box(Window,
+        "Archive recompression completed",
+        "Recompression completed." & NL & NL &
+        "Do you want to see full results (flat view & result sort) ?",
+        Yes_No_Box,
+        Question_Icon)
+      = Yes
+      then
+        Change_View(Window, Flat, force => False);
+        Window.Directory_List.Sort(Window.opt.column_index(Result) - 1, AZip_LV_Ex.Down);
+      end if;
     end if;
   end On_Recompress;
 

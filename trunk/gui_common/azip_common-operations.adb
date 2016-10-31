@@ -139,7 +139,7 @@ package body AZip_Common.Operations is
           code_rel:= code_rel ** 0.25; -- we skew the value (visual effect)
           val:= Color_range(Float'Floor(f_max * code_rel));
         end if;
-        color:= (Red => max - val, Green => max - val, Blue => max - val / 4);
+        color:= (Blue => max - val / 4, Red | Green => max - val);
       when Update =>
         case code is
           when updated =>
@@ -156,7 +156,7 @@ package body AZip_Common.Operations is
           code_rel:= Float(code) / Float(max_code);
           code_rel:= code_rel ** 0.5; -- we skew the value (visual effect)
           val:= Color_range(Float'Floor(f_max * code_rel));
-          color:= (Red => max - val, Green => max, Blue => max - val);
+          color:= (Green => max - val / 4, Red | Blue => max - val);
         end if;
       -- For other operations, we have a simple color code: green or white
       when others =>
@@ -170,7 +170,7 @@ package body AZip_Common.Operations is
     -- Errors are always shown - in red of course!
     case code is
       when wrong_pwd | corrupt | bad_crc | unsupported =>
-        color:= (Red => (max * 3) / 4, Green => 0, Blue => 0);
+        color:= (Red => (max * 3) / 4, Green | Blue => 0);
       when others =>
         null;
     end case;

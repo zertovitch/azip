@@ -18,6 +18,8 @@ with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
+with GWin_Util;
+
 with Ada.Calendar;
 with Ada.Directories;
 with Ada_Directories_Extensions;
@@ -1191,6 +1193,9 @@ package body AZip_GWin.MDI_Child is
           new_temp_name  => "",
           aborted        => aborted
         );
+        if not aborted then
+          GWin_Util.Start(G2S(dir));  --  !! not unicode
+        end if;
       end if;
     end;
   end On_Extract;

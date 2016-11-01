@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2016/10/25  20:45:18
+-- Transcription time: 2016/11/01  09:34:10
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -502,7 +502,7 @@ package AZip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion: constant String:= "1.32";
+    FileVersion: constant String:= "2.00";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2016";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
@@ -622,6 +622,6 @@ package AZip_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 414
+  -- Last line of resource script file: 415
 
 end AZip_Resource_GUI;

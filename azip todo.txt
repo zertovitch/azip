@@ -2,7 +2,6 @@ console mode through command lines options (GUI not started then)
   -a for Add, -d for Delete, etc.
   -q: quiet: neither console output, nor gui
 
-gw - open target directory after extraction
 gw - disable sorting on large lists
 gw - drag & drop entre fenêtres, et vers explorer
 gw - copy/paste entre fenêtres
@@ -19,7 +18,6 @@ Actions to be implemented:
 
   * Test recursive: test entries which are Zip files, and so on.
       See AZip_Common.Is_valid_Zip_archive for detecting Zip archives (could be .xlsx, .jar or other files...)
-  * Recompress (see ReZip tool in the Zip-Ada project)
   * Touch (change time stamp to now or a certain date)
   * Encrypt entire archive
 

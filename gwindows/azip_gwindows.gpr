@@ -21,9 +21,9 @@ project AZip_GWindows is
    type Build_Mode_Type is
       ("Debug_GPL", "Debug_MinGW", "Fast_GPL", "Fast_MinGW", "Profiling");
    Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug_GPL");
-   for Source_Dirs use ("../gui_common", ".", "win_special") & external_as_list("GNAT_SOURCE_PATH", ";");
+   for Source_Dirs use ("../sys_common", ".", "win_special", "../testing") & external_as_list("GNAT_SOURCE_PATH", ";");
    for Exec_Dir use ".";
-   for Main use ("azip.adb");
+   for Main use ("azip.adb", "test_expand_folders.adb");
 
    case Build_Mode is
       when "Debug_GPL" =>

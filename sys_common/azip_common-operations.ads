@@ -98,7 +98,7 @@ package AZip_Common.Operations is
     --
     -- I drop the folder "jaja" into an AZip archive window.
     -- jaja is located here: d:\ada\azip\gwindows\test .
-    -- then the function Expand_folder will give many names, like:
+    -- then the function Expand_folders will give many names, like:
     -- d:\ada\azip\gwindows\test\jaja\javax\swing\JProgressBar.class
     -- sep indicates this point ^
     -- the Zip entry to be replaced or appended will be:

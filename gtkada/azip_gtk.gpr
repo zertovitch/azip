@@ -12,7 +12,7 @@ project AZip_Gtk is
    AZBuild_Mode : AZBuild_Mode_Type := external ("Build_Mode", "Fast");
 
    for Main use ("azip.adb");
-   for Source_Dirs use ("../gui_common", "../zip_lib", ".");
+   for Source_Dirs use ("../sys_common", "../zip_lib", ".");
    for Exec_Dir use ".";
 
    case AZBuild_Mode is

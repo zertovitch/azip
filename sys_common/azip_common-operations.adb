@@ -1015,7 +1015,7 @@ package body AZip_Common.Operations is
     function Expand_one_entry(Name: Name_descriptor) return Name_list is
       --
       files, total_files: Natural:= 0;
-      sep: Natural;
+      sep: Natural:= 0;
       --
       -- Position of separator in "d:\ada\azip\gwindows\test\jaja\"
 

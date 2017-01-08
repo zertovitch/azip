@@ -13,7 +13,7 @@ if (%1)==() set target=GPL
 copy azip.exe AZip_Debug.exe
 del azip.exe
 
-%builder% -P azip_gwindows %1 -XBuild_Mode=Fast_%target%
+%builder% -P azip_gwindows azip %1 -XBuild_Mode=Fast_%target%
 ren azip.exe AZip.exe
 copy AZip.exe "AZip (ver) win32.exe"
 rem upx --ultra-brute "AZip (ver) win32.exe"

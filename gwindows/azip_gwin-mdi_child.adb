@@ -1159,43 +1159,44 @@ package body AZip_GWin.MDI_Child is
       ask: Boolean;
       list: constant Array_Of_File_Names:= Smart_list;
     begin
-      if dir /= "" then
-        Window.extract_dir:= G2GU(dir);
-        if list'Length > 0 then
-          ask:= Any_path_in_list(list);
+      if dir = "" then
+        return;
+      end if;
+      Window.extract_dir:= G2GU(dir);
+      if list'Length > 0 then
+        ask:= Any_path_in_list(list);
+      else
+        ask:= Window.any_path_in_zip;
+      end if;
+      if ask then
+        if Window.opt.ignore_extract_path then
+          box_kind:= Yes_No_Def_Cancel_Box; -- Previous answer was "No", so we take "No" as default
         else
-          ask:= Window.any_path_in_zip;
+          box_kind:= Yes_No_Cancel_Box;
         end if;
-        if ask then
-          if Window.opt.ignore_extract_path then
-            box_kind:= Yes_No_Def_Cancel_Box; -- Previous answer was "No", so we take "No" as default
-          else
-            box_kind:= Yes_No_Cancel_Box;
-          end if;
-          case Message_Box( Window, "Extract", Use_path_question, box_kind, Question_Icon ) is
-            when No =>
-              Window.opt.ignore_extract_path:= True;
-            when Yes =>
-              Window.opt.ignore_extract_path:= False;
-            when others =>
-              return;
-          end case;
-        end if;
-        Process_archive_GWin(
-          Window         => Window,
-          operation      => Extract,
-          file_names     => list,
-          base_folder    => "",
-          search_pattern => "",
-          output_folder  => dir,
-          ignore_path    => Window.opt.ignore_extract_path,
-          encrypt        => False,
-          new_temp_name  => "",
-          aborted        => aborted
-        );
-        if not aborted then
-          GWin_Util.Start(G2S(dir));  --  !! not unicode
-        end if;
+        case Message_Box( Window, "Extract", Use_path_question, box_kind, Question_Icon ) is
+          when No =>
+            Window.opt.ignore_extract_path:= True;
+          when Yes =>
+            Window.opt.ignore_extract_path:= False;
+          when others =>
+            return;
+        end case;
+      end if;
+      Process_archive_GWin(
+        Window         => Window,
+        operation      => Extract,
+        file_names     => list,
+        base_folder    => "",
+        search_pattern => "",
+        output_folder  => dir,
+        ignore_path    => Window.opt.ignore_extract_path,
+        encrypt        => False,
+        new_temp_name  => "",
+        aborted        => aborted
+      );
+      if not aborted then
+        GWin_Util.Start(G2S(dir));  --  !! not unicode
       end if;
     end;
   end On_Extract;
@@ -1253,7 +1254,7 @@ package body AZip_GWin.MDI_Child is
   begin
     Open_Files (
       Window,
-      "Add files to archive...",
+      "Add files to archive (also doable by Drag && Drop)...",
       File_Names,
        ( 1=>(G2GU ("All files (*.*)"),
              G2GU ("*.*"))),
@@ -1283,6 +1284,36 @@ package body AZip_GWin.MDI_Child is
       end if;
     end if;
   end On_Add_files;
+
+  procedure On_Add_folder(Window : in out MDI_Child_Type; encrypted: Boolean) is
+    cancelled: Boolean;
+    dir: constant GString:= Get_Directory(
+      Window       => Window,
+      Dialog_Title => "Add folder to archive (also doable by Drag && Drop)...",
+      Initial_Path => GU2G(Window.extract_dir) );
+  begin
+    if dir = "" then
+      return;
+    end if;
+    if not Is_loaded(Window.zif) then
+      Message_Box(
+        Window,
+        "New archive",
+        "You'll be asked under which name the archive will be created.",
+        OK_Box,
+        Information_Icon
+      );
+      Window.On_Save_As;
+    end if;
+    if encrypted then
+      Get_password_for_encryption(Window, cancelled);
+    else
+      cancelled:= False;
+    end if;
+    if Is_loaded(Window.zif) and not cancelled then -- Is_Loaded: we test again (in case Save As failed)
+      Window.Go_for_adding((1 => G2GU(dir)), encrypted);
+    end if;
+  end On_Add_folder;
 
   procedure On_Find(Window : in out MDI_Child_Type) is
     box: Find_box_Type;
@@ -1530,6 +1561,10 @@ package body AZip_GWin.MDI_Child is
         On_Add_files(Window, encrypted => False);
       when IDM_Add_Files_Encryption =>
         On_Add_files(Window, encrypted => True);
+      when IDM_Add_Folder =>
+        On_Add_folder(Window, encrypted => False);
+      when IDM_Add_Folder_Encryption =>
+        On_Add_folder(Window, encrypted => True);
       when IDM_Delete_selected =>
         On_Delete(Window);
       when IDM_TEST_ARCHIVE =>

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2016/11/01  09:34:10
+-- Transcription time: 2017/01/08  09:13:49
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -40,7 +40,7 @@ package AZip_Resource_GUI is
     Popup_0007: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 93
+  -- Menu at line 97
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -52,7 +52,7 @@ package AZip_Resource_GUI is
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  -- Menu at line 131
+  -- Menu at line 137
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -79,7 +79,7 @@ package AZip_Resource_GUI is
     Credits_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 161
+  -- Dialog at resource line 167
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -123,7 +123,7 @@ package AZip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- Credits_box_Type
 
-  -- Dialog at resource line 179
+  -- Dialog at resource line 185
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -161,7 +161,7 @@ package AZip_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Drop_files_box_Type
 
-  -- Dialog at resource line 197
+  -- Dialog at resource line 203
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -212,7 +212,7 @@ package AZip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- File_exists_box_Type
 
-  -- Dialog at resource line 217
+  -- Dialog at resource line 223
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -257,7 +257,7 @@ package AZip_Resource_GUI is
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Find_box_Type
 
-  -- Dialog at resource line 235
+  -- Dialog at resource line 241
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -288,6 +288,40 @@ package AZip_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
+  type Quick_help_box_Type is new Window_Type with record
+
+    -- Label: 0
+    RC_item_0: Group_Box_Type;
+    RC_item_1: Icon_Type;
+    -- Label: 0
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+  end record; -- Quick_help_box_Type
+
+  -- Dialog at resource line 256
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Quick_help_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "AZip Quick Help";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Quick_help_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     );
+
   type Password_decryption_box_Type is new Window_Type with record
 
     Static_0001: Group_Box_Type;
@@ -303,7 +337,7 @@ package AZip_Resource_GUI is
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Password_decryption_box_Type
 
-  -- Dialog at resource line 254
+  -- Dialog at resource line 275
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -349,7 +383,7 @@ package AZip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- Password_encryption_box_Type
 
-  -- Dialog at resource line 273
+  -- Dialog at resource line 294
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -392,7 +426,7 @@ package AZip_Resource_GUI is
     Comment_2: Label_Type;
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 290
+  -- Dialog at resource line 311
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -437,7 +471,7 @@ package AZip_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Properties_box_Type
 
-  -- Dialog at resource line 309
+  -- Dialog at resource line 330
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -475,7 +509,7 @@ package AZip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  -- Dialog at resource line 321
+  -- Dialog at resource line 342
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -502,8 +536,8 @@ package AZip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion: constant String:= "2.00";
-    LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2016";
+    FileVersion: constant String:= "2.10";
+    LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2017";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
   end Version_info;
@@ -533,8 +567,9 @@ package AZip_Resource_GUI is
   Password_decryption_box   : constant:=    133;
   Password_encryption_box   : constant:=    135;
   Plus_icon                 : constant:=    137;
-  Properties_box            : constant:=    139;
   Drop_files_box            : constant:=    140;
+  Properties_box            : constant:=    142;
+  Quick_help_box            : constant:=    143;
   Archive_Progress          : constant:=   1000;
   Conflict_simple_name      : constant:=   1000;
   Encrypted_entry           : constant:=   1000;
@@ -605,7 +640,10 @@ package AZip_Resource_GUI is
   IDM_Add_Files_Encryption  : constant:=  40031;
   IDM_Properties            : constant:=  40032;
   Overwrite_All             : constant:=  40032;
+  IDM_Add_Folder            : constant:=  40033;
+  IDM_Add_Folder_Encryption : constant:=  40034;
   Overwrite_None            : constant:=  40034;
+  IDM_Quick_Help            : constant:=  40035;
   Overwrite_Rename          : constant:=  40036;
   IDM_SAVE_ARCHIVE_AS       : constant:=  40037;
   IDM_Select_all            : constant:=  40038;
@@ -622,6 +660,6 @@ package AZip_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 415
+  -- Last line of resource script file: 436
 
 end AZip_Resource_GUI;

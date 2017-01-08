@@ -19,8 +19,9 @@
 #define Password_decryption_box                 133
 #define Password_encryption_box                 135
 #define Plus_icon                               137
-#define Properties_box                          139
 #define Drop_files_box                          140
+#define Properties_box                          142
+#define Quick_help_box                          143
 #define Archive_Progress                        1000
 #define Conflict_simple_name                    1000
 #define Encrypted_entry                         1000
@@ -91,7 +92,10 @@
 #define IDM_Add_Files_Encryption                40031
 #define IDM_Properties                          40032
 #define Overwrite_All                           40032
+#define IDM_Add_Folder                          40033
+#define IDM_Add_Folder_Encryption               40034
 #define Overwrite_None                          40034
+#define IDM_Quick_Help                          40035
 #define Overwrite_Rename                        40036
 #define IDM_SAVE_ARCHIVE_AS                     40037
 #define IDM_Select_all                          40038

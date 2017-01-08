@@ -61,6 +61,8 @@ Menu_MDI_Child MENU
         MENUITEM "Delete entries\tDel / -", IDM_Delete_selected
         MENUITEM "A&dd files...\t+", IDM_ADD_FILES
         MENUITEM "Add files with encr&yption...", IDM_Add_Files_Encryption
+        MENUITEM "Add folder...", IDM_Add_Folder
+        MENUITEM "Add folder with encryption...", IDM_Add_Folder_Encryption
     }
     POPUP "&Tools"
     {
@@ -89,6 +91,8 @@ Menu_MDI_Child MENU
     }
     POPUP "&Help"
     {
+        MENUITEM "&Quick help", IDM_Quick_Help
+        MENUITEM SEPARATOR
         MENUITEM "&About AZip", IDM__ABOUT
     }
 }
@@ -127,6 +131,8 @@ Menu_MDI_Main MENU
     }
     POPUP "&Help"
     {
+        MENUITEM "&Quick help", IDM_Quick_Help
+        MENUITEM SEPARATOR
         MENUITEM "&About AZip", IDM__ABOUT
     }
 }
@@ -238,6 +244,21 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Quick_help_box DIALOG 0, 0, 375, 202
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+CAPTION "AZip Quick Help"
+FONT 8, "Ms Shell Dlg"
+{
+    LTEXT           "Here is a couple of tips and informations.", 0, 6, 8, 302, 20, SS_LEFT, WS_EX_LEFT
+    GROUPBOX        "Adding files and folders", 0, 16, 27, 349, 54, 0, WS_EX_LEFT
+    ICON            Plus_icon, 1, 23, 41, 21, 20, SS_ICON, WS_EX_LEFT
+    LTEXT           "You can add files, or individual folders through menu commands or buttons, BUT you can also do it easily via Drag && Drop, from a File Explorer window or the Desktop, onto an AZip archive window. Any mix of dragged folders and files is supported.", 0, 59, 42, 291, 32, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 137, 177, 107, 19, 0, WS_EX_LEFT
+}
+
+
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 Password_decryption_box DIALOG 0, 0, 228, 137
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "Password for decryption"
@@ -292,7 +313,7 @@ FONT 8, "Ms Shell Dlg"
 
 
 
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 Properties_box DIALOG 0, 0, 265, 157
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "Archive properties"
@@ -388,8 +409,8 @@ Plus_icon          ICON           "ico_bmp/plus.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     2,0,0,0
-    PRODUCTVERSION  2,0,0,0
+    FILEVERSION     2,1,0,0
+    PRODUCTVERSION  2,1,0,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -402,8 +423,8 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
-            VALUE "FileVersion", "2.00"
-            VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2016"
+            VALUE "FileVersion", "2.10"
+            VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2017"
             VALUE "ProductName", "AZip"
         }
     }

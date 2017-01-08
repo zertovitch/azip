@@ -469,6 +469,16 @@ package body AZip_GWin.MDI_Main is
                                       My_Close_Win'Unrestricted_Access);
   end My_MDI_Close_All;
 
+  procedure On_Quick_Help(Window : in out MDI_Main_Type) is
+    box: Quick_help_box_Type;
+  begin
+    box.Create_Full_Dialog(Window);
+    box.Center;
+    if Show_Dialog (box, Window) = IDOK then
+      null;
+    end if;
+  end On_Quick_Help;
+
   procedure On_About(Window : in out MDI_Main_Type) is
     box: About_box_Type;
     url_azip, url_gnat, url_gnavi, url_resedit, url_zipada: URL_Type;
@@ -527,6 +537,8 @@ package body AZip_GWin.MDI_Main is
         On_File_New (Window, extra_first_doc => False);
       when IDM_OPEN_ARCHIVE =>
         On_File_Open (Window);
+      when IDM_Quick_Help =>
+        On_Quick_Help (Window);
       when IDM_ABOUT =>
         On_About (Window);
       when IDM_QUIT  =>

@@ -14,6 +14,8 @@ with GWindows.Registry;
 with GWindows.Static_Controls;          use GWindows.Static_Controls;
 with GWindows.Static_Controls.Web;      use GWindows.Static_Controls.Web;
 
+with GWin_Util;
+
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
 with Ada.Text_IO;
@@ -479,6 +481,8 @@ package body AZip_GWin.MDI_Main is
     end if;
   end On_Quick_Help;
 
+  azip_web_page: constant String:= "http://azip.sf.net/";
+
   procedure On_About(Window : in out MDI_Main_Type) is
     box: About_box_Type;
     url_azip, url_gnat, url_gnavi, url_resedit, url_zipada: URL_Type;
@@ -508,7 +512,7 @@ package body AZip_GWin.MDI_Main is
     box.Create_Full_Dialog(Window);
     box.Copyright_label.Text(S2G(Version_info.LegalCopyright));
     box.Version_label.Text(S2G(Version_info.FileVersion));
-    Create_and_Swap(url_azip, box.AZip_URL, box, "http://azip.sf.net/");
+    Create_and_Swap(url_azip, box.AZip_URL, box, S2G(azip_web_page));
     Create_and_Swap(url_gnat, box.GNAT_URL, box, "http://libre.adacore.com");
     Text(box.GNAT_Version, S2G("version " & GNAT_Version_string));
     Create_and_Swap(url_gnavi, box.GNAVI_URL, box, "http://sf.net/projects/gnavi");
@@ -541,6 +545,8 @@ package body AZip_GWin.MDI_Main is
         On_Quick_Help (Window);
       when IDM_ABOUT =>
         On_About (Window);
+      when IDM_Web =>
+        GWin_Util.Start(azip_web_page);
       when IDM_QUIT  =>
         Close (Window);
       when IDM_WINDOW_CASCADE   =>

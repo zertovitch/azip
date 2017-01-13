@@ -92,6 +92,7 @@ Menu_MDI_Child MENU
     POPUP "&Help"
     {
         MENUITEM "&Quick help", IDM_Quick_Help
+        MENUITEM "AZip &Web page (contact, support)", IDM_Web
         MENUITEM SEPARATOR
         MENUITEM "&About AZip", IDM__ABOUT
     }
@@ -132,6 +133,7 @@ Menu_MDI_Main MENU
     POPUP "&Help"
     {
         MENUITEM "&Quick help", IDM_Quick_Help
+        MENUITEM "AZip &Web page (contact, support)", IDM_Web
         MENUITEM SEPARATOR
         MENUITEM "&About AZip", IDM__ABOUT
     }
@@ -244,21 +246,6 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-Quick_help_box DIALOG 0, 0, 375, 202
-STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
-CAPTION "AZip Quick Help"
-FONT 8, "Ms Shell Dlg"
-{
-    LTEXT           "Here is a couple of tips and informations.", 0, 6, 8, 302, 20, SS_LEFT, WS_EX_LEFT
-    GROUPBOX        "Adding files and folders", 0, 16, 27, 349, 54, 0, WS_EX_LEFT
-    ICON            Plus_icon, 1, 23, 41, 21, 20, SS_ICON, WS_EX_LEFT
-    LTEXT           "You can add files, or individual folders through menu commands or buttons, BUT you can also do it easily via Drag && Drop, from a File Explorer window or the Desktop, onto an AZip archive window. Any mix of dragged folders and files is supported.", 0, 59, 42, 291, 32, SS_LEFT, WS_EX_LEFT
-    DEFPUSHBUTTON   "OK", IDOK, 137, 177, 107, 19, 0, WS_EX_LEFT
-}
-
-
-
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 Password_decryption_box DIALOG 0, 0, 228, 137
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "Password for decryption"
@@ -328,6 +315,21 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "# entries", Numb_entries, 97, 40, 84, 12, SS_LEFT, WS_EX_LEFT
     CONTROL         "", Stats_list, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 14, 56, 236, 81, WS_EX_LEFT
     DEFPUSHBUTTON   "OK", IDOK, 111, 140, 50, 14, 0, WS_EX_LEFT
+}
+
+
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Quick_help_box DIALOG 0, 0, 375, 202
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+CAPTION "AZip Quick Help"
+FONT 8, "Ms Shell Dlg"
+{
+    LTEXT           "Here is a couple of tips and informations.", 0, 6, 8, 302, 20, SS_LEFT, WS_EX_LEFT
+    GROUPBOX        "Adding files and folders", 0, 16, 27, 349, 54, 0, WS_EX_LEFT
+    ICON            Plus_icon, 1, 23, 41, 21, 20, SS_ICON, WS_EX_LEFT
+    LTEXT           "You can add files, or individual folders through menu commands or buttons, BUT you can also do it easily via Drag && Drop, from a File Explorer window or the Desktop, onto an AZip archive window. Any mix of dragged folders and files is supported.", 0, 59, 42, 291, 32, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 137, 177, 107, 19, 0, WS_EX_LEFT
 }
 
 

@@ -96,6 +96,7 @@
 #define IDM_Add_Folder_Encryption               40034
 #define Overwrite_None                          40034
 #define IDM_Quick_Help                          40035
+#define IDM_Web                                 40036
 #define Overwrite_Rename                        40036
 #define IDM_SAVE_ARCHIVE_AS                     40037
 #define IDM_Select_all                          40038

@@ -310,6 +310,14 @@ package body AZip_GWin.MDI_Main is
     Window.Accept_File_Drag_And_Drop;
     -- Dropping files on the background will trigger creating an archive
     Window.record_dimensions:= True;
+    --
+    begin
+      Window.Task_bar_gadget.Set_Progress_State (Window, No_Progress);
+      Window.Task_bar_gadget_ok := True;
+    exception
+      when Taskbar_Interface_Not_Supported =>
+        Window.Task_bar_gadget_ok := False;
+    end;
   end On_Create;
 
   function Minimized(Window: GWindows.Base.Base_Window_Type'Class)

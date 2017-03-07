@@ -12,6 +12,7 @@ with GWindows.Image_Lists;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
 with GWindows.Drawing;
+with GWindows.Taskbar;                  use GWindows.Taskbar;
 with GWindows.Types;
 
 package AZip_GWin.MDI_Main is
@@ -42,6 +43,9 @@ package AZip_GWin.MDI_Main is
         record_dimensions      : Boolean:= False; -- in On_Move, On_Size
         -- Options of a "model" child window.
         opt                    : AZip_Common.User_options.Option_Pack_Type;
+        --
+        Task_bar_gadget_ok     : Boolean := False;  --  Coloring of taskbar icon (Windows 7+)
+        Task_bar_gadget        : Taskbar_List;
       end record;
 
   type MDI_Main_Access is access all MDI_Main_Type;

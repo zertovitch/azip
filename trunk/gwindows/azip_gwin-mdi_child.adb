@@ -17,6 +17,7 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Taskbar;                  use GWindows.Taskbar;
 
 with GWin_Util;
 
@@ -748,6 +749,9 @@ package body AZip_GWin.MDI_Child is
       if now - tick >= 0.04 or else archive_percents_done = 100 then
         progress_box.File_Progress.Position(file_percents_done);
         progress_box.Archive_Progress.Position(archive_percents_done);
+        if Window.Parent.Task_bar_gadget_ok then
+          Window.Parent.Task_bar_gadget.Set_Progress_Value (Window.Parent.all, archive_percents_done, 100);
+        end if;
         progress_box.Entry_name.Text(entry_being_processed);
         progress_box.Entry_operation_name.Text(
           Description(e_operation, operation, skip_hint)
@@ -825,6 +829,9 @@ package body AZip_GWin.MDI_Child is
     progress_box.Create_Full_Dialog(Window);
     progress_box.File_Progress.Position(0);
     progress_box.Archive_Progress.Position(0);
+    if Window.Parent.Task_bar_gadget_ok then
+      Window.Parent.Task_bar_gadget.Set_Progress_Value (Window.Parent.all, 0, 100);
+    end if;
     progress_box.Cancel_button.Hide;
     progress_box.Cancel_button_permanent.Show;
     progress_box.Cancel_button_permanent.On_Click_Handler(Abort_clicked'Unrestricted_Access);
@@ -884,6 +891,9 @@ package body AZip_GWin.MDI_Child is
           Exclamation_Icon
         );
     end;
+    if Window.Parent.Task_bar_gadget_ok then
+      Window.Parent.Task_bar_gadget.Set_Progress_State (Window.Parent.all, No_Progress);
+    end if;
     Window.Parent.Enable;
     Window.Parent.Focus;
   end Process_archive_GWin;

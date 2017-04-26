@@ -2,6 +2,7 @@ with AZip_Common;                       use AZip_Common;
 with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
 with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
 with AZip_GWin.Toolbars;
+
 with Zip;
 
 with GWindows.Application;              use GWindows.Application;

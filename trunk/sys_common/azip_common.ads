@@ -1,3 +1,7 @@
+--  The Zip* and UnZip* packages from the Zip-Ada open-source project
+--  need to be visible to the compiler.
+--  See installation instructions in the header part of the azip_gwindows.gpr file.
+--
 with Zip;                               use Zip;
 
 with Ada.Containers.Hashed_Maps;
@@ -5,6 +9,7 @@ with Ada.Containers.Ordered_Maps;
 with Ada.Strings.UTF_Encoding;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 with Ada.Strings.Wide_Unbounded.Wide_Hash;
+
 with Interfaces;
 
 ------------------------------------------------------------------

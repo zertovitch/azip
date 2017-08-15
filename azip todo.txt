@@ -1,3 +1,5 @@
+Find: use an outward stream instead of decompressing completely each entry before searching (inward stream).
+
 console mode through command lines options (GUI not started then)
   -a for Add, -d for Delete, etc.
   -q: quiet: neither console output, nor gui
@@ -24,3 +26,8 @@ Actions to be implemented:
   * (2 or more archives) :
     * Compare
     * Merge
+
+Bugs:
+----
+
+drag & drop to new archive: not password asked when encryption box checked!

@@ -4,6 +4,7 @@ with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Directories;                   use Ada.Directories;
 with Ada.IO_Exceptions;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
+with Ada.Streams;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
@@ -336,17 +337,66 @@ package body AZip_Common.Operations is
       stl: Natural; -- string length
       l: Character; -- last character of the search string
       use UnZip.Streams;
-      f: Zipped_File_Type;
-      s: Stream_Access;
-      c: Character;
       -- Define a circular buffer
       siz: constant:= max;
       type Buffer_range is mod siz;
       buf: array(Buffer_range) of Character:= (others => ' ');
-      i, bup: Buffer_range:= 0;
-      j: Natural;
+      bup: Buffer_range:= 0;
       ignore_case: constant Boolean:= True; -- !! as option
       cancelled: Boolean;
+      --  We define a local, ad-hoc stream type.
+      --
+      type Search_stream is new Ada.Streams.Root_Stream_Type with null record;
+      --
+      overriding procedure Read
+        (Stream : in out Search_stream;
+         Item   :    out Ada.Streams.Stream_Element_Array;
+         Last   :    out Ada.Streams.Stream_Element_Offset);
+      overriding procedure Write
+       (Stream : in out Search_stream;
+        Item   : in     Ada.Streams.Stream_Element_Array);
+
+      --  Implementation of Read & Write:
+
+      overriding procedure Read
+        (Stream : in out Search_stream;
+         Item   :    out Ada.Streams.Stream_Element_Array;
+         Last   :    out Ada.Streams.Stream_Element_Offset) is null;  --  Not used.
+
+      overriding procedure Write
+       (Stream : in out Search_stream;
+        Item   : in     Ada.Streams.Stream_Element_Array)
+      is
+        pragma Unreferenced (Stream);
+        c: Character;
+        i: Buffer_range:= 0;
+        j: Natural;
+      begin
+        for sei in Item'Range loop
+          c:= Character'Val(Item(sei));
+          if ignore_case then
+            c:= To_Upper(c);
+          end if;
+          if c = l then -- last character do match, search further...
+            i:= bup;
+            j:= stl;
+            match: loop
+              i:= i-1;  --  this loops modulo max: 3, 2, 1, 0, max-1, max-2, ...
+              j:= j-1;
+              if j = 0 then -- we survived the whole search string
+                occ:= occ+1;
+                exit match;
+              end if;
+              exit match when str(j) /= buf(i);
+            end loop match;
+          end if;
+          buf(bup):= c;
+          bup:= bup+1;
+        end loop;
+      end Write;
+
+      sst: Search_stream;
+
     begin
       -- First we copy the string
       -- !! wide or not : what to do ? --
@@ -362,7 +412,13 @@ package body AZip_Common.Operations is
       occ:= 0;
       for attempt in 1..UnZip.tolerance_wrong_password loop
         begin
-          Open( f, zif, name, To_String(To_Wide_String(password)) );
+          Extract(
+            Destination      => sst,
+            Archive_Info     => zif,
+            Name             => name,
+            Ignore_Directory => False,
+            Password         => To_String(To_Wide_String(password))
+          );
           exit;
         exception
           when UnZip.Wrong_password =>
@@ -375,29 +431,6 @@ package body AZip_Common.Operations is
             end if;
         end;
       end loop;
-      s:= Stream(f);
-      while not End_Of_File(f) loop
-        Character'Read(s,c);
-        if ignore_case then
-          c:= To_Upper(c);
-        end if;
-        if c = l then -- last character do match, search further...
-          i:= bup;
-          j:= stl;
-          match: loop
-            i:= i-1;
-            j:= j-1;
-            if j = 0 then -- we survived the whole search string
-              occ:= occ+1;
-              exit match;
-            end if;
-            exit match when str(j) /= buf(i);
-          end loop match;
-        end if;
-        buf(bup):= c;
-        bup:= bup+1;
-      end loop;
-      Close(f);
     end Search_1_file;
 
     function Add_extract_directory(

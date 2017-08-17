@@ -1,7 +1,3 @@
-Find: use an outward stream instead of decompressing completely each entry before searching (inward stream).
-      This would use almost no memory, instead of the amount of the entry's uncompressed size.
-      Same topic in Zip-Ada, find_zip tool.
-
 console mode through command lines options (GUI not started then)
   -a for Add, -d for Delete, etc.
   -q: quiet: neither console output, nor gui

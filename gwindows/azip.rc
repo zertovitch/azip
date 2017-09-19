@@ -425,7 +425,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
-            VALUE "FileVersion", "2.12"
+            VALUE "FileVersion", "2.12b"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2017"
             VALUE "ProductName", "AZip"
         }

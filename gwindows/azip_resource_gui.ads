@@ -536,7 +536,7 @@ package AZip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion: constant String:= "2.12";
+    FileVersion: constant String:= "2.12b";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2017";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;

@@ -377,7 +377,7 @@ package body AZip_GWin.MDI_Main is
       if Current_MDI_Window = 0 then
         return "";
       else
-        return To_GString_From_String(Current_MDI_Window'Img);
+        return Integer'Wide_Image(Current_MDI_Window + 1);
       end if;
     end Suffix;
 

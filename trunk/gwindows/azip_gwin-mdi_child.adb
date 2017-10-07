@@ -579,7 +579,7 @@ package body AZip_GWin.MDI_Child is
     Window.Directory_List.Dock(Fill);
 
     Window.Status_Bar.Create(Window, "No archive");
-    Window.Status_Bar.Parts((1 => 200, 2 => -1));
+    Window.Status_Bar.Parts((0 => 200, 1 => -1));
     Window.Status_Bar.Dock(At_Bottom);
 
     Window.Dock_Children;

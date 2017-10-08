@@ -820,6 +820,21 @@ package body AZip_GWin.MDI_Child is
         Get_password_decrypt_for_Common
       );
     --
+    function Msg_Name_Error return GString is
+    begin
+      if operation in Modifying_Operation then
+        return
+          "Either:" & NL &
+          "  - The archive file cannot be opened - " & NL &
+          "      perhaps file has been deleted or moved ?" & NL &
+          "  - A new file cannot be written.";
+      else
+        return
+          "The archive file cannot be opened - " & NL &
+          "  perhaps file has been deleted or moved ?";
+      end if;
+    end Msg_Name_Error;
+    --
   begin -- Process_archive_GWin
     -- Neutral conversion: GStrings (UTF-16) to UTF_16_String
     for i in az_names'Range loop
@@ -867,25 +882,24 @@ package body AZip_GWin.MDI_Child is
       end if;
     exception
       when E : Ada.IO_Exceptions.Name_Error =>
+        aborted := True;
         Message_Box(
           Window,
           "Processing failed",
-          "Either the archive cannot be opened (deleted ? moved ?)," & NL &
-          "or a new file cannot be written." &
+          Msg_Name_Error &
           NL & "-----" & NL &
-          S2G(Ada.Exceptions.Exception_Name (E)) & NL &
           S2G(Ada.Exceptions.Exception_Message (E)),
           OK_Box,
           Exclamation_Icon
         );
       when E : Ada.IO_Exceptions.Use_Error =>
+        aborted := True;
         Message_Box(
           Window,
           "Processing failed",
-          "Archive cannot be modified (perhaps read-only ?)," & NL &
+          "Archive cannot be modified (perhaps is it read-only ?)," & NL &
           "or a new file cannot be written." &
           NL & "-----" & NL &
-          S2G(Ada.Exceptions.Exception_Name (E)) & NL &
           S2G(Ada.Exceptions.Exception_Message (E)),
           OK_Box,
           Exclamation_Icon

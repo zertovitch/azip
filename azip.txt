@@ -1,0 +1,37 @@
+-------------------------------------------
+AZip - A free, portable Zip Archive Manager
+-------------------------------------------
+
+  AZip is a Zip Archive Manager with a portable user interface
+  and unique features such as: built-in content search, smart
+  archive update, archive recompression.
+
+  The goal is to keep the user interface as simple as possible and
+  bother the user the least possible with options or useless gadgets.
+
+Features:
+
+   * Aimed at simplicity, minimal option set
+   * Usual archive management: Add / Remove / Extract files
+   * Useful tools:
+       * Content and/or entry name built-in search function through an archive - no need to extract contents!
+       * Archive updater: changes only new, modified files
+       * Archive recompression
+   * Flat view / Tree view
+   * Multi-document
+   * Methods supported: Reduce, Shrink, Implode, Deflate, Deflate64, BZip2, LZMA
+   * Encryption
+   * Portable (no installation needed, no DLL, no configuration file)
+   * Free, open-source
+
+Platforms supported:
+
+  * Windows
+  * Others: there is a draft multiplatform GTK implementation
+  * AZip's UI is mostly generic, so it can be implemented on various UI toolkits without redoing from scratch
+  
+How to build & modify AZip
+
+  * You need the GNAT compiler: http://libre.adacore.com
+  * Read the comments in the gwindows/azip_gwindows.gpr (just open as text file) for further instructions.
+  

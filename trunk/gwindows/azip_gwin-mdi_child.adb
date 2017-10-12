@@ -1666,8 +1666,8 @@ package body AZip_GWin.MDI_Child is
       Window.Parent.opt.view_mode:= Window.opt.view_mode;
       Memorize_splitter(Window);
       Window.Parent.opt.tree_portion:= Window.opt.tree_portion;
-      -- In case there is no more child window, disable toolbar items.
-      -- This is reversed if another child window is focused.
+      --  For the case there is no more child window, disable toolbar items.
+      --  This action is reversed as soon as another child window is focused.
       Window.Parent.Tool_Bar.Enabled(IDM_ADD_FILES, False);
       Window.Parent.Tool_Bar.Enabled(IDM_Add_Files_Encryption, False);
       Window.is_closing:= True;

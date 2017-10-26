@@ -807,7 +807,7 @@ package body AZip_Common.Operations is
                 abort_operation:= True;
               when UnZip.CRC_Error =>
                 user_code:= bad_crc;
-              when Zip.Zip_archive_corrupted =>
+              when Zip.Archive_corrupted =>
                 user_code:= corrupt;
               when UnZip.Wrong_password =>
                 user_code:= wrong_pwd;
@@ -857,7 +857,7 @@ package body AZip_Common.Operations is
                 abort_operation:= True;
               when UnZip.CRC_Error =>
                 user_code:= bad_crc;
-              when Zip.Zip_archive_corrupted =>
+              when Zip.Archive_corrupted =>
                 user_code:= corrupt;
               when UnZip.Wrong_password =>
                 user_code:= wrong_pwd;
@@ -886,7 +886,7 @@ package body AZip_Common.Operations is
                   abort_operation:= True;
                 when UnZip.CRC_Error =>
                   user_code:= bad_crc;
-                when Zip.Zip_archive_corrupted =>
+                when Zip.Archive_corrupted =>
                   user_code:= corrupt;
               end;
               Feedback(

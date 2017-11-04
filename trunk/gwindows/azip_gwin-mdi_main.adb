@@ -514,7 +514,7 @@ package body AZip_GWin.MDI_Main is
       if v(v'First..v'First+2) = "GPL" then
         return v;
       else
-        return "GMGPL " & v & " (MinGW)";
+        return "GMGPL " & v & " (TDM-GCC / MinGW)";
       end if;
     end GNAT_Version_string;
     --

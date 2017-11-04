@@ -10,12 +10,11 @@ call ming_set
 cd ..
 
 rem make Ming object directories if not yet existing
-md obj_ming
-md obj_ming\fast
-md obj_ming\debug
-copy obj\fast\libwin32ada.a   obj_ming\fast
-copy obj\debug\debug.pra      obj_ming\debug
-copy obj\debug\libwin32ada.a  obj_ming\debug
+md obj\fast_ming
+md obj\debug_ming
+copy obj\fast\libwin32ada.a   obj\fast_ming
+copy obj\debug\debug.pra      obj\debug_ming
+copy obj\debug\libwin32ada.a  obj\debug_ming
 
 cd gwindows
 

@@ -29,11 +29,11 @@ project AZip_GWindows is
       when "Debug_GPL" =>
          for Object_Dir use "../obj/debug";
       when "Debug_MinGW" =>
-         for Object_Dir use "../obj_ming/debug";
+         for Object_Dir use "../obj/debug_ming";
       when "Fast_GPL" =>
          for Object_Dir use "../obj/fast";
       when "Fast_MinGW" =>
-         for Object_Dir use "../obj_ming/fast";
+         for Object_Dir use "../obj/fast_ming";
       when "Profiling" =>
          for Object_Dir use "../obj/profiling";
    end case;

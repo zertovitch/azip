@@ -1,5 +1,4 @@
-with GWindows;                          use GWindows;
-with GWindows.Base;                     use GWindows.Base;
+with GWindows.Base;
 
 package AZip_GWin.Drop_file_dialog is
 

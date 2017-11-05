@@ -1,7 +1,6 @@
 with AZip_Common;                       use AZip_Common;
 with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
-with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
 
 with Zip;                               use Zip;
 with UnZip;

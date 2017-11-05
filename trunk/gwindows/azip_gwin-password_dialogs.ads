@@ -1,7 +1,6 @@
 with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
 
-with GWindows;                          use GWindows;
-with GWindows.Base;                     use GWindows.Base;
+with GWindows.Base;
 
 package AZip_GWin.Password_dialogs is
 

@@ -5,7 +5,6 @@ with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
 with Zip;
 
-with GWindows;                          use GWindows;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Common_Controls.Ex_List_View;
 with GWindows.Drawing;

@@ -1,4 +1,3 @@
-with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
 with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
 with GWindows.Application;              use GWindows.Application;

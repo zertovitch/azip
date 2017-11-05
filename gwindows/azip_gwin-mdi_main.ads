@@ -3,11 +3,8 @@
 with AZip_Common.User_options;
 with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
-with GWindows;                          use GWindows;
 with GWindows.Base;
-with GWindows.Common_Dialogs;
 with GWindows.Common_Controls;
-with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Image_Lists;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
@@ -99,17 +96,5 @@ package AZip_GWin.MDI_Main is
     File_Names: Array_Of_File_Names
   )
   return Boolean;
-
-  function S2G (Value : String) return GString renames To_GString_From_String;
-  function G2S (Value : GString) return String renames To_String;
-  function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
-  function G2GU (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
-
-  NL: constant GString:= S2G((1=> ASCII.LF));
-
-  Zip_archives_filters: GWindows.Common_Dialogs.Filter_Array:=
-    ((G2GU ("Zip archives (*.zip)"),        G2GU ("*.zip" )),
-     (G2GU ("JAR (Java archives) (*.jar)"), G2GU ("*.jar" )),
-     (G2GU ("All files (*.*)"),             G2GU ("*.*")));
 
 end AZip_GWin.MDI_Main;

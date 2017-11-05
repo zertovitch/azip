@@ -686,7 +686,6 @@ pragma Eliminate (GWindows.Common_Controls, SendMessageW, Source_Location => "gw
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2314");
 pragma Eliminate (GWindows.Common_Controls, SendMessageA, Source_Location => "gwindows-common_controls.adb:2451");
 pragma Eliminate (GWindows.Common_Controls, SendMessageW, Source_Location => "gwindows-common_controls.adb:2459");
-pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2513");
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2601");
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2832");
 pragma Eliminate (GWindows.Common_Controls, SendMessage, Source_Location => "gwindows-common_controls.adb:2852");

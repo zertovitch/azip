@@ -684,7 +684,7 @@ package body AZip_Common.Operations is
       archive_percents_done:= (100 * processed_entries) / total_entries;
       file_percents_done:= 0;
       --
-      -- !! use hashed maps either for searching
+      -- !! use rather hashed maps for searching
       --
       case operation is
         when Add =>
@@ -812,7 +812,7 @@ package body AZip_Common.Operations is
               when UnZip.Wrong_password =>
                 user_code:= wrong_pwd;
                 abort_operation:= True;
-              when UnZip.Unsupported_method =>
+              when UnZip.Unsupported_method | UnZip.Not_supported =>
                 user_code:= unsupported;
             end;
           when Extract =>
@@ -862,7 +862,7 @@ package body AZip_Common.Operations is
               when UnZip.Wrong_password =>
                 user_code:= wrong_pwd;
                 abort_operation:= True;
-              when UnZip.Unsupported_method =>
+              when UnZip.Unsupported_method | UnZip.Not_supported =>
                 user_code:= unsupported;
             end;
           when Search =>
@@ -888,6 +888,8 @@ package body AZip_Common.Operations is
                   user_code:= bad_crc;
                 when Zip.Archive_corrupted =>
                   user_code:= corrupt;
+                when UnZip.Unsupported_method | UnZip.Not_supported =>
+                  user_code:= unsupported;
               end;
               Feedback(
                 file_percents_done,

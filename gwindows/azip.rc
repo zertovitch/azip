@@ -201,8 +201,8 @@ FONT 8, "Ms Shell Dlg"
     ICON            Key_Icon, 0, 178, 98, 21, 20, SS_ICON, WS_EX_LEFT
     LTEXT           "(Archive name here)", Drop_archive_name, 39, 29, 285, 29, SS_LEFT, WS_EX_LEFT
     LTEXT           "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", New_archive_msg, 45, 65, 272, 21, NOT WS_VISIBLE | SS_LEFT, WS_EX_STATICEDGE
-    PUSHBUTTON      "No", IDCANCEL, 72, 95, 50, 20, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Yes", IDOK, 10, 95, 50, 20, 0, WS_EX_LEFT
+    PUSHBUTTON      "No", IDCANCEL, 87, 95, 63, 18, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Yes", IDOK, 10, 95, 63, 18, 0, WS_EX_LEFT
 }
 
 

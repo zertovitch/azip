@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2017/11/16  15:44:05
+-- Transcription time: 2017/11/16  17:10:35
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -422,7 +422,7 @@ package body AZip_Resource_GUI is
     Dlg_to_Scn(  45, 65, 272, 21, x,y,w,h);
     Create( Window.New_archive_msg, Window, "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", x,y,w,h, GWindows.Static_Controls.Left, Half_Sunken, ID => New_archive_msg);
     Hide(Window.New_archive_msg);
-    Dlg_to_Scn(  72, 95, 50, 20, x,y,w,h);
+    Dlg_to_Scn(  87, 95, 63, 18, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -433,7 +433,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  10, 95, 50, 20, x,y,w,h);
+    Dlg_to_Scn(  10, 95, 63, 18, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.

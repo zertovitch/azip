@@ -1350,7 +1350,6 @@ pragma Eliminate (Zip.Headers, Read_and_check, Source_Location => "zip-headers.a
 pragma Eliminate (Zip.Headers, Write, Source_Location => "zip-headers.ads:94");
 pragma Eliminate (Zip, Zip_comment, Source_Location => "zip.ads:102");
 pragma Eliminate (Zip, Tree_stat, Source_Location => "zip.ads:203");
-pragma Eliminate (Zip, Traverse, Source_Location => "zip.adb:488");
 pragma Eliminate (Zip, User_code, Source_Location => "zip.ads:278");
 pragma Eliminate (Zip, Get_sizes, Source_Location => "zip.ads:284");
 pragma Eliminate (Zip, BlockRead, Source_Location => "zip.ads:317");

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2017/08/17  15:49:44
+-- Transcription time: 2017/11/16  15:44:05
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: >= 19-May-2016
+-- RC Grammar version: 31-Oct-2017
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -409,20 +409,20 @@ package body AZip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  17, 10, 21, 20, x,y,w,h);
+    Dlg_to_Scn(  2, 2, 21, 20, x,y,w,h);
     Create( Window.RC_item_1, Window, Num_resource(Plus_icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  205, 100, 123, 16, x,y,w,h);
     Create( Window.Encrypt_check_box, Window, " Encrypt data in archive", x,y,w,h, ID => Encrypt_check_box);
-    Dlg_to_Scn(  50, 14, 250, 14, x,y,w,h);
+    Dlg_to_Scn(  31, 7, 250, 14, x,y,w,h);
     Create_Label( Window, "Add dropped file(s) to...", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  178, 98, 21, 20, x,y,w,h);
     Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  35, 36, 285, 29, x,y,w,h);
+    Dlg_to_Scn(  39, 29, 285, 29, x,y,w,h);
     Create( Window.Drop_archive_name, Window, "(Archive name here)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Drop_archive_name);
-    Dlg_to_Scn(  45, 71, 272, 21, x,y,w,h);
+    Dlg_to_Scn(  45, 65, 272, 21, x,y,w,h);
     Create( Window.New_archive_msg, Window, "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", x,y,w,h, GWindows.Static_Controls.Left, Half_Sunken, ID => New_archive_msg);
     Hide(Window.New_archive_msg);
-    Dlg_to_Scn(  72, 101, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  72, 95, 50, 20, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -433,7 +433,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  10, 101, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  10, 95, 50, 20, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.

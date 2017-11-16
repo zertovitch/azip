@@ -195,14 +195,14 @@ STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VIS
 CAPTION "File(s) dropped"
 FONT 8, "Ms Shell Dlg"
 {
-    ICON            Plus_icon, 1, 17, 10, 21, 20, SS_ICON, WS_EX_LEFT
+    ICON            Plus_icon, 1, 2, 2, 21, 20, SS_ICON, WS_EX_LEFT
     AUTOCHECKBOX    " Encrypt data in archive", Encrypt_check_box, 205, 100, 123, 16, 0, WS_EX_LEFT
-    LTEXT           "Add dropped file(s) to...", 0, 50, 14, 250, 14, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Add dropped file(s) to...", 0, 31, 7, 250, 14, SS_LEFT, WS_EX_LEFT
     ICON            Key_Icon, 0, 178, 98, 21, 20, SS_ICON, WS_EX_LEFT
-    LTEXT           "(Archive name here)", Drop_archive_name, 35, 36, 285, 29, SS_LEFT, WS_EX_LEFT
-    LTEXT           "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", New_archive_msg, 45, 71, 272, 21, NOT WS_VISIBLE | SS_LEFT, WS_EX_STATICEDGE
-    PUSHBUTTON      "No", IDCANCEL, 72, 101, 50, 14, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Yes", IDOK, 10, 101, 50, 14, 0, WS_EX_LEFT
+    LTEXT           "(Archive name here)", Drop_archive_name, 39, 29, 285, 29, SS_LEFT, WS_EX_LEFT
+    LTEXT           "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", New_archive_msg, 45, 65, 272, 21, NOT WS_VISIBLE | SS_LEFT, WS_EX_STATICEDGE
+    PUSHBUTTON      "No", IDCANCEL, 72, 95, 50, 20, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Yes", IDOK, 10, 95, 50, 20, 0, WS_EX_LEFT
 }
 
 

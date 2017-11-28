@@ -83,6 +83,7 @@ package body AZip_GWin.MDI_Child is
     if not Window.is_closing then
       bar.Enabled(IDM_ADD_FILES, True);
       bar.Enabled(IDM_Add_Files_Encryption, True);
+      bar.Enabled(IDM_Properties, True);
     end if;
   end Update_tool_bar;
 
@@ -1670,6 +1671,7 @@ package body AZip_GWin.MDI_Child is
       --  This action is reversed as soon as another child window is focused.
       Window.Parent.Tool_Bar.Enabled(IDM_ADD_FILES, False);
       Window.Parent.Tool_Bar.Enabled(IDM_Add_Files_Encryption, False);
+      Window.Parent.Tool_Bar.Enabled(IDM_Properties, False);
       Window.is_closing:= True;
     end if;
   end On_Close;

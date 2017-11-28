@@ -78,6 +78,8 @@ package AZip_GWin.MDI_Main is
     File_Name  :        GWindows.GString_Unbounded
   );
 
+  procedure On_About (Window : in out MDI_Main_Type);
+
   overriding procedure On_Menu_Select (
         Window : in out MDI_Main_Type;
         Item   : in     Integer        );

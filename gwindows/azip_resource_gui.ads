@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2017/11/28  21:05:29
+-- Transcription time: 2017/11/28  21:48:57
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -435,9 +435,11 @@ package AZip_Resource_GUI is
     Stats_list: List_View_Control_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    ID_Button_About_Azip: Default_Dialog_Button_Type;    -- closes parent window after click
+    ID_Button_About_Azip_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Properties_box_Type
 
-  -- Dialog at resource line 317
+  -- Dialog at resource line 318
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -478,7 +480,7 @@ package AZip_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Quick_help_box_Type
 
-  -- Dialog at resource line 332
+  -- Dialog at resource line 333
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -509,7 +511,7 @@ package AZip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  -- Dialog at resource line 344
+  -- Dialog at resource line 345
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -536,7 +538,7 @@ package AZip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion: constant String:= "2.12b";
+    FileVersion: constant String:= "2.14";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2017";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
@@ -611,6 +613,7 @@ package AZip_Resource_GUI is
   IDM_TEST_ARCHIVE          : constant:=  40004;
   Numb_entries              : constant:=  40004;
   IDM_QUIT                  : constant:=  40005;
+  ID_Button_About_Azip      : constant:=  40005;
   IDM_RECOMPRESS_ARCHIVE    : constant:=  40006;
   IDM_EXTRACT               : constant:=  40007;
   IDM_FIND_IN_ARCHIVE       : constant:=  40008;
@@ -661,6 +664,6 @@ package AZip_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 438
+  -- Last line of resource script file: 439
 
 end AZip_Resource_GUI;

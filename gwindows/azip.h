@@ -63,6 +63,7 @@
 #define IDM_TEST_ARCHIVE                        40004
 #define Numb_entries                            40004
 #define IDM__QUIT                               40005
+#define ID_Button_About_Azip                    40005
 #define IDM__RECOMPRESS_ARCHIVE                 40006
 #define IDM_EXTRACT                             40007
 #define IDM_FIND_IN_ARCHIVE                     40008

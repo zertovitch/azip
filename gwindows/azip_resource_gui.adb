@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2017/11/28  21:05:29
+-- Transcription time: 2017/11/28  21:48:57
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -1040,7 +1040,7 @@ package body AZip_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 265, 157, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 265, 166, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -1074,7 +1074,7 @@ package body AZip_Resource_GUI is
     x,y,w,h: Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 265, 157, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 265, 166, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
@@ -1097,7 +1097,7 @@ package body AZip_Resource_GUI is
     Create( Window.Numb_entries, Window, "# entries", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Numb_entries);
     Dlg_to_Scn(  14, 56, 236, 81, x,y,w,h);
     Create( Window.Stats_list, Window, x,y,w,h, Multiple, Report_View, No_Sorting, False, Align_Left);
-    Dlg_to_Scn(  111, 140, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  51, 142, 64, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -1108,9 +1108,20 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
+    Dlg_to_Scn(  145, 142, 64, 19, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.ID_Button_About_Azip, Window, "About AZip", x,y,w,h, ID => ID_Button_About_Azip);
+    Create( Window.ID_Button_About_Azip_permanent, Window, "About AZip", x,y,w,h, ID => ID_Button_About_Azip);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.ID_Button_About_Azip_permanent);
+    else -- hide the closing button
+      Hide(Window.ID_Button_About_Azip);
+    end if;
   end Create_Contents;  --  Properties_box_Type
 
-  -- Dialog at resource line 326
+  -- Dialog at resource line 327
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1187,7 +1198,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Quick_help_box_Type
 
-  -- Dialog at resource line 341
+  -- Dialog at resource line 342
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1359,6 +1370,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 438
+  -- Last line of resource script file: 439
 
 end AZip_Resource_GUI;

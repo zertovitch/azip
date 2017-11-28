@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2017/11/16  17:10:35
+-- Transcription time: 2017/11/28  21:05:29
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -417,7 +417,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "Add dropped file(s) to...", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  178, 98, 21, 20, x,y,w,h);
     Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  39, 29, 285, 29, x,y,w,h);
+    Dlg_to_Scn(  39, 26, 285, 32, x,y,w,h);
     Create( Window.Drop_archive_name, Window, "(Archive name here)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Drop_archive_name);
     Dlg_to_Scn(  45, 65, 272, 21, x,y,w,h);
     Create( Window.New_archive_msg, Window, "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", x,y,w,h, GWindows.Static_Controls.Left, Half_Sunken, ID => New_archive_msg);

@@ -1,6 +1,3 @@
-gw - drag & drop to main window with maximized child window -> 
-       drop top active child window
-gw - drag & drop of 0-size file seems to crash AZip (after correct action)
 gw - "view" function on text: show in a Scintilla window
 gw - "view" function on picture: show in a bitmap, using GID
 

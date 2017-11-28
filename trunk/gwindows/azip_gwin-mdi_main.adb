@@ -443,6 +443,16 @@ package body AZip_GWin.MDI_Main is
           File_Names(i)
         );
       end loop;
+    elsif Window.opt.MDI_childen_maximized then
+      --  If children windows are maximized, it is intuitive that files dropped (on the small
+      --   areas like the window borders or the tool bar) are for the focused child window.
+      declare
+        cwc: constant Pointer_To_Base_Window_Class := Window.MDI_Active_Window;
+      begin
+        if cwc /= null and then cwc.all in MDI_Child_Type'Class then
+          MDI_Child_Type (cwc.all).On_File_Drop (File_Names);
+        end if;
+      end;
     else
       Do_drop_file_dialog(
         Parent         => Window,

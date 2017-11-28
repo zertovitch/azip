@@ -503,7 +503,7 @@ package body AZip_GWin.MDI_Main is
 
   azip_web_page: constant String:= "http://azip.sf.net/";
 
-  procedure On_About(Window : in out MDI_Main_Type) is
+  procedure On_About (Window : in out MDI_Main_Type) is
     box: About_box_Type;
     url_azip, url_gnat, url_gnavi, url_resedit, url_zipada: URL_Type;
     --

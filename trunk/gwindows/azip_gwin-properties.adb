@@ -99,5 +99,8 @@ begin
   else
     box.Numb_entries.Text("0 (empty)");
   end if;
-  Show_Dialog(box, Window);
+  case Show_Dialog (box, Window) is
+    when ID_Button_About_Azip => Window.Parent.On_About;
+    when others => null;
+  end case;
 end;

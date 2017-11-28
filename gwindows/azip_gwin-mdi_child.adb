@@ -975,9 +975,9 @@ package body AZip_GWin.MDI_Child is
           return "";
         when Tree =>
           if sel_path = "" then
-            return NL & "Current folder is archive's root";
+            return NL & NL & "Current folder is archive's root";
           else
-            return NL & "Current folder is " & sel_path;
+            return NL & NL & "Current folder is: " & sel_path;
           end if;
       end case;
     end Eventual_folder;

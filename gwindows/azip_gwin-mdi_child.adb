@@ -17,9 +17,8 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Static_Controls;
 with GWindows.Taskbar;                  use GWindows.Taskbar;
-
-with GWin_Util;
 
 with Ada.Calendar;
 with Ada.Directories;
@@ -565,14 +564,7 @@ package body AZip_GWin.MDI_Child is
     Window.Bar_and_List.Create(Window.Tree_Bar_and_List, 1,1,20,20);
     Window.Bar_and_List.Dock(At_Right);
 
-    Window.Splitter.Create(Window.Bar_and_List, Fill);
-    Window.Splitter.Dock(At_Left);
-    Window.Splitter_dashes.Create(Window.Splitter,
-      Alignment => GWindows.Static_Controls.Center,
-      Text => S2G(1000 * ". ") -- A cheap grip design for the split bar...
-    );
-    Window.Splitter_dashes.Dock(Fill);
-    Window.Splitter_dashes.Enabled(False); -- Just give a grey look...
+    Window.Splitter.Create(Window.Bar_and_List, At_Left);
 
     Window.Directory_List.Create(Window.Bar_and_List, 50,1,20,20, Multiple, Report_View, Sort_Custom);
     Window.Directory_List.Set_Extended_Style(AZip_LV_Ex.Full_Row_Select);

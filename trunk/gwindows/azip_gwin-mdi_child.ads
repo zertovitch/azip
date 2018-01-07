@@ -11,10 +11,11 @@ with GWindows.Drawing;
 with GWindows.GControls.GSize_Bars;
 with GWindows.Packing_Boxes;
 with GWindows.Panels;
-with GWindows.Static_Controls;
 with GWindows.Types;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
+
+with GWin_Util;
 
 with Ada.Numerics.Float_Random;
 
@@ -110,8 +111,7 @@ package AZip_GWin.MDI_Child is
         Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
         Bar_and_List     : MDI_Child_Panel_Type;
         Directory_List   : MDI_Child_List_View_Control_Type;
-        Splitter         : MDI_Child_GSize_Bar_Type;
-        Splitter_dashes  : GWindows.Static_Controls.Label_Type;
+        Splitter         : GWin_Util.Splitter_with_dashes;
         Folder_Tree      : aliased MDI_Child_Tree_View_Control_Type;
         zif              : Zip.Zip_info;
         path_map         : AZip_Common.Path_Catalogues.Map;

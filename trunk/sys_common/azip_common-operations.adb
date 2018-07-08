@@ -1,6 +1,7 @@
 with Zip.Compress, Zip.Create, UnZip.Streams, Zip_Streams;
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
+with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 with Ada.Directories;                   use Ada.Directories;
 with Ada.IO_Exceptions;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
@@ -328,6 +329,9 @@ package body AZip_Common.Operations is
         user_abort
       );
     end Entry_feedback;
+
+    ignore_case: constant Boolean:= True; -- !! set as an option
+
     --
     -- Taken from Find_zip
     --
@@ -342,7 +346,6 @@ package body AZip_Common.Operations is
       type Buffer_range is mod siz;
       buf: array(Buffer_range) of Character:= (others => ' ');
       bup: Buffer_range:= 0;
-      ignore_case: constant Boolean:= True; -- !! as option
       cancelled: Boolean;
       --  We define a local, ad-hoc stream type.
       --
@@ -490,7 +493,7 @@ package body AZip_Common.Operations is
     --
     --  Action for entry 'name' in current archive being traversed.
     --
-    procedure Action(
+    procedure Action_1_entry (
       name             : String; -- 'name' is compressed entry's full name
       file_index       : Zip_Streams.ZS_Index_Type;
       comp_size        : Zip.File_size_type;
@@ -510,9 +513,9 @@ package body AZip_Common.Operations is
       name_utf_8_with_extra_folder: constant UTF_8_String:= Add_extract_directory(name, name_encoding);
       short_name_utf_16: constant UTF_16_String:= Remove_path(name_utf_16);
       dummy_user_abort, skip_if_conflict: Boolean;
-      match: Boolean:= False;
-      idx: Natural;
-      -- Just copy entry from old to new archive (Modifying_Operation)
+      match : Boolean:= False;
+      add_file_idx : Natural;  --  Index in the entry_name list (file to be added)
+      -- Just copy entry from old to new archive (Modifying_Operation):
       procedure Preserve_entry is
       begin
         current_operation:= Copy;
@@ -675,7 +678,7 @@ package body AZip_Common.Operations is
       end Recompress_entry;
       --
       use type Zip.File_size_type;
-    begin -- Action
+    begin  --  Action_1_entry
       user_code:= nothing;
       if abort_operation then
         return;
@@ -684,7 +687,7 @@ package body AZip_Common.Operations is
       archive_percents_done:= (100 * processed_entries) / total_entries;
       file_percents_done:= 0;
       --
-      -- !! use rather hashed maps for searching
+      -- !! we could use rather hashed maps for searching
       --
       case operation is
         when Add =>
@@ -692,8 +695,8 @@ package body AZip_Common.Operations is
             if base_folder & Remove_external_path(entry_name(i)) = name_utf_16 then
               -- The path removed is from an external file name.
               -- The file will be added with the base_folder from archive
-              match:= True;
-              idx:= i;
+              match := True;
+              add_file_idx := i;
               exit;
             end if;
           end loop;
@@ -706,42 +709,46 @@ package body AZip_Common.Operations is
             for i in entry_name'Range loop
               if To_Wide_String(entry_name(i).str) = name_utf_16 then
                 match:= True;
-                idx:= i;
                 exit;
               end if;
             end loop;
           end if;
         when Search =>
+          --  For Search, the entry name list is actually a list of search patterns.
           if entry_name'Length = 0 then
-            match:= True; -- empty name list -> we process the whole archive
-          else
-            for i in entry_name'Range loop
-              declare
-                pattern: constant UTF_16_String:= To_Wide_String(entry_name(i).str);
-              begin
-                if pattern = "" or else -- empty name -> we process the whole archive
-                  Index(short_name_utf_16, pattern) > 0
-                then
-                  match:= True;
-                  idx:= i;
-                  exit;
-                end if;
-              end;
-            end loop;
+            --  If the list is empty, we process the whole archive.
+            match:= True;
           end if;
+          for i in entry_name'Range loop
+            declare
+              pattern: UTF_16_String := To_Wide_String(entry_name(i).str);
+              up_name: UTF_16_String := short_name_utf_16;
+            begin
+              if ignore_case then
+                pattern := To_Upper (pattern);
+                up_name := To_Upper (up_name);
+              end if;
+              if pattern = ""  --  Always match
+                or else Index (up_name, pattern) > 0
+              then
+                match:= True;
+                exit;
+              end if;
+            end;
+          end loop;
       end case;
       --
       if match then
         case operation is
           when Add =>
-            current_operation:= Replace;
-            current_entry_name:= U(short_name_utf_16);
+            current_operation := Replace;
+            current_entry_name := U (short_name_utf_16);
             -- Here we compress new contents for replacing an existing entry
             declare
-              external_file_name: constant UTF_8_String:=
-                To_UTF_8(To_Wide_String(entry_name(idx).str));
+              external_file_name : constant UTF_8_String :=
+                To_UTF_8 (To_Wide_String (entry_name (add_file_idx).str));
             begin
-              Add_File(
+              Add_File (
                 Info               => new_zip,
                 Name               => external_file_name,
                 Name_in_archive    => name,
@@ -912,9 +919,9 @@ package body AZip_Common.Operations is
             null; -- Nothing to do here
         end case;
       end if;
-    end Action;
+    end Action_1_entry;
 
-    procedure Traverse_archive is new Zip.Traverse_verbose(Action);
+    procedure Traverse_archive is new Zip.Traverse_verbose (Action_1_entry);
 
   begin -- Process_archive
     max_code:= 0;

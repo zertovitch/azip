@@ -296,12 +296,13 @@ package body AZip_Common.Operations is
     new_zip: Zip.Create.Zip_Create_info;
     new_fzs: aliased Zip_Streams.File_Zipstream;
     old_fzs: aliased Zip_Streams.File_Zipstream;
-    file_percents_done: Natural:= 0;
-    archive_percents_done: Natural:= 0;
+    file_percents_done    : Natural := 0;
+    archive_percents_done : Natural := 0;
     processed_entries, total_entries: Natural:= 0;
     current_entry_name: UTF_16_Unbounded_String;
     current_operation: Entry_Operation;
     current_skip_hint: Boolean;
+    dummy_user_abort : Boolean;
     total_occurences: Natural:= 0;
     total_files_with_occurence: Natural:= 0;
     --
@@ -512,7 +513,7 @@ package body AZip_Common.Operations is
       name_utf_8_as_in_archive: constant UTF_8_String:= To_UTF_8(name_utf_16);
       name_utf_8_with_extra_folder: constant UTF_8_String:= Add_extract_directory(name, name_encoding);
       short_name_utf_16: constant UTF_16_String:= Remove_path(name_utf_16);
-      dummy_user_abort, skip_if_conflict: Boolean;
+      skip_if_conflict: Boolean;
       match : Boolean:= False;
       add_file_idx : Natural;  --  Index in the entry_name list (file to be added)
       -- Just copy entry from old to new archive (Modifying_Operation):
@@ -874,12 +875,13 @@ package body AZip_Common.Operations is
             end;
           when Search =>
             if search_pattern = "" then -- just mark entries with matching names
-              -- No feedback, it would be too time-consuming
-              -- for just 1 instruction !
+              --  No feedback, it would be too time-consuming
+              --  for just 2 instructions !
               user_code:= 1;
+              total_files_with_occurence:= total_files_with_occurence + 1;
             else
               begin
-                -- We need to search the string in the compressed entry...
+                -- We need to search the pattern string in the compressed entry...
                 Search_1_file(name => name, occ  => user_code);
                 if user_code > 0 then
                   total_files_with_occurence:= total_files_with_occurence + 1;
@@ -898,7 +900,7 @@ package body AZip_Common.Operations is
                 when UnZip.Unsupported_method | UnZip.Not_supported =>
                   user_code:= unsupported;
               end;
-              Feedback(
+              Feedback (
                 file_percents_done,
                 archive_percents_done,
                 short_name_utf_16,
@@ -956,9 +958,10 @@ package body AZip_Common.Operations is
     -- The main job is done here: --
     --------------------------------
     Traverse_archive(zif);
-    ------------------------------------------------------
-    -- Almost done, we only need to process new entries --
-    ------------------------------------------------------
+    --------------------------------------------------------------
+    --  Almost done, we only need to process new entries (Add)  --
+    --  or to give a final feedback (Search).                   --
+    --------------------------------------------------------------
     case operation is
       when Add =>
         for i in entry_name'Range loop
@@ -1016,12 +1019,23 @@ package body AZip_Common.Operations is
           end;
         end loop;
       when Update | Remove | Recompress =>
+        --  There should be no file to be updated, recompressed or removed which is
+        --  not in original archive.
         null;
-        -- There should be no file to be updated, recompressed or removed which is
-        -- not in original archive.
-      when Read_Only_Operation =>
+      when Test .. Extract =>
+        --  Nothing to do after archive traversal.
         null;
-        -- Nothing to do after archive traversal.
+      when Search =>
+        --  We force a final feedback, in order to have a correct final
+        --  message after a search with an empty pattern, or with 0
+        --  occurrence found. In both cases, a call to Feedback during
+        --  the search never happens and the message is wrong.
+        Feedback (100, 100, "", Search,
+          "Occurences found:" & Integer'Image(total_occurences),
+          "Total entries:" & Integer'Image(total_files_with_occurence),
+          False,
+          dummy_user_abort
+        );
     end case;
     case operation is
       when Modifying_Operation =>

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2017/11/28  21:48:57
+-- Transcription time: 2018/07/10  10:59:48
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -538,8 +538,8 @@ package AZip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion: constant String:= "2.14";
-    LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2017";
+    FileVersion: constant String:= "2.15";
+    LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2018";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
   end Version_info;

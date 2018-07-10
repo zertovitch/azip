@@ -6,7 +6,7 @@ REM ADA_INCLUDE_PATH=
 REM C:\Ada\zip-ada\zip_lib;C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework
 
 set builder=gprbuild
-REM set builder=gnatmake
+set builder=gnatmake
 set target=_MinGW
 if (%1)==() set builder=gprbuild
 if (%1)==() set target=_GPL

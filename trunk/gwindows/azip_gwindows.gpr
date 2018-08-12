@@ -1,20 +1,26 @@
 -- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
 -- for the AZip project ( http://azip.sf.net/ ), version using GWindows.
--- Build me with "gnatmake -P azip_gwindows", or open me with GPS
+-- Build me with "gnatmake -p -P azip_gwindows", or open me with GPS
 
--- *** External libraries ***
---   You need to make the following projects' source files visible to this project
---   through the ad-hoc GNAT_SOURCE_PATH environment variable:
---
--- * GWindows and contributions:
---   [gnavi]\gwindows\framework
---   [gnavi]\gwindows\contrib
---   [gnavi]\gnatcom\framework
---   Project URL: http://sf.net/projects/gnavi/
---
--- * Zip-Ada:
---   [zip-ada]\zip_lib
---   Project URL: http://unzip-ada.sf.net
+--  *** External libraries ***
+--  * 
+--  *     You need to make the following projects' source files visible to this project
+--  *     through the ad-hoc (not GNAT / AdaCore official) GNAT_SOURCE_PATH environment variable:
+--  *   
+--  *   * GWindows and contributions:
+--  *       [gnavi]\gwindows\framework
+--  *       [gnavi]\gwindows\contrib
+--  *       [gnavi]\gnatcom\framework
+--  *       Project URL: http://sf.net/projects/gnavi/
+--  *       Mirror URL: https://github.com/svn2github/gnavi
+--  *       NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
+--  *   
+--  *   * Zip-Ada:
+--  *       [zip-ada]\zip_lib
+--  *       Project URL: http://unzip-ada.sf.net
+--  *       Mirror URL: https://github.com/svn2github/zip-ada
+--  * 
+--  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;C:\Ada\zip-ada\zip_lib
 
 project AZip_GWindows is
 

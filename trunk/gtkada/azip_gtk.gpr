@@ -1,10 +1,20 @@
 -- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
--- for the AZip project ( http://azip.sf.net/ ), version using GtkAda.
--- Build me with "gnatmake -P azip_gtk", or open me with GPS
+-- for the AZip project ( http://azip.sf.net/ ), version using GtkAda graphical toolkit.
+-- Build me with "gnatmake -p -P azip_gtk", or open me with GPS
 --
+--  *** External libraries ***
+--  * 
+--  *     You need to make the following projects' source files visible to this project
+--  *     through the ad-hoc (not GNAT / AdaCore official) GNAT_SOURCE_PATH environment variable:
+--  *   
+--  *   * Zip-Ada:
+--  *       [zip-ada]\zip_lib
+--  *       Project URL: http://unzip-ada.sf.net
+--  *       Mirror URL: https://github.com/svn2github/zip-ada
+--  * 
+--  *  Example: GNAT_SOURCE_PATH=C:\Ada\zip-ada\zip_lib
 
 with "gtkada";
--- svn checkout http://svn.eu.adacore.com/anonsvn/Dev/trunk/GtkAda
 
 project AZip_Gtk is
 
@@ -12,7 +22,7 @@ project AZip_Gtk is
    AZBuild_Mode : AZBuild_Mode_Type := external ("Build_Mode", "Fast");
 
    for Main use ("azip.adb");
-   for Source_Dirs use ("../sys_common", "../zip_lib", ".");
+   for Source_Dirs use ("../sys_common", ".") & external_as_list("GNAT_SOURCE_PATH", ";");
    for Exec_Dir use ".";
 
    case AZBuild_Mode is
@@ -34,4 +44,3 @@ project AZip_Gtk is
    end Binder;
 
 end AZip_Gtk;
-

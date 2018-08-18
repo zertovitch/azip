@@ -1,18 +1,28 @@
+gw - drag & drop from list to a Windows Explorer window or to the Desktop
+gw - drag & drop a folder to Windows Explorer window or to the Desktop
+
+gw - drag & drop from list to another folder in a tree (same archive child window)
+gw - drag & drop a folder to another folder (same archive child window)
+
+gw - drag & drop from list to another list (between two child windows)
+gw - drag & drop from list to another folder in a tree (between two child windows)
+gw - drag & drop a folder to another folder (between two child windows)
+
+gw - "view": double-click / return -> open file in temp dir. (as Outlook does) or own
+             (pre)viewer for text and pictures.
 gw - "view" function on text: show in a Scintilla window
 gw - "view" function on picture: show in a bitmap, using GID
+gw - "copy" saves directory list or tree into text clipboard
 
 console mode through command lines options (GUI not started then)
   -a for Add, -d for Delete, etc.
   -q: quiet: neither console output, nor gui
 
 gw - disable sorting on large lists
-gw - drag & drop entre fenêtres, et vers explorer
 gw - copy/paste entre fenêtres
-gw - "copy" saves directory list into text clipboard
   
 gw - list of supported formats in "about" box
 gw - !! sélection: somme des tailles compressées et non compressées en #octets
-gw - double-clic / return (ouvrir un fichier dans un rép. temporaire)
 copy_file et rename qui marchent avec utf-8 (virer Ada.Directories)
 
 gw - "[Rename]" dans les conflits de nom

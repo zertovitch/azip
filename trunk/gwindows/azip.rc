@@ -372,6 +372,14 @@ Main_Menu ACCELERATORS
 
 
 //
+// Cursor resources
+//
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Drag_Unpack_Cursor CURSOR         "ico_bmp/drag_unpack.cur"
+
+
+
+//
 // Icon resources
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL

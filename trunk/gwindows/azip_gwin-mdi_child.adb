@@ -43,15 +43,22 @@ package body AZip_GWin.MDI_Child is
       Window.Focus = Window.Folder_Tree'Unrestricted_Access;
   end Folder_Focus;
 
-  procedure Update_status_bar(Window : in out MDI_Child_Type) is
+  procedure Update_status_bar (Window : in out MDI_Child_Type) is
     sel: Natural;
+    function Destination_image return GString is
+    begin
+      case Window.MDI_Root.dragging.destination is
+        when to_desktop =>
+          return "to the Desktop";
+        when to_explorer =>
+          return "to a Windows Explorer window";
+        when others =>
+          return "";
+      end case;
+    end Destination_image;
   begin
     if not Is_loaded(Window.zif) then
-      Text(Window.Status_Bar,"No archive loaded",0);
-      return;
-    end if;
-    if Folder_Focus(Window) then
-      Text(Window.Status_Bar,"Folder selected",0);
+      Window.Status_Bar.Text ("No archive loaded", 0, Flat);
       return;
     end if;
     --  Here the non-trivial cases.
@@ -59,18 +66,24 @@ package body AZip_GWin.MDI_Child is
     if Window.MDI_Root.dragging.is_dragging then
       --  Here is the dragging-from-list case
       Window.Status_Bar.Text (
-        "Dragging " & Integer'Wide_Image(sel) & " selected file(s)", 0
+        "Dragging " & Integer'Wide_Image(sel) &
+        " selected file(s) " & Destination_image, 0, Sunken
        );
     else
+      --  Cases without dragging
+      if Folder_Focus(Window) then
+        Text(Window.Status_Bar,"Folder selected",0, Flat);
+        return;
+      end if;
       if sel > 0 then
         Window.Status_Bar.Text (
           Integer'Wide_Image(Window.Directory_List.Item_Count) &
-            " file(s)," & Integer'Wide_Image(sel) & " selected", 0
+            " file(s)," & Integer'Wide_Image(sel) & " selected", 0, Flat
          );
       else
         Window.Status_Bar.Text (
            Integer'Wide_Image(Window.Directory_List.Item_Count) &
-            " file(s), none selected", 0
+            " file(s), none selected", 0, Flat
          );
       end if;
     end if;
@@ -610,7 +623,7 @@ package body AZip_GWin.MDI_Child is
     Window.Directory_List.Dock(Fill);
 
     Window.Status_Bar.Create(Window, "No archive");
-    Window.Status_Bar.Parts((0 => 200, 1 => -1));
+    Window.Status_Bar.Parts((0 => 600, 1 => -1));
     Window.Status_Bar.Dock(At_Bottom);
 
     Window.Dock_Children;
@@ -1722,8 +1735,14 @@ package body AZip_GWin.MDI_Child is
       begin
         if expl_path = "" then
           Set_Cursor (Window.MDI_Root.dragging.cursor_drag_no_way);
+          Window.MDI_Root.dragging.destination := to_nowhere;
         else
           Set_Cursor (Window.MDI_Root.dragging.cursor_drag_unpack);
+          if Is_Desktop_At_Location (A.X, A.Y) then
+            Window.MDI_Root.dragging.destination := to_desktop;
+          else
+            Window.MDI_Root.dragging.destination := to_explorer;
+          end if;
         end if;
       end;
       Window.Update_status_bar;

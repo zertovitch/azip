@@ -100,7 +100,7 @@ begin
     box.Numb_entries.Text("0 (empty)");
   end if;
   case Show_Dialog (box, Window) is
-    when ID_Button_About_Azip => Window.Parent.On_About;
+    when ID_Button_About_Azip => Window.MDI_Root.On_About;
     when others => null;
   end case;
 end;

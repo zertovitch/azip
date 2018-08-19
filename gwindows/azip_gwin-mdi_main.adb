@@ -319,6 +319,10 @@ package body AZip_GWin.MDI_Main is
       when Taskbar_Interface_Not_Supported =>
         Window.Task_bar_gadget_ok := False;
     end;
+    --
+    Window.dragging.cursor_drag_unpack := Load_Cursor ("Drag_Unpack_Cursor");
+    Window.dragging.cursor_drag_no_way := Load_System_Cursor (IDC_NO);
+    Window.dragging.cursor_arrow       := Load_System_Cursor (IDC_ARROW);
   end On_Create;
 
   function Minimized(Window: GWindows.Base.Base_Window_Type'Class)
@@ -682,7 +686,7 @@ package body AZip_GWin.MDI_Main is
       declare
         cw: MDI_Child_Type renames MDI_Child_Type(Window.all);
       begin
-        Update_MRU_Menu(cw.Parent.all, cw.Menu.Popup_0001);
+        Update_MRU_Menu (cw.MDI_Root.all, cw.Menu.Popup_0001);
         -- Update_Toolbar_Menu(cw.View_menu, cw.parent.Floating_toolbars);
       end;
     end if;

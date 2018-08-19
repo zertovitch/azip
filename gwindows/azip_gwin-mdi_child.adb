@@ -14,6 +14,7 @@ with GWindows.Buttons;                  use GWindows.Buttons;
 with GWindows.Colors;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
+with GWindows.Cursors;                  use GWindows.Cursors;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
@@ -53,25 +54,32 @@ package body AZip_GWin.MDI_Child is
       Text(Window.Status_Bar,"Folder selected",0);
       return;
     end if;
-    -- Here the non trivial case.
+    --  Here the non-trivial cases.
     sel:= Window.Directory_List.Selected_Item_Count;
-    if sel > 0 then
-      Text( Window.Status_Bar,
-        Integer'Wide_Image(Window.Directory_List.Item_Count) &
-          " files," & Integer'Wide_Image(sel) & " selected", 0
+    if Window.MDI_Root.dragging.is_dragging then
+      --  Here is the dragging-from-list case
+      Window.Status_Bar.Text (
+        "Dragging " & Integer'Wide_Image(sel) & " selected file(s)", 0
        );
     else
-      Text( Window.Status_Bar,
-         Integer'Wide_Image(Window.Directory_List.Item_Count) &
-          " files, none selected", 0
-       );
+      if sel > 0 then
+        Window.Status_Bar.Text (
+          Integer'Wide_Image(Window.Directory_List.Item_Count) &
+            " file(s)," & Integer'Wide_Image(sel) & " selected", 0
+         );
+      else
+        Window.Status_Bar.Text (
+           Integer'Wide_Image(Window.Directory_List.Item_Count) &
+            " file(s), none selected", 0
+         );
+      end if;
     end if;
   end Update_status_bar;
 
   procedure Update_tool_bar(Window : in out MDI_Child_Type) is
     not_empty_archive: constant Boolean:=
       Is_loaded(Window.zif) and then Entries(Window.zif) > 0;
-    bar: MDI_Toolbar_Type renames Window.Parent.Tool_Bar;
+    bar: MDI_Toolbar_Type renames Window.MDI_Root.Tool_Bar;
   begin
     bar.Enabled(IDM_EXTRACT, not_empty_archive);
     bar.Enabled(IDM_Delete_selected, not_empty_archive);
@@ -100,7 +108,7 @@ package body AZip_GWin.MDI_Child is
         if topic = Path and Window.opt.view_mode = Tree then
           return 0;
         else
-          return Window.Parent.opt.column_width(topic);
+          return Window.MDI_Root.opt.column_width(topic);
         end if;
       end Smart_column_width;
     begin
@@ -324,7 +332,7 @@ package body AZip_GWin.MDI_Child is
         end if;
         if Is_loaded(Window.zif) then
           if need in first_display .. archive_changed then
-            Window.Folder_Tree.Set_Image_List(Window.Parent.Folders_Images);
+            Window.Folder_Tree.Set_Image_List(Window.MDI_Root.Folders_Images);
             Window.Folder_Tree.Delete_Item(Window.Folder_Tree.Get_Root_Item);
             Window.Folder_Tree.Insert_Item(GU2G(Window.Short_Name), 0, w_root, As_A_Root);
             Window.Folder_Tree.Set_Image(w_root, 0, 1);
@@ -338,14 +346,14 @@ package body AZip_GWin.MDI_Child is
         Check(Window.Menu.Main, Command, IDM_TREE_VIEW, True);
     end case;
     if need in first_display .. node_selected and then
-      Window.Parent.opt.sort_column >= 0
+      Window.MDI_Root.opt.sort_column >= 0
     then
       -- Peform an initial sorting according to current options.
       Window.Directory_List.Sort(
-        Window.Parent.opt.sort_column,
+        Window.MDI_Root.opt.sort_column,
         AZip_LV_Ex.Sort_Direction_Type'Value(
           AZip_Common.User_options.Sort_Direction_Type'Image(
-            Window.Parent.opt.sort_direction
+            Window.MDI_Root.opt.sort_direction
            )
          )
        );
@@ -427,9 +435,39 @@ package body AZip_GWin.MDI_Child is
   end On_Compare;
 
   overriding procedure On_Focus (Control : in out MDI_Child_List_View_Control_Type) is
+    MDI_Child : MDI_Child_Type renames
+      MDI_Child_Type (Control.Parent.Parent.Parent.all);
   begin
-    Update_status_bar(MDI_Child_Type(Control.Parent.Parent.Parent.all));
+    Update_status_bar (MDI_Child);
   end On_Focus;
+
+  overriding procedure On_Notify (
+      Window       : in out MDI_Child_List_View_Control_Type;
+      Message      : in     GWindows.Base.Pointer_To_Notification;
+      Control      : in     GWindows.Base.Pointer_To_Base_Window_Class;
+      Return_Value : in out GWindows.Types.Lresult
+  )
+  is
+    LVN_FIRST      : constant := -100;
+    LVN_BEGINDRAG  : constant := LVN_FIRST - 9;
+  begin
+    --  Call parent method
+     AZip_LV_Ex.Ex_List_View_Control_Type (Window).On_Notify
+       (Message, Control, Return_Value);
+    case Message.Code is
+      when LVN_BEGINDRAG =>
+        declare
+          MDI_Child : MDI_Child_Type renames
+            MDI_Child_Type (Window.Parent.Parent.Parent.all);
+          MDI_Main : MDI_Main_Type renames MDI_Child.MDI_Root.all;
+        begin
+          Capture_Mouse (MDI_Child);
+          MDI_Main.dragging.is_dragging := True;
+        end;
+      when others =>
+        null;
+    end case;
+  end On_Notify;
 
   -- !! Missing in EX_LV: freeing internal tables on Delete_Item, Clear.
   --    Rem. 20-Aug-2014
@@ -546,9 +584,9 @@ package body AZip_GWin.MDI_Child is
     Window.Small_Icon("Box_Closed_Icon_Name");
 
     -- Filial feelings:
-    Window.Parent:= MDI_Main_Access(Controlling_Parent(Window));
+    Window.MDI_Root:= MDI_Main_Access (Controlling_Parent(Window));
     -- We copy options to child level:
-    Window.opt:= Window.Parent.opt;
+    Window.opt:= Window.MDI_Root.opt;
 
     Window.Tree_Bar_and_List.Create(Window, Direction => Horizontal);
     Window.Tree_Bar_and_List.Dock(At_Top);
@@ -586,7 +624,7 @@ package body AZip_GWin.MDI_Child is
     -- Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare
       memo_unmaximized_children: constant Boolean:=
-        not Window.Parent.opt.MDI_childen_maximized;
+        not Window.MDI_Root.opt.MDI_childen_maximized;
     begin
       if memo_unmaximized_children then
         Window.Parent.Freeze;
@@ -596,7 +634,7 @@ package body AZip_GWin.MDI_Child is
       if memo_unmaximized_children then
         Window.Parent.Thaw; -- Before Zoom, otherwise uncomplete draw.
         Window.Zoom(False);
-        Window.Parent.Tool_Bar.Redraw;
+        Window.MDI_Root.Tool_Bar.Redraw;
       end if;
     end;
     Window.Status_deamon.Start;
@@ -742,8 +780,8 @@ package body AZip_GWin.MDI_Child is
       if now - tick >= 0.04 or else archive_percents_done = 100 then
         progress_box.File_Progress.Position(file_percents_done);
         progress_box.Archive_Progress.Position(archive_percents_done);
-        if Window.Parent.Task_bar_gadget_ok then
-          Window.Parent.Task_bar_gadget.Set_Progress_Value (Window.Parent.all, archive_percents_done, 100);
+        if Window.MDI_Root.Task_bar_gadget_ok then
+          Window.MDI_Root.Task_bar_gadget.Set_Progress_Value (Window.Parent.all, archive_percents_done, 100);
         end if;
         progress_box.Entry_name.Text(entry_being_processed);
         progress_box.Entry_operation_name.Text(
@@ -837,8 +875,8 @@ package body AZip_GWin.MDI_Child is
     progress_box.Create_Full_Dialog(Window);
     progress_box.File_Progress.Position(0);
     progress_box.Archive_Progress.Position(0);
-    if Window.Parent.Task_bar_gadget_ok then
-      Window.Parent.Task_bar_gadget.Set_Progress_Value (Window.Parent.all, 0, 100);
+    if Window.MDI_Root.Task_bar_gadget_ok then
+      Window.MDI_Root.Task_bar_gadget.Set_Progress_Value (Window.MDI_Root.all, 0, 100);
     end if;
     progress_box.Cancel_button.Hide;
     progress_box.Cancel_button_permanent.Show;
@@ -898,8 +936,8 @@ package body AZip_GWin.MDI_Child is
           Exclamation_Icon
         );
     end;
-    if Window.Parent.Task_bar_gadget_ok then
-      Window.Parent.Task_bar_gadget.Set_Progress_State (Window.Parent.all, No_Progress);
+    if Window.MDI_Root.Task_bar_gadget_ok then
+      Window.MDI_Root.Task_bar_gadget.Set_Progress_State (Window.Parent.all, No_Progress);
     end if;
     Window.Parent.Enable;
     Window.Parent.Focus;
@@ -984,7 +1022,7 @@ package body AZip_GWin.MDI_Child is
       --  We save the parent access since Window may be closed when
       --  i > File_Names'First if Window is a temporary MS-Office-like
       --  blank window - See procedure Close_extra_first_child.
-      parent:= Window.Parent;
+      parent:= Window.MDI_Root;
       for i in File_Names'Range loop
         Open_Child_Window_And_Load(parent.all, File_Names(i));
       end loop;
@@ -1018,7 +1056,7 @@ package body AZip_GWin.MDI_Child is
   procedure Update_Common_Menus(Window : MDI_Child_Type;
                                 top_entry : GString:= "" ) is
   begin
-    Update_Common_Menus( Window.Parent.all, top_entry );
+    Update_Common_Menus( Window.MDI_Root.all, top_entry );
   end Update_Common_Menus;
 
   procedure Load_archive_catalogue (
@@ -1053,8 +1091,8 @@ package body AZip_GWin.MDI_Child is
     tree_w: constant Integer:= Integer(Window.opt.tree_portion * Float(w)) - splitter_w / 2;
     use GWindows.Types;
   begin
-    if Window.Parent.User_maximize_restore then
-      Window.Parent.opt.MDI_childen_maximized:= Zoom(Window);
+    if Window.MDI_Root.User_maximize_restore then
+      Window.MDI_Root.opt.MDI_childen_maximized:= Zoom(Window);
     end if;
     Window.Tree_Bar_and_List.Location(Rectangle_Type'(0, 0, w, h));
     case Window.opt.view_mode is
@@ -1627,7 +1665,7 @@ package body AZip_GWin.MDI_Child is
           when Yes    => On_Save(Window);
                          exit when Is_file_saved(Window);
           when No     => exit;
-          when Cancel => Window.Parent.Success_in_enumerated_close:= False;
+          when Cancel => Window.MDI_Root.Success_in_enumerated_close:= False;
                          Can_Close:= False;
                          exit;
           when others => null;
@@ -1641,32 +1679,71 @@ package body AZip_GWin.MDI_Child is
       -- Memorize column widths
       for e in Entry_topic'Range loop
         if Window.opt.view_mode /= Tree or e /= Path then
-          Window.Parent.opt.column_width(e):=
+          Window.MDI_Root.opt.column_width(e):=
             Window.Directory_List.Column_Width(Entry_topic'Pos(e));
         end if;
       end loop;
       Window.Directory_List.Sort_Info(
-        Window.Parent.opt.sort_column,
+        Window.MDI_Root.opt.sort_column,
         sd
       );
       -- We pass the Up/Down direction from the GWindows type to ours.
-      Window.Parent.opt.sort_direction:=
+      Window.MDI_Root.opt.sort_direction:=
         AZip_Common.User_options.Sort_Direction_Type'Value(
            AZip_LV_Ex.Sort_Direction_Type'Image(sd)
         );
       -- Pass view mode and the tree width portion to parent,
       -- this will memorize choice of last closed window.
-      Window.Parent.opt.view_mode:= Window.opt.view_mode;
+      Window.MDI_Root.opt.view_mode:= Window.opt.view_mode;
       Memorize_splitter(Window);
-      Window.Parent.opt.tree_portion:= Window.opt.tree_portion;
+      Window.MDI_Root.opt.tree_portion:= Window.opt.tree_portion;
       --  For the case there is no more child window, disable toolbar items.
       --  This action is reversed as soon as another child window is focused.
-      Window.Parent.Tool_Bar.Enabled(IDM_ADD_FILES, False);
-      Window.Parent.Tool_Bar.Enabled(IDM_Add_Files_Encryption, False);
-      Window.Parent.Tool_Bar.Enabled(IDM_Properties, False);
+      Window.MDI_Root.Tool_Bar.Enabled(IDM_ADD_FILES, False);
+      Window.MDI_Root.Tool_Bar.Enabled(IDM_Add_Files_Encryption, False);
+      Window.MDI_Root.Tool_Bar.Enabled(IDM_Properties, False);
       Window.is_closing:= True;
     end if;
   end On_Close;
+
+  procedure On_Mouse_Move (
+        Window : in out MDI_Child_Type;
+        X      : in     Integer;
+        Y      : in     Integer;
+        Keys   : in     Mouse_Key_States)
+  is
+  pragma Unreferenced (Keys);
+    A : constant GWindows.Types.Point_Type :=
+      Point_To_Desktop (Window, (X, Y));
+  begin
+    if Window.MDI_Root.dragging.is_dragging then
+      declare
+        expl_path: constant GString := Explorer_Path_At_Location (A.X, A.Y);
+      begin
+        if expl_path = "" then
+          Set_Cursor (Window.MDI_Root.dragging.cursor_drag_no_way);
+        else
+          Set_Cursor (Window.MDI_Root.dragging.cursor_drag_unpack);
+        end if;
+      end;
+      Window.Update_status_bar;
+    end if;
+  end On_Mouse_Move;
+
+  procedure On_Left_Mouse_Button_Up (
+        Window : in out MDI_Child_Type;
+        X      : in     Integer;
+        Y      : in     Integer;
+        Keys   : in     Mouse_Key_States)
+  is
+  pragma Unreferenced (X, Y, Keys);
+  begin
+    if Window.MDI_Root.dragging.is_dragging then
+      Set_Cursor (Window.MDI_Root.dragging.cursor_arrow);
+      Release_Mouse;
+      Window.MDI_Root.dragging.is_dragging := False;
+    end if;
+  end On_Left_Mouse_Button_Up;
 
   package body Daemons is
     ---------------------------------------------------------------------------
@@ -1675,7 +1752,7 @@ package body AZip_GWin.MDI_Child is
     ---------------------------------------------------------------------------
 
     task body Status_display is
-      current_child_window: AZip_GWin.MDI_Child.MDI_Child_Access;
+      current_child_window: MDI_Child_Access;
     begin
       accept Start;
       loop
@@ -1683,7 +1760,7 @@ package body AZip_GWin.MDI_Child is
           accept Stop;
           exit;
         or
-          accept Display(w: AZip_GWin.MDI_Child.MDI_Child_Access) do
+          accept Display(w: MDI_Child_Access) do
             current_child_window:= w;
           end Display;
           Update_display(current_child_window.all, status_bar);
@@ -1699,7 +1776,7 @@ package body AZip_GWin.MDI_Child is
     -----------------------------------------------------------------
 
     task body Testing_type is
-      current_child_window: AZip_GWin.MDI_Child.MDI_Child_Access;
+      current_child_window: MDI_Child_Access;
       pragma Unreferenced (current_child_window);
     begin
       accept Start;
@@ -1708,7 +1785,7 @@ package body AZip_GWin.MDI_Child is
           accept Stop;
           exit;
         or
-          accept Test(w: AZip_GWin.MDI_Child.MDI_Child_Access) do
+          accept Test(w: MDI_Child_Access) do
             current_child_window:= w;
           end Test;
           -- (perform test)

@@ -24,8 +24,15 @@ package AZip_GWin.MDI_Main is
 
   type IDM_MRU_List is array(AZip_Common.User_options.MRU_List'Range) of Natural;
 
+  ---------------------------
+  --  Dragging operations  --
+  ---------------------------
+  --  !! to do: put into a separate package !!
+  type Kind_of_dragging_destination is (to_azip, to_explorer, to_desktop, to_nowhere);
+
   type Dragging_info is record
     is_dragging        : Boolean := False;
+    destination        : Kind_of_dragging_destination;
     cursor_drag_unpack : Cursor_Type;  --  Drop to Explorer / Desktop
     cursor_drag_no_way : Cursor_Type;  --  Cannot drop here
     cursor_arrow       : Cursor_Type;  --  Back to normal

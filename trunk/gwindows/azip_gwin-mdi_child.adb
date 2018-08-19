@@ -474,6 +474,7 @@ package body AZip_GWin.MDI_Child is
             MDI_Child_Type (Window.Parent.Parent.Parent.all);
           MDI_Main : MDI_Main_Type renames MDI_Child.MDI_Root.all;
         begin
+          Window.Focus;
           Capture_Mouse (MDI_Child);
           MDI_Main.dragging.is_dragging := True;
         end;
@@ -1181,21 +1182,29 @@ package body AZip_GWin.MDI_Child is
     return any_path;
   end Any_path_in_list;
 
-  procedure On_Extract(Window : in out MDI_Child_Type) is
-    sel_list: constant Array_Of_File_Names:= Get_selected_entry_list(Window);
+  procedure On_Extract (
+    Window  : in out MDI_Child_Type;
+    dropped : in     Boolean;
+    drop_X  : in     Integer := -1;
+    drop_Y  : in     Integer := -1
+  )
+  is
+    sel_list: constant Array_Of_File_Names:= Get_selected_entry_list (Window);
     --
     function Smart_list return Array_Of_File_Names is
     begin
-      if Folder_Focus(Window) then
-        return Get_selected_folder_entry_list(Window);
+      if Folder_Focus (Window) then
+        return Get_selected_folder_entry_list (Window);
       else
-        return sel_list; -- If the list is empty list, whole archive will be extracted
+        return sel_list; -- If the list is empty, whole archive will be extracted
       end if;
     end Smart_list;
     --
+    list: constant Array_Of_File_Names:= Smart_list;
+    --
     function Archive_extract_msg return GString is
     begin
-      if Folder_Focus(Window) then
+      if Folder_Focus (Window) then
         return "Extract current folder's contents to...";
       elsif sel_list'Length > 0 then
         return "Extract the" & Integer'Wide_Image(sel_list'Length) & " selected item(s) to...";
@@ -1213,60 +1222,73 @@ package body AZip_GWin.MDI_Child is
           return "Use archive's folder names for output ?";
       end case;
     end Use_path_question;
-    aborted: Boolean;
+    --
+    aborted, ask : Boolean;
+    box_kind : Message_Box_Type;
+    dir : GString_Unbounded;
   begin
     if not Is_loaded(Window.zif) then
       return; -- No archive, then nothing to do
     end if;
-    declare
-      dir: constant GString:= Get_Directory(
-        Window       => Window,
-        Dialog_Title => Archive_extract_msg,
-        Initial_Path => GU2G(Window.extract_dir) );
-      box_kind: Message_Box_Type;
-      ask: Boolean;
-      list: constant Array_Of_File_Names:= Smart_list;
-    begin
-      if dir = "" then
+    if dropped then
+      dir:= G2GU(Explorer_Path_At_Location (drop_X, drop_Y));
+      if list'Length > 4
+        and then Message_Box (
+          Window, Archive_extract_msg,
+          "You are dropping a large amount of files. Continue?",
+          Yes_No_Box, Question_Icon ) = No
+      then
         return;
       end if;
-      Window.extract_dir:= G2GU(dir);
-      if list'Length > 0 then
-        ask:= Any_path_in_list(list);
+    else
+      dir:= G2GU (Get_Directory (
+        Window       => Window,
+        Dialog_Title => Archive_extract_msg,
+        Initial_Path => GU2G(Window.extract_dir) ));
+    end if;
+    if dir = "" then
+      return;
+    end if;
+    Window.extract_dir:= dir;
+    if list'Length > 0 then
+      ask:= Any_path_in_list(list);
+    else
+      ask:= Window.any_path_in_zip;
+    end if;
+    if ask then
+      if Window.opt.ignore_extract_path then
+        box_kind:= Yes_No_Def_Cancel_Box; -- Previous answer was "No", so we take "No" as default
       else
-        ask:= Window.any_path_in_zip;
+        box_kind:= Yes_No_Cancel_Box;
       end if;
-      if ask then
-        if Window.opt.ignore_extract_path then
-          box_kind:= Yes_No_Def_Cancel_Box; -- Previous answer was "No", so we take "No" as default
-        else
-          box_kind:= Yes_No_Cancel_Box;
-        end if;
-        case Message_Box( Window, "Extract", Use_path_question, box_kind, Question_Icon ) is
-          when No =>
-            Window.opt.ignore_extract_path:= True;
-          when Yes =>
-            Window.opt.ignore_extract_path:= False;
-          when others =>
-            return;
-        end case;
-      end if;
-      Process_archive_GWin(
-        Window         => Window,
-        operation      => Extract,
-        file_names     => list,
-        base_folder    => "",
-        search_pattern => "",
-        output_folder  => dir,
-        ignore_path    => Window.opt.ignore_extract_path,
-        encrypt        => False,
-        new_temp_name  => "",
-        aborted        => aborted
-      );
-      if not aborted then
-        GWin_Util.Start(G2S(dir));  --  !! not unicode
-      end if;
-    end;
+      case Message_Box (
+        Window, "Extract",
+        Use_path_question, box_kind, Question_Icon )
+      is
+        when No =>
+          Window.opt.ignore_extract_path:= True;
+        when Yes =>
+          Window.opt.ignore_extract_path:= False;
+        when others =>
+          return;
+      end case;
+    end if;
+    Process_archive_GWin(
+      Window         => Window,
+      operation      => Extract,
+      file_names     => list,
+      base_folder    => "",
+      search_pattern => "",
+      output_folder  => GU2G(dir),
+      ignore_path    => Window.opt.ignore_extract_path,
+      encrypt        => False,
+      new_temp_name  => "",
+      aborted        => aborted
+    );
+    if (not aborted) and (not dropped) then
+      --  Open destination path's folder
+      GWin_Util.Start(G2S(GU2G(dir)));  --  !! not unicode
+    end if;
   end On_Extract;
 
   procedure On_Delete(Window : in out MDI_Child_Type) is
@@ -1624,7 +1646,7 @@ package body AZip_GWin.MDI_Child is
       when IDM_Unselect_all =>
         Full_Select(Window, False);
       when IDM_EXTRACT =>
-        On_Extract(Window);
+        On_Extract (Window, dropped => False);
       when IDM_ADD_FILES =>
         On_Add_files(Window, encrypted => False);
       when IDM_Add_Files_Encryption =>
@@ -1755,12 +1777,21 @@ package body AZip_GWin.MDI_Child is
         Y      : in     Integer;
         Keys   : in     Mouse_Key_States)
   is
-  pragma Unreferenced (X, Y, Keys);
+  pragma Unreferenced (Keys);
+    A : constant GWindows.Types.Point_Type :=
+      Point_To_Desktop (Window, (X, Y));
   begin
     if Window.MDI_Root.dragging.is_dragging then
       Set_Cursor (Window.MDI_Root.dragging.cursor_arrow);
       Release_Mouse;
+      case Window.MDI_Root.dragging.destination is
+        when to_desktop | to_explorer =>
+          On_Extract (Window, dropped => True, drop_X => A.X, drop_Y => A.Y);
+        when others =>
+          null;
+      end case;
       Window.MDI_Root.dragging.is_dragging := False;
+      Window.Update_status_bar;
     end if;
   end On_Left_Mouse_Button_Up;
 

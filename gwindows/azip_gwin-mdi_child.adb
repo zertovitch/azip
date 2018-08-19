@@ -1,4 +1,5 @@
 with AZip_Common;                       use AZip_Common;
+with AZip_GWin.Dragging;                use AZip_GWin.Dragging;
 with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
 with AZip_GWin.Password_dialogs;        use AZip_GWin.Password_dialogs;
 with AZip_GWin.Properties;
@@ -1205,11 +1206,11 @@ package body AZip_GWin.MDI_Child is
     function Archive_extract_msg return GString is
     begin
       if Folder_Focus (Window) then
-        return "Extract current folder's contents to...";
+        return "Extract current folder's contents";
       elsif sel_list'Length > 0 then
-        return "Extract the" & Integer'Wide_Image(sel_list'Length) & " selected item(s) to...";
+        return "Extract the" & Integer'Wide_Image(sel_list'Length) & " selected item(s)";
       else
-        return "Extract entire archive to...";
+        return "Extract entire archive";
       end if;
     end Archive_extract_msg;
     --
@@ -1232,7 +1233,10 @@ package body AZip_GWin.MDI_Child is
     end if;
     if dropped then
       dir:= G2GU(Explorer_Path_At_Location (drop_X, drop_Y));
-      if list'Length > 4
+      if ((list'Length > 4 and then Is_Desktop_At_Location (drop_X, drop_Y))
+          or else
+          list'Length > 20
+         )
         and then Message_Box (
           Window, Archive_extract_msg,
           "You are dropping a large amount of files. Continue?",
@@ -1243,7 +1247,7 @@ package body AZip_GWin.MDI_Child is
     else
       dir:= G2GU (Get_Directory (
         Window       => Window,
-        Dialog_Title => Archive_extract_msg,
+        Dialog_Title => Archive_extract_msg & " to...",
         Initial_Path => GU2G(Window.extract_dir) ));
     end if;
     if dir = "" then
@@ -1262,7 +1266,7 @@ package body AZip_GWin.MDI_Child is
         box_kind:= Yes_No_Cancel_Box;
       end if;
       case Message_Box (
-        Window, "Extract",
+        Window, Archive_extract_msg,
         Use_path_question, box_kind, Question_Icon )
       is
         when No =>

@@ -9,6 +9,7 @@ with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
+with GWindows.Cursors;                  use GWindows.Cursors;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Registry;

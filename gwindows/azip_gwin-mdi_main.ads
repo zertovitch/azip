@@ -1,11 +1,11 @@
 -- To do: make a generic "Office Classic" application framework
 
+with AZip_GWin.Dragging;
 with AZip_Common.User_options;
 with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
 with GWindows.Base;
 with GWindows.Common_Controls;
-with GWindows.Cursors;                  use GWindows.Cursors;
 with GWindows.Image_Lists;
 with GWindows.Windows.MDI;
 with GWindows.Windows;                  use GWindows.Windows;
@@ -23,20 +23,6 @@ package AZip_GWin.MDI_Main is
   -- Handle click on toolbar
 
   type IDM_MRU_List is array(AZip_Common.User_options.MRU_List'Range) of Natural;
-
-  ---------------------------
-  --  Dragging operations  --
-  ---------------------------
-  --  !! to do: put into a separate package !!
-  type Kind_of_dragging_destination is (to_azip, to_explorer, to_desktop, to_nowhere);
-
-  type Dragging_info is record
-    is_dragging        : Boolean := False;
-    destination        : Kind_of_dragging_destination;
-    cursor_drag_unpack : Cursor_Type;  --  Drop to Explorer / Desktop
-    cursor_drag_no_way : Cursor_Type;  --  Cannot drop here
-    cursor_arrow       : Cursor_Type;  --  Back to normal
-  end record;
 
   type MDI_Main_Type is
     new GWindows.Windows.MDI.MDI_Main_Window_Type with
@@ -59,7 +45,7 @@ package AZip_GWin.MDI_Main is
         Task_bar_gadget_ok     : Boolean := False;  --  Coloring of taskbar icon (Windows 7+)
         Task_bar_gadget        : Taskbar_List;
         --
-        dragging               : Dragging_info;
+        dragging               : AZip_GWin.Dragging.Dragging_info;
       end record;
 
   type MDI_Main_Access is access all MDI_Main_Type;

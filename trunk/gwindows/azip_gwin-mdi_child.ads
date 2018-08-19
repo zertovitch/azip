@@ -5,6 +5,7 @@ with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
 with Zip;
 
+with GWindows.Base;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Common_Controls.Ex_List_View;
 with GWindows.Drawing;
@@ -57,6 +58,11 @@ package AZip_GWin.MDI_Child is
 
   package AZip_LV_Ex is new GWindows.Common_Controls.Ex_List_View(LV_Payload);
 
+  ----------------------------------------------
+  --  Full or partial archive directory list  --
+  ----------------------------------------------
+  --  !! to do: put into a separate package !!
+
   type MDI_Child_List_View_Control_Type is
     new AZip_LV_Ex.Ex_List_View_Control_Type with null record;
 
@@ -68,9 +74,21 @@ package AZip_GWin.MDI_Child is
                Value1 : in GString;
                Value2 : in GString) return Integer;
   overriding procedure On_Focus (Control : in out MDI_Child_List_View_Control_Type);
+  overriding procedure On_Notify (
+      Window       : in out MDI_Child_List_View_Control_Type;
+      Message      : in     GWindows.Base.Pointer_To_Notification;
+      Control      : in     GWindows.Base.Pointer_To_Base_Window_Class;
+      Return_Value : in out GWindows.Types.Lresult
+  );
   -- overriding procedure On_Free_Payload(
   --              Control: in out MDI_Child_List_View_Control_Type;
   --              Payload: out AZip_LV_Ex.Data_access);
+
+  ---------------------------
+  --  Archive folder tree  --
+  ---------------------------
+  --  !! to do: put into a separate package !!
+
   type MDI_Child_Tree_View_Control_Type is new Tree_View_Control_Type with null record;
   overriding procedure On_Selection_Change (Control : in out MDI_Child_Tree_View_Control_Type);
   overriding procedure On_Focus (Control : in out MDI_Child_Tree_View_Control_Type);
@@ -104,7 +122,7 @@ package AZip_GWin.MDI_Child is
         File_Name        : GString_Unbounded;
         Short_Name       : GString_Unbounded;
         -- ^ Window title = Short_Name & {""|" *"}
-        Parent           : MDI_Main_Access; -- -> access to the containing window
+        MDI_Root         : MDI_Main_Access; -- -> access to the containing window
         Extra_first_doc  : Boolean:= False;
         -- ^ new file closed if kept virgin when opening another one (like blank Excel sheet).
         Menu             : Menu_MDI_Child_Type;
@@ -203,6 +221,18 @@ package AZip_GWin.MDI_Child is
     Window    : in out MDI_Child_Type;
     Can_Close :    out Boolean
   );
+
+  overriding procedure On_Mouse_Move (
+        Window : in out MDI_Child_Type;
+        X      : in     Integer;
+        Y      : in     Integer;
+        Keys   : in     Mouse_Key_States);
+
+  overriding procedure On_Left_Mouse_Button_Up (
+        Window : in out MDI_Child_Type;
+        X      : in     Integer;
+        Y      : in     Integer;
+        Keys   : in     Mouse_Key_States);
 
   procedure Update_Common_Menus(Window : MDI_Child_Type;
                                 top_entry : GString:= "" );

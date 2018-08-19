@@ -30,7 +30,7 @@ package body AZip_GWin.Password_dialogs is
       pragma Warnings(off, dummy);
     begin
       pwd_candidate:= G2GU(box.Password_edit.Text);
-      Window.Parent.opt.show_passwords:= box.Show_password_box.State = Checked;
+      Window.MDI_Root.opt.show_passwords:= box.Show_password_box.State = Checked;
     end Get_Data;
     --
     procedure Show_or_Hide_Password ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
@@ -48,7 +48,7 @@ package body AZip_GWin.Password_dialogs is
     box.Create_Full_Dialog(Parent);
     box.Encrypted_entry.Text(entry_name);
     box.Password_edit.Text(GU2G(password));
-    if Window.Parent.opt.show_passwords then
+    if Window.MDI_Root.opt.show_passwords then
       box.Show_password_box.State(Checked);
     else
       box.Show_password_box.State(Unchecked);
@@ -86,7 +86,7 @@ package body AZip_GWin.Password_dialogs is
     begin
       pwd_candidate:= G2GU(box.Password_edit.Text);
       pwd_confirm_candidate:= G2GU(box.Password_confirm_edit.Text);
-      Window.Parent.opt.show_passwords:= box.Show_password_box.State = Checked;
+      Window.MDI_Root.opt.show_passwords:= box.Show_password_box.State = Checked;
     end Get_Data;
     --
     procedure Show_or_Hide_Password ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
@@ -112,7 +112,7 @@ package body AZip_GWin.Password_dialogs is
     loop
       box.Create_Full_Dialog(Window);
       box.Password_edit.Text(GU2G(Window.current_password));
-      if Window.Parent.opt.show_passwords then
+      if Window.MDI_Root.opt.show_passwords then
         box.Show_password_box.State(Checked);
       else
         box.Show_password_box.State(Unchecked);
@@ -127,7 +127,7 @@ package body AZip_GWin.Password_dialogs is
         when IDOK =>
           Window.current_password:= pwd_candidate;
           cancelled:= False;
-          if Window.Parent.opt.show_passwords then
+          if Window.MDI_Root.opt.show_passwords then
             confirm_ok:= True;
           else
             confirm_ok:= pwd_confirm_candidate = pwd_candidate;

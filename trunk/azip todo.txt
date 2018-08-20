@@ -1,4 +1,3 @@
-gw - drag & drop from list to a Windows Explorer window or to the Desktop
 gw - drag & drop a folder to Windows Explorer window or to the Desktop
 
 gw - have a "truly portable" mode that doesn't use the registry. Either by:

@@ -53,11 +53,11 @@ package AZip_Common.User_options is
   -- On Linux or Gtk (any platform) it is done usually in a config file
 
   generic
-    with function Read_key(topic: Wide_String) return Wide_String;
-    with procedure Write_key(topic: Wide_String; value: Wide_String);
+    with function Read_key (topic: Wide_String) return Wide_String;
+    with procedure Write_key (topic: Wide_String; value: Wide_String);
   package Persistence is
-    procedure Load(opt: out Option_Pack_Type);
-    procedure Save(opt: in  Option_Pack_Type);
+    procedure Load (opt: out Option_Pack_Type);
+    procedure Save (opt: in  Option_Pack_Type);
   end;
 
 end AZip_Common.User_options;

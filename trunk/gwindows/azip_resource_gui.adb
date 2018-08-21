@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2018/08/21  13:20:14
+-- Transcription time: 2018/08/21  19:44:28
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -412,13 +412,13 @@ package body AZip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  2, 2, 21, 20, x,y,w,h);
-    Create( Window.RC_item_1, Window, Num_resource(Plus_icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Create( Window.Static_0001, Window, Num_resource(Plus_icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  205, 100, 123, 16, x,y,w,h);
     Create( Window.Encrypt_check_box, Window, " Encrypt data in archive", x,y,w,h, ID => Encrypt_check_box);
     Dlg_to_Scn(  31, 7, 250, 14, x,y,w,h);
     Create_Label( Window, "Add dropped file(s) to...", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  178, 98, 21, 20, x,y,w,h);
-    Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Create( Window.Static_0002, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  39, 26, 285, 32, x,y,w,h);
     Create( Window.Drop_archive_name, Window, "(Archive name here)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Drop_archive_name);
     Dlg_to_Scn(  45, 65, 272, 21, x,y,w,h);
@@ -665,13 +665,13 @@ package body AZip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  9, 12, 21, 20, x,y,w,h);
-    Create( Window.RC_item_0, Window, Num_resource(Binoculars_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Create( Window.Static_0001, Window, Num_resource(Binoculars_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  44, 7, 172, 8, x,y,w,h);
     Create_Label( Window, "Entry &name ( if empty: all names )", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  44, 20, 172, 12, x,y,w,h);
     Create( Window.Name_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Name_to_be_searched);
     Dlg_to_Scn(  9, 46, 21, 20, x,y,w,h);
-    Create( Window.RC_item_1, Window, Num_resource(Binoculars_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Create( Window.Static_0003, Window, Num_resource(Binoculars_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  44, 41, 172, 8, x,y,w,h);
     Create_Label( Window, "&Content ( if empty: any content )", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  44, 54, 172, 12, x,y,w,h);
@@ -779,7 +779,7 @@ package body AZip_Resource_GUI is
     Dlg_to_Scn(  12, 58, 159, 8, x,y,w,h);
     Create_Label( Window, "Please enter the correct password:", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  12, 70, 21, 20, x,y,w,h);
-    Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Create( Window.Static_0004, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  46, 73, 172, 13, x,y,w,h);
     Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Password_edit);
     Dlg_to_Scn(  12, 97, 96, 8, x,y,w,h);
@@ -911,7 +911,7 @@ package body AZip_Resource_GUI is
     Dlg_to_Scn(  12, 58, 153, 8, x,y,w,h);
     Create( Window.Confirm_Password_Label, Window, "Confirm password:", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Confirm_Password_Label);
     Dlg_to_Scn(  12, 30, 21, 20, x,y,w,h);
-    Create( Window.RC_item_0, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Create( Window.Static_0001, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  12, 18, 151, 8, x,y,w,h);
     Create_Label( Window, "Enter password:", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Password_encryption_box_Type
@@ -1125,12 +1125,26 @@ package body AZip_Resource_GUI is
 
   -- Dialog at resource line 329
 
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out Quick_help_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Quick_help_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "AZip Quick Help";
+      Title       : in     GString := "AZip Quick Help - a couple of tips and informations...";
       Left        : in     Integer := Use_Default; -- Default = as designed
       Top         : in     Integer := Use_Default; -- Default = as designed
       Width       : in     Integer := Use_Default; -- Default = as designed
@@ -1179,18 +1193,16 @@ package body AZip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  17, 84, 348, 66, x,y,w,h);
-    Create( Window.RC_item_0, Window, "Using AZip as a portable software", x,y,w,h);
-    Dlg_to_Scn(  40, 99, 316, 33, x,y,w,h);
-    Create_Label( Window, "AZip doesn't require any installation. It can even run from a USB stick for instance. For convenience, by default, it writes user settings in the registry. If you want the registry NOT being written to, you can add a file azip.cfg (can be emtpy) in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed (and settings not saved).", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  6, 8, 302, 20, x,y,w,h);
-    Create_Label( Window, "Here is a couple of tips and informations.", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  16, 27, 349, 54, x,y,w,h);
-    Create( Window.GB1, Window, "Adding files and folders", x,y,w,h);
-    Dlg_to_Scn(  23, 41, 21, 20, x,y,w,h);
-    Create( Window.RC_item_1, Window, Num_resource(Plus_icon), x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  59, 42, 291, 32, x,y,w,h);
-    Create_Label( Window, "You can add files, or individual folders through menu commands or buttons, BUT you can also do it easily via Drag && Drop, from a File Explorer window or the Desktop, onto an AZip archive window. Any mix of dragged folders and files is supported.", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  4, 106, 365, 66, x,y,w,h);
+    Create( Window.Static_0001, Window, "Using AZip as a portable software", x,y,w,h);
+    Dlg_to_Scn(  27, 121, 337, 43, x,y,w,h);
+    Create_Label( Window, "AZip doesn't require any installation. It can even run from a USB stick for instance. For convenience, by default, it writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  3, 3, 366, 46, x,y,w,h);
+    Create( Window.Static_0002, Window, "Adding files and folders", x,y,w,h);
+    Dlg_to_Scn(  10, 17, 21, 20, x,y,w,h);
+    Create( Window.Static_0003, Window, Num_resource(Plus_icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  46, 18, 316, 29, x,y,w,h);
+    Create_Label( Window, "You can add files, or individual folders through menu commands (+) or buttons. BUT: you can also do it easily via Drag && Drop, from a Windows Explorer window or the Desktop, onto an AZip archive window. Any mix of dragged folders and files is supported.", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  137, 177, 107, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -1202,9 +1214,15 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
+    Dlg_to_Scn(  5, 57, 364, 46, x,y,w,h);
+    Create( Window.Static_0004, Window, "Unpacking files", x,y,w,h);
+    Dlg_to_Scn(  12, 71, 21, 20, x,y,w,h);
+    Create( Window.Static_0005, Window, Num_resource(Drag_Unpack_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  48, 72, 316, 28, x,y,w,h);
+    Create_Label( Window, "You can extract selected files, the selected folder, or the entire archive via the Extract command (Ctrl+E) or a button. BUT: you can also extract files via Drag && Drop to a Windows Explorer window or to the Desktop.", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_box_Type
 
-  -- Dialog at resource line 346
+  -- Dialog at resource line 348
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1376,6 +1394,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 451
+  -- Last line of resource script file: 460
 
 end AZip_Resource_GUI;

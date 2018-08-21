@@ -1,15 +1,5 @@
 gw - drag & drop a folder to Windows Explorer window or to the Desktop
 
-gw - have a "truly portable" mode that doesn't use the registry. Either by:
-      - command-line parameter: AZip.exe -portable
-      - portable flag on program folder (?)
-      - ask on first usage (detected by the absence of regisitry key
-        and of a configuration file) which method is preferred.
-     See https://sourceforge.net/p/azip/discussion/general/thread/3c5d77dc/ .
-     The "truly portable" mode would work with a configuration file (azip.ini);
-     if azip.ini is read-only (or the whole device containing the .exe and the .ini)
-     persistence would just not be written.
-
 gw - drag & drop from list to another folder in a tree (same archive child window)
 gw - drag & drop a folder to another folder (same archive child window)
 

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2018/08/21  19:44:28
+-- Transcription time: 2018/08/21  21:14:45
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -336,17 +336,17 @@ package AZip_Resource_GUI is
 
   type Password_encryption_box_Type is new Window_Type with record
 
-    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
-    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    Show_password_box: Check_Box_Type;
-    Password_edit: Edit_Box_Type;
-    Password_confirm_edit: Edit_Box_Type;
-    Confirm_Icon: Icon_Type;
-    Confirm_Password_Label: Label_Type;
     Static_0001: Icon_Type;
     -- Label: IDC_STATIC
+    Password_edit: Edit_Box_Type;
+    Confirm_Icon: Icon_Type;
+    Confirm_Password_Label: Label_Type;
+    Password_confirm_edit: Edit_Box_Type;
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
+    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    Show_password_box: Check_Box_Type;
   end record; -- Password_encryption_box_Type
 
   -- Dialog at resource line 283
@@ -473,15 +473,15 @@ package AZip_Resource_GUI is
   type Quick_help_box_Type is new Window_Type with record
 
     Static_0001: Group_Box_Type;
+    Static_0002: Icon_Type;
     -- Label: 0
-    Static_0002: Group_Box_Type;
-    Static_0003: Icon_Type;
+    Static_0003: Group_Box_Type;
+    Static_0004: Icon_Type;
+    -- Label: 0
+    Static_0005: Group_Box_Type;
     -- Label: 0
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    Static_0004: Group_Box_Type;
-    Static_0005: Icon_Type;
-    -- Label: 0
   end record; -- Quick_help_box_Type
 
   -- Dialog at resource line 339
@@ -498,7 +498,7 @@ package AZip_Resource_GUI is
   procedure Create_Full_Dialog
      (Window      : in out Quick_help_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "AZip Quick Help - a couple of tips and informations...";
+      Title       : in     GString := "AZip Quick Help - a couple of tips and hints...";
       Left        : in     Integer := Use_Default; -- Default = as designed
       Top         : in     Integer := Use_Default; -- Default = as designed
       Width       : in     Integer := Use_Default; -- Default = as designed

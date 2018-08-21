@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2018/08/21  19:44:28
+-- Transcription time: 2018/08/21  21:14:45
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -878,17 +878,18 @@ package body AZip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  167, 119, 50, 14, x,y,w,h);
-    -- Both versions of the button are created.
-    -- The more meaningful one is made visible, but this choice
-    -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
-    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
-    if for_dialog then -- hide the non-closing button
-      Hide(Window.IDCANCEL_permanent);
-    else -- hide the closing button
-      Hide(Window.IDCANCEL);
-    end if;
+    Dlg_to_Scn(  12, 30, 21, 20, x,y,w,h);
+    Create( Window.Static_0001, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  12, 18, 151, 8, x,y,w,h);
+    Create_Label( Window, "Enter password:", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  46, 33, 172, 13, x,y,w,h);
+    Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Password_edit);
+    Dlg_to_Scn(  12, 70, 21, 20, x,y,w,h);
+    Create( Window.Confirm_Icon, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  12, 58, 153, 8, x,y,w,h);
+    Create( Window.Confirm_Password_Label, Window, "Confirm password:", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Confirm_Password_Label);
+    Dlg_to_Scn(  46, 73, 172, 13, x,y,w,h);
+    Create( Window.Password_confirm_edit, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Password_confirm_edit);
     Dlg_to_Scn(  112, 119, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -900,20 +901,19 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
+    Dlg_to_Scn(  167, 119, 50, 14, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDCANCEL, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    Create( Window.IDCANCEL_permanent, Window, "Cancel", x,y,w,h, ID => IDCANCEL);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDCANCEL_permanent);
+    else -- hide the closing button
+      Hide(Window.IDCANCEL);
+    end if;
     Dlg_to_Scn(  12, 97, 96, 8, x,y,w,h);
     Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
-    Dlg_to_Scn(  46, 33, 172, 13, x,y,w,h);
-    Create( Window.Password_edit, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Password_edit);
-    Dlg_to_Scn(  46, 73, 172, 13, x,y,w,h);
-    Create( Window.Password_confirm_edit, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Password_confirm_edit);
-    Dlg_to_Scn(  12, 70, 21, 20, x,y,w,h);
-    Create( Window.Confirm_Icon, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  12, 58, 153, 8, x,y,w,h);
-    Create( Window.Confirm_Password_Label, Window, "Confirm password:", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Confirm_Password_Label);
-    Dlg_to_Scn(  12, 30, 21, 20, x,y,w,h);
-    Create( Window.Static_0001, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  12, 18, 151, 8, x,y,w,h);
-    Create_Label( Window, "Enter password:", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Password_encryption_box_Type
 
   -- Dialog at resource line 292
@@ -1144,7 +1144,7 @@ package body AZip_Resource_GUI is
   procedure Create_Full_Dialog
      (Window      : in out Quick_help_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "AZip Quick Help - a couple of tips and informations...";
+      Title       : in     GString := "AZip Quick Help - a couple of tips and hints...";
       Left        : in     Integer := Use_Default; -- Default = as designed
       Top         : in     Integer := Use_Default; -- Default = as designed
       Width       : in     Integer := Use_Default; -- Default = as designed
@@ -1193,16 +1193,22 @@ package body AZip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  4, 106, 365, 66, x,y,w,h);
-    Create( Window.Static_0001, Window, "Using AZip as a portable software", x,y,w,h);
-    Dlg_to_Scn(  27, 121, 337, 43, x,y,w,h);
-    Create_Label( Window, "AZip doesn't require any installation. It can even run from a USB stick for instance. For convenience, by default, it writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  3, 3, 366, 46, x,y,w,h);
-    Create( Window.Static_0002, Window, "Adding files and folders", x,y,w,h);
+    Dlg_to_Scn(  4, 3, 366, 46, x,y,w,h);
+    Create( Window.Static_0001, Window, "Adding files and folders", x,y,w,h);
     Dlg_to_Scn(  10, 17, 21, 20, x,y,w,h);
-    Create( Window.Static_0003, Window, Num_resource(Plus_icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Create( Window.Static_0002, Window, Num_resource(Plus_icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  46, 18, 316, 29, x,y,w,h);
     Create_Label( Window, "You can add files, or individual folders through menu commands (+) or buttons. BUT: you can also do it easily via Drag && Drop, from a Windows Explorer window or the Desktop, onto an AZip archive window. Any mix of dragged folders and files is supported.", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  4, 50, 366, 46, x,y,w,h);
+    Create( Window.Static_0003, Window, "Unpacking files", x,y,w,h);
+    Dlg_to_Scn(  10, 64, 21, 20, x,y,w,h);
+    Create( Window.Static_0004, Window, Num_resource(Drag_Unpack_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  48, 65, 316, 28, x,y,w,h);
+    Create_Label( Window, "You can extract selected files, the selected folder, or the entire archive via the Extract command (Ctrl+E) or a button. BUT: you can also extract files via Drag && Drop to a Windows Explorer window or to the Desktop.", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  4, 106, 366, 66, x,y,w,h);
+    Create( Window.Static_0005, Window, "Using AZip as a portable software", x,y,w,h);
+    Dlg_to_Scn(  27, 121, 337, 43, x,y,w,h);
+    Create_Label( Window, "AZip doesn't require any installation. It can even run from a USB stick for instance. For convenience, by default, it writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  137, 177, 107, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -1214,12 +1220,6 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  5, 57, 364, 46, x,y,w,h);
-    Create( Window.Static_0004, Window, "Unpacking files", x,y,w,h);
-    Dlg_to_Scn(  12, 71, 21, 20, x,y,w,h);
-    Create( Window.Static_0005, Window, Num_resource(Drag_Unpack_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  48, 72, 316, 28, x,y,w,h);
-    Create_Label( Window, "You can extract selected files, the selected folder, or the entire archive via the Extract command (Ctrl+E) or a button. BUT: you can also extract files via Drag && Drop to a Windows Explorer window or to the Desktop.", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_box_Type
 
   -- Dialog at resource line 348

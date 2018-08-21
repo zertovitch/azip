@@ -15,6 +15,10 @@
 --  *       Mirror URL: https://github.com/svn2github/gnavi
 --  *       NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
 --  *   
+--  *   * Ini file manager:
+--  *       Project URL: http://ini-files.sourceforge.net/
+--  *       Mirror URL: https://github.com/svn2github/Ini-Files.git
+--  *   
 --  *   * Zip-Ada:
 --  *       [zip-ada]\zip_lib
 --  *       Project URL: http://unzip-ada.sf.net

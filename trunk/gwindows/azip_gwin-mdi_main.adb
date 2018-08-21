@@ -1,6 +1,7 @@
 with AZip_Common;                       use AZip_Common;
 with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
 with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
+with AZip_GWin.Persistence;
 with AZip_GWin.Toolbars;
 
 with Zip;
@@ -12,7 +13,6 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Cursors;                  use GWindows.Cursors;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
-with GWindows.Registry;
 with GWindows.Static_Controls;          use GWindows.Static_Controls;
 with GWindows.Static_Controls.Web;      use GWindows.Static_Controls.Web;
 
@@ -218,27 +218,6 @@ package body AZip_GWin.MDI_Main is
            Top  in -320 .. Desktop_Height - 80;
   end Valid_Left_Top;
 
-  -----------------
-  -- Persistence --
-  -----------------
-
-  kname: constant GString:= "Software\AZip";
-
-  function Read_key(topic: Wide_String) return Wide_String is
-    use GWindows.Registry;
-  begin
-    return Get_Value(kname, topic, HKEY_CURRENT_USER);
-  end Read_key;
-
-  procedure Write_key(topic: Wide_String; value: Wide_String) is
-    use GWindows.Registry;
-  begin
-    Register( kname, topic, value, HKEY_CURRENT_USER );
-  end Write_key;
-
-  package Windows_persistence is new
-    AZip_Common.User_options.Persistence(Read_key, Write_key);
-
   ---------------
   -- On_Create --
   ---------------
@@ -256,7 +235,7 @@ package body AZip_GWin.MDI_Main is
     end Replace_default;
     --
   begin
-    Windows_persistence.Load(Window.opt);
+    AZip_GWin.Persistence.Load (Window.opt);
     Replace_default(Window.opt.win_left);
     Replace_default(Window.opt.win_width);
     Replace_default(Window.opt.win_top);
@@ -618,7 +597,7 @@ package body AZip_GWin.MDI_Main is
     Can_Close:= Window.Success_in_enumerated_close;
     --
     if Can_Close then
-      Windows_persistence.Save(Window.opt);
+      AZip_GWin.Persistence.Save (Window.opt);
       GWindows.Base.On_Exception_Handler (Handler => null);
       -- !! Trick to remove a strange crash on Destroy_Children
       -- !! on certain Windows platforms - 29-Jun-2012

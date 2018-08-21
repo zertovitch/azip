@@ -2,21 +2,6 @@ package body AZip_Common.User_options is
 
   package body Persistence is
 
-    type Key is
-      ( view_mode,
-        col_width,
-        sort_column,
-        sort_direction,
-        win_left, win_top, win_width, win_height,
-        maximized, children_maximized,
-        tree_portion,
-        mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
-        show_passwords,
-        ignore_extract_path
-      );
-
-    pragma Unreferenced (mru2, mru3, mru4, mru5, mru6, mru7, mru8);
-
     procedure Load(opt: out Option_Pack_Type) is
       defaults: Option_Pack_Type;
     begin

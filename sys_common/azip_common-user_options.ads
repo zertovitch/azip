@@ -58,6 +58,22 @@ package AZip_Common.User_options is
   package Persistence is
     procedure Load (opt: out Option_Pack_Type);
     procedure Save (opt: in  Option_Pack_Type);
+    --
+    --  This is not really needed in the specification for loading & saving,
+    --  but useful for creating a fresh configuration file.
+    --
+    type Key is
+      ( view_mode,
+        col_width,
+        sort_column,
+        sort_direction,
+        win_left, win_top, win_width, win_height,
+        maximized, children_maximized,
+        tree_portion,
+        mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
+        show_passwords,
+        ignore_extract_path
+      );
   end;
 
 end AZip_Common.User_options;

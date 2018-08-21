@@ -1,5 +1,5 @@
 This is a GWenerator project file (a "GWen"). Visit GWenerator on the Web: http://sf.net/projects/gnavi
-RC_NAME azip.rc
+RC_NAME AZip.rc
 RC_LISTEN TRUE
 RC_AUTO_TRANS TRUE
 RC_COMPILE WINDRES -- compilation of .rc script to a .rbj object file

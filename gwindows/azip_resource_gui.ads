@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2018/08/21  13:20:14
+-- Transcription time: 2018/08/21  19:44:28
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -149,10 +149,10 @@ package AZip_Resource_GUI is
 
   type Drop_files_box_Type is new Window_Type with record
 
-    RC_item_1: Icon_Type;
+    Static_0001: Icon_Type;
     Encrypt_check_box: Check_Box_Type;
     -- Label: 0
-    RC_item_0: Icon_Type;
+    Static_0002: Icon_Type;
     Drop_archive_name: Label_Type;
     New_archive_msg: Label_Type;
     IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
@@ -245,10 +245,10 @@ package AZip_Resource_GUI is
 
   type Find_box_Type is new Window_Type with record
 
-    RC_item_0: Icon_Type;
+    Static_0001: Icon_Type;
     -- Label: IDC_STATIC
     Name_to_be_searched: Edit_Box_Type;
-    RC_item_1: Icon_Type;
+    Static_0003: Icon_Type;
     -- Label: IDC_STATIC
     Content_to_be_searched: Edit_Box_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
@@ -294,7 +294,7 @@ package AZip_Resource_GUI is
     Encrypted_entry: Label_Type;
     -- Label: IDC_STATIC
     -- Label: IDC_STATIC
-    RC_item_0: Icon_Type;
+    Static_0004: Icon_Type;
     Password_edit: Edit_Box_Type;
     Show_password_box: Check_Box_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
@@ -345,7 +345,7 @@ package AZip_Resource_GUI is
     Password_confirm_edit: Edit_Box_Type;
     Confirm_Icon: Icon_Type;
     Confirm_Password_Label: Label_Type;
-    RC_item_0: Icon_Type;
+    Static_0001: Icon_Type;
     -- Label: IDC_STATIC
   end record; -- Password_encryption_box_Type
 
@@ -472,24 +472,33 @@ package AZip_Resource_GUI is
 
   type Quick_help_box_Type is new Window_Type with record
 
-    RC_item_0: Group_Box_Type;
+    Static_0001: Group_Box_Type;
     -- Label: 0
-    -- Label: 0
-    GB1: Group_Box_Type;
-    RC_item_1: Icon_Type;
+    Static_0002: Group_Box_Type;
+    Static_0003: Icon_Type;
     -- Label: 0
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    Static_0004: Group_Box_Type;
+    Static_0005: Icon_Type;
+    -- Label: 0
   end record; -- Quick_help_box_Type
 
-  -- Dialog at resource line 337
+  -- Dialog at resource line 339
+
+  -- Pre-Create operation to switch off default styles
+  -- or add ones that are not in usual GWindows Create parameters
+  --
+  procedure On_Pre_Create (Window    : in out Quick_help_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Quick_help_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "AZip Quick Help";
+      Title       : in     GString := "AZip Quick Help - a couple of tips and informations...";
       Left        : in     Integer := Use_Default; -- Default = as designed
       Top         : in     Integer := Use_Default; -- Default = as designed
       Width       : in     Integer := Use_Default; -- Default = as designed
@@ -513,7 +522,7 @@ package AZip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  -- Dialog at resource line 349
+  -- Dialog at resource line 351
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -601,7 +610,6 @@ package AZip_Resource_GUI is
   Copyright_label           : constant:=  40000;
   IDM_NEW_ARCHIVE           : constant:=  40000;
   New_archive_msg           : constant:=  40000;
-  Confirm_Icon              : constant:=  40001;
   Drop_archive_name         : constant:=  40001;
   IDM_OPEN_ARCHIVE          : constant:=  40001;
   Uncomp_size               : constant:=  40001;
@@ -655,8 +663,9 @@ package AZip_Resource_GUI is
   ZipAda_Version            : constant:=  40039;
   ZipAda_URL                : constant:=  40040;
   IDM_AZip_Web_news         : constant:=  40041;
-  GB1                       : constant:=  40042;
   ID_Button_About_Azip      : constant:=  40043;
+  Drag_Unpack_Icon          : constant:=  40044;
+  Confirm_Icon              : constant:=  40045;
 
   -- ** Some helper utilities (spec).
 
@@ -668,6 +677,6 @@ package AZip_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 451
+  -- Last line of resource script file: 460
 
 end AZip_Resource_GUI;

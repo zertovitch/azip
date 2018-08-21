@@ -139,7 +139,8 @@ package body AZip_GWin.Password_dialogs is
             );
           end if;
         when others =>
-          cancelled:= True; -- abandon pwd change and cancel current operation
+          confirm_ok := False;
+          cancelled := True;  --  abandon pwd change and cancel current operation
       end case;
       exit when confirm_ok or cancelled;
     end loop;

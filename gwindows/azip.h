@@ -47,10 +47,8 @@
 #define Comp_size                               40000
 #define Confirm_Password_Label                  40000
 #define Copyright_label                         40000
-#define GB1                                     40042
 #define IDM__NEW_ARCHIVE                        40000
 #define New_archive_msg                         40000
-#define Confirm_Icon                            40001
 #define Drop_archive_name                       40001
 #define IDM__OPEN_ARCHIVE                       40001
 #define Uncomp_size                             40001
@@ -61,11 +59,9 @@
 #define Password_confirm_edit                   40002
 #define IDM__ABOUT                              40003
 #define Stats_list                              40003
-#define IDM_AZip_Web_news                       40041
 #define IDM_TEST_ARCHIVE                        40004
 #define Numb_entries                            40004
 #define IDM__QUIT                               40005
-#define ID_Button_About_Azip                    40043
 #define IDM__RECOMPRESS_ARCHIVE                 40006
 #define IDM_EXTRACT                             40007
 #define IDM_FIND_IN_ARCHIVE                     40008
@@ -105,3 +101,7 @@
 #define IDM_Select_all                          40038
 #define ZipAda_Version                          40039
 #define ZipAda_URL                              40040
+#define IDM_AZip_Web_news                       40041
+#define ID_Button_About_Azip                    40043
+#define Drag_Unpack_Icon                        40044
+#define Confirm_Icon                            40045

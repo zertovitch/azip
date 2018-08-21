@@ -21,8 +21,14 @@ Features:
    * Multi-document
    * Methods supported: Reduce, Shrink, Implode, Deflate, Deflate64, BZip2, LZMA
    * Encryption
-   * Portable (no installation needed, no DLL, no configuration file)
+   * Portable (no installation needed, no DLL, no configuration file (*))
    * Free, open-source
+___
+(*)  AZip can operate in a "no trace in registry" mode. All you need is to put a dummy file
+        with the name "azip.cfg" in the same directory as the executable, azip.exe. If
+        azip.cfg is read-only, user settings won't be remembered for next usage, otherwise
+        settings will be recorded in azip.cfg instead of in the registry.
+
 
 Platforms supported:
 

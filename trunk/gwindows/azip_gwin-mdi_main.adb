@@ -485,7 +485,8 @@ package body AZip_GWin.MDI_Main is
     end if;
   end On_Quick_Help;
 
-  azip_web_page: constant String:= "http://azip.sf.net/";
+  azip_web_page      : constant String := "http://azip.sf.net/";
+  azip_news_web_page : constant String := "http://sourceforge.net/p/azip/news/";
 
   procedure On_About (Window : in out MDI_Main_Type) is
     box: About_box_Type;
@@ -550,7 +551,9 @@ package body AZip_GWin.MDI_Main is
       when IDM_ABOUT =>
         On_About (Window);
       when IDM_Web =>
-        GWin_Util.Start(azip_web_page);
+        GWin_Util.Start (azip_web_page);
+      when IDM_AZip_Web_news =>
+        GWin_Util.Start (azip_news_web_page);
       when IDM_QUIT  =>
         Close (Window);
       when IDM_WINDOW_CASCADE   =>

@@ -642,12 +642,12 @@ package body AZip_GWin.MDI_Child is
         not Window.MDI_Root.opt.MDI_childen_maximized;
     begin
       if memo_unmaximized_children then
-        Window.Parent.Freeze;
+        Window.MDI_Root.Freeze;
         Window.Zoom;
       end if;
       On_Size(Window,Width(Window),Height(Window));
       if memo_unmaximized_children then
-        Window.Parent.Thaw; -- Before Zoom, otherwise uncomplete draw.
+        Window.MDI_Root.Thaw; -- Before Zoom, otherwise uncomplete draw.
         Window.Zoom(False);
         Window.MDI_Root.Tool_Bar.Redraw;
       end if;
@@ -796,7 +796,7 @@ package body AZip_GWin.MDI_Child is
         progress_box.File_Progress.Position(file_percents_done);
         progress_box.Archive_Progress.Position(archive_percents_done);
         if Window.MDI_Root.Task_bar_gadget_ok then
-          Window.MDI_Root.Task_bar_gadget.Set_Progress_Value (Window.Parent.all, archive_percents_done, 100);
+          Window.MDI_Root.Task_bar_gadget.Set_Progress_Value (Window.MDI_Root.all, archive_percents_done, 100);
         end if;
         progress_box.Entry_name.Text(entry_being_processed);
         progress_box.Entry_operation_name.Text(
@@ -899,7 +899,7 @@ package body AZip_GWin.MDI_Child is
     progress_box.Center;
     progress_box.Redraw;
     progress_box.Show;
-    Window.Parent.Disable;
+    Window.MDI_Root.Disable;
     progress_box.Text(progress_box.Text & " Operation: " & Img(operation));
     begin
       Archive_processing(
@@ -952,10 +952,10 @@ package body AZip_GWin.MDI_Child is
         );
     end;
     if Window.MDI_Root.Task_bar_gadget_ok then
-      Window.MDI_Root.Task_bar_gadget.Set_Progress_State (Window.Parent.all, No_Progress);
+      Window.MDI_Root.Task_bar_gadget.Set_Progress_State (Window.MDI_Root.all, No_Progress);
     end if;
-    Window.Parent.Enable;
-    Window.Parent.Focus;
+    Window.MDI_Root.Enable;
+    Window.MDI_Root.Focus;
   end Process_archive_GWin;
 
   function Temp_AZip_name(Window: MDI_Child_Type) return String is
@@ -1771,7 +1771,7 @@ package body AZip_GWin.MDI_Child is
           end if;
         end if;
       end;
-      Window.Update_status_bar;
+      Update_status_bar (Window);
     end if;
   end On_Mouse_Move;
 
@@ -1795,7 +1795,7 @@ package body AZip_GWin.MDI_Child is
           null;
       end case;
       Window.MDI_Root.dragging.is_dragging := False;
-      Window.Update_status_bar;
+      Update_status_bar (Window);
     end if;
   end On_Left_Mouse_Button_Up;
 

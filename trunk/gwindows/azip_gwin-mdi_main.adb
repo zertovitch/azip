@@ -490,7 +490,7 @@ package body AZip_GWin.MDI_Main is
 
   procedure On_About (Window : in out MDI_Main_Type) is
     box: About_box_Type;
-    url_azip, url_gnat, url_gnavi, url_resedit, url_zipada: URL_Type;
+    url_azip, url_gnat, url_gnavi, url_ini, url_resedit, url_zipada : URL_Type;
     --
     procedure Credits_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
       credits_box: Credits_box_Type;
@@ -517,13 +517,14 @@ package body AZip_GWin.MDI_Main is
     box.Create_Full_Dialog(Window);
     box.Copyright_label.Text(S2G(Version_info.LegalCopyright));
     box.Version_label.Text(S2G(Version_info.FileVersion));
-    Create_and_Swap(url_azip, box.AZip_URL, box, S2G(azip_web_page));
-    Create_and_Swap(url_gnat, box.GNAT_URL, box, "http://libre.adacore.com");
-    Text(box.GNAT_Version, S2G("version " & GNAT_Version_string));
-    Create_and_Swap(url_gnavi, box.GNAVI_URL, box, "http://sf.net/projects/gnavi");
-    Create_and_Swap(url_resedit, box.ResEdit_URL, box, "http://resedit.net");
-    Create_and_Swap(url_zipada, box.ZipAda_URL, box, S2G(Zip.web));
-    Text(box.ZipAda_Version, S2G("version " & Zip.version & ", ref. " & Zip.reference));
+    Create_and_Swap (url_azip, box.AZip_URL, box, S2G(azip_web_page));
+    Create_and_Swap (url_gnat, box.GNAT_URL, box, "http://libre.adacore.com");
+    Text (box.GNAT_Version, S2G ("version " & GNAT_Version_string));
+    Create_and_Swap (url_gnavi,   box.GNAVI_URL,     box, "http://sf.net/projects/gnavi");
+    Create_and_Swap (url_ini,     box.Ini_files_URL, box, "http://sf.net/projects/ini-files");
+    Create_and_Swap (url_resedit, box.ResEdit_URL,   box, "http://resedit.net");
+    Create_and_Swap (url_zipada,  box.ZipAda_URL,    box, S2G (Zip.web));
+    Text (box.ZipAda_Version, S2G ("version " & Zip.version & ", ref. " & Zip.reference));
     box.Credits_button_permanent.Show;
     box.Credits_button.Hide;
     box.Credits_button_permanent.On_Click_Handler(Credits_clicked'Unrestricted_Access);

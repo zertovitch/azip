@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2018/08/21  21:14:45
+-- Transcription time: 2018/08/26  00:17:57
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -221,18 +221,22 @@ package body AZip_Resource_GUI is
     Dlg_to_Scn(  157, 81, 118, 8, x,y,w,h);
     Create( Window.Version_label, Window, "(ver)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Version_label);
     Dlg_to_Scn(  5, 105, 278, 78, x,y,w,h);
-    Create( Window.Static_0006, Window, "Software made with the following free, open source components:", x,y,w,h);
-    Dlg_to_Scn(  23, 119, 100, 8, x,y,w,h);
+    Create( Window.Static_0006, Window, "AZip is made with the following free, open source components:", x,y,w,h);
+    Dlg_to_Scn(  23, 119, 88, 8, x,y,w,h);
     Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_URL);
-    Dlg_to_Scn(  132, 119, 147, 8, x,y,w,h);
+    Dlg_to_Scn(  115, 119, 139, 8, x,y,w,h);
     Create( Window.GNAT_Version, Window, "GNAT_Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_Version);
-    Dlg_to_Scn(  23, 134, 118, 8, x,y,w,h);
+    Dlg_to_Scn(  23, 134, 72, 8, x,y,w,h);
     Create( Window.GNAVI_URL, Window, "GNAVI / GWindows", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAVI_URL);
-    Dlg_to_Scn(  23, 149, 170, 8, x,y,w,h);
+    Dlg_to_Scn(  223, 134, 53, 8, x,y,w,h);
+    Create( Window.Ini_files_URL, Window, "Ini file manager", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Ini_files_URL);
+    Dlg_to_Scn(  23, 149, 27, 8, x,y,w,h);
     Create( Window.ResEdit_URL, Window, "ResEdit", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ResEdit_URL);
-    Dlg_to_Scn(  23, 164, 75, 8, x,y,w,h);
+    Dlg_to_Scn(  55, 149, 103, 8, x,y,w,h);
+    Create_Label( Window, "(freeware, not open-source)", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  23, 165, 28, 8, x,y,w,h);
     Create( Window.ZipAda_URL, Window, "Zip-Ada", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ZipAda_URL);
-    Dlg_to_Scn(  132, 164, 147, 8, x,y,w,h);
+    Dlg_to_Scn(  57, 165, 146, 8, x,y,w,h);
     Create( Window.ZipAda_Version, Window, "ZA_Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ZipAda_Version);
     Dlg_to_Scn(  87, 186, 115, 18, x,y,w,h);
     -- Both versions of the button are created.
@@ -258,7 +262,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  -- Dialog at resource line 180
+  -- Dialog at resource line 182
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -341,7 +345,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Credits_box_Type
 
-  -- Dialog at resource line 198
+  -- Dialog at resource line 200
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -448,7 +452,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Drop_files_box_Type
 
-  -- Dialog at resource line 216
+  -- Dialog at resource line 218
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -594,7 +598,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "Do you want to replace this file ?", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  File_exists_box_Type
 
-  -- Dialog at resource line 236
+  -- Dialog at resource line 238
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -700,7 +704,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Find_box_Type
 
-  -- Dialog at resource line 254
+  -- Dialog at resource line 256
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -808,7 +812,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Password_decryption_box_Type
 
-  -- Dialog at resource line 273
+  -- Dialog at resource line 275
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -916,7 +920,7 @@ package body AZip_Resource_GUI is
     Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
   end Create_Contents;  --  Password_encryption_box_Type
 
-  -- Dialog at resource line 292
+  -- Dialog at resource line 294
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -1011,7 +1015,7 @@ package body AZip_Resource_GUI is
     Create( Window.Comment_2, Window, "Comment 2", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Comment_2);
   end Create_Contents;  --  Progress_box_Type
 
-  -- Dialog at resource line 309
+  -- Dialog at resource line 311
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -1123,7 +1127,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Properties_box_Type
 
-  -- Dialog at resource line 329
+  -- Dialog at resource line 331
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -1222,7 +1226,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Quick_help_box_Type
 
-  -- Dialog at resource line 348
+  -- Dialog at resource line 350
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1394,6 +1398,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 460
+  -- Last line of resource script file: 462
 
 end AZip_Resource_GUI;

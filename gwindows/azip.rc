@@ -160,13 +160,15 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "http://azip.sf.net/", AZip_URL, 157, 61, 89, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "Version:", IDC_STATIC, 110, 81, 30, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "(ver)", Version_label, 157, 81, 118, 8, SS_LEFT, WS_EX_LEFT
-    GROUPBOX        "Software made with the following free, open source components:", IDC_STATIC, 5, 105, 278, 78, 0, WS_EX_LEFT
-    LTEXT           "GNAT -  free Ada compiler", GNAT_URL, 23, 119, 100, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "GNAT_Version", GNAT_Version, 132, 119, 147, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "GNAVI / GWindows", GNAVI_URL, 23, 134, 118, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "ResEdit", ResEdit_URL, 23, 149, 170, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "Zip-Ada", ZipAda_URL, 23, 164, 75, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "ZA_Version", ZipAda_Version, 132, 164, 147, 8, SS_LEFT, WS_EX_LEFT
+    GROUPBOX        "AZip is made with the following free, open source components:", IDC_STATIC, 5, 105, 278, 78, 0, WS_EX_LEFT
+    LTEXT           "GNAT -  free Ada compiler", GNAT_URL, 23, 119, 88, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "GNAT_Version", GNAT_Version, 115, 119, 139, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "GNAVI / GWindows", GNAVI_URL, 23, 134, 72, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Ini file manager", Ini_files_URL, 223, 134, 53, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "ResEdit", ResEdit_URL, 23, 149, 27, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "(freeware, not open-source)", IDC_STATIC, 55, 149, 103, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Zip-Ada", ZipAda_URL, 23, 165, 28, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "ZA_Version", ZipAda_Version, 57, 165, 146, 8, SS_LEFT, WS_EX_LEFT
     DEFPUSHBUTTON   "Close", IDOK, 87, 186, 115, 18, 0, WS_EX_LEFT
     PUSHBUTTON      "Credits", Credits_button, 5, 186, 44, 18, 0, WS_EX_LEFT
 }

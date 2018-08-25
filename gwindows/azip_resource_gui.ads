@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2018/08/21  21:14:45
+-- Transcription time: 2018/08/26  00:17:57
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -70,7 +70,9 @@ package AZip_Resource_GUI is
     GNAT_URL: Label_Type;
     GNAT_Version: Label_Type;
     GNAVI_URL: Label_Type;
+    Ini_files_URL: Label_Type;
     ResEdit_URL: Label_Type;
+    -- Label: IDC_STATIC
     ZipAda_URL: Label_Type;
     ZipAda_Version: Label_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
@@ -79,7 +81,7 @@ package AZip_Resource_GUI is
     Credits_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 171
+  -- Dialog at resource line 173
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -123,7 +125,7 @@ package AZip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- Credits_box_Type
 
-  -- Dialog at resource line 189
+  -- Dialog at resource line 191
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -161,7 +163,7 @@ package AZip_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Drop_files_box_Type
 
-  -- Dialog at resource line 207
+  -- Dialog at resource line 209
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -212,7 +214,7 @@ package AZip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- File_exists_box_Type
 
-  -- Dialog at resource line 227
+  -- Dialog at resource line 229
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -257,7 +259,7 @@ package AZip_Resource_GUI is
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Find_box_Type
 
-  -- Dialog at resource line 245
+  -- Dialog at resource line 247
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -303,7 +305,7 @@ package AZip_Resource_GUI is
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Password_decryption_box_Type
 
-  -- Dialog at resource line 264
+  -- Dialog at resource line 266
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -349,7 +351,7 @@ package AZip_Resource_GUI is
     Show_password_box: Check_Box_Type;
   end record; -- Password_encryption_box_Type
 
-  -- Dialog at resource line 283
+  -- Dialog at resource line 285
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -392,7 +394,7 @@ package AZip_Resource_GUI is
     Comment_2: Label_Type;
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 300
+  -- Dialog at resource line 302
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -439,7 +441,7 @@ package AZip_Resource_GUI is
     ID_Button_About_Azip_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Properties_box_Type
 
-  -- Dialog at resource line 320
+  -- Dialog at resource line 322
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -484,7 +486,7 @@ package AZip_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Quick_help_box_Type
 
-  -- Dialog at resource line 339
+  -- Dialog at resource line 341
 
   -- Pre-Create operation to switch off default styles
   -- or add ones that are not in usual GWindows Create parameters
@@ -522,7 +524,7 @@ package AZip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  -- Dialog at resource line 351
+  -- Dialog at resource line 353
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -584,44 +586,32 @@ package AZip_Resource_GUI is
   Properties_box            : constant:=    142;
   Quick_help_box            : constant:=    143;
   Archive_Progress          : constant:=   1000;
-  Conflict_simple_name      : constant:=   1000;
-  Encrypted_entry           : constant:=   1000;
-  GNAT_URL                  : constant:=   1000;
   Entry_operation_name      : constant:=   1001;
-  GNAT_Version              : constant:=   1001;
   Conflict_location         : constant:=   1002;
-  File_Progress             : constant:=   1002;
-  GNAVI_URL                 : constant:=   1002;
-  Name_to_be_searched       : constant:=   1002;
-  Show_password_box         : constant:=   1002;
   Cancel_button             : constant:=   1003;
-  Version_label             : constant:=   1003;
   Content_to_be_searched    : constant:=   1004;
-  ResEdit_URL               : constant:=   1004;
   Credits_button            : constant:=   1005;
-  Entry_name                : constant:=   1005;
-  Password_edit             : constant:=   1005;
   Overwrite_Yes             : constant:=   1006;
   Comment_2                 : constant:=   1007;
   Comment_1                 : constant:=   1008;
-  Overwrite_No              : constant:=   1008;
+  Overwrite_No              : constant:=   1009;
+  Password_edit             : constant:=   1010;
+  Entry_name                : constant:=   1011;
+  ResEdit_URL               : constant:=   1012;
+  Version_label             : constant:=   1013;
+  Show_password_box         : constant:=   1014;
+  Name_to_be_searched       : constant:=   1015;
+  GNAVI_URL                 : constant:=   1016;
+  File_Progress             : constant:=   1017;
+  GNAT_Version              : constant:=   1018;
+  GNAT_URL                  : constant:=   1019;
+  Encrypted_entry           : constant:=   1020;
+  Conflict_simple_name      : constant:=   1021;
   Comp_size                 : constant:=  40000;
-  Confirm_Password_Label    : constant:=  40000;
-  Copyright_label           : constant:=  40000;
-  IDM_NEW_ARCHIVE           : constant:=  40000;
-  New_archive_msg           : constant:=  40000;
   Drop_archive_name         : constant:=  40001;
-  IDM_OPEN_ARCHIVE          : constant:=  40001;
-  Uncomp_size               : constant:=  40001;
   Comp_ratio                : constant:=  40002;
-  Encrypt_check_box         : constant:=  40002;
-  IDM_MRU_1                 : constant:=  40002;
-  IDM_Unselect_all          : constant:=  40002;
-  Password_confirm_edit     : constant:=  40002;
   IDM_ABOUT                 : constant:=  40003;
-  Stats_list                : constant:=  40003;
   IDM_TEST_ARCHIVE          : constant:=  40004;
-  Numb_entries              : constant:=  40004;
   IDM_QUIT                  : constant:=  40005;
   IDM_RECOMPRESS_ARCHIVE    : constant:=  40006;
   IDM_EXTRACT               : constant:=  40007;
@@ -642,7 +632,6 @@ package AZip_Resource_GUI is
   IDM_WINDOW_TILE_VERTICAL  : constant:=  40022;
   IDM_WINDOW_CLOSE_ALL      : constant:=  40023;
   IDM_MERGE_ARCHIVES        : constant:=  40024;
-  AZip_URL                  : constant:=  40025;
   IDM_Touch_Time_Stamps     : constant:=  40025;
   IDM_Delete_selected       : constant:=  40026;
   IDM_ADD_FILES             : constant:=  40027;
@@ -651,13 +640,10 @@ package AZip_Resource_GUI is
   IDM_Encrypt_Archive       : constant:=  40030;
   IDM_Add_Files_Encryption  : constant:=  40031;
   IDM_Properties            : constant:=  40032;
-  Overwrite_All             : constant:=  40032;
   IDM_Add_Folder            : constant:=  40033;
   IDM_Add_Folder_Encryption : constant:=  40034;
-  Overwrite_None            : constant:=  40034;
   IDM_Quick_Help            : constant:=  40035;
   IDM_Web                   : constant:=  40036;
-  Overwrite_Rename          : constant:=  40036;
   IDM_SAVE_ARCHIVE_AS       : constant:=  40037;
   IDM_Select_all            : constant:=  40038;
   ZipAda_Version            : constant:=  40039;
@@ -666,6 +652,23 @@ package AZip_Resource_GUI is
   ID_Button_About_Azip      : constant:=  40043;
   Drag_Unpack_Icon          : constant:=  40044;
   Confirm_Icon              : constant:=  40045;
+  Ini_files_URL             : constant:=  40046;
+  AZip_URL                  : constant:=  40047;
+  Overwrite_All             : constant:=  40048;
+  Overwrite_None            : constant:=  40049;
+  Overwrite_Rename          : constant:=  40050;
+  Numb_entries              : constant:=  40051;
+  Stats_list                : constant:=  40052;
+  Password_confirm_edit     : constant:=  40053;
+  IDM_Unselect_all          : constant:=  40054;
+  IDM_MRU_1                 : constant:=  40055;
+  Encrypt_check_box         : constant:=  40056;
+  Uncomp_size               : constant:=  40057;
+  IDM_OPEN_ARCHIVE          : constant:=  40058;
+  New_archive_msg           : constant:=  40059;
+  IDM_NEW_ARCHIVE           : constant:=  40060;
+  Copyright_label           : constant:=  40061;
+  Confirm_Password_Label    : constant:=  40062;
 
   -- ** Some helper utilities (spec).
 
@@ -677,6 +680,6 @@ package AZip_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 460
+  -- Last line of resource script file: 462
 
 end AZip_Resource_GUI;

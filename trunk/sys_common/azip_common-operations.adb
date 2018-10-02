@@ -646,6 +646,7 @@ package body AZip_Common.Operations is
         current_entry_name:= U(short_name_utf_16);
         Tentative_compress(
           date_time,
+          --  We try the very best compression available in our toolbox.
           Zip.Compress.Preselection_Method'Last,
           temp_entry_data_name
         );
@@ -1048,13 +1049,18 @@ package body AZip_Common.Operations is
           --  New archive is discarded.
           Delete_File(new_temp_name);
         else
+          --  We move the new archive to the previous one's place.
           Delete_File(Zip.Zip_name(zif));
           Rename(new_temp_name, Zip.Zip_name(zif));
         end if;
         if operation in Update .. Recompress then
+          --  Update or Recompress have created a single
+          --  entry Zip file for each original entry.
           if Zip.Exists(temp_single_entry_zip_name) then
             Delete_File(temp_single_entry_zip_name);
           end if;
+          --  Recompress has needed to unpack each entry,
+          --  then compress it, trying to achieve a better compression.
           if Zip.Exists(temp_entry_data_name) then
             Delete_File(temp_entry_data_name);
           end if;

@@ -221,7 +221,7 @@ package body AZip_Common.Operations is
     end case;
   end Description;
 
-  procedure Copy_user_codes(from, to: Zip.Zip_info) is
+  procedure Copy_user_codes (from: Zip.Zip_info; to: in out Zip.Zip_info) is
     procedure Copy_user_code(
       name             : String; -- 'name' is compressed entry's full name
       file_index       : Zip_Streams.ZS_Index_Type;
@@ -233,7 +233,7 @@ package body AZip_Common.Operations is
       name_encoding    : Zip.Zip_name_encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
-      user_code        : in out Integer
+      user_code        : Integer
     )
     is
     pragma Unreferenced (file_index, comp_size, uncomp_size, crc_32, date_time, method, name_encoding, read_only, encrypted_2_x);
@@ -249,7 +249,7 @@ package body AZip_Common.Operations is
     Do_it(from);
   end Copy_user_codes;
 
-  procedure Set_user_codes(info: Zip.Zip_info; code: Integer) is
+  procedure Set_user_codes (info: in out Zip.Zip_info; code: Integer) is
     procedure Set_same_user_code(name: String) is
     begin
       Zip.Set_user_code(info, name, code);
@@ -277,7 +277,7 @@ package body AZip_Common.Operations is
   ------------------------------------------------
 
   procedure Process_archive(
-    zif             :        Zip.Zip_info; -- preserved, even after modifying operation
+    zif             : in out Zip.Zip_info; -- preserved, even after modifying operation
     operation       :        Archive_Operation;
     entry_name      :        Name_list;
     base_folder     :        UTF_16_String;
@@ -924,7 +924,7 @@ package body AZip_Common.Operations is
       end if;
     end Action_1_entry;
 
-    procedure Traverse_archive is new Zip.Traverse_verbose (Action_1_entry);
+    procedure Traverse_archive is new Zip.Traverse_verbose_altering (Action_1_entry);
 
   begin -- Process_archive
     max_code:= 0;
@@ -1166,7 +1166,7 @@ package body AZip_Common.Operations is
       name_encoding    : Zip.Zip_name_encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
-      user_code        : in out Integer
+      user_code        : Integer
     )
     is
     pragma Unreferenced (

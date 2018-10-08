@@ -39,7 +39,7 @@ procedure AZip_GWin.Properties(Window: in out MDI_Child_Type) is
       name_encoding    : Zip_name_encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
-      user_code        : in out Integer
+      user_code        : Integer
     )
   is
   pragma Unreferenced (user_code, encrypted_2_x, read_only, name_encoding, date_time, crc_32, file_index, name);

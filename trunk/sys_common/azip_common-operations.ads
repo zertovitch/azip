@@ -128,7 +128,7 @@ package AZip_Common.Operations is
       cancelled  :    out Boolean
     );
   procedure Process_archive(
-    zif             :        Zip.Zip_info; -- preserved, even after modifying operation
+    zif             : in out Zip.Zip_info; -- preserved, even after modifying operation
     operation       :        Archive_Operation;
     entry_name      :        Name_list;
     base_folder     :        UTF_16_String;
@@ -148,9 +148,9 @@ package AZip_Common.Operations is
   -- Some goodies --
   ------------------
 
-  procedure Copy_user_codes(from, to: Zip.Zip_info);
+  procedure Copy_user_codes (from: Zip.Zip_info; to: in out Zip.Zip_info);
 
-  procedure Set_user_codes(info: Zip.Zip_info; code: Integer);
+  procedure Set_user_codes (info: in out Zip.Zip_info; code: Integer);
 
   procedure Count_test_totals(
     archive: Zip.Zip_info;

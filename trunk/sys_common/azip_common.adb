@@ -624,7 +624,7 @@ package body AZip_Common is
       name_encoding    : Zip_name_encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
-      user_code        : Integer
+      user_code        : in out Integer
     ) is
     pragma Unreferenced (
       name, file_index, comp_size, uncomp_size, crc_32, date_time, method,

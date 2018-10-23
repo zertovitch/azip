@@ -169,7 +169,7 @@ package body AZip_GWin.MDI_Child is
         name_encoding    : Zip_name_encoding;
         read_only        : Boolean;
         encrypted_2_x    : Boolean; -- PKZip 2.x encryption
-        user_code        : Integer
+        user_code        : in out Integer
       )
       is
         pragma Unreferenced (file_index);

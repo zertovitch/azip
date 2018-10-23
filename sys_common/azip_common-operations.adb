@@ -233,7 +233,7 @@ package body AZip_Common.Operations is
       name_encoding    : Zip.Zip_name_encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
-      user_code        : Integer
+      user_code        : in out Integer
     )
     is
     pragma Unreferenced (file_index, comp_size, uncomp_size, crc_32, date_time, method, name_encoding, read_only, encrypted_2_x);
@@ -924,7 +924,7 @@ package body AZip_Common.Operations is
       end if;
     end Action_1_entry;
 
-    procedure Traverse_archive is new Zip.Traverse_verbose_altering (Action_1_entry);
+    procedure Traverse_archive is new Zip.Traverse_verbose (Action_1_entry);
 
   begin -- Process_archive
     max_code:= 0;
@@ -1166,7 +1166,7 @@ package body AZip_Common.Operations is
       name_encoding    : Zip.Zip_name_encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
-      user_code        : Integer
+      user_code        : in out Integer
     )
     is
     pragma Unreferenced (

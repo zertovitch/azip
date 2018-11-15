@@ -53,8 +53,9 @@ package body AZip_GWin.Toolbars is
     parent: in out AZip_GWin.MDI_Main.MDI_Main_Type
   )
   is
-    string_count: Natural:= 0;
-    Fake_Menu: Menu_MDI_Child_Type;
+    string_count : Natural := 0;
+    Fake_Menu : Menu_MDI_Child_Type;
+    Super_Fake_Menu : Fake_menu_for_commands_in_no_real_menu_Type;
     --
     procedure Add_Button_with_Tip
       (Image_Index : in     Natural;
@@ -64,7 +65,16 @@ package body AZip_GWin.Toolbars is
       use type GString_Unbounded;
     begin
       -- The tool tip is the menu text.
-      tb.Add_String(Filter(Text(Fake_Menu.Main, Command, Command_ID)));
+      declare
+        tip1 : constant GString := Text (Fake_Menu.Main, Command, Command_ID);
+        tip2 : constant GString := Text (Super_Fake_Menu.Main, Command, Command_ID);
+      begin
+        if tip1 = "" then
+          tb.Add_String(Filter(tip2));
+        else
+          tb.Add_String(Filter(tip1));
+        end if;
+      end;
       tb.Add_Button(Image_Index, Command_ID, string_count);
       string_count:= string_count + 1;
     end Add_Button_with_Tip;
@@ -82,6 +92,7 @@ package body AZip_GWin.Toolbars is
     Set_Extended_Style(tb, TBSTYLE_EX_MIXEDBUTTONS);
 
     Create_Full_Menu (Fake_Menu);
+    Create_Full_Menu (Super_Fake_Menu);
     Add_Button_with_Tip (10, IDM_NEW_ARCHIVE);
     Add_Button_with_Tip (11, IDM_OPEN_ARCHIVE);
     Add_Button_with_Tip ( 2, IDM_EXTRACT);
@@ -95,6 +106,8 @@ package body AZip_GWin.Toolbars is
     Add_Separator (tb, sep_width);
     Add_Button_with_Tip ( 5, IDM_UPDATE_ARCHIVE);
     Add_Button_with_Tip ( 9, IDM_RECOMPRESS_ARCHIVE);
+    Add_Separator (tb, sep_width);
+    Add_Button_with_Tip (12, IDM_Toggle_Flat_Tree_View);
     Add_Separator (tb, sep_width);
     Add_Button_with_Tip ( 7, IDM_Properties);
   end Init_Main_toolbar;

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2018/08/28  11:27:26
+-- Transcription time: 2018/11/15  20:42:10
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 31-Oct-2017
+-- RC Grammar version: 30-Aug-2018
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -21,7 +21,18 @@ package body AZip_Resource_GUI is
 
   -- ** Generated code begins here \/ \/ \/.
 
-  -- Menu at line 29
+  --  Menu at line 29
+  procedure Create_Full_Menu
+     (Menu        : in out Fake_menu_for_commands_in_no_real_menu_Type)
+  is
+  begin
+    Menu.Main:= Create_Menu;
+    Menu.Popup_0001:= Create_Popup;
+    Append_Menu(Menu.Main, "Fake", Menu.Popup_0001);
+    Append_Item(Menu.Popup_0001, "Toggle Flat / Tree view", IDM_Toggle_Flat_Tree_View);
+  end Create_Full_Menu;  --  Fake_menu_for_commands_in_no_real_menu_Type
+
+  --  Menu at line 40
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type)
   is
@@ -95,7 +106,7 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0007, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 105
+  --  Menu at line 116
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -134,10 +145,10 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0004, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  -- Dialog at resource line 153
+  --  Dialog at resource line 164
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out About_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
@@ -150,7 +161,7 @@ package body AZip_Resource_GUI is
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out About_box_Type;
@@ -187,8 +198,8 @@ package body AZip_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- About_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out About_box_Type;
@@ -262,9 +273,9 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  -- Dialog at resource line 182
+  --  Dialog at resource line 193
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Credits_box_Type;
@@ -301,8 +312,8 @@ package body AZip_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Credits_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Credits_box_Type;
@@ -345,10 +356,10 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Credits_box_Type
 
-  -- Dialog at resource line 200
+  --  Dialog at resource line 211
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Drop_files_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
@@ -361,7 +372,7 @@ package body AZip_Resource_GUI is
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Drop_files_box_Type;
@@ -398,8 +409,8 @@ package body AZip_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Drop_files_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Drop_files_box_Type;
@@ -427,7 +438,7 @@ package body AZip_Resource_GUI is
     Create( Window.Drop_archive_name, Window, "(Archive name here)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Drop_archive_name);
     Dlg_to_Scn(  45, 65, 272, 21, x,y,w,h);
     Create( Window.New_archive_msg, Window, "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", x,y,w,h, GWindows.Static_Controls.Left, Half_Sunken, ID => New_archive_msg);
-    Hide(Window.New_archive_msg);
+    Hide (Window.New_archive_msg);
     Dlg_to_Scn(  87, 95, 63, 18, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -452,10 +463,10 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Drop_files_box_Type
 
-  -- Dialog at resource line 218
+  --  Dialog at resource line 229
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out File_exists_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
@@ -468,7 +479,7 @@ package body AZip_Resource_GUI is
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out File_exists_box_Type;
@@ -505,8 +516,8 @@ package body AZip_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- File_exists_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out File_exists_box_Type;
@@ -598,10 +609,10 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "Do you want to replace this file ?", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  File_exists_box_Type
 
-  -- Dialog at resource line 238
+  --  Dialog at resource line 249
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Find_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
@@ -614,7 +625,7 @@ package body AZip_Resource_GUI is
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Find_box_Type;
@@ -651,8 +662,8 @@ package body AZip_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Find_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Find_box_Type;
@@ -704,10 +715,10 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Find_box_Type
 
-  -- Dialog at resource line 256
+  --  Dialog at resource line 267
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Password_decryption_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
@@ -720,7 +731,7 @@ package body AZip_Resource_GUI is
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Password_decryption_box_Type;
@@ -757,8 +768,8 @@ package body AZip_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Password_decryption_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Password_decryption_box_Type;
@@ -812,10 +823,10 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Password_decryption_box_Type
 
-  -- Dialog at resource line 275
+  --  Dialog at resource line 286
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Password_encryption_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
@@ -828,7 +839,7 @@ package body AZip_Resource_GUI is
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Password_encryption_box_Type;
@@ -865,8 +876,8 @@ package body AZip_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Password_encryption_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Password_encryption_box_Type;
@@ -920,10 +931,10 @@ package body AZip_Resource_GUI is
     Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
   end Create_Contents;  --  Password_encryption_box_Type
 
-  -- Dialog at resource line 294
+  --  Dialog at resource line 305
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Progress_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
@@ -936,7 +947,7 @@ package body AZip_Resource_GUI is
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Progress_box_Type;
@@ -973,8 +984,8 @@ package body AZip_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Progress_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Progress_box_Type;
@@ -1015,10 +1026,10 @@ package body AZip_Resource_GUI is
     Create( Window.Comment_2, Window, "Comment 2", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Comment_2);
   end Create_Contents;  --  Progress_box_Type
 
-  -- Dialog at resource line 311
+  --  Dialog at resource line 322
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Properties_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
@@ -1031,7 +1042,7 @@ package body AZip_Resource_GUI is
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Properties_box_Type;
@@ -1068,8 +1079,8 @@ package body AZip_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Properties_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Properties_box_Type;
@@ -1127,10 +1138,10 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Properties_box_Type
 
-  -- Dialog at resource line 331
+  --  Dialog at resource line 342
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Quick_help_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
@@ -1143,7 +1154,7 @@ package body AZip_Resource_GUI is
     dwStyle:= dwStyle and not WS_SYSMENU;
   end On_Pre_Create;
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Quick_help_box_Type;
@@ -1180,8 +1191,8 @@ package body AZip_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Quick_help_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Quick_help_box_Type;
@@ -1226,9 +1237,9 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Quick_help_box_Type
 
-  -- Dialog at resource line 350
+  --  Dialog at resource line 361
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Wait_refresh_box_Type;
@@ -1265,8 +1276,8 @@ package body AZip_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Wait_refresh_box_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Wait_refresh_box_Type;
@@ -1398,6 +1409,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 462
+  -- Last line of resource script file: 473
 
 end AZip_Resource_GUI;

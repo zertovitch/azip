@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2018/08/28  11:27:26
+-- Transcription time: 2018/11/15  20:42:10
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 31-Oct-2017
+-- RC Grammar version: 30-Aug-2018
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -29,6 +29,15 @@ with Interfaces.C;                      use Interfaces.C;
 
 package AZip_Resource_GUI is
 
+  type Fake_menu_for_commands_in_no_real_menu_Type is tagged record
+    Main: Menu_Type; -- Root of the whole menu tree
+    Popup_0001: Menu_Type;  -- level 1; title: "Fake"
+  end record;  --  Fake_menu_for_commands_in_no_real_menu_Type
+
+  --  Menu at line 34
+  procedure Create_Full_Menu
+     (Menu        : in out Fake_menu_for_commands_in_no_real_menu_Type);
+
   type Menu_MDI_Child_Type is tagged record
     Main: Menu_Type; -- Root of the whole menu tree
     Popup_0001: Menu_Type;  -- level 1; title: "&File"
@@ -40,7 +49,7 @@ package AZip_Resource_GUI is
     Popup_0007: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  -- Menu at line 99
+  --  Menu at line 110
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type);
 
@@ -52,7 +61,7 @@ package AZip_Resource_GUI is
     Popup_0004: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  -- Menu at line 141
+  --  Menu at line 152
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type);
 
@@ -81,16 +90,16 @@ package AZip_Resource_GUI is
     Credits_button_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- About_box_Type
 
-  -- Dialog at resource line 173
+  --  Dialog at resource line 184
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out About_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned);
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out About_box_Type;
@@ -103,8 +112,8 @@ package AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out About_box_Type;
@@ -125,9 +134,9 @@ package AZip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- Credits_box_Type
 
-  -- Dialog at resource line 191
+  --  Dialog at resource line 202
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Credits_box_Type;
@@ -140,8 +149,8 @@ package AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Credits_box_Type;
@@ -163,16 +172,16 @@ package AZip_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Drop_files_box_Type
 
-  -- Dialog at resource line 209
+  --  Dialog at resource line 220
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Drop_files_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned);
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Drop_files_box_Type;
@@ -185,8 +194,8 @@ package AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Drop_files_box_Type;
@@ -214,16 +223,16 @@ package AZip_Resource_GUI is
     -- Label: IDC_STATIC
   end record; -- File_exists_box_Type
 
-  -- Dialog at resource line 229
+  --  Dialog at resource line 240
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out File_exists_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned);
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out File_exists_box_Type;
@@ -236,8 +245,8 @@ package AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out File_exists_box_Type;
@@ -259,16 +268,16 @@ package AZip_Resource_GUI is
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Find_box_Type
 
-  -- Dialog at resource line 247
+  --  Dialog at resource line 258
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Find_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned);
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Find_box_Type;
@@ -281,8 +290,8 @@ package AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Find_box_Type;
@@ -305,16 +314,16 @@ package AZip_Resource_GUI is
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Password_decryption_box_Type
 
-  -- Dialog at resource line 266
+  --  Dialog at resource line 277
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Password_decryption_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned);
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Password_decryption_box_Type;
@@ -327,8 +336,8 @@ package AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Password_decryption_box_Type;
@@ -351,16 +360,16 @@ package AZip_Resource_GUI is
     Show_password_box: Check_Box_Type;
   end record; -- Password_encryption_box_Type
 
-  -- Dialog at resource line 285
+  --  Dialog at resource line 296
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Password_encryption_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned);
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Password_encryption_box_Type;
@@ -373,8 +382,8 @@ package AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Password_encryption_box_Type;
@@ -394,16 +403,16 @@ package AZip_Resource_GUI is
     Comment_2: Label_Type;
   end record; -- Progress_box_Type
 
-  -- Dialog at resource line 302
+  --  Dialog at resource line 313
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Progress_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned);
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Progress_box_Type;
@@ -416,8 +425,8 @@ package AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Progress_box_Type;
@@ -441,16 +450,16 @@ package AZip_Resource_GUI is
     ID_Button_About_Azip_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Properties_box_Type
 
-  -- Dialog at resource line 322
+  --  Dialog at resource line 333
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Properties_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned);
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Properties_box_Type;
@@ -463,8 +472,8 @@ package AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Properties_box_Type;
@@ -486,16 +495,16 @@ package AZip_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Quick_help_box_Type
 
-  -- Dialog at resource line 341
+  --  Dialog at resource line 352
 
-  -- Pre-Create operation to switch off default styles
-  -- or add ones that are not in usual GWindows Create parameters
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
   --
   procedure On_Pre_Create (Window    : in out Quick_help_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned);
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Quick_help_box_Type;
@@ -508,8 +517,8 @@ package AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Quick_help_box_Type;
@@ -524,9 +533,9 @@ package AZip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  -- Dialog at resource line 353
+  --  Dialog at resource line 364
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Wait_refresh_box_Type;
@@ -539,8 +548,8 @@ package AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Wait_refresh_box_Type;
@@ -551,7 +560,7 @@ package AZip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion: constant String:= "2.20";
+    FileVersion: constant String:= "2.25";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2018";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
@@ -564,111 +573,113 @@ package AZip_Resource_GUI is
   -- NB: only items with a defined symbol get a constant here
   -- These constants are needed for getting button and menu feedbacks.
 
-  IDC_STATIC                : constant:=     -1;
-  About_box                 : constant:=  40000;
-  Archive_Progress          : constant:=  40001;
-  AZip_Doc_Icon             : constant:=  40002;
-  AZip_Icon                 : constant:=  40003;
-  AZip_URL                  : constant:=  40004;
-  Binoculars_Icon           : constant:=  40005;
-  Cancel_button             : constant:=  40006;
-  Comment_1                 : constant:=  40007;
-  Comment_2                 : constant:=  40008;
-  Comp_ratio                : constant:=  40009;
-  Comp_size                 : constant:=  40010;
-  Confirm_Icon              : constant:=  40011;
-  Confirm_Password_Label    : constant:=  40012;
-  Conflict_location         : constant:=  40013;
-  Conflict_simple_name      : constant:=  40014;
-  Content_to_be_searched    : constant:=  40015;
-  Copyright_label           : constant:=  40016;
-  Credits_box               : constant:=  40017;
-  Credits_button            : constant:=  40018;
-  Drag_Unpack_Icon          : constant:=  40019;
-  Drop_archive_name         : constant:=  40020;
-  Drop_files_box            : constant:=  40021;
-  Encrypt_check_box         : constant:=  40022;
-  Encrypted_entry           : constant:=  40023;
-  Entry_name                : constant:=  40024;
-  Entry_operation_name      : constant:=  40025;
-  File_exists_box           : constant:=  40026;
-  File_Progress             : constant:=  40027;
-  Find_box                  : constant:=  40028;
-  Folders_BMP               : constant:=  40029;
-  GNAT_URL                  : constant:=  40030;
-  GNAT_Version              : constant:=  40031;
-  GNAVI_URL                 : constant:=  40032;
-  ID_Button_About_Azip      : constant:=  40033;
-  IDM_ABOUT                 : constant:=  40034;
-  IDM_CLOSE_ARCHIVE         : constant:=  40035;
-  IDM_FLAT_VIEW             : constant:=  40036;
-  IDM_NEW_ARCHIVE           : constant:=  40037;
-  IDM_OPEN_ARCHIVE          : constant:=  40038;
-  IDM_QUIT                  : constant:=  40039;
-  IDM_RECOMPRESS_ARCHIVE    : constant:=  40040;
-  IDM_TREE_VIEW             : constant:=  40041;
-  IDM_ADD_FILES             : constant:=  40042;
-  IDM_Add_Files_Encryption  : constant:=  40043;
-  IDM_Add_Folder            : constant:=  40044;
-  IDM_Add_Folder_Encryption : constant:=  40045;
-  IDM_AZip_Web_news         : constant:=  40046;
-  IDM_COMPARE_ARCHIVES      : constant:=  40047;
-  IDM_Delete_selected       : constant:=  40048;
-  IDM_Encrypt_Archive       : constant:=  40049;
-  IDM_EXTRACT               : constant:=  40050;
-  IDM_FIND_IN_ARCHIVE       : constant:=  40051;
-  IDM_MERGE_ARCHIVES        : constant:=  40052;
-  IDM_MRU_1                 : constant:=  40053;
-  IDM_MRU_2                 : constant:=  40054;
-  IDM_MRU_3                 : constant:=  40055;
-  IDM_MRU_4                 : constant:=  40056;
-  IDM_MRU_5                 : constant:=  40057;
-  IDM_MRU_6                 : constant:=  40058;
-  IDM_MRU_7                 : constant:=  40059;
-  IDM_MRU_8                 : constant:=  40060;
-  IDM_MRU_9                 : constant:=  40061;
-  IDM_Properties            : constant:=  40062;
-  IDM_Quick_Help            : constant:=  40063;
-  IDM_SAVE_ARCHIVE_AS       : constant:=  40064;
-  IDM_Select_all            : constant:=  40065;
-  IDM_TEST_ARCHIVE          : constant:=  40066;
-  IDM_Touch_Time_Stamps     : constant:=  40067;
-  IDM_Unselect_all          : constant:=  40068;
-  IDM_UPDATE_ARCHIVE        : constant:=  40069;
-  IDM_Web                   : constant:=  40070;
-  IDM_WINDOW_CASCADE        : constant:=  40071;
-  IDM_WINDOW_CLOSE_ALL      : constant:=  40072;
-  IDM_WINDOW_TILE_HORIZONTAL: constant:=  40073;
-  IDM_WINDOW_TILE_VERTICAL  : constant:=  40074;
-  Ini_files_URL             : constant:=  40075;
-  Key_Icon                  : constant:=  40076;
-  Menu_MDI_Child            : constant:=  40077;
-  Menu_MDI_Main             : constant:=  40078;
-  Name_to_be_searched       : constant:=  40079;
-  New_archive_msg           : constant:=  40080;
-  Numb_entries              : constant:=  40081;
-  Overwrite_All             : constant:=  40082;
-  Overwrite_No              : constant:=  40083;
-  Overwrite_None            : constant:=  40084;
-  Overwrite_Rename          : constant:=  40085;
-  Overwrite_Yes             : constant:=  40086;
-  Password_confirm_edit     : constant:=  40087;
-  Password_decryption_box   : constant:=  40088;
-  Password_edit             : constant:=  40089;
-  Password_encryption_box   : constant:=  40090;
-  Plus_icon                 : constant:=  40091;
-  Progress_box              : constant:=  40092;
-  Properties_box            : constant:=  40093;
-  Quick_help_box            : constant:=  40094;
-  ResEdit_URL               : constant:=  40095;
-  Show_password_box         : constant:=  40096;
-  Stats_list                : constant:=  40097;
-  Toolbar_BMP               : constant:=  40098;
-  Uncomp_size               : constant:=  40099;
-  Version_label             : constant:=  40100;
-  Wait_refresh_box          : constant:=  40101;
-  ZipAda_URL                : constant:=  40102;
-  ZipAda_Version            : constant:=  40103;
+  IDC_STATIC                            : constant:=     -1;
+  Fake_menu_for_commands_in_no_real_menu: constant:=    101;
+  About_box                             : constant:=  40000;
+  Archive_Progress                      : constant:=  40001;
+  AZip_Doc_Icon                         : constant:=  40002;
+  AZip_Icon                             : constant:=  40003;
+  AZip_URL                              : constant:=  40004;
+  Binoculars_Icon                       : constant:=  40005;
+  Cancel_button                         : constant:=  40006;
+  Comment_1                             : constant:=  40007;
+  Comment_2                             : constant:=  40008;
+  Comp_ratio                            : constant:=  40009;
+  Comp_size                             : constant:=  40010;
+  Confirm_Icon                          : constant:=  40011;
+  Confirm_Password_Label                : constant:=  40012;
+  Conflict_location                     : constant:=  40013;
+  Conflict_simple_name                  : constant:=  40014;
+  Content_to_be_searched                : constant:=  40015;
+  Copyright_label                       : constant:=  40016;
+  Credits_box                           : constant:=  40017;
+  Credits_button                        : constant:=  40018;
+  Drag_Unpack_Icon                      : constant:=  40019;
+  Drop_archive_name                     : constant:=  40020;
+  Drop_files_box                        : constant:=  40021;
+  Encrypt_check_box                     : constant:=  40022;
+  Encrypted_entry                       : constant:=  40023;
+  Entry_name                            : constant:=  40024;
+  Entry_operation_name                  : constant:=  40025;
+  File_exists_box                       : constant:=  40026;
+  File_Progress                         : constant:=  40027;
+  Find_box                              : constant:=  40028;
+  Folders_BMP                           : constant:=  40029;
+  GNAT_URL                              : constant:=  40030;
+  GNAT_Version                          : constant:=  40031;
+  GNAVI_URL                             : constant:=  40032;
+  ID_Button_About_Azip                  : constant:=  40033;
+  IDM_ABOUT                             : constant:=  40034;
+  IDM_CLOSE_ARCHIVE                     : constant:=  40035;
+  IDM_FLAT_VIEW                         : constant:=  40036;
+  IDM_NEW_ARCHIVE                       : constant:=  40037;
+  IDM_OPEN_ARCHIVE                      : constant:=  40038;
+  IDM_QUIT                              : constant:=  40039;
+  IDM_RECOMPRESS_ARCHIVE                : constant:=  40040;
+  IDM_TREE_VIEW                         : constant:=  40041;
+  IDM_ADD_FILES                         : constant:=  40042;
+  IDM_Add_Files_Encryption              : constant:=  40043;
+  IDM_Add_Folder                        : constant:=  40044;
+  IDM_Add_Folder_Encryption             : constant:=  40045;
+  IDM_AZip_Web_news                     : constant:=  40046;
+  IDM_COMPARE_ARCHIVES                  : constant:=  40047;
+  IDM_Delete_selected                   : constant:=  40048;
+  IDM_Encrypt_Archive                   : constant:=  40049;
+  IDM_EXTRACT                           : constant:=  40050;
+  IDM_FIND_IN_ARCHIVE                   : constant:=  40051;
+  IDM_MERGE_ARCHIVES                    : constant:=  40052;
+  IDM_MRU_1                             : constant:=  40053;
+  IDM_MRU_2                             : constant:=  40054;
+  IDM_MRU_3                             : constant:=  40055;
+  IDM_MRU_4                             : constant:=  40056;
+  IDM_MRU_5                             : constant:=  40057;
+  IDM_MRU_6                             : constant:=  40058;
+  IDM_MRU_7                             : constant:=  40059;
+  IDM_MRU_8                             : constant:=  40060;
+  IDM_MRU_9                             : constant:=  40061;
+  IDM_Properties                        : constant:=  40062;
+  IDM_Quick_Help                        : constant:=  40063;
+  IDM_SAVE_ARCHIVE_AS                   : constant:=  40064;
+  IDM_Select_all                        : constant:=  40065;
+  IDM_TEST_ARCHIVE                      : constant:=  40066;
+  IDM_Touch_Time_Stamps                 : constant:=  40067;
+  IDM_Unselect_all                      : constant:=  40068;
+  IDM_UPDATE_ARCHIVE                    : constant:=  40069;
+  IDM_Web                               : constant:=  40070;
+  IDM_WINDOW_CASCADE                    : constant:=  40071;
+  IDM_WINDOW_CLOSE_ALL                  : constant:=  40072;
+  IDM_WINDOW_TILE_HORIZONTAL            : constant:=  40073;
+  IDM_WINDOW_TILE_VERTICAL              : constant:=  40074;
+  Ini_files_URL                         : constant:=  40075;
+  Key_Icon                              : constant:=  40076;
+  Menu_MDI_Child                        : constant:=  40077;
+  Menu_MDI_Main                         : constant:=  40078;
+  Name_to_be_searched                   : constant:=  40079;
+  New_archive_msg                       : constant:=  40080;
+  Numb_entries                          : constant:=  40081;
+  Overwrite_All                         : constant:=  40082;
+  Overwrite_No                          : constant:=  40083;
+  Overwrite_None                        : constant:=  40084;
+  Overwrite_Rename                      : constant:=  40085;
+  Overwrite_Yes                         : constant:=  40086;
+  Password_confirm_edit                 : constant:=  40087;
+  Password_decryption_box               : constant:=  40088;
+  Password_edit                         : constant:=  40089;
+  Password_encryption_box               : constant:=  40090;
+  Plus_icon                             : constant:=  40091;
+  Progress_box                          : constant:=  40092;
+  Properties_box                        : constant:=  40093;
+  Quick_help_box                        : constant:=  40094;
+  ResEdit_URL                           : constant:=  40095;
+  Show_password_box                     : constant:=  40096;
+  Stats_list                            : constant:=  40097;
+  Toolbar_BMP                           : constant:=  40098;
+  Uncomp_size                           : constant:=  40099;
+  Version_label                         : constant:=  40100;
+  Wait_refresh_box                      : constant:=  40101;
+  ZipAda_URL                            : constant:=  40102;
+  ZipAda_Version                        : constant:=  40103;
+  IDM_Toggle_Flat_Tree_View             : constant:=  40104;
 
   -- ** Some helper utilities (spec).
 
@@ -680,6 +691,6 @@ package AZip_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 462
+  -- Last line of resource script file: 473
 
 end AZip_Resource_GUI;

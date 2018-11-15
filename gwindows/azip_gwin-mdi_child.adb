@@ -102,8 +102,12 @@ package body AZip_GWin.MDI_Child is
     bar.Enabled(IDM_UPDATE_ARCHIVE, not_empty_archive);
     bar.Enabled(IDM_RECOMPRESS_ARCHIVE, not_empty_archive);
     if not Window.is_closing then
+      --  Reactivate buttons that might have been disabled upon
+      --  closing of another window. These buttons are valid even
+      --  on an undefined (new) or existing, but empty, archive.
       bar.Enabled(IDM_ADD_FILES, True);
       bar.Enabled(IDM_Add_Files_Encryption, True);
+      bar.Enabled(IDM_Toggle_Flat_Tree_View, True);
       bar.Enabled(IDM_Properties, True);
     end if;
   end Update_tool_bar;
@@ -1747,6 +1751,7 @@ package body AZip_GWin.MDI_Child is
       --  This action is reversed as soon as another child window is focused.
       Window.MDI_Root.Tool_Bar.Enabled(IDM_ADD_FILES, False);
       Window.MDI_Root.Tool_Bar.Enabled(IDM_Add_Files_Encryption, False);
+      Window.MDI_Root.Tool_Bar.Enabled(IDM_Toggle_Flat_Tree_View, False);
       Window.MDI_Root.Tool_Bar.Enabled(IDM_Properties, False);
       Window.is_closing:= True;
     end if;

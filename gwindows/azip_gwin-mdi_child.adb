@@ -1670,9 +1670,16 @@ package body AZip_GWin.MDI_Child is
       when IDM_FIND_IN_ARCHIVE =>
         On_Find(Window);
       when IDM_FLAT_VIEW =>
-        Change_View(Window, Flat, force => False);
+        Change_View (Window, Flat, force => False);
       when IDM_TREE_VIEW =>
-        Change_View(Window, Tree, force => False);
+        Change_View (Window, Tree, force => False);
+      when IDM_Toggle_Flat_Tree_View =>
+        case Window.opt.view_mode is
+          when Flat =>
+            Change_View (Window, Tree, force => False);
+          when Tree =>
+            Change_View (Window, Flat, force => False);
+        end case;
       when others =>
         On_Menu_Select (Window_Type (Window), Item);
     end case;

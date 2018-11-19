@@ -13,6 +13,7 @@ package AZip_GWin.Dragging is
   type Dragging_info is record
     is_dragging        : Boolean := False;
     destination        : Kind_of_dragging_destination;
+    destination_path   : GString_Unbounded;
     cursor_drag_unpack : Cursor_Type;  --  Drop to Explorer / Desktop
     cursor_drag_no_way : Cursor_Type;  --  Cannot drop here
     cursor_arrow       : Cursor_Type;  --  Back to normal

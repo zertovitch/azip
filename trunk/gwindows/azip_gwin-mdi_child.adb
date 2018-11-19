@@ -52,7 +52,8 @@ package body AZip_GWin.MDI_Child is
         when to_desktop =>
           return "to the Desktop";
         when to_explorer =>
-          return "to a Windows Explorer window";
+          return "to a Windows Explorer window: " &
+                 GU2G (Window.MDI_Root.dragging.destination_path);
         when others =>
           return "";
       end case;
@@ -1780,6 +1781,7 @@ package body AZip_GWin.MDI_Child is
             Window.MDI_Root.dragging.destination := to_desktop;
           else
             Window.MDI_Root.dragging.destination := to_explorer;
+            Window.MDI_Root.dragging.destination_path := G2GU (Explorer_Path_At_Location (A.X, A.Y));
           end if;
         end if;
       end;

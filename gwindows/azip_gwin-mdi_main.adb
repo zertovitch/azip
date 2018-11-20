@@ -138,7 +138,17 @@ package body AZip_GWin.MDI_Main is
           Window,
           "Invalid zip archive",
           "File " & GU2G(File_Name) & NL &
-          "doesn't exist, or is not a valid zip archive (eventually, a ZIP64 archive).",
+          "is not a valid zip archive. Eventually, it's a ZIP64 archive.",
+          OK_Box,
+          Error_Icon
+        );
+        return;
+      when file_doesnt_exist =>
+        Message_Box(
+          Window,
+          "Zip archive issue",
+          "File " & GU2G(File_Name) & NL &
+          "doesn't exist, or is locked.",
           OK_Box,
           Error_Icon
         );

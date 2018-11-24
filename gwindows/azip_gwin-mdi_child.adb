@@ -765,7 +765,7 @@ package body AZip_GWin.MDI_Child is
     ignore_path    : Boolean; -- ignore directories upon extraction
     encrypt        : Boolean;
     new_temp_name  : String;
-    aborted        : out Boolean
+    return_code    : out Operation_return_code
   )
   is
     az_names: Name_list(file_names'Range);
@@ -921,19 +921,28 @@ package body AZip_GWin.MDI_Child is
         ignore_path      => ignore_path,
         encrypt          => encrypt,
         max_code         => Window.last_max_code,
-        abort_operation  => aborted
+        return_code      => return_code
       );
       Window.last_operation:= operation;
-      if not aborted then
-        if operation in Modifying_Operation then
-          Window.Load_archive_catalogue(copy_codes => operation /= Remove);
-        else
-          Update_display(Window, results_refresh);
-        end if;
-      end if;
+      case return_code is
+        when ok =>
+          if operation in Modifying_Operation then
+            Window.Load_archive_catalogue(copy_codes => operation /= Remove);
+          else
+            Update_display(Window, results_refresh);
+          end if;
+        when archive_too_large =>
+          Message_Box(Window,
+            "Archive change",
+            "New archive would be too large." & NL & "Change cancelled.",
+          OK_Box,
+          Error_Icon);
+        when aborted =>
+          null;
+      end case;
     exception
       when E : Ada.IO_Exceptions.Name_Error =>
-        aborted := True;
+        return_code := aborted;
         Message_Box(
           Window,
           "Processing failed",
@@ -944,11 +953,11 @@ package body AZip_GWin.MDI_Child is
           Exclamation_Icon
         );
       when E : Ada.IO_Exceptions.Use_Error =>
-        aborted := True;
+        return_code := aborted;
         Message_Box(
           Window,
           "Processing failed",
-          "Archive cannot be modified (perhaps is it read-only ?)," & NL &
+          "Archive cannot be modified (perhaps, is it read-only ?)," & NL &
           "or a new file cannot be written." &
           NL & "-----" & NL &
           S2G(Ada.Exceptions.Exception_Message (E)),
@@ -1000,7 +1009,7 @@ package body AZip_GWin.MDI_Child is
           end if;
       end case;
     end Eventual_folder;
-    aborted: Boolean;
+    return_code : Operation_return_code;
   begin
     Process_archive_GWin(
       Window         => Window,
@@ -1012,7 +1021,7 @@ package body AZip_GWin.MDI_Child is
       ignore_path    => False,
       encrypt        => Encrypt,
       new_temp_name  => Temp_AZip_name(Window),
-      aborted        => aborted
+      return_code    => return_code
     );
   end Go_for_adding;
 
@@ -1229,9 +1238,10 @@ package body AZip_GWin.MDI_Child is
       end case;
     end Use_path_question;
     --
-    aborted, ask : Boolean;
+    ask : Boolean;
     box_kind : Message_Box_Type;
     dir : GString_Unbounded;
+    return_code : Operation_return_code;
   begin
     if not Is_loaded(Window.zif) then
       return; -- No archive, then nothing to do
@@ -1292,9 +1302,9 @@ package body AZip_GWin.MDI_Child is
       ignore_path    => Window.opt.ignore_extract_path,
       encrypt        => False,
       new_temp_name  => "",
-      aborted        => aborted
+      return_code    => return_code
     );
-    if (not aborted) and (not dropped) then
+    if return_code = ok and not dropped then
       --  Open destination path's folder
       GWin_Util.Start(G2S(GU2G(dir)));  --  !! not unicode
     end if;
@@ -1321,7 +1331,7 @@ package body AZip_GWin.MDI_Child is
           " selected item(s) ?";
       end if;
     end Delete_msg;
-    aborted: Boolean;
+    return_code : Operation_return_code;
   begin
     if Window.Directory_List.Selected_Item_Count = 0 and not Folder_Focus(Window) then
       return; -- not item -> do nothing (different from On_Extract's behaviour)
@@ -1337,7 +1347,7 @@ package body AZip_GWin.MDI_Child is
         ignore_path    => False,
         encrypt        => False,
         new_temp_name  => Temp_AZip_name(Window),
-        aborted        => aborted
+        return_code    => return_code
       );
     end if;
   end On_Delete;
@@ -1424,7 +1434,7 @@ package body AZip_GWin.MDI_Child is
       Window.content_search:= G2GU(box.Content_to_be_searched.Text);
     end Get_Data;
     --
-    aborted: Boolean;
+    return_code : Operation_return_code;
   begin
     box.Create_Full_Dialog(Window);
     box.Name_to_be_searched.Text(GU2G(Window.name_search));
@@ -1443,7 +1453,7 @@ package body AZip_GWin.MDI_Child is
         ignore_path    => False,
         encrypt        => False,
         new_temp_name  => "",
-        aborted        => aborted
+        return_code    => return_code
       );
       if Message_Box(Window,
           "Find in archive",
@@ -1471,7 +1481,7 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Test(Window : in out MDI_Child_Type) is
     count_ok, count_ko, count_nt: Natural;
-    aborted: Boolean;
+    return_code : Operation_return_code;
   begin
     Process_archive_GWin(
       Window         => Window,
@@ -1483,7 +1493,7 @@ package body AZip_GWin.MDI_Child is
       ignore_path    => False,
       encrypt        => False,
       new_temp_name  => "",
-      aborted        => aborted
+      return_code    => return_code
     );
     Count_test_totals(Window.zif, count_ok, count_ko, count_nt);
     if count_nt > 0 then
@@ -1523,7 +1533,7 @@ package body AZip_GWin.MDI_Child is
     new_dir: constant String:= Ada.Directories.Containing_Directory(
       To_UTF_8(GU2G (Window.File_Name))
     ); -- !! Not UTF-8 capable
-    aborted: Boolean;
+    return_code : Operation_return_code;
   begin
     if not Is_loaded(Window.zif) then
       return;
@@ -1554,7 +1564,7 @@ package body AZip_GWin.MDI_Child is
         ignore_path    => False,
         encrypt        => False,
         new_temp_name  => Temp_AZip_name(Window),
-        aborted        => aborted
+        return_code    => return_code
       );
       if mem_dir'Length > 0 and then mem_dir(mem_dir'Last) =':' then
         -- Bug in GNAT up to GPL 2011 - cf issue [L216-021 public], fixed in 2012.
@@ -1562,7 +1572,7 @@ package body AZip_GWin.MDI_Child is
       else
         Ada.Directories.Set_Directory(mem_dir); -- !! Check if UTF-8 capable
       end if;
-      if aborted then
+      if return_code = aborted or return_code = archive_too_large then
         null;
       elsif Window.last_max_code <= only_archive then
         Message_Box(Window,
@@ -1585,7 +1595,7 @@ package body AZip_GWin.MDI_Child is
   end On_Update;
 
   procedure On_Recompress(Window : in out MDI_Child_Type) is
-    aborted: Boolean;
+    return_code : Operation_return_code;
   begin
     if not Is_loaded(Window.zif) then
       return;
@@ -1615,9 +1625,9 @@ package body AZip_GWin.MDI_Child is
         ignore_path    => False,
         encrypt        => False,
         new_temp_name  => Temp_AZip_name(Window),
-        aborted        => aborted
+        return_code    => return_code
       );
-      if aborted then
+      if return_code = aborted then
         null;
       elsif Window.last_max_code = nothing then
         Message_Box(Window,

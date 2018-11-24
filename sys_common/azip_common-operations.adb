@@ -290,7 +290,7 @@ package body AZip_Common.Operations is
     ignore_path     :        Boolean; -- ignore directories upon extraction
     encrypt         :        Boolean;
     max_code        :    out Integer;
-    abort_operation :    out Boolean
+    return_code     :    out Operation_return_code
   )
   is
     new_zip: Zip.Create.Zip_Create_info;
@@ -486,8 +486,8 @@ package body AZip_Common.Operations is
     );
     --
     use Zip.Create, UnZip;
-    none_updated: Boolean:= True;
-    none_recompressed: Boolean:= True;
+    none_updated      : Boolean := True;
+    none_recompressed : Boolean := True;
     quick_method: constant Zip.Compress.Compression_Method:= Zip.Compress.Deflate_1;
     temp_single_entry_zip_name: constant String:= new_temp_name & ".single_entry_zip.tmp";
     temp_entry_data_name: constant String:= new_temp_name & ".entry_data.tmp";
@@ -623,7 +623,7 @@ package body AZip_Common.Operations is
         end if;
       exception
         when Zip.Compress.User_abort =>
-          abort_operation:= True;
+          return_code := aborted;
       end Update_entry;
       --
       procedure Recompress_entry is
@@ -676,13 +676,13 @@ package body AZip_Common.Operations is
         end if;
       exception
         when UnZip.User_abort | Zip.Compress.User_abort =>
-          abort_operation:= True;
+          return_code := aborted;
       end Recompress_entry;
       --
       use type Zip.File_size_type;
     begin  --  Action_1_entry
       user_code:= nothing;
-      if abort_operation then
+      if return_code = aborted then
         return;
       end if;
       processed_entries:= processed_entries + 1;
@@ -764,7 +764,7 @@ package body AZip_Common.Operations is
               user_code:= success;
             exception
               when Zip.Compress.User_abort =>
-                abort_operation:= True;
+                return_code := aborted;
             end;
           when Update =>
             if name = "" or else (name(name'Last)= '\' or name(name'Last)= '/') then
@@ -813,14 +813,14 @@ package body AZip_Common.Operations is
               user_code:= success;
             exception
               when UnZip.User_abort =>
-                abort_operation:= True;
+                return_code := aborted;
               when UnZip.CRC_Error =>
                 user_code:= bad_crc;
               when Zip.Archive_corrupted =>
                 user_code:= corrupt;
               when UnZip.Wrong_password =>
                 user_code:= wrong_pwd;
-                abort_operation:= True;
+                return_code := aborted;
               when UnZip.Unsupported_method | UnZip.Not_supported =>
                 user_code:= unsupported;
             end;
@@ -863,14 +863,14 @@ package body AZip_Common.Operations is
               end case;
             exception
               when UnZip.User_abort =>
-                abort_operation:= True;
+                return_code := aborted;
               when UnZip.CRC_Error =>
                 user_code:= bad_crc;
               when Zip.Archive_corrupted =>
                 user_code:= corrupt;
               when UnZip.Wrong_password =>
                 user_code:= wrong_pwd;
-                abort_operation:= True;
+                return_code := aborted;
               when UnZip.Unsupported_method | UnZip.Not_supported =>
                 user_code:= unsupported;
             end;
@@ -890,10 +890,10 @@ package body AZip_Common.Operations is
                 end if;
               exception
                 when UnZip.User_abort =>
-                  abort_operation:= True;
+                  return_code := aborted;
                 when UnZip.Wrong_password =>
                   user_code:= wrong_pwd;
-                  abort_operation:= True;
+                  return_code := aborted;
                 when UnZip.CRC_Error =>
                   user_code:= bad_crc;
                 when Zip.Archive_corrupted =>
@@ -928,7 +928,7 @@ package body AZip_Common.Operations is
 
   begin -- Process_archive
     max_code:= 0;
-    abort_operation:= False;
+    return_code := ok;
     if not Zip.Is_loaded(zif) then
       return; -- we have a "null" archive (not even a file with 0 entries)
     end if;
@@ -1015,8 +1015,11 @@ package body AZip_Common.Operations is
             end if;
           exception
             when Zip.Compress.User_abort =>
-              abort_operation:= True;
+              return_code := aborted;
               exit;
+            when Zip_Capacity_Exceeded =>        --  Detected on Add_Stream.
+              return_code := archive_too_large;  --  In Zip-Ada v. > 55, on Add_Compressed_Stream.
+              exit;                              --  At latest, on Finish below.
           end;
         end loop;
       when Update | Remove | Recompress =>
@@ -1040,17 +1043,26 @@ package body AZip_Common.Operations is
     end case;
     case operation is
       when Modifying_Operation =>
-        Zip_Streams.Close(old_fzs);
-        Finish(new_zip);
-        if abort_operation or
-          (operation = Update and none_updated) or
+        old_fzs.Close;
+        begin
+          Finish (new_zip);
+        exception
+          when Zip_Capacity_Exceeded =>
+            return_code := archive_too_large;
+        end;
+        if new_fzs.Is_Open then
+          new_fzs.Close;
+        end if;
+        if return_code = aborted or
+          (operation = Add and return_code = archive_too_large) or
+          (operation = Update and (none_updated or return_code = archive_too_large)) or
           (operation = Recompress and none_recompressed)
         then
           --  New archive is discarded.
-          Delete_File(new_temp_name);
+          Delete_File (new_temp_name);
         else
           --  We move the new archive to the previous one's place.
-          Delete_File(Zip.Zip_name(zif));
+          Delete_File (Zip.Zip_name(zif));
           Rename(new_temp_name, Zip.Zip_name(zif));
         end if;
         if operation in Update .. Recompress then

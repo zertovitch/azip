@@ -604,12 +604,12 @@ package body AZip_Common is
         Zip.Delete(info);
         return with_case_sensitive_duplicates;
       exception
-        when Zip.Zip_File_Open_Error =>
+        when Zip.Zip_file_open_error =>
           return file_doesnt_exist;
         when others =>
           return invalid;
       end;
-    when Zip.Zip_File_Open_Error =>
+    when Zip.Zip_file_open_error =>
       return file_doesnt_exist;
     when others =>
       return invalid;

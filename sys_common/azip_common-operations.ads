@@ -112,6 +112,9 @@ package AZip_Common.Operations is
   --
   function Expand_folders(l: Name_list) return Name_list;
 
+  type Operation_return_code is (ok, aborted, archive_too_large);
+  --  !! TBD: too_many_entries, currently as subcase of archive_too_large
+
   generic
     with procedure Feedback(
       file_percents_done    : Natural;
@@ -141,7 +144,7 @@ package AZip_Common.Operations is
     ignore_path     :        Boolean; -- ignore directories upon extraction
     encrypt         :        Boolean;
     max_code        :    out Integer;
-    abort_operation :    out Boolean
+    return_code     :    out Operation_return_code
   );
 
   ------------------

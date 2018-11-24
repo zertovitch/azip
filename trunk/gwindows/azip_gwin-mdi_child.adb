@@ -932,9 +932,17 @@ package body AZip_GWin.MDI_Child is
             Update_display(Window, results_refresh);
           end if;
         when archive_too_large =>
-          Message_Box(Window,
-            "Archive change",
-            "New archive would be too large." & NL & "Change cancelled.",
+          Message_Box (Window,
+            "Archive change: Zip capacity exceeded",
+            "New archive would be larger than possible with the Zip format." & NL &
+            "Change has been cancelled.",
+          OK_Box,
+          Error_Icon);
+        when too_many_entries =>
+          Message_Box (Window,
+            "Archive change: Zip capacity exceeded",
+            "New archive would have more entries than possible with the Zip format." & NL &
+            "Change has been cancelled.",
           OK_Box,
           Error_Icon);
         when aborted =>

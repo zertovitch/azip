@@ -3,6 +3,7 @@ with Zip.Compress, Zip.Create, UnZip.Streams, Zip_Streams;
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 with Ada.Directories;                   use Ada.Directories;
+with Ada.Exceptions;
 with Ada.IO_Exceptions;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 with Ada.Streams;
@@ -1047,8 +1048,12 @@ package body AZip_Common.Operations is
         begin
           Finish (new_zip);
         exception
-          when Zip_Capacity_Exceeded =>
-            return_code := archive_too_large;
+          when E: Zip_Capacity_Exceeded =>
+            if Index (Ada.Exceptions.Exception_Message (E), "Too many entries") > 0 then
+              return_code := too_many_entries;
+            else
+              return_code := archive_too_large;
+            end if;
         end;
         if new_fzs.Is_Open then
           new_fzs.Close;

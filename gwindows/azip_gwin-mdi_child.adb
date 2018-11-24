@@ -52,7 +52,7 @@ package body AZip_GWin.MDI_Child is
         when to_desktop =>
           return "to the Desktop";
         when to_explorer =>
-          return "to Windows Explorer: " &
+          return "to Windows Explorer : " &
                  GU2G (Window.MDI_Root.dragging.destination_path);
         when others =>
           return "";

@@ -1059,16 +1059,16 @@ package body AZip_Common.Operations is
           new_fzs.Close;
         end if;
         if return_code = aborted or
-          (operation = Add and return_code = archive_too_large) or
+          (operation = Add and return_code in archive_too_large .. too_many_entries) or
           (operation = Update and (none_updated or return_code = archive_too_large)) or
           (operation = Recompress and none_recompressed)
         then
-          --  New archive is discarded.
+          --  New archive is either incomplete, or identical to the old one. We discard it.
           Delete_File (new_temp_name);
         else
           --  We move the new archive to the previous one's place.
           Delete_File (Zip.Zip_name(zif));
-          Rename(new_temp_name, Zip.Zip_name(zif));
+          Rename (new_temp_name, Zip.Zip_name(zif));
         end if;
         if operation in Update .. Recompress then
           --  Update or Recompress have created a single

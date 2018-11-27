@@ -92,6 +92,8 @@ Menu_MDI_Child MENU
     {
         MENUITEM "&Flat view", IDM__FLAT_VIEW
         MENUITEM "&Tree view", IDM__TREE_VIEW
+        MENUITEM SEPARATOR
+        MENUITEM "&No sorting", IDM_No_sorting
     }
     POPUP "&Window"
     {

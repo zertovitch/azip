@@ -7,7 +7,9 @@ package AZip_Common.User_options is
   -- MRU (Most Recently Used) files names:
   type MRU_List is array(1..9) of UTF_16_Unbounded_String;
 
- type Sort_Direction_Type is (Up, Down, Auto);
+  type Sort_Direction_Type is (Up, Down, Auto);
+
+  no_sorting : constant := -1;  --  Column index is 0-based; -1 if no sorting column
 
   -- The GUI-agnostic part of user options are stored in this record
   --
@@ -40,8 +42,8 @@ package AZip_Common.User_options is
     MDI_main_maximized    : Boolean := False;
     mru                   : MRU_List:= (others => Null_Unbounded_Wide_String);
     show_passwords        : Boolean := False;
-    sort_column           : Integer := -1; -- column index is 0-based; -1 if no sorting column
-    sort_direction        : Sort_Direction_Type:= Up;
+    sort_column           : Integer := no_sorting;
+    sort_direction        : Sort_Direction_Type := Up;
     ignore_extract_path   : Boolean := False;
   end record;
 

@@ -2,7 +2,6 @@
 #define IDC_STATIC (-1)
 #endif
 
-#define Fake_menu_for_commands_in_no_real_menu  101
 #define About_box                               40000
 #define Archive_Progress                        40001
 #define AZip_Doc_Icon                           40002
@@ -108,3 +107,5 @@
 #define ZipAda_URL                              40102
 #define ZipAda_Version                          40103
 #define IDM_Toggle_Flat_Tree_View               40104
+#define Fake_menu_for_commands_in_no_real_menu  40105
+#define IDM_No_sorting                          40106

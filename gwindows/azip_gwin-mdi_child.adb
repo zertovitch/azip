@@ -1703,6 +1703,14 @@ package body AZip_GWin.MDI_Child is
           when Tree =>
             Change_View (Window, Flat, force => False);
         end case;
+      when IDM_No_sorting =>
+        Message_Box (Window,
+          "No sorting",
+          "The lists of newly opened archive windows" & NL &
+          "won't be sorted until next start of AZip.",
+          Icon => Information_Icon);
+        Window.MDI_Root.opt.sort_column := AZip_Common.User_options.no_sorting;
+        Window.MDI_Root.remember_sorting := False;
       when others =>
         On_Menu_Select (Window_Type (Window), Item);
     end case;
@@ -1752,15 +1760,17 @@ package body AZip_GWin.MDI_Child is
             Window.Directory_List.Column_Width(Entry_topic'Pos(e));
         end if;
       end loop;
-      Window.Directory_List.Sort_Info(
-        Window.MDI_Root.opt.sort_column,
-        sd
-      );
-      -- We pass the Up/Down direction from the GWindows type to ours.
-      Window.MDI_Root.opt.sort_direction:=
-        AZip_Common.User_options.Sort_Direction_Type'Value(
-           AZip_LV_Ex.Sort_Direction_Type'Image(sd)
+      if Window.MDI_Root.remember_sorting then
+        Window.Directory_List.Sort_Info (
+          Window.MDI_Root.opt.sort_column,  --  Get column
+          sd                                --  Get direction
         );
+        --  We pass the Up/Down direction from the GWindows type to ours.
+        Window.MDI_Root.opt.sort_direction:=
+          AZip_Common.User_options.Sort_Direction_Type'Value(
+             AZip_LV_Ex.Sort_Direction_Type'Image(sd)
+          );
+      end if;
       -- Pass view mode and the tree width portion to parent,
       -- this will memorize choice of last closed window.
       Window.MDI_Root.opt.view_mode:= Window.opt.view_mode;

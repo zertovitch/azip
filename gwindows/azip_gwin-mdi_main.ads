@@ -41,6 +41,7 @@ package AZip_GWin.MDI_Main is
         record_dimensions      : Boolean:= False; -- in On_Move, On_Size
         -- Options of a "model" child window.
         opt                    : AZip_Common.User_options.Option_Pack_Type;
+        remember_sorting       : Boolean := True;
         --
         Task_bar_gadget_ok     : Boolean := False;  --  Coloring of taskbar icon (Windows 7+)
         Task_bar_gadget        : Taskbar_List;

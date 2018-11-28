@@ -401,7 +401,10 @@ package body AZip_GWin.MDI_Child is
   )
   return Integer
   is
-    i1, i2: Integer;
+    i1, i2  : Integer;
+    less    : constant := -1;
+    greater : constant := +1;
+    equal   : constant :=  0;
   begin
     for t in Entry_topic loop
       if Column = MDI_Child_Type(Control.Parent.Parent.Parent.all).opt.column_index(t)-1 then
@@ -410,47 +413,69 @@ package body AZip_GWin.MDI_Child is
             i1:= Integer(File_Size_Value(Value1));
             i2:= Integer(File_Size_Value(Value2));
             if i1 = i2 then
-              return 0;
+              return equal;
             elsif i1 > i2 then
-              return 1;
+              return greater;
             else
-              return -1;
+              return less;
             end if;
           when Ratio => -- 77%
             i1:= Pct_Value(Value1);
             i2:= Pct_Value(Value2);
             if i1 = i2 then
-              return 0;
+              return equal;
             elsif i1 > i2 then
-              return 1;
+              return greater;
             else
-              return -1;
+              return less;
             end if;
           when Result => -- 1234
             -- Message_Box("Falk forever", "Waaaah!");
             i1:= Result_value(Value1);
             i2:= Result_value(Value2);
             if i1 = i2 then
-              return 0;
+              return equal;
             elsif i1 > i2 then
-              return 1;
+              return greater;
             else
-              return -1;
+              return less;
             end if;
           when others =>
-            null;
+            exit;  --  The sort column has the default behaviour.
         end case;
       end if;
     end loop;
-    -- Default behaviour: alphabetic. We could also call the parent method,
-    -- with same effect but certainly a bit slower.
-    if Value1 = Value2 then
-      return 0;
-    elsif Value1 > Value2 then
-      return 1;
-    else
-      return -1;
-    end if;
+    --  Default behaviour: lexicographic. We could also call the
+    --  parent method, with same effect but certainly a bit slower.
+    --
+    --  if Value1 = Value2 then
+    --    return equal;
+    --  elsif Value1 > Value2 then
+    --    return greater;
+    --  else
+    --    return less;
+    --  end if;
+    --
+    i1 := Value1'First;
+    i2 := Value2'First;
+    loop
+      if i1 > Value1'Last then
+        if i2 > Value2'Last then
+          return equal;  --  Both strings stop at the same length and have been equal so far.
+        else
+          return less;   --  Value1 is shorter than Value2.
+        end if;
+      elsif i2 > Value2'Last then
+        return greater;  --  Value1 is longer than Value2.
+      elsif Value1 (i1) < Value2 (i2) then
+        return less;
+      elsif Value1 (i1) > Value2 (i2) then
+        return greater;
+      end if;
+      --  So far the strings are equal, go to next index.
+      i1 := i1 + 1;
+      i2 := i2 + 1;
+    end loop;
   end On_Compare;
 
   overriding procedure On_Focus (Control : in out MDI_Child_List_View_Control_Type) is

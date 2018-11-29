@@ -412,7 +412,6 @@ package body AZip_GWin.MDI_Child is
     less    : constant := -1;
     greater : constant := +1;
     equal   : constant :=  0;
-    single_string_comparison : constant Boolean := True;
   begin
     case Control.curr_col_topic (Column) is
       when Size | Packed =>  --  E.g. 3 KB
@@ -449,41 +448,13 @@ package body AZip_GWin.MDI_Child is
       when others =>
         null;  --  The sort column has the default behaviour.
     end case;
-    --  Default behaviour: lexicographic. We could also call the
-    --  parent method, with same effect but certainly a bit slower.
-    if single_string_comparison then
-      if Value1'Length = Value2'Length then
-        i1 := Value1'First;
-        i2 := Value2'First;
-        loop
-          if i1 > Value1'Last then
-            return equal;  --  Both strings stop at the same length and have been equal so far.
-          elsif Value1 (i1) < Value2 (i2) then
-            return less;
-          elsif Value1 (i1) > Value2 (i2) then
-            return greater;
-          end if;
-          --  So far the strings are equal, go to next index.
-          i1 := i1 + 1;
-          i2 := i2 + 1;
-        end loop;
-      else
-        --  Strings have different lengths.
-        if Value1 > Value2 then
-          return greater;
-        else
-          return less;
-        end if;
-      end if;
+    --  Default behaviour: lexicographic.
+    if Value1 = Value2 then
+      return equal;
+    elsif Value1 > Value2 then
+      return greater;
     else
-      --  "Old" string comparison from Ex_LV:
-      if Value1 = Value2 then
-        return equal;
-      elsif Value1 > Value2 then
-        return greater;
-      else
-        return less;
-      end if;
+      return less;
     end if;
   end On_Compare;
 

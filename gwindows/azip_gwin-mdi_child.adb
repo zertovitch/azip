@@ -405,7 +405,9 @@ package body AZip_GWin.MDI_Child is
     less    : constant := -1;
     greater : constant := +1;
     equal   : constant :=  0;
+    single_string_comparison : constant Boolean := False;
   begin
+    --  TBD !! : precalculate the Column -> topic relation
     for t in Entry_topic loop
       if Column = MDI_Child_Type(Control.Parent.Parent.Parent.all).opt.column_index(t)-1 then
         case t is
@@ -447,36 +449,61 @@ package body AZip_GWin.MDI_Child is
     end loop;
     --  Default behaviour: lexicographic. We could also call the
     --  parent method, with same effect but certainly a bit slower.
-    --
-    --  if Value1 = Value2 then
-    --    return equal;
-    --  elsif Value1 > Value2 then
-    --    return greater;
-    --  else
-    --    return less;
-    --  end if;
-    --
-    i1 := Value1'First;
-    i2 := Value2'First;
-    loop
-      if i1 > Value1'Last then
-        if i2 > Value2'Last then
-          return equal;  --  Both strings stop at the same length and have been equal so far.
-        else
-          return less;   --  Value1 is shorter than Value2.
+    if single_string_comparison then
+      i1 := Value1'First;
+      i2 := Value2'First;
+      loop
+        if i1 > Value1'Last then
+          if i2 > Value2'Last then
+            return equal;  --  Both strings stop at the same length and have been equal so far.
+          else
+            return less;   --  Value1 is shorter than Value2.
+          end if;
+        elsif i2 > Value2'Last then
+          return greater;  --  Value1 is longer than Value2.
+        elsif Value1 (i1) < Value2 (i2) then
+          return less;
+        elsif Value1 (i1) > Value2 (i2) then
+          return greater;
         end if;
-      elsif i2 > Value2'Last then
-        return greater;  --  Value1 is longer than Value2.
-      elsif Value1 (i1) < Value2 (i2) then
-        return less;
-      elsif Value1 (i1) > Value2 (i2) then
+        --  So far the strings are equal, go to next index.
+        i1 := i1 + 1;
+        i2 := i2 + 1;
+      end loop;
+    else
+      --  String comparison from Ex_LV:
+      if Value1 = Value2 then
+        return equal;
+      elsif Value1 > Value2 then
         return greater;
+      else
+        return less;
       end if;
-      --  So far the strings are equal, go to next index.
-      i1 := i1 + 1;
-      i2 := i2 + 1;
-    end loop;
+    end if;
   end On_Compare;
+
+  overriding procedure Sort(
+    Control   : in out MDI_Child_List_View_Control_Type;
+    Column    : in Natural;
+    Direction : in AZip_LV_Ex.Sort_Direction_Type;
+    Show_Icon : in Boolean := True)
+  is
+    timing : constant Boolean := True;
+    use Ada.Calendar;
+    t0, t1 : Ada.Calendar.Time;
+  begin
+    if timing then
+      t0 := Clock;
+    end if;
+    --  Call parent method
+    AZip_LV_Ex.Ex_List_View_Control_Type (Control).Sort(Column, Direction, Show_Icon);
+    if timing then
+      t1 := Clock;
+      MDI_Child_Type(Control.Parent.Parent.Parent.all).Status_Bar.Text (
+        Duration'Wide_Image (t1-t0)
+      );
+    end if;
+  end Sort;
 
   overriding procedure On_Focus (Control : in out MDI_Child_List_View_Control_Type) is
     MDI_Child : MDI_Child_Type renames

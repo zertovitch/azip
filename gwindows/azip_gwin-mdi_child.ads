@@ -73,6 +73,11 @@ package AZip_GWin.MDI_Child is
                Column : in Natural;
                Value1 : in GString;
                Value2 : in GString) return Integer;
+  overriding procedure Sort(
+    Control   : in out MDI_Child_List_View_Control_Type;
+    Column    : in Natural;
+    Direction : in AZip_LV_Ex.Sort_Direction_Type;
+    Show_Icon : in Boolean := True);
   overriding procedure On_Focus (Control : in out MDI_Child_List_View_Control_Type);
   overriding procedure On_Notify (
       Window       : in out MDI_Child_List_View_Control_Type;

@@ -119,6 +119,8 @@ package body AZip_GWin.MDI_Child is
   )
   is
 
+    cidx: Column_integer_array renames Window.opt.column_index;
+
     procedure Define_columns is
       Lst: MDI_Child_List_View_Control_Type renames Window.Directory_List;
       --
@@ -137,14 +139,14 @@ package body AZip_GWin.MDI_Child is
             Lst.Clear;
             Lst.Insert_Column(
               Image(topic),
-              Entry_topic'Pos(topic),
+              cidx(topic) - 1,
               Smart_column_width(topic)
             );
           when archive_changed | node_selected =>
             Lst.Clear;
             Lst.Set_Column(
               Image(topic),
-              Entry_topic'Pos(topic),
+              cidx(topic) - 1,
               Smart_column_width(topic)
             );
           when results_refresh | status_bar | toolbar_and_menu =>
@@ -158,7 +160,6 @@ package body AZip_GWin.MDI_Child is
     procedure Feed_directory_list(prefix_path: GString) is
       row, last_row: Integer:= -1;
       Lst: MDI_Child_List_View_Control_Type renames Window.Directory_List;
-      cidx: Column_integer_array renames Window.opt.column_index;
       max_entries: constant Natural:= Entries(Window.zif);
       -- This includes potential invisible entries (directory names from Info-Zip, WinZip)
       sorted_index, unsorted_index, result_code: array(0..max_entries-1) of Integer;
@@ -297,9 +298,15 @@ package body AZip_GWin.MDI_Child is
         -- This will be set to True if there is any path during the listing
         Window.any_path_in_zip:= False;
       end if;
-      -- Performance is meant to be better with the All_Items mode.
+      --  Performance is meant to be better with the All_Items mode.
       Window.Directory_List.Color_Mode(AZip_LV_Ex.All_Items);
+      --
+      --  List is entirely filled on next instruction:
+      --
       Traverse(Window.zif);
+      --
+      --  Finishing touch: the colours in the "Results" column.
+      --
       last_row:= row;
       for i in 0..last_row loop
         sorted_index(unsorted_index(i)):= i; -- Nice one, isn't it ?
@@ -407,46 +414,41 @@ package body AZip_GWin.MDI_Child is
     equal   : constant :=  0;
     single_string_comparison : constant Boolean := True;
   begin
-    --  TBD !! : precalculate the Column -> topic relation
-    for t in Entry_topic loop
-      if Column = MDI_Child_Type(Control.Parent.Parent.Parent.all).opt.column_index(t)-1 then
-        case t is
-          when Size | Packed => -- 3 KB
-            i1:= Integer(File_Size_Value(Value1));
-            i2:= Integer(File_Size_Value(Value2));
-            if i1 = i2 then
-              return equal;
-            elsif i1 > i2 then
-              return greater;
-            else
-              return less;
-            end if;
-          when Ratio => -- 77%
-            i1:= Pct_Value(Value1);
-            i2:= Pct_Value(Value2);
-            if i1 = i2 then
-              return equal;
-            elsif i1 > i2 then
-              return greater;
-            else
-              return less;
-            end if;
-          when Result => -- 1234
-            -- Message_Box("Falk forever", "Waaaah!");
-            i1:= Result_value(Value1);
-            i2:= Result_value(Value2);
-            if i1 = i2 then
-              return equal;
-            elsif i1 > i2 then
-              return greater;
-            else
-              return less;
-            end if;
-          when others =>
-            exit;  --  The sort column has the default behaviour.
-        end case;
-      end if;
-    end loop;
+    case Control.curr_col_topic (Column) is
+      when Size | Packed =>  --  E.g. 3 KB
+        i1:= Integer(File_Size_Value(Value1));
+        i2:= Integer(File_Size_Value(Value2));
+        if i1 = i2 then
+          return equal;
+        elsif i1 > i2 then
+          return greater;
+        else
+          return less;
+        end if;
+      when Ratio =>  --  E.g. 77%
+        i1:= Pct_Value(Value1);
+        i2:= Pct_Value(Value2);
+        if i1 = i2 then
+          return equal;
+        elsif i1 > i2 then
+          return greater;
+        else
+          return less;
+        end if;
+      when Result =>  --  E.g. 1234
+        -- Message_Box("Falk forever", "Waaaah!");
+        i1:= Result_value(Value1);
+        i2:= Result_value(Value2);
+        if i1 = i2 then
+          return equal;
+        elsif i1 > i2 then
+          return greater;
+        else
+          return less;
+        end if;
+      when others =>
+        null;  --  The sort column has the default behaviour.
+    end case;
     --  Default behaviour: lexicographic. We could also call the
     --  parent method, with same effect but certainly a bit slower.
     if single_string_comparison then
@@ -491,13 +493,18 @@ package body AZip_GWin.MDI_Child is
     Direction : in AZip_LV_Ex.Sort_Direction_Type;
     Show_Icon : in Boolean := True)
   is
-    timing : constant Boolean := True;
+    timing : constant Boolean := False;
     use Ada.Calendar;
     t0, t1 : Ada.Calendar.Time;
+    window : MDI_Child_Type renames MDI_Child_Type(Control.Parent.Parent.Parent.all);
   begin
     if timing then
       t0 := Clock;
     end if;
+    --  Get the inverse of opt.column_index:
+    for t in Entry_topic loop
+      Control.curr_col_topic(window.opt.column_index(t)-1) := t;
+    end loop;
     --  Call parent method
     AZip_LV_Ex.Ex_List_View_Control_Type (Control).Sort(Column, Direction, Show_Icon);
     if timing then

@@ -1768,8 +1768,11 @@ package body AZip_GWin.MDI_Child is
       when IDM_No_sorting =>
         Message_Box (Window,
           "No sorting",
-          "The lists of newly opened archive windows" & NL &
-          "won't be sorted until next start of AZip.",
+          "The lists of newly opened archive windows won't be sorted" & NL &
+          "until both following conditions are met (in any order):" & NL &
+          " - you sort again some column" & NL &
+          " - you restart AZip." & NL & NL &
+          "Sorting can be slow on archives with many entries.",
           Icon => Information_Icon);
         Window.MDI_Root.opt.sort_column := AZip_Common.User_options.no_sorting;
         Window.MDI_Root.remember_sorting := False;

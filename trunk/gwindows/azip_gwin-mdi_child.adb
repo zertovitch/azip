@@ -197,6 +197,7 @@ package body AZip_GWin.MDI_Child is
         --
         w_node, w_parent: Tree_Item_Node;
       begin -- Process_row
+        Scan_for_path:
         for i in name'Range loop
           case name(i) is
             when '/' | '\' =>
@@ -208,6 +209,8 @@ package body AZip_GWin.MDI_Child is
               --
               if Window.opt.view_mode = Tree and need in first_display .. archive_changed then
                 declare
+                  --  If name is "zip-ada/zip_lib/zip.ads" and i = 16, the partial_path
+                  --  will be "zip-ada/zip_lib".
                   partial_path: UTF_16_String renames name(name'First..i-1);
                   partial_path_u: constant GString_Unbounded:= G2GU(partial_path);
                 begin
@@ -217,7 +220,14 @@ package body AZip_GWin.MDI_Child is
                     else
                       w_parent:= Tree_Item_Node(Window.path_map.Element(G2GU(partial_path(name'First..previous_idx-2))));
                     end if;
-                    Window.Folder_Tree.Insert_Item(partial_path(previous_idx..i-1), w_parent, w_node);
+                    declare
+                      --  From the above example, folder_name will be "zip_lib".
+                      --  The folder named "zip-ada" will have been inserted previously to
+                      --  the root node, when i=8.
+                      folder_name: UTF_16_String renames partial_path(previous_idx..i-1);
+                    begin
+                      Window.Folder_Tree.Insert_Item(folder_name, w_parent, w_node);
+                    end;
                     Window.Folder_Tree.Set_Image(w_node, 2, 3);
                     Window.path_map.Insert(partial_path_u, Integer(w_node));
                     Window.node_map.Insert(Integer(w_node), partial_path_u);
@@ -230,7 +240,7 @@ package body AZip_GWin.MDI_Child is
             when others =>
               null;
           end case;
-        end loop;
+        end loop Scan_for_path;
         if simple_name_idx > name'Last then -- skip directory entries (names end with '/' or '\')
           return;
         end if;

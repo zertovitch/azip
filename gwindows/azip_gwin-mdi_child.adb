@@ -612,21 +612,35 @@ package body AZip_GWin.MDI_Child is
       when Tree =>
         if Is_loaded(Window.zif) then
           loop
+            --  Fix 21-Jul-2019: since GNAT GPL 2016 the pragma Suppress(Container_Checks)
+            --  is activated with the -gnatp (Suppress all checks) switch and the
+            --  function Element won't raise Constraint_Error when the selected path is not
+            --  found (RM: A.18.4, 69/2). Instead, a Program_Error with Access_Violation, or
+            --  something else, may occur. The workaround is to use a cursor and
+            --  the Find function. For details, see:
+            --  https://groups.google.com/forum/#!original/comp.lang.ada/HZsG7Czymto/kY4BjoD0BAAJ
             declare
-              idx: Integer;
+              idx : Integer;
+              use AZip_Common.Path_Catalogues;
+              curs : Cursor;
             begin
-              sel_node:= Tree_Item_Node(Window.path_map.Element(Window.selected_path));
-              exit;
-            exception
-              when Constraint_Error =>
-                -- Element fails: the selected path doesn't exist anymore.
-                -- We try going one folder up.
-                idx:= Index(Window.selected_path, "/", Backward);
+              curs := Window.path_map.Find (Window.selected_path);
+              if curs = No_Element then
+                --  The selected path doesn't exist anymore. We'll try again by going one
+                --  folder up by truncating the last folder name from the right.
+                idx := Index(Window.selected_path, "/", Backward);
                 if idx = 0 then
-                  Window.selected_path:= Null_GString_Unbounded;
+                  --  We are at the root.
+                  Window.selected_path := Null_GString_Unbounded;
                 else
-                  Window.selected_path:= Unbounded_Slice(Window.selected_path, 1, idx-1);
+                  --  Truncation to a non-empty string was successful, e.g.
+                  --  "zip-ada/zip_lib" becomes "zip-ada".
+                  Window.selected_path := Unbounded_Slice(Window.selected_path, 1, idx-1);
                 end if;
+              else
+                sel_node := Tree_Item_Node(Window.path_map.Element(Window.selected_path));
+                exit;
+              end if;
             end;
           end loop;
           Window.Folder_Tree.Select_Item(sel_node);

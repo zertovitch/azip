@@ -263,6 +263,17 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Select_column_box DIALOG 0, 0, 186, 174
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+CAPTION "Select displayed columns"
+FONT 8, "Ms Shell Dlg"
+{
+    DEFPUSHBUTTON   "Done", IDOK, 53, 148, 78, 19, 0, WS_EX_LEFT
+}
+
+
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 Password_decryption_box DIALOG 0, 0, 228, 137
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "Password for decryption"
@@ -462,8 +473,8 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
-            VALUE "FileVersion", "2.25"
-            VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2018"
+            VALUE "FileVersion", "2.30"
+            VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2019"
             VALUE "ProductName", "AZip"
         }
     }

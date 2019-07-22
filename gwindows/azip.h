@@ -2,6 +2,7 @@
 #define IDC_STATIC (-1)
 #endif
 
+#define Select_column_box                       101
 #define About_box                               40000
 #define Archive_Progress                        40001
 #define AZip_Doc_Icon                           40002

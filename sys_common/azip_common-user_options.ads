@@ -1,6 +1,7 @@
 package AZip_Common.User_options is
 
   type Column_integer_array is array(Entry_topic) of Natural;
+  type Column_boolean_array is array(Entry_topic) of Boolean;
 
   use_default: constant:= -1;
 
@@ -14,13 +15,15 @@ package AZip_Common.User_options is
   -- The GUI-agnostic part of user options are stored in this record
   --
   type Option_Pack_Type is record
-    view_mode    : View_Mode_Type:= Tree;
-    tree_portion : Float:= 0.25;
+    view_mode      : View_Mode_Type:= Tree;
+    tree_portion   : Float:= 0.25;
       -- Horizontal portion of the window for the tree, when view_mode = Tree
-    column_width : Column_integer_array:=
-      -- Defaults for GWindows. May be scaled for different GUI metrics.
+    column_width   : Column_integer_array:=
+      -- Defaults for GWindows. May be scaled for other GUI metrics.
       (Name => 150, Modified => 120, others => 70);
-    column_index : Column_integer_array:=
+    visible_column : Column_boolean_array :=
+      (others => True);
+    column_index   : Column_integer_array:=
       (Name       => 1, -- This should never change
        FType      => 2,
        Modified   => 3,
@@ -52,7 +55,7 @@ package AZip_Common.User_options is
   -----------------
 
   -- On Windows "vanilla", it is done through the registry
-  -- On Linux or Gtk (any platform) it is done usually in a config file
+  -- On Linux or GTK (any platform) it is done usually in a config file
 
   generic
     with function Read_key (topic: Wide_String) return Wide_String;

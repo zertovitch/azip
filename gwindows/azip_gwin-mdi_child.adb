@@ -627,7 +627,7 @@ package body AZip_GWin.MDI_Child is
               curs := Window.path_map.Find (Window.selected_path);
               if curs = No_Element then
                 --  The selected path doesn't exist anymore. We'll try again by going one
-                --  folder up by truncating the last folder name from the right.
+                --  folder up. This is done by truncating the last folder name from the right.
                 idx := Index(Window.selected_path, "/", Backward);
                 if idx = 0 then
                   --  We are at the root.
@@ -638,7 +638,7 @@ package body AZip_GWin.MDI_Child is
                   Window.selected_path := Unbounded_Slice(Window.selected_path, 1, idx-1);
                 end if;
               else
-                sel_node := Tree_Item_Node(Window.path_map.Element(Window.selected_path));
+                sel_node := Tree_Item_Node(Element(curs));
                 exit;
               end if;
             end;

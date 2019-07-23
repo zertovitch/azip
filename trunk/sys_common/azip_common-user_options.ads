@@ -50,12 +50,12 @@ package AZip_Common.User_options is
     ignore_extract_path   : Boolean := False;
   end record;
 
-  -----------------
-  -- Persistence --
-  -----------------
+  -------------------
+  --  Persistence  --
+  -------------------
 
-  -- On Windows "vanilla", it is done through the registry
-  -- On Linux or GTK (any platform) it is done usually in a config file
+  --  On Windows "vanilla", persistence is done through the registry.
+  --  On Linux or GTK (any platform) it is done usually in a config file.
 
   generic
     with function Read_key (topic: Wide_String) return Wide_String;
@@ -70,6 +70,7 @@ package AZip_Common.User_options is
     type Key is
       ( view_mode,
         col_width,
+        col_visible,
         sort_column,
         sort_direction,
         win_left, win_top, win_width, win_height,

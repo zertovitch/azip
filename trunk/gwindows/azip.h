@@ -112,3 +112,4 @@
 #define Fake_menu_for_commands_in_no_real_menu  40105
 #define IDM_No_sorting                          40106
 #define Select_column_box                       40107
+#define IDM_Select_columns                      40108

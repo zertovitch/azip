@@ -15,13 +15,19 @@ package body AZip_Common.User_options is
               when view_mode =>
                 opt.view_mode:= View_Mode_Type'Wide_Value(s);
               when col_width =>
-                for e in Entry_topic loop
-                  opt.column_width(e):= Integer'Wide_Value(
-                    Read_key(ks & "_" & Entry_topic'Wide_Image(e))
+                for t in Entry_topic loop
+                  opt.column_width(t):= Integer'Wide_Value(
+                    Read_key(ks & "_" & Entry_topic'Wide_Image(t))
                   );
-                  if opt.column_width(e) = 0 then
-                    opt.column_width(e):= defaults.column_width(e);
+                  if opt.column_width(t) = 0 then
+                    opt.column_width(t):= defaults.column_width(t);
                   end if;
+                end loop;
+              when col_visible =>
+                for t in Entry_topic loop
+                  opt.visible_column(t):= Boolean'Wide_Value(
+                    Read_key(ks & "_" & Entry_topic'Wide_Image(t))
+                  );
                 end loop;
               when sort_column =>
                 opt.sort_column:= Integer'Wide_Value(s);
@@ -74,11 +80,19 @@ package body AZip_Common.User_options is
             when view_mode =>
               R(View_Mode_Type'Wide_Image(opt.view_mode));
             when col_width =>
-              R("(root - dummy)"); -- dummy for having reading going well
-              for e in Entry_topic loop
+              R("(root key - dummy value)"); -- dummy for having reading going well
+              for t in Entry_topic loop
                 Write_key(
-                  ks & "_" & Entry_topic'Wide_Image(e),
-                  Integer'Wide_Image(opt.column_width(e))
+                  ks & "_" & Entry_topic'Wide_Image(t),
+                  Integer'Wide_Image(opt.column_width(t))
+                );
+              end loop;
+            when col_visible =>
+              R("(root key - dummy value)"); -- dummy for having reading going well
+              for t in Entry_topic loop
+                Write_key(
+                  ks & "_" & Entry_topic'Wide_Image(t),
+                  Boolean'Wide_Image(opt.visible_column(t))
                 );
               end loop;
             when sort_column =>

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/07/23  05:10:24
+-- Transcription time: 2019/07/23  20:50:33
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -93,6 +93,7 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0005, "&Tree view", IDM_TREE_VIEW);
     Append_Separator(Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "&No sorting", IDM_No_sorting);
+    Append_Item(Menu.Popup_0005, "&Select columns", IDM_Select_columns);
     Menu.Popup_0006:= Create_Popup;
     Append_Menu(Menu.Main, "&Window", Menu.Popup_0006);
     Append_Item(Menu.Popup_0006, "&Cascade", IDM_WINDOW_CASCADE);
@@ -108,7 +109,7 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0007, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  --  Menu at line 118
+  --  Menu at line 119
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -147,7 +148,7 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0004, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  --  Dialog at resource line 166
+  --  Dialog at resource line 167
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -275,7 +276,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  --  Dialog at resource line 195
+  --  Dialog at resource line 196
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -358,7 +359,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Credits_box_Type
 
-  --  Dialog at resource line 213
+  --  Dialog at resource line 214
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -465,7 +466,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Drop_files_box_Type
 
-  --  Dialog at resource line 231
+  --  Dialog at resource line 232
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -611,7 +612,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "Do you want to replace this file ?", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  File_exists_box_Type
 
-  --  Dialog at resource line 251
+  --  Dialog at resource line 252
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -717,7 +718,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Find_box_Type
 
-  --  Dialog at resource line 269
+  --  Dialog at resource line 270
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -825,7 +826,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Password_decryption_box_Type
 
-  --  Dialog at resource line 288
+  --  Dialog at resource line 289
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -933,7 +934,7 @@ package body AZip_Resource_GUI is
     Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
   end Create_Contents;  --  Password_encryption_box_Type
 
-  --  Dialog at resource line 307
+  --  Dialog at resource line 308
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1028,7 +1029,7 @@ package body AZip_Resource_GUI is
     Create( Window.Comment_2, Window, "Comment 2", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Comment_2);
   end Create_Contents;  --  Progress_box_Type
 
-  --  Dialog at resource line 324
+  --  Dialog at resource line 325
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1140,7 +1141,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Properties_box_Type
 
-  --  Dialog at resource line 344
+  --  Dialog at resource line 345
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1239,7 +1240,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Quick_help_box_Type
 
-  --  Dialog at resource line 363
+  --  Dialog at resource line 364
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1270,7 +1271,7 @@ package body AZip_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 186, 174, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 141, 254, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -1304,14 +1305,14 @@ package body AZip_Resource_GUI is
     x,y,w,h: Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 186, 174, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 141, 254, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  21, 13, 130, 17, x,y,w,h);
     Create( Window.Dummy_check_box_1, Window, "Dummy_1", x,y,w,h, ID => Dummy_check_box_1);
-    Dlg_to_Scn(  53, 148, 78, 19, x,y,w,h);
+    Dlg_to_Scn(  31, 228, 78, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -1326,7 +1327,7 @@ package body AZip_Resource_GUI is
     Create( Window.Dummy_check_box_2, Window, "Dummy_2", x,y,w,h, ID => Dummy_check_box_2);
   end Create_Contents;  --  Select_column_box_Type
 
-  --  Dialog at resource line 376
+  --  Dialog at resource line 377
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1498,6 +1499,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 488
+  -- Last line of resource script file: 489
 
 end AZip_Resource_GUI;

@@ -2,9 +2,10 @@
 #define IDC_STATIC (-1)
 #endif
 
-#define Select_column_box                       101
 #define About_box                               40000
+#define Dummy_check_box_2                       40000
 #define Archive_Progress                        40001
+#define Dummy_check_box_1                       40001
 #define AZip_Doc_Icon                           40002
 #define AZip_Icon                               40003
 #define AZip_URL                                40004
@@ -110,3 +111,4 @@
 #define IDM_Toggle_Flat_Tree_View               40104
 #define Fake_menu_for_commands_in_no_real_menu  40105
 #define IDM_No_sorting                          40106
+#define Select_column_box                       40107

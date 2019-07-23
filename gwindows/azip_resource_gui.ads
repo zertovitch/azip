@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2018/11/27  14:49:18
+-- Transcription time: 2019/07/23  05:10:24
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 30-Aug-2018
+-- RC Grammar version: 20-Jul-2019
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -526,6 +526,45 @@ package AZip_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
+  type Select_column_box_Type is new Window_Type with record
+
+    Dummy_check_box_1: Check_Box_Type;
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    Dummy_check_box_2: Check_Box_Type;
+  end record; -- Select_column_box_Type
+
+  --  Dialog at resource line 367
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out Select_column_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Select_column_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Select displayed columns";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Select_column_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     );
+
   type Wait_refresh_box_Type is new Window_Type with record
 
     -- Label: IDC_STATIC
@@ -533,7 +572,7 @@ package AZip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  --  Dialog at resource line 366
+  --  Dialog at resource line 379
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -560,8 +599,8 @@ package AZip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion: constant String:= "2.25";
-    LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2018";
+    FileVersion: constant String:= "2.30";
+    LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2019";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
   end Version_info;
@@ -575,7 +614,9 @@ package AZip_Resource_GUI is
 
   IDC_STATIC                            : constant:=     -1;
   About_box                             : constant:=  40000;
+  Dummy_check_box_2                     : constant:=  40000;
   Archive_Progress                      : constant:=  40001;
+  Dummy_check_box_1                     : constant:=  40001;
   AZip_Doc_Icon                         : constant:=  40002;
   AZip_Icon                             : constant:=  40003;
   AZip_URL                              : constant:=  40004;
@@ -681,6 +722,7 @@ package AZip_Resource_GUI is
   IDM_Toggle_Flat_Tree_View             : constant:=  40104;
   Fake_menu_for_commands_in_no_real_menu: constant:=  40105;
   IDM_No_sorting                        : constant:=  40106;
+  Select_column_box                     : constant:=  40107;
 
   -- ** Some helper utilities (spec).
 
@@ -692,6 +734,6 @@ package AZip_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 475
+  -- Last line of resource script file: 488
 
 end AZip_Resource_GUI;

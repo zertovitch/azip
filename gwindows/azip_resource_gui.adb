@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2018/11/27  14:49:18
+-- Transcription time: 2019/07/23  05:10:24
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 30-Aug-2018
+-- RC Grammar version: 20-Jul-2019
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -1241,6 +1241,93 @@ package body AZip_Resource_GUI is
 
   --  Dialog at resource line 363
 
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out Select_column_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Select_column_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Select displayed columns";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 186, 174, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- Select_column_box_Type
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Select_column_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 186, 174, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  21, 13, 130, 17, x,y,w,h);
+    Create( Window.Dummy_check_box_1, Window, "Dummy_1", x,y,w,h, ID => Dummy_check_box_1);
+    Dlg_to_Scn(  53, 148, 78, 19, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDOK, Window, "Done", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "Done", x,y,w,h, ID => IDOK);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDOK_permanent);
+    else -- hide the closing button
+      Hide(Window.IDOK);
+    end if;
+    Dlg_to_Scn(  21, 30, 130, 17, x,y,w,h);
+    Create( Window.Dummy_check_box_2, Window, "Dummy_2", x,y,w,h, ID => Dummy_check_box_2);
+  end Create_Contents;  --  Select_column_box_Type
+
+  --  Dialog at resource line 376
+
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
@@ -1411,6 +1498,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 475
+  -- Last line of resource script file: 488
 
 end AZip_Resource_GUI;

@@ -133,14 +133,14 @@ package body AZip_GWin.MDI_Child is
             Lst.Insert_Column(
               Image(topic),
               cidx(topic) - 1,
-              Smart_column_width(Window, topic)
+              Get_column_width_from_options (Window, topic)
             );
           when archive_changed | node_selected =>
             Lst.Clear;
             Lst.Set_Column(
               Image(topic),
               cidx(topic) - 1,
-              Smart_column_width(Window, topic)
+              Get_column_width_from_options (Window, topic)
             );
           when results_refresh | status_bar | toolbar_and_menu =>
             null;
@@ -1764,6 +1764,12 @@ package body AZip_GWin.MDI_Child is
           Icon => Information_Icon);
         Window.MDI_Root.opt.sort_column := AZip_Common.User_options.no_sorting;
         Window.MDI_Root.remember_sorting := False;
+      when IDM_Select_columns =>
+        --  Propagate current child window settings to main options.
+        Set_all_column_widths_to_options (Window);
+        Window.MDI_Root.opt.view_mode:= Window.opt.view_mode;
+        --  Start dialog.
+        Select_columns_dialog (Window.MDI_Root.all);
       when others =>
         On_Menu_Select (Window_Type (Window), Item);
     end case;
@@ -1806,13 +1812,9 @@ package body AZip_GWin.MDI_Child is
       if Is_loaded(Window.zif) then
         Zip.Delete(Window.zif);
       end if;
-      -- Memorize column widths
-      for e in Entry_topic'Range loop
-        if Window.opt.view_mode /= Tree or e /= Path then
-          Window.MDI_Root.opt.column_width(e):=
-            Window.Directory_List.Column_Width(Entry_topic'Pos(e));
-        end if;
-      end loop;
+      --  Memorize column widths
+      Set_all_column_widths_to_options (Window);
+      --
       if Window.MDI_Root.remember_sorting then
         Window.Directory_List.Sort_Info (
           Window.MDI_Root.opt.sort_column,  --  Get column

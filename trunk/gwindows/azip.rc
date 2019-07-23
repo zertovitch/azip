@@ -263,17 +263,6 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-Select_column_box DIALOG 0, 0, 186, 174
-STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
-CAPTION "Select displayed columns"
-FONT 8, "Ms Shell Dlg"
-{
-    DEFPUSHBUTTON   "Done", IDOK, 53, 148, 78, 19, 0, WS_EX_LEFT
-}
-
-
-
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 Password_decryption_box DIALOG 0, 0, 228, 137
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "Password for decryption"
@@ -363,6 +352,19 @@ FONT 8, "Ms Shell Dlg"
     GROUPBOX        "Using AZip as a portable software", IDC_STATIC, 4, 106, 366, 66, 0, WS_EX_LEFT
     LTEXT           "AZip doesn't require any installation. It can even run from a USB stick for instance. For convenience, by default, it writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", 0, 27, 121, 337, 43, SS_LEFT, WS_EX_LEFT
     DEFPUSHBUTTON   "OK", IDOK, 137, 177, 107, 19, 0, WS_EX_LEFT
+}
+
+
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Select_column_box DIALOG 0, 0, 186, 174
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+CAPTION "Select displayed columns"
+FONT 8, "Ms Shell Dlg"
+{
+    AUTOCHECKBOX    "Dummy_1", Dummy_check_box_1, 21, 13, 130, 17, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Done", IDOK, 53, 148, 78, 19, 0, WS_EX_LEFT
+    AUTOCHECKBOX    "Dummy_2", Dummy_check_box_2, 21, 30, 130, 17, 0, WS_EX_LEFT
 }
 
 

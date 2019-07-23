@@ -1,4 +1,5 @@
 with AZip_Common;                       use AZip_Common;
+with AZip_GWin.Columns;                 use AZip_GWin.Columns;
 with AZip_GWin.Dragging;                use AZip_GWin.Dragging;
 with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
 with AZip_GWin.Password_dialogs;        use AZip_GWin.Password_dialogs;
@@ -124,14 +125,6 @@ package body AZip_GWin.MDI_Child is
     procedure Define_columns is
       Lst: MDI_Child_List_View_Control_Type renames Window.Directory_List;
       --
-      function Smart_column_width(topic: Entry_topic) return Natural is
-      begin
-        if topic = Path and Window.opt.view_mode = Tree then
-          return 0;
-        else
-          return Window.MDI_Root.opt.column_width(topic);
-        end if;
-      end Smart_column_width;
     begin
       for topic in Entry_topic loop
         case need is
@@ -140,14 +133,14 @@ package body AZip_GWin.MDI_Child is
             Lst.Insert_Column(
               Image(topic),
               cidx(topic) - 1,
-              Smart_column_width(topic)
+              Smart_column_width(Window, topic)
             );
           when archive_changed | node_selected =>
             Lst.Clear;
             Lst.Set_Column(
               Image(topic),
               cidx(topic) - 1,
-              Smart_column_width(topic)
+              Smart_column_width(Window, topic)
             );
           when results_refresh | status_bar | toolbar_and_menu =>
             null;

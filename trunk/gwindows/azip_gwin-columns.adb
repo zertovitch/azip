@@ -117,7 +117,7 @@ package body AZip_GWin.Columns is
             State (check_box_topic (t), Unchecked);  --  Path always hidden in Tree mode
           end if;
           Disable (check_box_topic (t));
-        when Name =>
+        when Name | Result =>
           State (check_box_topic (t), Checked);
           Disable (check_box_topic (t));
         when others =>

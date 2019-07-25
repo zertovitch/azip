@@ -2,7 +2,7 @@ gw - Alt-Up triggers an "up one level" command
 gw - drop to empty main window (0 archive) should trigger "New archive" command
 gw - quick help: tabbed (1 tab drag&drop, 1 tab installation)
 
-gw - drag & drop a folder to Windows Explorer window or to the Desktop
+gw - drag & drop a folder from AZip to Windows Explorer window or to the Desktop
 
 gw - drag & drop from list to another folder in a tree (same archive child window)
 gw - drag & drop a folder to another folder (same archive child window)
@@ -17,9 +17,13 @@ gw - "view" function on text: show in a Scintilla window
 gw - "view" function on picture: show in a bitmap, using GID
 gw - "copy" saves directory list or tree into text clipboard
 
+gw - add some Windows Explorer context menu options for packing files ito .zip
+     or unpacking .zip files (suggestion by Rolf Ebert). Would use the
+     console mode described below.
+
 console mode through command lines options (GUI not started then)
   -a for Add, -d for Delete, etc.
-  -q: quiet: neither console output, nor gui
+  -q: quiet: neither console output, nor gui (for deamons or context menu operations)
 
 gw - disable sorting on large lists
 gw - copy/paste entre fenêtres

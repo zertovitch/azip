@@ -1,6 +1,8 @@
 gw - Alt-Up triggers an "up one level" command
 gw - drop to empty main window (0 archive) should trigger "New archive" command
-gw - quick help: tabbed (1 tab drag&drop, 1 tab installation)
+gw - quick help: tabbed (1 tab drag&drop, 1 tab installation & command-line)
+
+gw - option for setting a default extraction directory
 
 gw - drag & drop a folder from AZip to Windows Explorer window or to the Desktop
 

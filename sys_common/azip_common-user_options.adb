@@ -54,6 +54,8 @@ package body AZip_Common.User_options is
                 opt.show_passwords:= Boolean'Wide_Value(s);
               when ignore_extract_path =>
                 opt.ignore_extract_path:= Boolean'Wide_Value(s);
+              when extract_directory =>
+                opt.extract_directory := To_Unbounded_Wide_String(s);
             end case;
           end;
         exception
@@ -119,6 +121,8 @@ package body AZip_Common.User_options is
               R(Boolean'Wide_Image(opt.show_passwords));
             when ignore_extract_path =>
               R(Boolean'Wide_Image(opt.ignore_extract_path));
+            when extract_directory =>
+              R(To_Wide_String(opt.extract_directory));
           end case;
         end;
       end loop;

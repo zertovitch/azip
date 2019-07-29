@@ -689,7 +689,7 @@ package body AZip_GWin.MDI_Child is
     end if;
 
     AZip_Resource_GUI.Create_Full_Menu(Window.Menu);
-    Window.MDI_Menu(Window.Menu.Main, Window_Menu => 5);
+    Window.MDI_Menu(Window.Menu.Main, Window_Menu => 6);
 
     -- Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare

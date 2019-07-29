@@ -1,6 +1,7 @@
 with AZip_Common;                       use AZip_Common;
 with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
 with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
+with AZip_GWin.Options;                 use AZip_GWin.Options;
 with AZip_GWin.Persistence;
 with AZip_GWin.Toolbars;
 
@@ -26,12 +27,13 @@ with GNAT.Compiler_Version;
 
 package body AZip_GWin.MDI_Main is
 
+  use type GString_Unbounded;
+
   procedure Focus_an_already_opened_window(
     Window    : MDI_Main_Type;
     File_Name : GString_Unbounded;
     is_open   : out Boolean )
   is
-    use type GString_Unbounded;
     procedure Identify (Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
     begin
@@ -162,7 +164,13 @@ package body AZip_GWin.MDI_Main is
       --
       Window.User_maximize_restore:= False;
       New_Window.File_Name:= File_Name;
-      New_Window.extract_dir:= G2GU(Give_path(GU2G(File_Name)));
+      if Window.opt.extract_directory = "" then
+        --  First suggested extract directory is the archive's directory.
+        New_Window.extract_dir:= G2GU(Give_path(GU2G(File_Name)));
+      else
+        --  A default extract directory is set as option.
+        New_Window.extract_dir:= Window.opt.extract_directory;
+      end if;
       Create_MDI_Child (New_Window.all,
         Window,
         GU2G(File_Title),
@@ -257,7 +265,7 @@ package body AZip_GWin.MDI_Main is
     -- ** Menus and accelerators:
 
     AZip_Resource_GUI.Create_Full_Menu(Window.Menu);
-    MDI_Menu (Window, Window.Menu.Main, Window_Menu => 2);
+    MDI_Menu (Window, Window.Menu.Main, Window_Menu => 3);
     Accelerator_Table (Window, "Main_Menu");
     Window.IDM_MRU:=
       (IDM_MRU_1,       IDM_MRU_2,       IDM_MRU_3,       IDM_MRU_4,
@@ -575,6 +583,8 @@ package body AZip_GWin.MDI_Main is
         MDI_Tile_Vertical (Window);
       when IDM_WINDOW_CLOSE_ALL =>
         My_MDI_Close_All(Window);
+      when IDM_General_options =>
+        On_General_Options (Window);
       when others =>
         for i_mru in Window.IDM_MRU'Range loop
           if Item = Window.IDM_MRU(i_mru) then

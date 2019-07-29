@@ -96,6 +96,10 @@ Menu_MDI_Child MENU
         MENUITEM "&No sorting", IDM_No_sorting
         MENUITEM "&Select columns", IDM_Select_columns
     }
+    POPUP "&Options"
+    {
+        MENUITEM "&General options", IDM_General_options
+    }
     POPUP "&Window"
     {
         MENUITEM "&Cascade", IDM_WINDOW_CASCADE
@@ -152,6 +156,10 @@ Menu_MDI_Main MENU
         MENUITEM "AZip &news", IDM_AZip_Web_news
         MENUITEM SEPARATOR
         MENUITEM "&About AZip", IDM__ABOUT
+    }
+    POPUP "&Options"
+    {
+        MENUITEM "&General options", IDM_General_options
     }
 }
 
@@ -259,6 +267,21 @@ FONT 8, "Ms Shell Dlg"
     EDITTEXT        Content_to_be_searched, 44, 54, 172, 12, ES_AUTOHSCROLL, WS_EX_LEFT
     DEFPUSHBUTTON   "OK", IDOK, 111, 76, 50, 14, 0, WS_EX_LEFT
     PUSHBUTTON      "Cancel", IDCANCEL, 164, 76, 50, 14, 0, WS_EX_LEFT
+}
+
+
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Option_box DIALOG 0, 0, 255, 121
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+CAPTION "Options"
+FONT 8, "Ms Shell Dlg"
+{
+    LTEXT           "Extract directory", 0, 7, 10, 70, 15, SS_LEFT, WS_EX_LEFT
+    EDITTEXT        Extract_directory_edit_box, 85, 10, 115, 15, ES_AUTOHSCROLL, WS_EX_LEFT
+    PUSHBUTTON      "Choose", Choose_extract_directory_button, 205, 10, 35, 15, 0, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", IDCANCEL, 191, 98, 50, 19, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 136, 98, 50, 19, 0, WS_EX_LEFT
 }
 
 
@@ -453,8 +476,11 @@ Key_Icon           ICON           "ico_bmp/key.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Plus_icon          ICON           "ico_bmp/plus.ico"
+Options_Icon       ICON           "ico_bmp/options.ico"
 
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Plus_icon          ICON           "ico_bmp/plus.ico"
 
 
 //

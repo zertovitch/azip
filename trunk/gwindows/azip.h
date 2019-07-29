@@ -3,9 +3,8 @@
 #endif
 
 #define About_box                               40000
-#define Dummy_check_box_2                       40000
 #define Archive_Progress                        40001
-#define Dummy_check_box_1                       40001
+#define Choose_extract_directory_button         40001
 #define AZip_Doc_Icon                           40002
 #define AZip_Icon                               40003
 #define AZip_URL                                40004
@@ -113,3 +112,8 @@
 #define IDM_No_sorting                          40106
 #define Select_column_box                       40107
 #define IDM_Select_columns                      40108
+#define Dummy_check_box_1                       40109
+#define Dummy_check_box_2                       40110
+#define IDM_General_options                     40111
+#define Option_box                              40112
+#define Extract_directory_edit_box              40113

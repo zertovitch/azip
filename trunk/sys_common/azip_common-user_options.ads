@@ -40,14 +40,15 @@ package AZip_Common.User_options is
     win_left,
     win_top,
     win_width,
-    win_height            : Integer := use_default;
-    MDI_childen_maximized : Boolean := True;
-    MDI_main_maximized    : Boolean := False;
-    mru                   : MRU_List:= (others => Null_Unbounded_Wide_String);
-    show_passwords        : Boolean := False;
-    sort_column           : Integer := no_sorting;
-    sort_direction        : Sort_Direction_Type := Up;
-    ignore_extract_path   : Boolean := False;
+    win_height            : Integer                 := use_default;
+    MDI_childen_maximized : Boolean                 := True;
+    MDI_main_maximized    : Boolean                 := False;
+    mru                   : MRU_List                := (others => Null_Unbounded_Wide_String);
+    show_passwords        : Boolean                 := False;
+    sort_column           : Integer                 := no_sorting;
+    sort_direction        : Sort_Direction_Type     := Up;
+    ignore_extract_path   : Boolean                 := False;
+    extract_directory     : UTF_16_Unbounded_String := Null_Unbounded_Wide_String;
   end record;
 
   -------------------
@@ -78,7 +79,8 @@ package AZip_Common.User_options is
         tree_portion,
         mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
         show_passwords,
-        ignore_extract_path
+        ignore_extract_path,
+        extract_directory
       );
   end;
 

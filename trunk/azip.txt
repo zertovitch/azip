@@ -9,7 +9,8 @@ AZip - A free, portable Zip Archive Manager
   The goal is to keep the user interface as simple as possible and
   bother the user the least possible with options or useless gadgets.
 
-Features:
+Features
+========
 
    * Aimed at simplicity, minimal option set
    * Usual archive management: Add / Remove / Extract files
@@ -24,23 +25,39 @@ Features:
    * Portable (no installation needed, no DLL, no configuration file (*))
    * Free, open-source
 ___
-(*)  AZip can operate in a "no trace in registry" mode. All you need is to put a dummy file
-        with the name "azip.cfg" in the same directory as the executable, azip.exe. If
-        azip.cfg is read-only, user settings won't be remembered for next usage, otherwise
-        settings will be recorded in azip.cfg instead of in the registry.
+(*)  AZip can alternatively operate in a stealth "no trace in registry" mode.
+        All you need is to put a dummy configuration file
+        with the name "azip.cfg" in the same directory as the executable, azip.exe.
+        If azip.cfg is read-only, user settings won't be remembered for next usage,
+        otherwise settings will be recorded in azip.cfg instead of in the registry.
 
 
-Platforms supported:
+License / Warning / Legal stuff
+===============================
+
+There is NO WARRANTY in the AZip software.
+AZip is licensed under the MIT License.
+You find the full license and copyright notice in zip.ads.
+
+Platforms supported
+===================
 
   * Windows
-  * Others: there is a draft multiplatform GTK implementation
+  * Others: work in progess: there is a draft multiplatform GTK implementation
   * AZip's UI is mostly generic, so it can be implemented on various
       UI toolkits without redoing from scratch
   
 How to build & modify AZip
+==========================
 
   * You need the GNAT compiler: http://libre.adacore.com
       (Windows: the 2017 32 bit edition, not the later 64 bit ones)
-  * Read the comments in the gwindows/azip_gwindows.gpr project file 
-      (just open as text file) for further instructions.
-  
+  * For the GWindows toolkit: read the comments in the gwindows/azip_gwindows.gpr
+       project file (just open as text file) for further instructions.
+
+Thanks to...
+============
+
+Asen Anastassov, for the idea of a "stealth mode" (no trace in registry).
+
+Nicolas F. Mirkov, for the idea of an optional default extract directory.

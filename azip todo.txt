@@ -2,8 +2,6 @@ gw - Alt-Up triggers an "up one level" command
 gw - drop to empty main window (0 archive) should trigger "New archive" command
 gw - quick help: tabbed (1 tab drag&drop, 1 tab installation & command-line)
 
-gw - drag & drop a folder from AZip to Windows Explorer window or to the Desktop
-
 gw - drag & drop from list to another folder in a tree (same archive child window)
 gw - drag & drop a folder to another folder (same archive child window)
 

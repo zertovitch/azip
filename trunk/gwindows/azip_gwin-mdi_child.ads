@@ -60,6 +60,7 @@ package AZip_GWin.MDI_Child is
   package AZip_LV_Ex is new GWindows.Common_Controls.Ex_List_View(LV_Payload);
 
   ----------------------------------------------
+  --  MDI_Child_List_View_Control_Type        --
   --  Full or partial archive directory list  --
   ----------------------------------------------
   --  !! to do: put into a separate package !!
@@ -98,14 +99,21 @@ package AZip_GWin.MDI_Child is
   --              Control: in out MDI_Child_List_View_Control_Type;
   --              Payload: out AZip_LV_Ex.Data_access);
 
-  ---------------------------
-  --  Archive folder tree  --
-  ---------------------------
+  ----------------------------------------
+  --  MDI_Child_Tree_View_Control_Type  --
+  --  Archive folder tree               --
+  ----------------------------------------
   --  !! to do: put into a separate package !!
 
   type MDI_Child_Tree_View_Control_Type is new Tree_View_Control_Type with null record;
   overriding procedure On_Selection_Change (Control : in out MDI_Child_Tree_View_Control_Type);
   overriding procedure On_Focus (Control : in out MDI_Child_Tree_View_Control_Type);
+  overriding procedure On_Notify (
+      Window       : in out MDI_Child_Tree_View_Control_Type;
+      Message      : in     GWindows.Base.Pointer_To_Notification;
+      Control      : in     GWindows.Base.Pointer_To_Base_Window_Class;
+      Return_Value : in out GWindows.Types.Lresult
+  );
 
   type MDI_Child_Packing_Box_Type is new GWindows.Packing_Boxes.Packing_Box_Type with null record;
   overriding procedure On_Erase_Background

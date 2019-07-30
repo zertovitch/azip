@@ -519,6 +519,8 @@ package body AZip_GWin.MDI_Child is
           Window.Focus;
           Capture_Mouse (MDI_Child);
           MDI_Main.dragging.is_dragging := True;
+          --  The rest of the dragging operation is handled by the parent window, of
+          --  type MDI_Child_Type: see On_Mouse_Move, On_Left_Mouse_Button_Up.
         end;
       when others =>
         null;
@@ -553,6 +555,38 @@ package body AZip_GWin.MDI_Child is
   begin
     Update_status_bar(MDI_Child_Type(Control.Parent.Parent.all));
   end On_Focus;
+
+  overriding procedure On_Notify (
+      Window       : in out MDI_Child_Tree_View_Control_Type;
+      Message      : in     GWindows.Base.Pointer_To_Notification;
+      Control      : in     GWindows.Base.Pointer_To_Base_Window_Class;
+      Return_Value : in out GWindows.Types.Lresult
+  )
+  is
+    TVN_FIRST      : constant := -400;
+    TVN_BEGINDRAGA : constant := TVN_FIRST -  7;
+    TVN_BEGINDRAGW : constant := TVN_FIRST - 56;
+  begin
+    --  Call parent method
+     Tree_View_Control_Type (Window).On_Notify
+       (Message, Control, Return_Value);
+    case Message.Code is
+      when TVN_BEGINDRAGA | TVN_BEGINDRAGW =>
+        declare
+          MDI_Child : MDI_Child_Type renames
+            MDI_Child_Type (Window.Parent.Parent.all);
+          MDI_Main : MDI_Main_Type renames MDI_Child.MDI_Root.all;
+        begin
+          Window.Focus;
+          Capture_Mouse (MDI_Child);
+          MDI_Main.dragging.is_dragging := True;
+          --  The rest of the dragging operation is handled by the parent window, of
+          --  type MDI_Child_Type: see On_Mouse_Move, On_Left_Mouse_Button_Up.
+        end;
+      when others =>
+        null;
+    end case;
+  end On_Notify;
 
   procedure Memorize_splitter(Window: in out MDI_Child_Type) is
   begin
@@ -1310,6 +1344,7 @@ package body AZip_GWin.MDI_Child is
           or else
           list'Length > 20
          )
+        and then (not Folder_Focus (Window))  --  Bunch of individual files, not a whole folder
         and then Message_Box (
           Window, Archive_extract_msg,
           "You are dropping a large amount of files. Continue?",

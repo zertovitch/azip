@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/07/29  21:01:28
+-- Transcription time: 2019/07/30  08:47:47
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -780,11 +780,11 @@ package body AZip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  7, 10, 70, 15, x,y,w,h);
-    Create_Label( Window, "Extract directory", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  85, 10, 115, 15, x,y,w,h);
+    Dlg_to_Scn(  12, 14, 188, 15, x,y,w,h);
     Create( Window.Extract_directory_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Extract_directory_edit_box);
-    Dlg_to_Scn(  205, 10, 35, 15, x,y,w,h);
+    Dlg_to_Scn(  7, 2, 240, 33, x,y,w,h);
+    Create( Window.RC_item_0, Window, "Directory suggested for archive extraction (empty = archive's location)", x,y,w,h);
+    Dlg_to_Scn(  205, 14, 35, 15, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -1413,6 +1413,8 @@ package body AZip_Resource_GUI is
     Use_GUI_Font(Window);
     Dlg_to_Scn(  21, 13, 130, 17, x,y,w,h);
     Create( Window.Dummy_check_box_1, Window, "Dummy_1", x,y,w,h, ID => Dummy_check_box_1);
+    Dlg_to_Scn(  21, 30, 130, 17, x,y,w,h);
+    Create( Window.Dummy_check_box_2, Window, "Dummy_2", x,y,w,h, ID => Dummy_check_box_2);
     Dlg_to_Scn(  31, 228, 78, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -1424,8 +1426,6 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  21, 30, 130, 17, x,y,w,h);
-    Create( Window.Dummy_check_box_2, Window, "Dummy_2", x,y,w,h, ID => Dummy_check_box_2);
   end Create_Contents;  --  Select_column_box_Type
 
   --  Dialog at resource line 400
@@ -1600,6 +1600,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 515
+  -- Last line of resource script file: 516
 
 end AZip_Resource_GUI;

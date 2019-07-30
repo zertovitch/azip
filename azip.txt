@@ -58,6 +58,15 @@ How to build & modify AZip
 Thanks to...
 ============
 
+[Zip-Ada - Zip archive management library]
+  Stratégies Software team: intensive profiling and contributions
+  ITEC team at NXP Semiconductors: contributions
+
+[GWindows - native MS Windows framework]
+  David Botton: main author
+  André van Splunter
+  Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended
+
 Asen Anastassov, for the idea of a "stealth mode" (no trace in registry).
 
 Nicolas F. Mirkov, for the idea of an optional default extract directory.

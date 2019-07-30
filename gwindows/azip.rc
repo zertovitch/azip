@@ -277,9 +277,9 @@ STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VIS
 CAPTION "Options"
 FONT 8, "Ms Shell Dlg"
 {
-    LTEXT           "Extract directory", 0, 7, 10, 70, 15, SS_LEFT, WS_EX_LEFT
-    EDITTEXT        Extract_directory_edit_box, 85, 10, 115, 15, ES_AUTOHSCROLL, WS_EX_LEFT
-    PUSHBUTTON      "Choose", Choose_extract_directory_button, 205, 10, 35, 15, 0, WS_EX_LEFT
+    EDITTEXT        Extract_directory_edit_box, 12, 14, 188, 15, ES_AUTOHSCROLL, WS_EX_LEFT
+    GROUPBOX        "Directory suggested for archive extraction (empty = archive's location)", 0, 7, 2, 240, 33, 0, WS_EX_LEFT
+    PUSHBUTTON      "Choose", Choose_extract_directory_button, 205, 14, 35, 15, 0, WS_EX_LEFT
     PUSHBUTTON      "Cancel", IDCANCEL, 191, 98, 50, 19, 0, WS_EX_LEFT
     DEFPUSHBUTTON   "OK", IDOK, 136, 98, 50, 19, 0, WS_EX_LEFT
 }
@@ -387,8 +387,8 @@ CAPTION "Select displayed columns"
 FONT 8, "Ms Shell Dlg"
 {
     AUTOCHECKBOX    "Dummy_1", Dummy_check_box_1, 21, 13, 130, 17, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Done", IDOK, 31, 228, 78, 19, 0, WS_EX_LEFT
     AUTOCHECKBOX    "Dummy_2", Dummy_check_box_2, 21, 30, 130, 17, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Done", IDOK, 31, 228, 78, 19, 0, WS_EX_LEFT
 }
 
 
@@ -456,6 +456,10 @@ Box_Closed_Icon_Name ICON           "ico_bmp/box_closed.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Options_Icon       ICON           "ico_bmp/options.ico"
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 AZip_Doc_Icon      ICON           "ico_bmp/azip_doc.ico"
 
 
@@ -476,11 +480,8 @@ Key_Icon           ICON           "ico_bmp/key.ico"
 
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-Options_Icon       ICON           "ico_bmp/options.ico"
-
-
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Plus_icon          ICON           "ico_bmp/plus.ico"
+
 
 
 //
@@ -488,8 +489,8 @@ Plus_icon          ICON           "ico_bmp/plus.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     2,3,0,0
-    PRODUCTVERSION  2,3,0,0
+    FILEVERSION     2,3,1,0
+    PRODUCTVERSION  2,3,1,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -502,7 +503,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
-            VALUE "FileVersion", "2.30"
+            VALUE "FileVersion", "2.31"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2019"
             VALUE "ProductName", "AZip"
         }

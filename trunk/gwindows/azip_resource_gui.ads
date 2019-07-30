@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/07/29  21:01:28
+-- Transcription time: 2019/07/30  08:47:47
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -303,8 +303,8 @@ package AZip_Resource_GUI is
 
   type Option_box_Type is new Window_Type with record
 
-    -- Label: 0
     Extract_directory_edit_box: Edit_Box_Type;
+    RC_item_0: Group_Box_Type;
     Choose_extract_directory_button: Dialog_Button_Type;    -- closes parent window after click
     Choose_extract_directory_button_permanent: Button_Type; -- doesn't close parent window after click
     IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
@@ -567,9 +567,9 @@ package AZip_Resource_GUI is
   type Select_column_box_Type is new Window_Type with record
 
     Dummy_check_box_1: Check_Box_Type;
+    Dummy_check_box_2: Check_Box_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    Dummy_check_box_2: Check_Box_Type;
   end record; -- Select_column_box_Type
 
   --  Dialog at resource line 391
@@ -637,7 +637,7 @@ package AZip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion: constant String:= "2.30";
+    FileVersion: constant String:= "2.31";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2019";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
@@ -777,6 +777,6 @@ package AZip_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 515
+  -- Last line of resource script file: 516
 
 end AZip_Resource_GUI;

@@ -12,17 +12,14 @@
 --  *       [gnavi]\gwindows\contrib
 --  *       [gnavi]\gnatcom\framework
 --  *       Project URL: http://sf.net/projects/gnavi/
---  *       Mirror URL: https://github.com/svn2github/gnavi
 --  *       NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
 --  *   
 --  *   * Ini file manager:
 --  *       Project URL: http://ini-files.sourceforge.net/
---  *       Mirror URL: https://github.com/svn2github/Ini-Files.git
 --  *   
 --  *   * Zip-Ada:
 --  *       [zip-ada]\zip_lib
 --  *       Project URL: http://unzip-ada.sf.net
---  *       Mirror URL: https://github.com/svn2github/zip-ada
 --  * 
 --  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;C:\Ada\zip-ada\zip_lib
 

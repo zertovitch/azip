@@ -606,11 +606,12 @@ package body AZip_GWin.MDI_Child is
           --  When you drag a tree item which is not selected, Windows doesn't select the
           --  dragged item (contrary to the list view).
           --  So, we need to select programmatically the dragged item right now.
-          Window.Select_Item (Nmtv_Ptr.ItemNew.HItem);
-          Capture_Mouse (MDI_Child);
-          MDI_Main.dragging.is_dragging := True;
-          --  The rest of the dragging operation is handled by the parent window, of
-          --  type MDI_Child_Type: see On_Mouse_Move, On_Left_Mouse_Button_Up.
+          if Window.Select_Item (Nmtv_Ptr.ItemNew.HItem) then
+            Capture_Mouse (MDI_Child);
+            MDI_Main.dragging.is_dragging := True;
+            --  The rest of the dragging operation is handled by the parent window, of
+            --  type MDI_Child_Type: see On_Mouse_Move, On_Left_Mouse_Button_Up.
+          end if;
         end;
       when others =>
         null;

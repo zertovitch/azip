@@ -32,9 +32,10 @@ with Ada.IO_Exceptions;
 with Ada.Sequential_IO;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
+with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
 
-with Interfaces;
+with Interfaces.C;
 
 package body AZip_GWin.MDI_Child is
 
@@ -47,6 +48,7 @@ package body AZip_GWin.MDI_Child is
 
   procedure Update_status_bar (Window : in out MDI_Child_Type) is
     sel: Natural;
+    is_folder_focused : Boolean;
     function Destination_image return GString is
     begin
       case Window.MDI_Root.dragging.destination is
@@ -65,20 +67,27 @@ package body AZip_GWin.MDI_Child is
       return;
     end if;
     --  Here the non-trivial cases.
-    sel:= Window.Directory_List.Selected_Item_Count;
+    is_folder_focused := Folder_Focus(Window);
+    if not is_folder_focused then
+      sel:= Window.Directory_List.Selected_Item_Count;
+    end if;
     if Window.MDI_Root.dragging.is_dragging then
-      --  Here is the dragging-from-list case
-      Window.Status_Bar.Text (
-        "Dragging " & Integer'Wide_Image(sel) &
-        " selected file(s) " & Destination_image, 0, Sunken
-       );
+      --  Here are the dragging-from-tree or dragging-from-list cases.
+      if is_folder_focused then
+        Window.Status_Bar.Text (
+          "Dragging a folder " & Destination_image, 0, Sunken
+         );
+      else
+        Window.Status_Bar.Text (
+          "Dragging " & Integer'Wide_Image(sel) &
+          " selected file(s) " & Destination_image, 0, Sunken
+         );
+      end if;
     else
       --  Cases without dragging
-      if Folder_Focus(Window) then
+      if is_folder_focused then
         Text(Window.Status_Bar,"Folder selected",0, Flat);
-        return;
-      end if;
-      if sel > 0 then
+      elsif sel > 0 then
         Window.Status_Bar.Text (
           Integer'Wide_Image(Window.Directory_List.Item_Count) &
             " file(s)," & Integer'Wide_Image(sel) & " selected", 0, Flat
@@ -507,14 +516,13 @@ package body AZip_GWin.MDI_Child is
     LVN_BEGINDRAG  : constant := LVN_FIRST - 9;
   begin
     --  Call parent method
-     AZip_LV_Ex.Ex_List_View_Control_Type (Window).On_Notify
+    AZip_LV_Ex.Ex_List_View_Control_Type (Window).On_Notify
        (Message, Control, Return_Value);
     case Message.Code is
       when LVN_BEGINDRAG =>
         declare
-          MDI_Child : MDI_Child_Type renames
-            MDI_Child_Type (Window.Parent.Parent.Parent.all);
-          MDI_Main : MDI_Main_Type renames MDI_Child.MDI_Root.all;
+          MDI_Child : MDI_Child_Type renames MDI_Child_Type (Window.Parent.Parent.Parent.all);
+          MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Root.all;
         begin
           Window.Focus;
           Capture_Mouse (MDI_Child);
@@ -566,18 +574,39 @@ package body AZip_GWin.MDI_Child is
     TVN_FIRST      : constant := -400;
     TVN_BEGINDRAGA : constant := TVN_FIRST -  7;
     TVN_BEGINDRAGW : constant := TVN_FIRST - 56;
+    --  \/ \/ \/ \/ Code from Ex_TV's body:
+    type NMTREEVIEW is
+      record
+         Hdr     : Notification;
+         Action  : Interfaces.C.unsigned;
+         ItemOld : TVITEM;
+         ItemNew : TVITEM;
+         PtDrag  : GWindows.Types.Point_Type;
+      end record;
+
+    type Pointer_To_NMTREEVIEW_Type is access all NMTREEVIEW;
+
+    function Message_To_NmTreeView_Pointer is
+      new Ada.Unchecked_Conversion (GWindows.Base.Pointer_To_Notification,
+                                    Pointer_To_NMTREEVIEW_Type);
+    --  /\ /\ /\ /\
   begin
     --  Call parent method
-     Tree_View_Control_Type (Window).On_Notify
+    Tree_View_Control_Type (Window).On_Notify
        (Message, Control, Return_Value);
     case Message.Code is
       when TVN_BEGINDRAGA | TVN_BEGINDRAGW =>
         declare
-          MDI_Child : MDI_Child_Type renames
-            MDI_Child_Type (Window.Parent.Parent.all);
-          MDI_Main : MDI_Main_Type renames MDI_Child.MDI_Root.all;
+          MDI_Child : MDI_Child_Type renames MDI_Child_Type (Window.Parent.Parent.all);
+          MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Root.all;
+          Nmtv_Ptr  : constant Pointer_To_NMTREEVIEW_Type :=
+                 Message_To_NmTreeView_Pointer (Message);
         begin
           Window.Focus;
+          --  When you drag a tree item which is not selected, Windows doesn't select the
+          --  dragged item (contrary to the list view).
+          --  So, we need to select programmatically the dragged item right now.
+          Window.Select_Item (Nmtv_Ptr.ItemNew.HItem);
           Capture_Mouse (MDI_Child);
           MDI_Main.dragging.is_dragging := True;
           --  The rest of the dragging operation is handled by the parent window, of

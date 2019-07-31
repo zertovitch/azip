@@ -10,7 +10,6 @@
 --  *   * Zip-Ada:
 --  *       [zip-ada]\zip_lib
 --  *       Project URL: http://unzip-ada.sf.net
---  *       Mirror URL: https://github.com/svn2github/zip-ada
 --  * 
 --  *  Example: GNAT_SOURCE_PATH=C:\Ada\zip-ada\zip_lib
 

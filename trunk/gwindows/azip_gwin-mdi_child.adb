@@ -67,7 +67,7 @@ package body AZip_GWin.MDI_Child is
       return;
     end if;
     --  Here the non-trivial cases.
-    is_folder_focused := Folder_Focus(Window);
+    is_folder_focused := Folder_Focus (Window);
     if not is_folder_focused then
       sel:= Window.Directory_List.Selected_Item_Count;
     end if;
@@ -601,12 +601,14 @@ package body AZip_GWin.MDI_Child is
           MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Root.all;
           Nmtv_Ptr  : constant Pointer_To_NMTREEVIEW_Type :=
                  Message_To_NmTreeView_Pointer (Message);
+          success   : Boolean;
         begin
           Window.Focus;
           --  When you drag a tree item which is not selected, Windows doesn't select the
-          --  dragged item (contrary to the list view).
+          --  dragged item, contrary to what happens for instance with the list view.
           --  So, we need to select programmatically the dragged item right now.
-          if Window.Select_Item (Nmtv_Ptr.ItemNew.HItem) then
+          success := Window.Select_Item (Nmtv_Ptr.ItemNew.HItem);
+          if success then
             Capture_Mouse (MDI_Child);
             MDI_Main.dragging.is_dragging := True;
             --  The rest of the dragging operation is handled by the parent window, of
@@ -1326,11 +1328,12 @@ package body AZip_GWin.MDI_Child is
     drop_Y  : in     Integer := -1
   )
   is
-    sel_list: constant Array_Of_File_Names:= Get_selected_entry_list (Window);
+    sel_list : constant Array_Of_File_Names := Get_selected_entry_list (Window);
+    is_folder_focused : constant Boolean := Folder_Focus (Window);
     --
     function Smart_list return Array_Of_File_Names is
     begin
-      if Folder_Focus (Window) then
+      if is_folder_focused then
         return Get_selected_folder_entry_list (Window);
       else
         return sel_list; -- If the list is empty, whole archive will be extracted
@@ -1341,7 +1344,7 @@ package body AZip_GWin.MDI_Child is
     --
     function Archive_extract_msg return GString is
     begin
-      if Folder_Focus (Window) then
+      if is_folder_focused then
         return "Extract current folder's contents";
       elsif sel_list'Length > 0 then
         return "Extract the" & Integer'Wide_Image(sel_list'Length) & " selected item(s)";
@@ -1374,7 +1377,7 @@ package body AZip_GWin.MDI_Child is
           or else
           list'Length > 20
          )
-        and then (not Folder_Focus (Window))  --  Bunch of individual files, not a whole folder
+        and then (not is_folder_focused)  --  Bunch of individual files, not a whole folder
         and then Message_Box (
           Window, Archive_extract_msg,
           "You are dropping a large amount of files. Continue?",
@@ -1393,8 +1396,10 @@ package body AZip_GWin.MDI_Child is
     end if;
     Window.extract_dir:= dir;
     if list'Length > 0 then
+      --  Bunch of individual files, or a non-empty folder
       ask:= Any_path_in_list(list);
     else
+      --  Entire archive
       ask:= Window.any_path_in_zip;
     end if;
     if ask then
@@ -1434,11 +1439,12 @@ package body AZip_GWin.MDI_Child is
   end On_Extract;
 
   procedure On_Delete(Window : in out MDI_Child_Type) is
-    sel_list: constant Array_Of_File_Names:= Get_selected_entry_list(Window);
+    sel_list : constant Array_Of_File_Names := Get_selected_entry_list (Window);
+    is_folder_focused : constant Boolean := Folder_Focus (Window);
     --
     function Smart_list return Array_Of_File_Names is
     begin
-      if Folder_Focus(Window) then
+      if is_folder_focused then
         return Get_selected_folder_entry_list(Window);
       else
         return sel_list;
@@ -1447,7 +1453,7 @@ package body AZip_GWin.MDI_Child is
     --
     function Delete_msg return GString is
     begin
-      if Folder_Focus(Window) then
+      if is_folder_focused then
         return "Do you want to remove the entire selected FOLDER and subfolders ?";
       else
         return "Do you want to remove the" & Integer'Wide_Image(sel_list'Length) &
@@ -1456,8 +1462,8 @@ package body AZip_GWin.MDI_Child is
     end Delete_msg;
     return_code : Operation_return_code;
   begin
-    if Window.Directory_List.Selected_Item_Count = 0 and not Folder_Focus(Window) then
-      return; -- not item -> do nothing (different from On_Extract's behaviour)
+    if Window.Directory_List.Selected_Item_Count = 0 and not is_folder_focused then
+      return; -- no item, no folder -> do nothing (different from On_Extract's behaviour)
     end if;
     if Message_Box(Window, "Delete", Delete_msg, Yes_No_Box, Question_Icon) = Yes then
       Process_archive_GWin(

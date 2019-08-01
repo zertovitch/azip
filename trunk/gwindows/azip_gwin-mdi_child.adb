@@ -243,15 +243,19 @@ package body AZip_GWin.MDI_Child is
               null;
           end case;
         end loop Scan_for_path;
+        --
+        if simple_name_idx > name'First then
+          Window.any_path_in_zip:= True;
+        end if;
         if simple_name_idx > name'Last then -- skip directory entries (names end with '/' or '\')
           return;
+        end if;
+        if Window.opt.view_mode = Tree and then prefix_path /= name(name'First..simple_name_idx-2) then
+          return; -- not in a part of the tree to be displayed
         end if;
         if extension_idx < simple_name_idx then
           -- last dot was in a directory name (like: .svn/entries)
           extension_idx:= name'Last + 1; -- will be empty
-        end if;
-        if Window.opt.view_mode = Tree and then prefix_path /=  name(name'First..simple_name_idx-2) then
-          return; -- not in a part of the tree to be displayed
         end if;
         row:= row + 1;
         if need in first_display .. node_selected then
@@ -278,7 +282,6 @@ package body AZip_GWin.MDI_Child is
           Lst.Set_Sub_Item(S2G(Zip.Image(method)), row, cidx(Format)-1);
           Lst.Set_Sub_Item(Hexadecimal(crc_32), row, cidx(CRC32)-1);
           if simple_name_idx > name'First then
-            Window.any_path_in_zip:= True;
             Lst.Set_Sub_Item(name(name'First..simple_name_idx - 1), row, cidx(Path)-1);
           end if;
           Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, cidx(Encoding)-1);
@@ -1313,12 +1316,13 @@ package body AZip_GWin.MDI_Child is
   end Get_selected_folder_entry_list;
 
   function Any_path_in_list(names: Array_Of_File_Names) return Boolean is
-    any_path: Boolean:= False;
   begin
     for i in names'Range loop
-      any_path:= any_path or (Index(names(i), "/") > 0) or (Index(names(i), "\") > 0);
+      if Index(names(i), "/") > 0 or else Index(names(i), "\") > 0 then
+        return True;
+      end if;
     end loop;
-    return any_path;
+    return False;
   end Any_path_in_list;
 
   procedure On_Extract (
@@ -1403,6 +1407,7 @@ package body AZip_GWin.MDI_Child is
       ask:= Window.any_path_in_zip;
     end if;
     if ask then
+      --  We have folders in some of the file names.
       if Window.opt.ignore_extract_path then
         box_kind:= Yes_No_Def_Cancel_Box; -- Previous answer was "No", so we take "No" as default
       else

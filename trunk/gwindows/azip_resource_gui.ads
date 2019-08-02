@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/07/30  08:47:47
+-- Transcription time: 2019/08/01  17:20:19
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -303,8 +303,8 @@ package AZip_Resource_GUI is
 
   type Option_box_Type is new Window_Type with record
 
-    Extract_directory_edit_box: Edit_Box_Type;
     RC_item_0: Group_Box_Type;
+    Extract_directory_edit_box: Edit_Box_Type;
     Choose_extract_directory_button: Dialog_Button_Type;    -- closes parent window after click
     Choose_extract_directory_button_permanent: Button_Type; -- doesn't close parent window after click
     IDCANCEL: Dialog_Button_Type;    -- closes parent window after click

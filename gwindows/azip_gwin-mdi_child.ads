@@ -1,14 +1,13 @@
 with AZip_Common.User_options;          use AZip_Common.User_options;
 with AZip_Common.Operations;            use AZip_Common.Operations;
 with AZip_GWin.Folder_Trees;
+with AZip_GWin.Directory_Lists;
 with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
 with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
 with Zip;
 
-with GWindows.Base;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
-with GWindows.Common_Controls.Ex_List_View;
 with GWindows.Drawing;
 with GWindows.GControls.GSize_Bars;
 with GWindows.Packing_Boxes;
@@ -54,52 +53,6 @@ package AZip_GWin.MDI_Child is
   type MDI_Child_Status_Bar_Type is
     new GWindows.Common_Controls.Status_Bar_Type with null record;
 
-  type LV_Payload is record
-    index_before_sorting: Integer;
-  end record;
-
-  package AZip_LV_Ex is new GWindows.Common_Controls.Ex_List_View(LV_Payload);
-
-  ----------------------------------------------
-  --  MDI_Child_List_View_Control_Type        --
-  --  Full or partial archive directory list  --
-  ----------------------------------------------
-  --  !! to do: put into a separate package !!
-
-  type Column_topic_array is
-    array (0 .. Column_integer_array'Length) of AZip_Common.Entry_topic;
-
-  type MDI_Child_List_View_Control_Type is
-    new AZip_LV_Ex.Ex_List_View_Control_Type with
-  record
-    --  Inverse of parent window's opt.column_index,
-    --  for a bit quicker sorting (see On_Compare).
-    curr_col_topic : Column_topic_array;
-  end record;
-
-  overriding procedure On_Item_Changed
-    (Control : in out MDI_Child_List_View_Control_Type);
-  overriding function On_Compare(
-               Control: in MDI_Child_List_View_Control_Type;
-               Column : in Natural;
-               Value1 : in GString;
-               Value2 : in GString) return Integer;
-  overriding procedure Sort(
-    Control   : in out MDI_Child_List_View_Control_Type;
-    Column    : in Natural;
-    Direction : in AZip_LV_Ex.Sort_Direction_Type;
-    Show_Icon : in Boolean := True);
-  overriding procedure On_Focus (Control : in out MDI_Child_List_View_Control_Type);
-  overriding procedure On_Notify (
-      Window       : in out MDI_Child_List_View_Control_Type;
-      Message      : in     GWindows.Base.Pointer_To_Notification;
-      Control      : in     GWindows.Base.Pointer_To_Base_Window_Class;
-      Return_Value : in out GWindows.Types.Lresult
-  );
-  -- overriding procedure On_Free_Payload(
-  --              Control: in out MDI_Child_List_View_Control_Type;
-  --              Payload: out AZip_LV_Ex.Data_access);
-
   type MDI_Child_Packing_Box_Type is new GWindows.Packing_Boxes.Packing_Box_Type with null record;
   overriding procedure On_Erase_Background
      (Window : in out MDI_Child_Packing_Box_Type;
@@ -135,7 +88,7 @@ package AZip_GWin.MDI_Child is
         Menu             : Menu_MDI_Child_Type;
         Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
         Bar_and_List     : MDI_Child_Panel_Type;
-        Directory_List   : MDI_Child_List_View_Control_Type;
+        Directory_List   : AZip_GWin.Directory_Lists.Directory_list_type;
         Splitter         : GWin_Util.Splitter_with_dashes;
         Folder_Tree      : AZip_GWin.Folder_Trees.Folder_tree_type;
         zif              : Zip.Zip_info;

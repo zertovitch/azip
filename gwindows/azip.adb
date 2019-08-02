@@ -4,7 +4,7 @@
 --  See installation instructions in the header part of the azip_gwindows.gpr file.
 --
 with GWindows.Application;        use GWindows.Application;
-with GWindows.Base;               use GWindows.Base;
+with GWindows.Base;
 with GWindows.GStrings;           use GWindows.GStrings;
 with GWindows.Message_Boxes;      use GWindows.Message_Boxes;
 

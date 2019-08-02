@@ -4,10 +4,9 @@ with GWindows.Types;
 
 package AZip_GWin.Folder_Trees is
 
-  ----------------------------------------
-  --  MDI_Child_Tree_View_Control_Type  --
-  --  Archive folder tree               --
-  ----------------------------------------
+  ----------------------------------------------
+  --  Folder_tree_type : archive folder tree  --
+  ----------------------------------------------
 
   type Folder_tree_type is
     new GWindows.Common_Controls.Tree_View_Control_Type with null record;

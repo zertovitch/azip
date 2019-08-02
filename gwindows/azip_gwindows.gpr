@@ -72,14 +72,15 @@ project AZip_GWindows is
               "-gnatyaknpr",  --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
               "-gnatybfhiu",  --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
               "-gnatyx",      --  Style: check x:no extra parens
-              "-gnat05", "-gnatf", "-gnato", 
-              "-fstack-check", "-g", "-gnatwa", "-gnatVa",
+              "-gnatf", "-gnato", 
+              "-fstack-check", "-g",
+              "-gnatwa", "-gnatVa",
               "-gnatec=" & project'Project_Dir & "../obj/debug/debug.pra",
               "-gnatec=" & project'Project_Dir & "azip_elim.pra"
               );
          when "Fast_GPL" | "Fast_MinGW" =>
             for Default_Switches ("ada") use (
-              "-gnat05", "-gnatwa", "-O2", "-gnatpn", 
+              "-gnatwa", "-O2", "-gnatpn", 
               "-funroll-loops", "-fpeel-loops", "-funswitch-loops", "-ftracer", "-fweb", "-frename-registers", 
               "-fpredictive-commoning", "-fgcse-after-reload", "-ftree-vectorize", "-fipa-cp-clone",
               "-ffunction-sections",
@@ -87,7 +88,7 @@ project AZip_GWindows is
               );
          when "Profiling" =>
             for Default_Switches ("ada") use (
-              "-gnat05", "-gnatwa", "-O2", "-gnatp",  
+              "-gnatwa", "-O2", "-gnatp",  
               "-funroll-loops", "-fpeel-loops", "-funswitch-loops", "-ftracer", "-fweb", "-frename-registers", 
               "-fpredictive-commoning", "-fgcse-after-reload", "-ftree-vectorize", "-fipa-cp-clone",
               "-g", "-pg"

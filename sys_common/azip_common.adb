@@ -411,7 +411,6 @@ package body AZip_Common is
       s: constant Wide_String:= Size_type'Wide_Image(r);
       t: Wide_String(s'First..s'First+(s'Length*4)/3);
       j, c: Natural;
-      use Interfaces;
     begin
       --  For signed integers
       --
@@ -436,7 +435,6 @@ package body AZip_Common is
     end Image_1000;
 
     function Long_file_size_image(x: Size_type; separator: Wide_Character) return UTF_16_String is
-      use Interfaces;
     begin
       if x < 1024 then
         return Image_1000(x, separator) & " bytes";

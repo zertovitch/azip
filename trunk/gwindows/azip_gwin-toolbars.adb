@@ -62,7 +62,6 @@ package body AZip_GWin.Toolbars is
        Command_ID  : in     Integer)
     is
       use GWindows.Common_Controls;
-      use type GString_Unbounded;
     begin
       -- The tool tip is the menu text.
       declare

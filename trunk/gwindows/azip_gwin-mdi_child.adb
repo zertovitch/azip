@@ -39,6 +39,8 @@ with Interfaces;
 
 package body AZip_GWin.MDI_Child is
 
+  use AZip_GWin.Directory_Lists;
+
   function Folder_Focus(Window : in MDI_Child_Type) return Boolean is
   begin
     return
@@ -132,7 +134,7 @@ package body AZip_GWin.MDI_Child is
     cidx: Column_integer_array renames Window.opt.column_index;
 
     procedure Define_columns is
-      Lst: MDI_Child_List_View_Control_Type renames Window.Directory_List;
+      Lst: Directory_list_type renames Window.Directory_List;
       --
     begin
       for topic in Entry_topic loop
@@ -161,7 +163,7 @@ package body AZip_GWin.MDI_Child is
     --
     procedure Feed_directory_list(prefix_path: GString) is
       row, last_row: Integer:= -1;
-      Lst: MDI_Child_List_View_Control_Type renames Window.Directory_List;
+      Lst: Directory_list_type renames Window.Directory_List;
       max_entries: constant Natural:= Entries(Window.zif);
       -- This includes potential invisible entries (directory names from Info-Zip, WinZip)
       sorted_index, unsorted_index, result_code: array(0..max_entries-1) of Integer;
@@ -402,152 +404,6 @@ package body AZip_GWin.MDI_Child is
     Window.Update_status_bar;
     Update_tool_bar(Window);
   end Update_display;
-
-  procedure On_Item_Changed (Control : in out MDI_Child_List_View_Control_Type) is
-    PW: MDI_Child_Type renames MDI_Child_Type(Control.Parent.Parent.Parent.all);
-  begin
-    if PW.refreshing_list then
-      null;
-      -- We avoid a call to Update_display during a full refresh...
-      -- with Update_display.
-    else
-      PW.Update_display(status_bar);
-    end if;
-  end On_Item_Changed;
-
-  function On_Compare(
-               Control: in MDI_Child_List_View_Control_Type;
-               Column : in Natural;
-               Value1 : in GString;
-               Value2 : in GString
-  )
-  return Integer
-  is
-    i1, i2  : Integer;
-    less    : constant := -1;
-    greater : constant := +1;
-    equal   : constant :=  0;
-  begin
-    case Control.curr_col_topic (Column) is
-      when Size | Packed =>  --  E.g. 3 KB
-        i1:= Integer(File_Size_Value(Value1));
-        i2:= Integer(File_Size_Value(Value2));
-        if i1 = i2 then
-          return equal;
-        elsif i1 > i2 then
-          return greater;
-        else
-          return less;
-        end if;
-      when Ratio =>  --  E.g. 77%
-        i1:= Pct_Value(Value1);
-        i2:= Pct_Value(Value2);
-        if i1 = i2 then
-          return equal;
-        elsif i1 > i2 then
-          return greater;
-        else
-          return less;
-        end if;
-      when Result =>  --  E.g. 1234
-        -- Message_Box("Falk forever", "Waaaah!");
-        i1:= Result_value(Value1);
-        i2:= Result_value(Value2);
-        if i1 = i2 then
-          return equal;
-        elsif i1 > i2 then
-          return greater;
-        else
-          return less;
-        end if;
-      when others =>
-        null;  --  The sort column has the default behaviour.
-    end case;
-    --  Default behaviour: lexicographic.
-    if Value1 = Value2 then
-      return equal;
-    elsif Value1 > Value2 then
-      return greater;
-    else
-      return less;
-    end if;
-  end On_Compare;
-
-  overriding procedure Sort(
-    Control   : in out MDI_Child_List_View_Control_Type;
-    Column    : in Natural;
-    Direction : in AZip_LV_Ex.Sort_Direction_Type;
-    Show_Icon : in Boolean := True)
-  is
-    timing : constant Boolean := False;
-    use Ada.Calendar;
-    t0, t1 : Ada.Calendar.Time;
-    window : MDI_Child_Type renames MDI_Child_Type(Control.Parent.Parent.Parent.all);
-  begin
-    if timing then
-      t0 := Clock;
-    end if;
-    --  Get the inverse of opt.column_index:
-    for t in Entry_topic loop
-      Control.curr_col_topic(window.opt.column_index(t)-1) := t;
-    end loop;
-    --  Call parent method
-    AZip_LV_Ex.Ex_List_View_Control_Type (Control).Sort(Column, Direction, Show_Icon);
-    if timing then
-      t1 := Clock;
-      MDI_Child_Type(Control.Parent.Parent.Parent.all).Status_Bar.Text (
-        Duration'Wide_Image (t1-t0)
-      );
-    end if;
-  end Sort;
-
-  overriding procedure On_Focus (Control : in out MDI_Child_List_View_Control_Type) is
-    MDI_Child : MDI_Child_Type renames
-      MDI_Child_Type (Control.Parent.Parent.Parent.all);
-  begin
-    MDI_Child.Update_status_bar;
-  end On_Focus;
-
-  overriding procedure On_Notify (
-      Window       : in out MDI_Child_List_View_Control_Type;
-      Message      : in     GWindows.Base.Pointer_To_Notification;
-      Control      : in     GWindows.Base.Pointer_To_Base_Window_Class;
-      Return_Value : in out GWindows.Types.Lresult
-  )
-  is
-    LVN_FIRST      : constant := -100;
-    LVN_BEGINDRAG  : constant := LVN_FIRST - 9;
-  begin
-    --  Call parent method
-    AZip_LV_Ex.Ex_List_View_Control_Type (Window).On_Notify
-       (Message, Control, Return_Value);
-    case Message.Code is
-      when LVN_BEGINDRAG =>
-        declare
-          MDI_Child : MDI_Child_Type renames MDI_Child_Type (Window.Parent.Parent.Parent.all);
-          MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Root.all;
-        begin
-          Window.Focus;
-          Capture_Mouse (MDI_Child);
-          MDI_Main.dragging.is_dragging := True;
-          --  The rest of the dragging operation is handled by the parent window, of
-          --  type MDI_Child_Type: see On_Mouse_Move, On_Left_Mouse_Button_Up.
-        end;
-      when others =>
-        null;
-    end case;
-  end On_Notify;
-
-  -- !! Missing in EX_LV: freeing internal tables on Delete_Item, Clear.
-  --    Rem. 20-Aug-2014
-  -- !! Missing in EX_LV: a On_Free_Payload that one can override
-  -- overriding procedure On_Free_Payload(
-  --              Control: in out MDI_Child_List_View_Control_Type;
-  --              Payload: out AZip_LV_Ex.Data_access) is
-  --   procedure Dispose is new Ada.Unchecked_Deallocation(LV_Payload, AZip_LV_Ex.Data_Access);
-  -- begin
-  --   Dispose(Payload);
-  -- end On_Free_Payload;
 
   procedure Memorize_splitter(Window: in out MDI_Child_Type) is
   begin

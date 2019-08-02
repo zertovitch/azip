@@ -18,7 +18,6 @@ with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Cursors;                  use GWindows.Cursors;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
-with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Static_Controls;
 with GWindows.Taskbar;                  use GWindows.Taskbar;
@@ -539,8 +538,14 @@ package body AZip_GWin.MDI_Child is
       Change_View(Window, Tree, force => True);
     end if;
 
+    ------------
+    --  Menus --
+    ------------
+
     AZip_Resource_GUI.Create_Full_Menu(Window.Menu);
     Window.MDI_Menu(Window.Menu.Main, Window_Menu => 6);
+    Append_Item (Window.context_menu_file, "&Extract", IDM_EXTRACT);
+    Append_Item (Window.context_menu_file, "&Delete",  IDM_Delete_selected);
 
     -- Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare

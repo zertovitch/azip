@@ -10,6 +10,7 @@ with Zip;
 with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Drawing;
 with GWindows.GControls.GSize_Bars;
+with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Packing_Boxes;
 with GWindows.Panels;
 with GWindows.Types;
@@ -19,7 +20,6 @@ with GWindows.Windows;                  use GWindows.Windows;
 with GWin_Util;
 
 with Ada.Numerics.Float_Random;
-with AZip_Common;
 
 package AZip_GWin.MDI_Child is
 
@@ -79,37 +79,39 @@ package AZip_GWin.MDI_Child is
   type MDI_Child_Type is
     new GWindows.Windows.MDI.MDI_Child_Window_Type with
       record
-        File_Name        : GString_Unbounded;
-        Short_Name       : GString_Unbounded;
+        File_Name           : GString_Unbounded;
+        Short_Name          : GString_Unbounded;
         -- ^ Window title = Short_Name & {""|" *"}
-        MDI_Root         : MDI_Main_Access; -- -> access to the containing window
-        Extra_first_doc  : Boolean:= False;
+        MDI_Root            : MDI_Main_Access; -- -> access to the containing window
+        Extra_first_doc     : Boolean:= False;
         -- ^ new file closed if kept virgin when opening another one (like blank Excel sheet).
-        Menu             : Menu_MDI_Child_Type;
-        Tree_Bar_and_List: MDI_Child_Packing_Box_Type;
-        Bar_and_List     : MDI_Child_Panel_Type;
-        Directory_List   : AZip_GWin.Directory_Lists.Directory_list_type;
-        Splitter         : GWin_Util.Splitter_with_dashes;
-        Folder_Tree      : AZip_GWin.Folder_Trees.Folder_tree_type;
-        zif              : Zip.Zip_info;
-        path_map         : AZip_Common.Path_Catalogues.Map;
-        node_map         : AZip_Common.Node_Catalogues.Map;
-        selected_path    : GString_Unbounded:= Null_GString_Unbounded;
-        opt              : Option_Pack_Type;
-        Status_deamon    : Daemons.Status_display;
-        Status_Bar       : MDI_Child_Status_Bar_Type;
-        name_search      : GString_Unbounded;
-        content_search   : GString_Unbounded;
-        current_password : GString_Unbounded;
-        temp_name_gen    : Ada.Numerics.Float_Random.Generator;
-        last_operation   : Archive_Operation:= Remove;
-        last_max_code    : Integer;
-        any_path_in_zip  : Boolean;
-        extract_dir      : GString_Unbounded;
-        refreshing_list  : Boolean:= False;
-        is_closing       : Boolean:= False;
-        last_op_comment_1: GString_Unbounded;
-        last_op_comment_2: GString_Unbounded;
+        Menu                : Menu_MDI_Child_Type;
+        context_menu_file   : Menu_Type := Create_Popup;
+        context_menu_folder : Menu_Type := Create_Popup;
+        Tree_Bar_and_List   : MDI_Child_Packing_Box_Type;
+        Bar_and_List        : MDI_Child_Panel_Type;
+        Directory_List      : AZip_GWin.Directory_Lists.Directory_list_type;
+        Splitter            : GWin_Util.Splitter_with_dashes;
+        Folder_Tree         : AZip_GWin.Folder_Trees.Folder_tree_type;
+        zif                 : Zip.Zip_info;
+        path_map            : AZip_Common.Path_Catalogues.Map;
+        node_map            : AZip_Common.Node_Catalogues.Map;
+        selected_path       : GString_Unbounded:= Null_GString_Unbounded;
+        opt                 : Option_Pack_Type;
+        Status_deamon       : Daemons.Status_display;
+        Status_Bar          : MDI_Child_Status_Bar_Type;
+        name_search         : GString_Unbounded;
+        content_search      : GString_Unbounded;
+        current_password    : GString_Unbounded;
+        temp_name_gen       : Ada.Numerics.Float_Random.Generator;
+        last_operation      : Archive_Operation:= Remove;
+        last_max_code       : Integer;
+        any_path_in_zip     : Boolean;
+        extract_dir         : GString_Unbounded;
+        refreshing_list     : Boolean:= False;
+        is_closing          : Boolean:= False;
+        last_op_comment_1   : GString_Unbounded;
+        last_op_comment_2   : GString_Unbounded;
       end record;
 
   procedure Update_status_bar (Window : in out MDI_Child_Type);

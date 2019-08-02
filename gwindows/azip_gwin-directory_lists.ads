@@ -57,4 +57,6 @@ package AZip_GWin.Directory_Lists is
   --              Control: in out Directory_list_type;
   --              Payload: out AZip_LV_Ex.Data_access);
 
+   overriding procedure On_Right_Click (Control : in out Directory_list_type);
+
 end AZip_GWin.Directory_Lists;

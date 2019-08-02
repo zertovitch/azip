@@ -4,6 +4,7 @@ with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
 with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
 
 with GWindows.Base;                     use GWindows.Base;
+with GWindows.Menus;                    use GWindows.Menus;
 
 with Ada.Calendar;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
@@ -156,5 +157,12 @@ package body AZip_GWin.Directory_Lists is
   -- begin
   --   Dispose(Payload);
   -- end On_Free_Payload;
+
+  overriding procedure On_Right_Click (Control : in out Directory_list_type) is
+    MDI_Child : MDI_Child_Type renames
+      MDI_Child_Type (Control.Parent.Parent.Parent.all);
+  begin
+    Immediate_Popup_Menu (MDI_Child.context_menu_file, Control);
+  end On_Right_Click;
 
 end AZip_GWin.Directory_Lists;

@@ -1,5 +1,6 @@
 with AZip_Common.User_options;          use AZip_Common.User_options;
 with AZip_Common.Operations;            use AZip_Common.Operations;
+with AZip_GWin.Folder_Trees;
 with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
 with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
@@ -99,22 +100,6 @@ package AZip_GWin.MDI_Child is
   --              Control: in out MDI_Child_List_View_Control_Type;
   --              Payload: out AZip_LV_Ex.Data_access);
 
-  ----------------------------------------
-  --  MDI_Child_Tree_View_Control_Type  --
-  --  Archive folder tree               --
-  ----------------------------------------
-  --  !! to do: put into a separate package !!
-
-  type MDI_Child_Tree_View_Control_Type is new Tree_View_Control_Type with null record;
-  overriding procedure On_Selection_Change (Control : in out MDI_Child_Tree_View_Control_Type);
-  overriding procedure On_Focus (Control : in out MDI_Child_Tree_View_Control_Type);
-  overriding procedure On_Notify (
-      Window       : in out MDI_Child_Tree_View_Control_Type;
-      Message      : in     GWindows.Base.Pointer_To_Notification;
-      Control      : in     GWindows.Base.Pointer_To_Base_Window_Class;
-      Return_Value : in out GWindows.Types.Lresult
-  );
-
   type MDI_Child_Packing_Box_Type is new GWindows.Packing_Boxes.Packing_Box_Type with null record;
   overriding procedure On_Erase_Background
      (Window : in out MDI_Child_Packing_Box_Type;
@@ -152,7 +137,7 @@ package AZip_GWin.MDI_Child is
         Bar_and_List     : MDI_Child_Panel_Type;
         Directory_List   : MDI_Child_List_View_Control_Type;
         Splitter         : GWin_Util.Splitter_with_dashes;
-        Folder_Tree      : aliased MDI_Child_Tree_View_Control_Type;
+        Folder_Tree      : AZip_GWin.Folder_Trees.Folder_tree_type;
         zif              : Zip.Zip_info;
         path_map         : AZip_Common.Path_Catalogues.Map;
         node_map         : AZip_Common.Node_Catalogues.Map;
@@ -173,6 +158,8 @@ package AZip_GWin.MDI_Child is
         last_op_comment_1: GString_Unbounded;
         last_op_comment_2: GString_Unbounded;
       end record;
+
+  procedure Update_status_bar (Window : in out MDI_Child_Type);
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);
 

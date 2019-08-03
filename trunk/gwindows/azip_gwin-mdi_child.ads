@@ -115,6 +115,7 @@ package AZip_GWin.MDI_Child is
       end record;
 
   procedure Update_status_bar (Window : in out MDI_Child_Type);
+  procedure Update_tool_bar_and_menus (Window : in out MDI_Child_Type);
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);
 

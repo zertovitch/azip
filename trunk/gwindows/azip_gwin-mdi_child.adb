@@ -40,7 +40,7 @@ package body AZip_GWin.MDI_Child is
 
   use AZip_GWin.Directory_Lists;
 
-  function Folder_Focus(Window : in MDI_Child_Type) return Boolean is
+  function Folder_Focus (Window : in MDI_Child_Type) return Boolean is
   begin
     return
       Window.opt.view_mode = Tree and then
@@ -48,8 +48,6 @@ package body AZip_GWin.MDI_Child is
   end Folder_Focus;
 
   procedure Update_status_bar (Window : in out MDI_Child_Type) is
-    sel: Natural;
-    is_folder_focused : Boolean;
     function Destination_image return GString is
     begin
       case Window.MDI_Root.dragging.destination is
@@ -62,6 +60,8 @@ package body AZip_GWin.MDI_Child is
           return "";
       end case;
     end Destination_image;
+    sel: Natural;
+    is_folder_focused : Boolean;
   begin
     if not Is_loaded(Window.zif) then
       Window.Status_Bar.Text ("No archive loaded", 0, Flat);
@@ -102,13 +102,32 @@ package body AZip_GWin.MDI_Child is
     end if;
   end Update_status_bar;
 
-  procedure Update_tool_bar(Window : in out MDI_Child_Type) is
+  procedure Update_tool_bar_and_menus (Window : in out MDI_Child_Type) is
     not_empty_archive: constant Boolean:=
       Is_loaded(Window.zif) and then Entries(Window.zif) > 0;
+    is_folder_focused : Boolean;
+    is_any_to_delete : Boolean;
+    sel: Natural;
     bar: MDI_Toolbar_Type renames Window.MDI_Root.Tool_Bar;
+    boolean_to_state : constant array (Boolean) of State_Type
+      := (True => Enabled, False => Disabled);
   begin
+    is_folder_focused := Folder_Focus (Window);
+    if not is_folder_focused then
+      sel:= Window.Directory_List.Selected_Item_Count;
+    end if;
+    --
     bar.Enabled(IDM_EXTRACT, not_empty_archive);
-    bar.Enabled(IDM_Delete_selected, not_empty_archive);
+    State (Window.Menu.Main,           Command, IDM_EXTRACT, boolean_to_state (not_empty_archive));
+    State (Window.context_menu_file,   Command, IDM_EXTRACT, boolean_to_state (not_empty_archive));
+    State (Window.context_menu_folder, Command, IDM_EXTRACT, boolean_to_state (not_empty_archive));
+    --
+    is_any_to_delete := not_empty_archive and then (is_folder_focused or else sel > 0);
+    bar.Enabled(IDM_Delete_selected, is_any_to_delete);
+    State (Window.Menu.Main,           Command, IDM_Delete_selected, boolean_to_state (is_any_to_delete));
+    State (Window.context_menu_file,   Command, IDM_Delete_selected, boolean_to_state (is_any_to_delete));
+    State (Window.context_menu_folder, Command, IDM_Delete_selected, boolean_to_state (is_any_to_delete));
+    --
     bar.Enabled(IDM_FIND_IN_ARCHIVE, not_empty_archive);
     bar.Enabled(IDM_TEST_ARCHIVE, not_empty_archive);
     bar.Enabled(IDM_UPDATE_ARCHIVE, not_empty_archive);
@@ -122,7 +141,7 @@ package body AZip_GWin.MDI_Child is
       bar.Enabled(IDM_Toggle_Flat_Tree_View, True);
       bar.Enabled(IDM_Properties, True);
     end if;
-  end Update_tool_bar;
+  end Update_tool_bar_and_menus;
 
   procedure Update_display(
     Window : in out MDI_Child_Type;
@@ -390,18 +409,18 @@ package body AZip_GWin.MDI_Child is
     if need in first_display .. node_selected and then
       Window.MDI_Root.opt.sort_column >= 0
     then
-      -- Peform an initial sorting according to current options.
+      --  Peform an initial sorting according to current options.
       Window.Directory_List.Sort(
         Window.MDI_Root.opt.sort_column,
         AZip_LV_Ex.Sort_Direction_Type'Value(
           AZip_Common.User_options.Sort_Direction_Type'Image(
             Window.MDI_Root.opt.sort_direction
-           )
-         )
-       );
+          )
+        )
+      );
     end if;
     Window.Update_status_bar;
-    Update_tool_bar(Window);
+    Window.Update_tool_bar_and_menus;
   end Update_display;
 
   procedure Memorize_splitter(Window: in out MDI_Child_Type) is
@@ -544,8 +563,10 @@ package body AZip_GWin.MDI_Child is
 
     AZip_Resource_GUI.Create_Full_Menu(Window.Menu);
     Window.MDI_Menu(Window.Menu.Main, Window_Menu => 6);
-    Append_Item (Window.context_menu_file, "&Extract", IDM_EXTRACT);
-    Append_Item (Window.context_menu_file, "&Delete",  IDM_Delete_selected);
+    Append_Item (Window.context_menu_file, "&Extract file(s)", IDM_EXTRACT);
+    Append_Item (Window.context_menu_file, "&Delete file(s)",  IDM_Delete_selected);
+    Append_Item (Window.context_menu_folder, "&Extract folder", IDM_EXTRACT);
+    Append_Item (Window.context_menu_folder, "&Delete folder",  IDM_Delete_selected);
 
     -- Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare

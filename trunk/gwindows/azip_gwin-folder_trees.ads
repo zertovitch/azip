@@ -22,4 +22,6 @@ package AZip_GWin.Folder_Trees is
       Return_Value : in out GWindows.Types.Lresult
   );
 
+   overriding procedure On_Right_Click (Control : in out Folder_tree_type);
+
 end AZip_GWin.Folder_Trees;

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/08/01  17:20:19
+-- Transcription time: 2019/08/03  11:30:49
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -81,11 +81,11 @@ package AZip_Resource_GUI is
     GNAT_URL: Label_Type;
     GNAT_Version: Label_Type;
     GNAVI_URL: Label_Type;
-    Ini_files_URL: Label_Type;
     ResEdit_URL: Label_Type;
     -- Label: IDC_STATIC
     ZipAda_URL: Label_Type;
     ZipAda_Version: Label_Type;
+    Ini_files_URL: Label_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
     Credits_button: Dialog_Button_Type;    -- closes parent window after click
@@ -125,8 +125,6 @@ package AZip_Resource_GUI is
 
   type Credits_box_Type is new Window_Type with record
 
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
     Static_0001: Group_Box_Type;
     -- Label: IDC_STATIC
     -- Label: IDC_STATIC
@@ -134,6 +132,8 @@ package AZip_Resource_GUI is
     -- Label: IDC_STATIC
     -- Label: IDC_STATIC
     -- Label: IDC_STATIC
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Credits_box_Type
 
   --  Dialog at resource line 213
@@ -637,7 +637,7 @@ package AZip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion: constant String:= "2.31";
+    FileVersion: constant String:= "2.35";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2019";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;

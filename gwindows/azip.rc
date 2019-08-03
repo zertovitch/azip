@@ -169,7 +169,7 @@ Menu_MDI_Main MENU
 // Dialog resources
 //
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-About_box DIALOG 0, 0, 289, 210
+About_box DIALOG 0, 0, 289, 238
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "About AZip"
 FONT 8, "Ms Shell Dlg"
@@ -182,17 +182,17 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "http://azip.sf.net/", AZip_URL, 157, 61, 89, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "Version:", IDC_STATIC, 110, 81, 30, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "(ver)", Version_label, 157, 81, 118, 8, SS_LEFT, WS_EX_LEFT
-    GROUPBOX        "AZip is made with the following free, open source components:", IDC_STATIC, 5, 105, 278, 78, 0, WS_EX_LEFT
-    LTEXT           "GNAT -  free Ada compiler", GNAT_URL, 23, 119, 88, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "GNAT_Version", GNAT_Version, 115, 119, 139, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "GNAVI / GWindows", GNAVI_URL, 23, 134, 72, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "Ini file manager", Ini_files_URL, 223, 134, 53, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "ResEdit", ResEdit_URL, 23, 149, 27, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "(freeware, not open-source)", IDC_STATIC, 55, 149, 103, 8, SS_LEFT, WS_EX_LEFT
+    GROUPBOX        "AZip is made with the following free, open source components:", IDC_STATIC, 5, 105, 278, 102, 0, WS_EX_LEFT
+    LTEXT           "GNAT -  free Ada compiler", GNAT_URL, 23, 120, 88, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "GNAT_Version", GNAT_Version, 115, 120, 139, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "GNAVI / GWindows", GNAVI_URL, 23, 135, 72, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "ResEdit", ResEdit_URL, 23, 150, 27, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "(freeware, not open-source)", IDC_STATIC, 55, 150, 103, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "Zip-Ada", ZipAda_URL, 23, 165, 28, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "ZA_Version", ZipAda_Version, 57, 165, 146, 8, SS_LEFT, WS_EX_LEFT
-    DEFPUSHBUTTON   "Close", IDOK, 87, 186, 115, 18, 0, WS_EX_LEFT
-    PUSHBUTTON      "Credits", Credits_button, 5, 186, 44, 18, 0, WS_EX_LEFT
+    LTEXT           "Ini file manager", Ini_files_URL, 23, 180, 80, 8, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON   "Close", IDOK, 87, 212, 115, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "Credits", Credits_button, 5, 212, 44, 19, 0, WS_EX_LEFT
 }
 
 
@@ -203,14 +203,14 @@ STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VIS
 CAPTION "Credits"
 FONT 8, "Ms Shell Dlg"
 {
-    DEFPUSHBUTTON   "Close", IDOK, 107, 177, 88, 18, 0, WS_EX_LEFT
     GROUPBOX        "Zip-Ada - Zip archive management library", IDC_STATIC, 11, 4, 283, 44, 0, WS_EX_LEFT
     LTEXT           "Stratégies Software team: intensive profiling and contributions", IDC_STATIC, 25, 18, 260, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "ITEC team at NXP Semiconductors: contributions", IDC_STATIC, 25, 32, 260, 8, SS_LEFT, WS_EX_LEFT
-    GROUPBOX        "GWindows - native MS Windows framework", IDC_STATIC, 11, 54, 284, 76, 0, WS_EX_LEFT
+    GROUPBOX        "GWindows - native MS Windows framework", IDC_STATIC, 11, 54, 284, 62, 0, WS_EX_LEFT
     LTEXT           "David Botton: main author", IDC_STATIC, 25, 69, 260, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "André van Splunter", IDC_STATIC, 25, 83, 260, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", IDC_STATIC, 25, 97, 260, 8, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON   "Close", IDOK, 107, 177, 88, 19, 0, WS_EX_LEFT
 }
 
 
@@ -489,8 +489,8 @@ Plus_icon          ICON           "ico_bmp/plus.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     2,3,1,0
-    PRODUCTVERSION  2,3,1,0
+    FILEVERSION     2,3,5,0
+    PRODUCTVERSION  2,3,5,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -503,7 +503,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
-            VALUE "FileVersion", "2.31"
+            VALUE "FileVersion", "2.35"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2019"
             VALUE "ProductName", "AZip"
         }

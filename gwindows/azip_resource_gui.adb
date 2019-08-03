@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/08/01  17:20:19
+-- Transcription time: 2019/08/03  11:30:49
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -185,7 +185,7 @@ package body AZip_Resource_GUI is
   is
     x,y,w,h: Integer;
   begin
-    Dlg_to_Scn(  0, 0, 289, 210, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 289, 238, x,y,w,h);
     if Left   /= Use_Default then x:= Left;   end if;
     if Top    /= Use_Default then y:= Top;    end if;
     if Width  /= Use_Default then w:= Width;  end if;
@@ -219,7 +219,7 @@ package body AZip_Resource_GUI is
     x,y,w,h: Integer;
   begin
     if resize then
-    Dlg_to_Scn(  0, 0, 289, 210, x,y,w,h);
+    Dlg_to_Scn(  0, 0, 289, 238, x,y,w,h);
       Move(Window, x,y);
       Client_Area_Size(Window, w, h);
     end if;
@@ -240,25 +240,25 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "Version:", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  157, 81, 118, 8, x,y,w,h);
     Create( Window.Version_label, Window, "(ver)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Version_label);
-    Dlg_to_Scn(  5, 105, 278, 78, x,y,w,h);
+    Dlg_to_Scn(  5, 105, 278, 102, x,y,w,h);
     Create( Window.Static_0006, Window, "AZip is made with the following free, open source components:", x,y,w,h);
-    Dlg_to_Scn(  23, 119, 88, 8, x,y,w,h);
+    Dlg_to_Scn(  23, 120, 88, 8, x,y,w,h);
     Create( Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_URL);
-    Dlg_to_Scn(  115, 119, 139, 8, x,y,w,h);
+    Dlg_to_Scn(  115, 120, 139, 8, x,y,w,h);
     Create( Window.GNAT_Version, Window, "GNAT_Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_Version);
-    Dlg_to_Scn(  23, 134, 72, 8, x,y,w,h);
+    Dlg_to_Scn(  23, 135, 72, 8, x,y,w,h);
     Create( Window.GNAVI_URL, Window, "GNAVI / GWindows", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAVI_URL);
-    Dlg_to_Scn(  223, 134, 53, 8, x,y,w,h);
-    Create( Window.Ini_files_URL, Window, "Ini file manager", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Ini_files_URL);
-    Dlg_to_Scn(  23, 149, 27, 8, x,y,w,h);
+    Dlg_to_Scn(  23, 150, 27, 8, x,y,w,h);
     Create( Window.ResEdit_URL, Window, "ResEdit", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ResEdit_URL);
-    Dlg_to_Scn(  55, 149, 103, 8, x,y,w,h);
+    Dlg_to_Scn(  55, 150, 103, 8, x,y,w,h);
     Create_Label( Window, "(freeware, not open-source)", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  23, 165, 28, 8, x,y,w,h);
     Create( Window.ZipAda_URL, Window, "Zip-Ada", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ZipAda_URL);
     Dlg_to_Scn(  57, 165, 146, 8, x,y,w,h);
     Create( Window.ZipAda_Version, Window, "ZA_Version", x,y,w,h, GWindows.Static_Controls.Left, None, ID => ZipAda_Version);
-    Dlg_to_Scn(  87, 186, 115, 18, x,y,w,h);
+    Dlg_to_Scn(  23, 180, 80, 8, x,y,w,h);
+    Create( Window.Ini_files_URL, Window, "Ini file manager", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Ini_files_URL);
+    Dlg_to_Scn(  87, 212, 115, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -269,7 +269,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  5, 186, 44, 18, x,y,w,h);
+    Dlg_to_Scn(  5, 212, 44, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -338,7 +338,21 @@ package body AZip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  107, 177, 88, 18, x,y,w,h);
+    Dlg_to_Scn(  11, 4, 283, 44, x,y,w,h);
+    Create( Window.Static_0001, Window, "Zip-Ada - Zip archive management library", x,y,w,h);
+    Dlg_to_Scn(  25, 18, 260, 8, x,y,w,h);
+    Create_Label( Window, "Stratégies Software team: intensive profiling and contributions", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  25, 32, 260, 8, x,y,w,h);
+    Create_Label( Window, "ITEC team at NXP Semiconductors: contributions", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  11, 54, 284, 62, x,y,w,h);
+    Create( Window.Static_0004, Window, "GWindows - native MS Windows framework", x,y,w,h);
+    Dlg_to_Scn(  25, 69, 260, 8, x,y,w,h);
+    Create_Label( Window, "David Botton: main author", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  25, 83, 260, 8, x,y,w,h);
+    Create_Label( Window, "André van Splunter", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  25, 97, 260, 8, x,y,w,h);
+    Create_Label( Window, "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  107, 177, 88, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -349,20 +363,6 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  11, 4, 283, 44, x,y,w,h);
-    Create( Window.Static_0001, Window, "Zip-Ada - Zip archive management library", x,y,w,h);
-    Dlg_to_Scn(  25, 18, 260, 8, x,y,w,h);
-    Create_Label( Window, "Stratégies Software team: intensive profiling and contributions", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  25, 32, 260, 8, x,y,w,h);
-    Create_Label( Window, "ITEC team at NXP Semiconductors: contributions", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  11, 54, 284, 76, x,y,w,h);
-    Create( Window.Static_0004, Window, "GWindows - native MS Windows framework", x,y,w,h);
-    Dlg_to_Scn(  25, 69, 260, 8, x,y,w,h);
-    Create_Label( Window, "David Botton: main author", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  25, 83, 260, 8, x,y,w,h);
-    Create_Label( Window, "André van Splunter", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  25, 97, 260, 8, x,y,w,h);
-    Create_Label( Window, "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Credits_box_Type
 
   --  Dialog at resource line 222

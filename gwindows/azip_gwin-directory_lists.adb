@@ -115,6 +115,7 @@ package body AZip_GWin.Directory_Lists is
       MDI_Child_Type (Control.Parent.Parent.Parent.all);
   begin
     MDI_Child.Update_status_bar;
+    MDI_Child.Update_tool_bar_and_menus;
   end On_Focus;
 
   overriding procedure On_Notify (
@@ -162,7 +163,7 @@ package body AZip_GWin.Directory_Lists is
     MDI_Child : MDI_Child_Type renames
       MDI_Child_Type (Control.Parent.Parent.Parent.all);
   begin
-    Immediate_Popup_Menu (MDI_Child.context_menu_file, Control);
+    Immediate_Popup_Menu (MDI_Child.context_menu_file, MDI_Child);
   end On_Right_Click;
 
 end AZip_GWin.Directory_Lists;

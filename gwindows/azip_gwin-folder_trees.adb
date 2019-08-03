@@ -3,6 +3,7 @@ with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
 with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
 
 with GWindows.Base;                     use GWindows.Base;
+with GWindows.Menus;                    use GWindows.Menus;
 
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 with Ada.Unchecked_Conversion;
@@ -27,8 +28,11 @@ package body AZip_GWin.Folder_Trees is
   end On_Selection_Change;
 
   overriding procedure On_Focus (Control : in out Folder_tree_type) is
+    MDI_Child : MDI_Child_Type renames
+      MDI_Child_Type (Control.Parent.Parent.all);
   begin
-    MDI_Child_Type(Control.Parent.Parent.all).Update_status_bar;
+    MDI_Child.Update_status_bar;
+    MDI_Child.Update_tool_bar_and_menus;
   end On_Focus;
 
   overriding procedure On_Notify (
@@ -86,5 +90,12 @@ package body AZip_GWin.Folder_Trees is
         null;
     end case;
   end On_Notify;
+
+  overriding procedure On_Right_Click (Control : in out Folder_tree_type) is
+    MDI_Child : MDI_Child_Type renames
+      MDI_Child_Type (Control.Parent.Parent.all);
+  begin
+    Immediate_Popup_Menu (MDI_Child.context_menu_folder, MDI_Child);
+  end On_Right_Click;
 
 end AZip_GWin.Folder_Trees;

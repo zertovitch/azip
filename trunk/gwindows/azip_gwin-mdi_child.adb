@@ -537,12 +537,12 @@ package body AZip_GWin.MDI_Child is
     );
     Window.Folder_Tree.Dock(Fill);
 
-    -- Panel with split bar and list
+    --  Sliding panel with split bar and list on it:
     Window.Bar_and_List.Create(Window.Tree_Bar_and_List, 1,1,20,20);
     Window.Bar_and_List.Dock(At_Right);
-
+    --  The split bar:
     Window.Splitter.Create(Window.Bar_and_List, At_Left);
-
+    --  The list:
     Window.Directory_List.Create(Window.Bar_and_List, 50,1,20,20, Multiple, Report_View, Sort_Custom);
     Window.Directory_List.Set_Extended_Style(AZip_LV_Ex.Full_Row_Select);
     Window.Directory_List.Color_Mode(AZip_LV_Ex.Subitem);

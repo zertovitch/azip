@@ -69,4 +69,5 @@ Thanks to...
 
 Asen Anastassov, for the idea of a "stealth mode" (no trace in registry).
 
-Nicolas F. Mirkov, for the idea of an optional default extract directory.
+Nicolas F. Mirkov, for the ideas of an option for a default extract
+  directory and of context menus within AZip.

@@ -3,6 +3,7 @@ with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
 with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
 
 with GWindows.Base;                     use GWindows.Base;
+with GWindows.Cursors;                  use GWindows.Cursors;
 with GWindows.Menus;                    use GWindows.Menus;
 
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
@@ -17,8 +18,16 @@ package body AZip_GWin.Folder_Trees is
   overriding procedure On_Selection_Change (Control : in out Folder_tree_type) is
     w_node: constant Tree_Item_Node:= Control.Selected_Item;
     parent_window: MDI_Child_Type renames MDI_Child_Type(Control.Parent.Parent.all);
-    new_path: constant GString_Unbounded:= parent_window.node_map.Element(Integer(w_node));
+    new_path: GString_Unbounded;
+    use AZip_Common.Node_Catalogues;
+    curs : constant Cursor :=
+      parent_window.node_map.Find (Integer (w_node));
   begin
+    if curs = No_Element then
+      null;  --  Tree node not registered by us. We let new_path empty.
+    else
+      new_path := Element (curs);
+    end if;
     if new_path = parent_window.selected_path then
       parent_window.Update_status_bar;
       return; -- the same node as before has been selected, no further refresh needed.
@@ -77,6 +86,7 @@ package body AZip_GWin.Folder_Trees is
           Window.Focus;
           --  When you drag a tree item which is not selected, Windows doesn't select the
           --  dragged item, contrary to what happens for instance with the list view.
+          --  NB: the same problem appears with right-click.
           --  So, we need to select programmatically the dragged item right now.
           success := Window.Select_Item (Nmtv_Ptr.ItemNew.HItem);
           if success then
@@ -94,8 +104,30 @@ package body AZip_GWin.Folder_Trees is
   overriding procedure On_Right_Click (Control : in out Folder_tree_type) is
     MDI_Child : MDI_Child_Type renames
       MDI_Child_Type (Control.Parent.Parent.all);
+    use AZip_Common.Node_Catalogues;
+    clicked_node : constant Tree_Item_Node :=
+      Control.Item_At_Position (
+        Control.Point_To_Client (Get_Cursor_Position)
+      );
+    curs : constant Cursor :=
+      MDI_Child.node_map.Find (Integer (clicked_node));
+    success   : Boolean;
   begin
-    Immediate_Popup_Menu (MDI_Child.context_menu_folder, MDI_Child);
+    --  Windows forgets to actually select the folder, despite
+    --  a temporary coloration of the clicked folder.
+    --  NB: the same problem appears with dragging.
+    --  So, we need to select programmatically the clicked item right now.
+    --  But first, we need to check if the clicked node is valid.
+    --  If we click below the tree, clicked_node has a bogus value.
+    if curs = No_Element then
+      null;  --  Tree node not registered by us -> invalid.
+    else
+      --  The node is known to us, we select it.
+      success := Control.Select_Item (clicked_node);
+      if success then
+        Immediate_Popup_Menu (MDI_Child.context_menu_folder, MDI_Child);
+      end if;
+    end if;
   end On_Right_Click;
 
 end AZip_GWin.Folder_Trees;

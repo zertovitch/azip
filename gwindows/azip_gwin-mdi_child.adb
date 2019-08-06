@@ -440,6 +440,61 @@ package body AZip_GWin.MDI_Child is
     GWindows.GControls.GSize_Bars.GSize_Bar_Type(Window).On_Bar_Moved;
   end On_Bar_Moved;
 
+  procedure Check_path (Window : in out MDI_Child_Type; go_up : Boolean) is
+    use AZip_Common.Path_Catalogues;
+    go_up_done : Boolean := False;
+    sel_node   : Tree_Item_Node;
+    curs       : Cursor;
+    idx        : Integer;
+  begin
+    case Window.opt.view_mode is
+      when Flat =>
+        null;
+      when Tree =>
+        if Is_loaded (Window.zif) then
+          loop
+            --  Fix 21-Jul-2019: since GNAT GPL 2016 the pragma Suppress(Container_Checks)
+            --  is activated with the -gnatp (Suppress all checks) switch and the
+            --  function Element won't raise Constraint_Error when the selected path is not
+            --  found (RM: A.18.4, 69/2). Instead, a Program_Error with Access_Violation, or
+            --  something else, may occur. The workaround is to use a cursor and
+            --  the Find function. For details, see:
+            --  https://groups.google.com/forum/#!original/comp.lang.ada/HZsG7Czymto/kY4BjoD0BAAJ
+            curs := Window.path_map.Find (Window.selected_path);
+            if
+                --  The selected path doesn't exist anymore. We'll try again by going one
+                --  folder up. This is done by truncating the last folder name from the right.
+                curs = No_Element
+              or else
+                --  Here, we want to go up (at least) one folder.
+                (go_up and not go_up_done)
+            then
+              idx := Integer'Max (
+                Index(Window.selected_path, "/", Backward),  --  Regular Zip (and Unix) separator.
+                Index(Window.selected_path, "\", Backward)   --  Wrong, but may happen.
+              );
+              if idx = 0 then
+                --  We are at the root.
+                Window.selected_path := Null_GString_Unbounded;
+              else
+                --  Truncation to a non-empty string was successful, e.g.
+                --  "zip-ada/zip_lib" becomes "zip-ada".
+                Window.selected_path := Unbounded_Slice (Window.selected_path, 1, idx-1);
+              end if;
+              go_up_done := True;
+            else
+              sel_node := Tree_Item_Node (Element (curs));
+              exit;
+            end if;
+          end loop;
+          Window.Folder_Tree.Select_Item (sel_node);
+          Update_display (Window, node_selected);
+          Window.Folder_Tree.Expand (sel_node);
+          Window.Folder_Tree.Focus;
+        end if;
+    end case;
+  end Check_path;
+
   procedure Change_View (
         Window   : in out MDI_Child_Type;
         new_view :        View_Mode_Type;
@@ -447,7 +502,6 @@ package body AZip_GWin.MDI_Child is
   )
   is
     mem_sel_path: constant GString_Unbounded:= Window.selected_path;
-    sel_node: Tree_Item_Node;
   begin
     if Window.opt.view_mode = new_view and not force then
       return;
@@ -468,49 +522,7 @@ package body AZip_GWin.MDI_Child is
     Window.On_Size(Window.Width, Window.Height);
     Update_display(Window, archive_changed);
     Window.selected_path:= mem_sel_path;
-    case new_view is
-      when Flat =>
-        null;
-      when Tree =>
-        if Is_loaded(Window.zif) then
-          loop
-            --  Fix 21-Jul-2019: since GNAT GPL 2016 the pragma Suppress(Container_Checks)
-            --  is activated with the -gnatp (Suppress all checks) switch and the
-            --  function Element won't raise Constraint_Error when the selected path is not
-            --  found (RM: A.18.4, 69/2). Instead, a Program_Error with Access_Violation, or
-            --  something else, may occur. The workaround is to use a cursor and
-            --  the Find function. For details, see:
-            --  https://groups.google.com/forum/#!original/comp.lang.ada/HZsG7Czymto/kY4BjoD0BAAJ
-            declare
-              idx : Integer;
-              use AZip_Common.Path_Catalogues;
-              curs : Cursor;
-            begin
-              curs := Window.path_map.Find (Window.selected_path);
-              if curs = No_Element then
-                --  The selected path doesn't exist anymore. We'll try again by going one
-                --  folder up. This is done by truncating the last folder name from the right.
-                idx := Index(Window.selected_path, "/", Backward);
-                if idx = 0 then
-                  --  We are at the root.
-                  Window.selected_path := Null_GString_Unbounded;
-                else
-                  --  Truncation to a non-empty string was successful, e.g.
-                  --  "zip-ada/zip_lib" becomes "zip-ada".
-                  Window.selected_path := Unbounded_Slice(Window.selected_path, 1, idx-1);
-                end if;
-              else
-                sel_node := Tree_Item_Node(Element(curs));
-                exit;
-              end if;
-            end;
-          end loop;
-          Window.Folder_Tree.Select_Item(sel_node);
-          Update_display(Window, node_selected); -- !! update done twice, once for remapping folders
-          Window.Folder_Tree.Expand(sel_node);
-          Window.Folder_Tree.Focus;
-        end if;
-    end case;
+    Check_path (Window, go_up => False);
   end Change_View;
 
   ---------------
@@ -1655,7 +1667,7 @@ package body AZip_GWin.MDI_Child is
         --  Start dialog.
         Select_columns_dialog (Window.MDI_Root.all);
       when IDM_Up_one_level =>
-        Message_Box ("Key", "Alt-Up");
+        Check_path (Window, go_up => True);
       when IDM_Context_menu_key =>
         --  We capture the "context menu key", which has the code VK_APPS (and *not*
         --  VK_MENU, VK_LMENU, VK_RMENU, VK_CONTEXTMENU) through an accelerator which

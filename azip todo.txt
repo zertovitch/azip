@@ -1,4 +1,3 @@
-gw - Alt-Up triggers an "up one level" command
 gw - drop to empty main window (0 archive) should trigger "New archive" command
 gw - quick help: tabbed (1 tab drag&drop, 1 tab installation & command-line)
 

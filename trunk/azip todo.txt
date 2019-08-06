@@ -15,8 +15,8 @@ gw - "view" function on text: show in a Scintilla window
 gw - "view" function on picture: show in a bitmap, using GID
 gw - "copy" saves directory list or tree into text clipboard
 
-gw - add some Windows Explorer context menu options for packing files ito .zip
-     or unpacking .zip files (suggestion by Rolf Ebert). Would use the
+gw - add some Windows Explorer context menu options for packing files into a .zip
+     or for unpacking .zip files (suggestion by Rolf Ebert). Would use the
      console mode described below.
 
 console mode through command lines options (GUI not started then)

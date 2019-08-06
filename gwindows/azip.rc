@@ -31,6 +31,8 @@ Fake_menu_for_commands_in_no_real_menu MENU
     POPUP "Fake"
     {
         MENUITEM "Toggle Flat / Tree view", IDM_Toggle_Flat_Tree_View
+        MENUITEM "Up one level", IDM_Up_one_level
+        MENUITEM "Activate context menu (by key)", IDM_Context_menu_key
     }
 }
 
@@ -428,6 +430,8 @@ Main_Menu ACCELERATORS
     "P",            IDM_UPDATE_ARCHIVE, VIRTKEY, CONTROL
     "R",            IDM__RECOMPRESS_ARCHIVE, VIRTKEY, CONTROL
     "D",            IDM_Properties, VIRTKEY, CONTROL
+    VK_UP,         IDM_Up_one_level, VIRTKEY, ALT
+    VK_APPS,      IDM_Context_menu_key, VIRTKEY
 }
 
 

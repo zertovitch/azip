@@ -5,6 +5,7 @@ with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
 
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Menus;                    use GWindows.Menus;
+--  with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with Ada.Calendar;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
@@ -127,22 +128,24 @@ package body AZip_GWin.Directory_Lists is
   is
     LVN_FIRST      : constant := -100;
     LVN_BEGINDRAG  : constant := LVN_FIRST - 9;
+    --  WM_CONTEXTMENU : constant := 16#7B#;
+    MDI_Child : MDI_Child_Type renames MDI_Child_Type (Window.Parent.Parent.Parent.all);
+    MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Root.all;
   begin
     --  Call parent method
     AZip_LV_Ex.Ex_List_View_Control_Type (Window).On_Notify
        (Message, Control, Return_Value);
     case Message.Code is
       when LVN_BEGINDRAG =>
-        declare
-          MDI_Child : MDI_Child_Type renames MDI_Child_Type (Window.Parent.Parent.Parent.all);
-          MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Root.all;
-        begin
-          Window.Focus;
-          Capture_Mouse (MDI_Child);
-          MDI_Main.dragging.is_dragging := True;
-          --  The rest of the dragging operation is handled by the parent window, of
-          --  type MDI_Child_Type: see On_Mouse_Move, On_Left_Mouse_Button_Up.
-        end;
+        Window.Focus;
+        Capture_Mouse (MDI_Child);
+        MDI_Main.dragging.is_dragging := True;
+        --  The rest of the dragging operation is handled by the parent window, of
+        --  type MDI_Child_Type: see On_Mouse_Move, On_Left_Mouse_Button_Up.
+      --
+      --  when WM_CONTEXTMENU =>  --  Documented but doesn't work.
+      --    Message_Box ("Key", "Context menu key via WM_CONTEXTMENU");
+      --    Immediate_Popup_Menu (MDI_Child.context_menu_file, MDI_Child);
       when others =>
         null;
     end case;

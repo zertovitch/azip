@@ -4,7 +4,6 @@
 
 #define About_box                               40000
 #define Archive_Progress                        40001
-#define Choose_extract_directory_button         40001
 #define AZip_Doc_Icon                           40002
 #define AZip_Icon                               40003
 #define AZip_URL                                40004
@@ -117,3 +116,6 @@
 #define IDM_General_options                     40111
 #define Option_box                              40112
 #define Extract_directory_edit_box              40113
+#define IDM_Up_one_level                        40114
+#define IDM_Context_menu_key                    40115
+#define Choose_extract_directory_button         40116

@@ -1654,6 +1654,23 @@ package body AZip_GWin.MDI_Child is
         Window.MDI_Root.opt.view_mode:= Window.opt.view_mode;
         --  Start dialog.
         Select_columns_dialog (Window.MDI_Root.all);
+      when IDM_Up_one_level =>
+        Message_Box ("Key", "Alt-Up");
+      when IDM_Context_menu_key =>
+        --  We capture the "context menu key", which has the code VK_APPS (and *not*
+        --  VK_MENU, VK_LMENU, VK_RMENU, VK_CONTEXTMENU) through an accelerator which
+        --  activates IDM_Context_menu_key defined by us.
+        --  NB: WM_CONTEXTMENU (documented on Windows Dev Center -
+        --  https://docs.microsoft.com/en-us/windows/win32/menurc/wm-contextmenu )
+        --  doesn't work, see commented out code in AZip_GWin.Directory_Lists.
+        --
+        --  Message_Box ("Key", "Context menu key via IDM_Context_menu_key");
+        --
+        if Folder_Focus (Window) then
+          Immediate_Popup_Menu (Window.context_menu_folder, Window);
+        elsif Window.Focus = Window.Directory_List'Unrestricted_Access then
+          Immediate_Popup_Menu (Window.context_menu_file, Window);
+        end if;
       when others =>
         On_Menu_Select (Window_Type (Window), Item);
     end case;

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/08/03  11:30:49
+-- Transcription time: 2019/08/06  03:15:43
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -782,9 +782,9 @@ package body AZip_Resource_GUI is
     Use_GUI_Font(Window);
     Dlg_to_Scn(  7, 7, 240, 33, x,y,w,h);
     Create( Window.RC_item_0, Window, "Directory suggested for archive extraction ( if empty: archive's location )", x,y,w,h);
-    Dlg_to_Scn(  12, 21, 188, 12, x,y,w,h);
+    Dlg_to_Scn(  12, 21, 188, 13, x,y,w,h);
     Create( Window.Extract_directory_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Extract_directory_edit_box);
-    Dlg_to_Scn(  205, 20, 35, 12, x,y,w,h);
+    Dlg_to_Scn(  205, 20, 35, 15, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.

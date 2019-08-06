@@ -1305,7 +1305,7 @@ package body AZip_GWin.MDI_Child is
   begin
     Open_Files (
       Window,
-      "Add files to archive (also doable by Drag && Drop)...",
+      "Add files to archive (also doable by Drag & Drop)...",
       File_Names,
        ( 1=>(G2GU ("All files (*.*)"),
              G2GU ("*.*"))),
@@ -1340,7 +1340,7 @@ package body AZip_GWin.MDI_Child is
     cancelled: Boolean;
     dir: constant GString:= Get_Directory(
       Window       => Window,
-      Dialog_Title => "Add folder to archive (also doable by Drag && Drop)...",
+      Dialog_Title => "Add folder to archive (also doable by Drag & Drop)...",
       Initial_Path => GU2G(Window.extract_dir) );
   begin
     if dir = "" then

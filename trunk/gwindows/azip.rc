@@ -171,23 +171,6 @@ Menu_MDI_Main MENU
 // Dialog resources
 //
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-Quick_help_tab_gui DIALOG 0, 0, 375, 202
-STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
-FONT 8, "Ms Shell Dlg"
-{
-    GROUPBOX        "Adding files and folders", IDC_STATIC, 4, 3, 366, 46, 0, WS_EX_LEFT
-    ICON            Plus_icon, IDC_STATIC, 10, 17, 21, 20, SS_ICON, WS_EX_LEFT
-    LTEXT           "You can add files, or individual folders through menu commands (+) or buttons. BUT: you can also do it easily via Drag && Drop, from a Windows Explorer window or the Desktop, onto an AZip archive window. Any mix of dragged folders and files is supported.", 0, 46, 18, 316, 29, SS_LEFT, WS_EX_LEFT
-    GROUPBOX        "Unpacking files", IDC_STATIC, 4, 50, 366, 46, 0, WS_EX_LEFT
-    ICON            Drag_Unpack_Icon, IDC_STATIC, 10, 64, 21, 20, SS_ICON, WS_EX_LEFT
-    LTEXT           "You can extract selected files, the selected folder, or the entire archive via the Extract command (Ctrl+E) or a button. BUT: you can also extract files via Drag && Drop to a Windows Explorer window or to the Desktop.", 0, 48, 65, 316, 28, SS_LEFT, WS_EX_LEFT
-    GROUPBOX        "Using AZip as a portable software", IDC_STATIC, 4, 106, 366, 66, 0, WS_EX_LEFT
-    LTEXT           "AZip doesn't require any installation. It can even run from a USB stick for instance. For convenience, by default, it writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", 0, 27, 121, 337, 43, SS_LEFT, WS_EX_LEFT
-}
-
-
-
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 About_box DIALOG 0, 0, 289, 238
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "About AZip"
@@ -387,6 +370,33 @@ CAPTION "AZip Quick Help - a couple of tips and hints..."
 FONT 8, "Ms Shell Dlg"
 {
     DEFPUSHBUTTON   "OK", IDOK, 137, 177, 107, 19, 0, WS_EX_LEFT
+}
+
+
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Quick_help_tab_gui DIALOG 0, 0, 375, 202
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+FONT 8, "Ms Shell Dlg"
+{
+    GROUPBOX        "Adding files and folders", IDC_STATIC, 4, 3, 366, 46, 0, WS_EX_LEFT
+    ICON            Plus_icon, IDC_STATIC, 10, 17, 21, 20, SS_ICON, WS_EX_LEFT
+    LTEXT           "You can add files, or individual folders through menu commands (+) or buttons. BUT: you can also do it easily via Drag && Drop, from a Windows Explorer window or the Desktop, onto an AZip archive window. Any mix of dragged folders and files is supported.", 0, 46, 18, 316, 29, SS_LEFT, WS_EX_LEFT
+    GROUPBOX        "Unpacking files", IDC_STATIC, 4, 50, 366, 46, 0, WS_EX_LEFT
+    ICON            Drag_Unpack_Icon, IDC_STATIC, 10, 64, 21, 20, SS_ICON, WS_EX_LEFT
+    LTEXT           "You can extract selected files, the selected folder, or the entire archive via the Extract command (Ctrl+E) or a button. BUT: you can also extract files via Drag && Drop to a Windows Explorer window or to the Desktop.", 0, 48, 65, 316, 28, SS_LEFT, WS_EX_LEFT
+}
+
+
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Quick_help_tab_install DIALOG 0, 0, 375, 202
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+FONT 8, "Ms Shell Dlg"
+{
+    LTEXT           "AZip doesn't require any installation. It can even run from a USB stick for instance.", 0, 4, 3, 366, 9, SS_LEFT, WS_EX_LEFT
+    GROUPBOX        "Using AZip as a portable software - stealth mode", IDC_STATIC, 4, 23, 366, 66, 0, WS_EX_LEFT
+    LTEXT           "For convenience, by default, AZip writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", 0, 27, 38, 330, 33, SS_LEFT, WS_EX_LEFT
 }
 
 

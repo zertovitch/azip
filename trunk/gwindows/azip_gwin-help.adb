@@ -12,9 +12,10 @@ package body AZip_GWin.Help is
 
    procedure Quick_Help_Dialog (Parent : in out GWindows.Base.Base_Window_Type'Class)
    is
-      box         : Quick_help_box_Type;
-      tab_control : Tab_Window_Control_Type;
-      Window_1    : aliased Quick_help_tab_gui_Type;
+      box             : Quick_help_box_Type;
+      tab_control     : Tab_Window_Control_Type;
+      help_on_gui     : aliased Quick_help_tab_gui_Type;
+      help_on_install : aliased Quick_help_tab_install_Type;
 
       --  procedure Do_Click (Window : in out Base_Window_Type'Class)
       --  is
@@ -38,13 +39,18 @@ package body AZip_GWin.Help is
       --  06.01.2007
 
       Insert_Tab (tab_control, 0, "User Interface");
+      Insert_Tab (tab_control, 1, "Installation");
 
-      Create_As_Control (Window_1, tab_control, "", 0, 0, 10, 10,
+      Create_As_Control (help_on_gui,     tab_control, "", 0, 0, 10, 10,
+         Show => False);
+      Create_As_Control (help_on_install, tab_control, "", 0, 0, 10, 10,
          Show => False);
 
-      Create_Contents (Window_1, True);
+      help_on_gui.Create_Contents (True);
+      help_on_install.Create_Contents (True);
 
-      Tab_Window (tab_control, 0, Window_1'Unchecked_Access);
+      Tab_Window (tab_control, 0, help_on_gui'Unchecked_Access);
+      Tab_Window (tab_control, 1, help_on_install'Unchecked_Access);
 
       --  declare
       --     Button_1 : Button_Access;
@@ -62,7 +68,7 @@ package body AZip_GWin.Help is
       --  end;
       --
       tab_control.Dock (Fill);
-      Window_1.Dock (Fill);
+      help_on_gui.Dock (Fill);
       --  Create (Okay, box, "O&k", 20,
       --     Client_Area_Height (box) - 40, 60, 25, ID => IDOK);
       box.Dock_Children;

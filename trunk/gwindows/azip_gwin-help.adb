@@ -16,6 +16,7 @@ package body AZip_GWin.Help is
       tab_control     : Tab_Window_Control_Type;
       help_on_gui     : aliased Quick_help_tab_gui_Type;
       help_on_install : aliased Quick_help_tab_install_Type;
+      help_on_command : aliased Quick_help_tab_command_Type;
 
       --  procedure Do_Click (Window : in out Base_Window_Type'Class)
       --  is
@@ -40,17 +41,22 @@ package body AZip_GWin.Help is
 
       Insert_Tab (tab_control, 0, "User Interface");
       Insert_Tab (tab_control, 1, "Installation");
+      Insert_Tab (tab_control, 2, "Command-line");
 
       Create_As_Control (help_on_gui,     tab_control, "", 0, 0, 10, 10,
          Show => False);
       Create_As_Control (help_on_install, tab_control, "", 0, 0, 10, 10,
          Show => False);
+      Create_As_Control (help_on_command, tab_control, "", 0, 0, 10, 10,
+         Show => False);
 
       help_on_gui.Create_Contents (True);
       help_on_install.Create_Contents (True);
+      help_on_command.Create_Contents (True);
 
       Tab_Window (tab_control, 0, help_on_gui'Unchecked_Access);
       Tab_Window (tab_control, 1, help_on_install'Unchecked_Access);
+      Tab_Window (tab_control, 2, help_on_command'Unchecked_Access);
 
       --  declare
       --     Button_1 : Button_Access;

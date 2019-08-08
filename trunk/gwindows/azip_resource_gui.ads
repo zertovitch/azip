@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/08/08  20:52:29
+-- Transcription time: 2019/08/08  22:08:50
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -556,6 +556,46 @@ package AZip_Resource_GUI is
        resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
+  type Quick_help_tab_command_Type is new Window_Type with record
+
+    RC_item_0: Group_Box_Type;
+    -- Label: 0
+    Static_0001: Group_Box_Type;
+    Static_0002: Icon_Type;
+    -- Label: 0
+  end record; -- Quick_help_tab_command_Type
+
+  --  Dialog at resource line 386
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out Quick_help_tab_command_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Quick_help_tab_command_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Quick_help_tab_command_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     );
+
   type Quick_help_tab_gui_Type is new Window_Type with record
 
     Static_0001: Group_Box_Type;
@@ -566,7 +606,7 @@ package AZip_Resource_GUI is
     -- Label: 0
   end record; -- Quick_help_tab_gui_Type
 
-  --  Dialog at resource line 387
+  --  Dialog at resource line 401
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -601,10 +641,11 @@ package AZip_Resource_GUI is
 
     -- Label: 0
     Static_0001: Group_Box_Type;
+    Static_0002: Icon_Type;
     -- Label: 0
   end record; -- Quick_help_tab_install_Type
 
-  --  Dialog at resource line 399
+  --  Dialog at resource line 414
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -643,7 +684,7 @@ package AZip_Resource_GUI is
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
   end record; -- Select_column_box_Type
 
-  --  Dialog at resource line 412
+  --  Dialog at resource line 427
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -681,7 +722,7 @@ package AZip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  --  Dialog at resource line 424
+  --  Dialog at resource line 439
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -841,6 +882,9 @@ package AZip_Resource_GUI is
   Choose_extract_directory_button       : constant:=  40116;
   Quick_help_tab_gui                    : constant:=  40117;
   Quick_help_tab_install                : constant:=  40118;
+  Quick_help_tab_command                : constant:=  40119;
+  ZA_console_icon                       : constant:=  40120;
+  No_regedit_icon                       : constant:=  40121;
 
   -- ** Some helper utilities (spec).
 
@@ -852,6 +896,6 @@ package AZip_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 539
+  -- Last line of resource script file: 562
 
 end AZip_Resource_GUI;

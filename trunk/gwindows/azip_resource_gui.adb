@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/08/08  20:52:29
+-- Transcription time: 2019/08/08  22:08:50
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -1332,6 +1332,88 @@ package body AZip_Resource_GUI is
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
   --
+  procedure On_Pre_Create (Window    : in out Quick_help_tab_command_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Quick_help_tab_command_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 375, 202, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- Quick_help_tab_command_Type
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Quick_help_tab_command_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 375, 202, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  4, 3, 362, 65, x,y,w,h);
+    Create( Window.RC_item_0, Window, "Command-line parameters", x,y,w,h);
+    Dlg_to_Scn(  17, 18, 342, 29, x,y,w,h);
+    Create_Label( Window, "The activation of AZip with command-line parameters for specific operations is under construction", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  4, 72, 366, 66, x,y,w,h);
+    Create( Window.Static_0001, Window, "Command-line tools with console output", x,y,w,h);
+    Dlg_to_Scn(  10, 88, 50, 50, x,y,w,h);
+    Create( Window.Static_0002, Window, Num_resource(ZA_console_icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  63, 87, 294, 33, x,y,w,h);
+    Create_Label( Window, "Pure command-line tools corresponding to AZip are located in the Zip-Ada project (zipada, unzipada, rezip, find_zip, comp_zip). Follow hyperlink in the About box for download.", x,y,w,h, GWindows.Static_Controls.Left, None);
+  end Create_Contents;  --  Quick_help_tab_command_Type
+
+  --  Dialog at resource line 394
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
   procedure On_Pre_Create (Window    : in out Quick_help_tab_gui_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
                            dwExStyle : in out Interfaces.C.unsigned)
@@ -1411,7 +1493,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "You can extract selected files, the selected folder, or the entire archive via the Extract command (Ctrl+E) or a button. BUT: you can also extract files via Drag && Drop to a Windows Explorer window or to the Desktop.", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_gui_Type
 
-  --  Dialog at resource line 395
+  --  Dialog at resource line 409
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1485,11 +1567,13 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "AZip doesn't require any installation. It can even run from a USB stick for instance.", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  4, 23, 366, 66, x,y,w,h);
     Create( Window.Static_0001, Window, "Using AZip as a portable software - stealth mode", x,y,w,h);
-    Dlg_to_Scn(  27, 38, 330, 33, x,y,w,h);
+    Dlg_to_Scn(  10, 39, 50, 50, x,y,w,h);
+    Create( Window.Static_0002, Window, Num_resource(No_regedit_icon), x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  69, 38, 288, 40, x,y,w,h);
     Create_Label( Window, "For convenience, by default, AZip writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_install_Type
 
-  --  Dialog at resource line 408
+  --  Dialog at resource line 423
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1576,7 +1660,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Select_column_box_Type
 
-  --  Dialog at resource line 421
+  --  Dialog at resource line 436
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1748,6 +1832,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 539
+  -- Last line of resource script file: 562
 
 end AZip_Resource_GUI;

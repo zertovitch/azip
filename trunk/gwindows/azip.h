@@ -122,5 +122,5 @@
 #define Quick_help_tab_gui                      40117
 #define Quick_help_tab_install                  40118
 #define Quick_help_tab_command                  40119
-#define ZA_console_icon                         40120
-#define No_regedit_icon                         40121
+#define ZA_console_BMP                          40122
+#define No_regedit_BMP                          40123

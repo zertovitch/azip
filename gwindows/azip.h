@@ -119,3 +119,4 @@
 #define IDM_Up_one_level                        40114
 #define IDM_Context_menu_key                    40115
 #define Choose_extract_directory_button         40116
+#define Quick_help_tab_gui                      40117

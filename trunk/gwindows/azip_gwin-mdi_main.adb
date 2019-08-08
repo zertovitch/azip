@@ -1,5 +1,6 @@
 with AZip_Common;                       use AZip_Common;
 with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
+with AZip_GWin.Help;                    use AZip_GWin.Help;
 with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
 with AZip_GWin.Options;                 use AZip_GWin.Options;
 with AZip_GWin.Persistence;
@@ -493,16 +494,6 @@ package body AZip_GWin.MDI_Main is
                                       My_Close_Win'Unrestricted_Access);
   end My_MDI_Close_All;
 
-  procedure On_Quick_Help(Window : in out MDI_Main_Type) is
-    box: Quick_help_box_Type;
-  begin
-    box.Create_Full_Dialog(Window);
-    box.Center;
-    if Show_Dialog (box, Window) = IDOK then
-      null;
-    end if;
-  end On_Quick_Help;
-
   azip_web_page      : constant String := "http://azip.sf.net/";
   azip_news_web_page : constant String := "http://sourceforge.net/p/azip/news/";
 
@@ -566,7 +557,7 @@ package body AZip_GWin.MDI_Main is
       when IDM_OPEN_ARCHIVE =>
         On_File_Open (Window);
       when IDM_Quick_Help =>
-        On_Quick_Help (Window);
+        Quick_Help_Dialog (Window);
       when IDM_ABOUT =>
         On_About (Window);
       when IDM_Web =>

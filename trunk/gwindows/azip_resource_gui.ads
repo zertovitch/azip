@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/08/18  08:47:56
+-- Transcription time: 2019/08/22  10:07:31
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -58,9 +58,9 @@ package AZip_Resource_GUI is
     Main: Menu_Type; -- Root of the whole menu tree
     Popup_0001: Menu_Type;  -- level 1; title: "&File"
     Popup_0002: Menu_Type;  -- level 2; title: "&Recent"
-    Popup_0003: Menu_Type;  -- level 1; title: "&Window"
-    Popup_0004: Menu_Type;  -- level 1; title: "&Help"
-    Popup_0005: Menu_Type;  -- level 1; title: "&Options"
+    Popup_0003: Menu_Type;  -- level 1; title: "&Options"
+    Popup_0004: Menu_Type;  -- level 1; title: "&Window"
+    Popup_0005: Menu_Type;  -- level 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
   --  Menu at line 173
@@ -898,6 +898,6 @@ package AZip_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 564
+  -- Last line of resource script file: 565
 
 end AZip_Resource_GUI;

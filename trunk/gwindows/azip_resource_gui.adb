@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/08/18  08:47:56
+-- Transcription time: 2019/08/22  10:07:31
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -107,7 +107,7 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0007, "&Close All", IDM_WINDOW_CLOSE_ALL);
     Menu.Popup_0008:= Create_Popup;
     Append_Menu(Menu.Main, "&Help", Menu.Popup_0008);
-    Append_Item(Menu.Popup_0008, "&Quick help", IDM_Quick_Help);
+    Append_Item(Menu.Popup_0008, "&Quick help" & To_GString_From_String((1=>ASCII.HT)) & "F1", IDM_Quick_Help);
     Append_Item(Menu.Popup_0008, "AZip &Web page (contact, support)", IDM_Web);
     Append_Item(Menu.Popup_0008, "AZip &news", IDM_AZip_Web_news);
     Append_Separator(Menu.Popup_0008);
@@ -139,21 +139,21 @@ package body AZip_Resource_GUI is
     Append_Separator(Menu.Popup_0001);
     Append_Item(Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
     Menu.Popup_0003:= Create_Popup;
-    Append_Menu(Menu.Main, "&Window", Menu.Popup_0003);
-    Append_Item(Menu.Popup_0003, "&Cascade", IDM_WINDOW_CASCADE);
-    Append_Item(Menu.Popup_0003, "Tile &Horizontal", IDM_WINDOW_TILE_HORIZONTAL);
-    Append_Item(Menu.Popup_0003, "Tile &Vertical", IDM_WINDOW_TILE_VERTICAL);
-    Append_Item(Menu.Popup_0003, "&Close All", IDM_WINDOW_CLOSE_ALL);
+    Append_Menu(Menu.Main, "&Options", Menu.Popup_0003);
+    Append_Item(Menu.Popup_0003, "&General options", IDM_General_options);
     Menu.Popup_0004:= Create_Popup;
-    Append_Menu(Menu.Main, "&Help", Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&Quick help", IDM_Quick_Help);
-    Append_Item(Menu.Popup_0004, "AZip &Web page (contact, support)", IDM_Web);
-    Append_Item(Menu.Popup_0004, "AZip &news", IDM_AZip_Web_news);
-    Append_Separator(Menu.Popup_0004);
-    Append_Item(Menu.Popup_0004, "&About AZip", IDM_ABOUT);
+    Append_Menu(Menu.Main, "&Window", Menu.Popup_0004);
+    Append_Item(Menu.Popup_0004, "&Cascade", IDM_WINDOW_CASCADE);
+    Append_Item(Menu.Popup_0004, "Tile &Horizontal", IDM_WINDOW_TILE_HORIZONTAL);
+    Append_Item(Menu.Popup_0004, "Tile &Vertical", IDM_WINDOW_TILE_VERTICAL);
+    Append_Item(Menu.Popup_0004, "&Close All", IDM_WINDOW_CLOSE_ALL);
     Menu.Popup_0005:= Create_Popup;
-    Append_Menu(Menu.Main, "&Options", Menu.Popup_0005);
-    Append_Item(Menu.Popup_0005, "&General options", IDM_General_options);
+    Append_Menu(Menu.Main, "&Help", Menu.Popup_0005);
+    Append_Item(Menu.Popup_0005, "&Quick help" & To_GString_From_String((1=>ASCII.HT)) & "F1", IDM_Quick_Help);
+    Append_Item(Menu.Popup_0005, "AZip &Web page (contact, support)", IDM_Web);
+    Append_Item(Menu.Popup_0005, "AZip &news", IDM_AZip_Web_news);
+    Append_Separator(Menu.Popup_0005);
+    Append_Item(Menu.Popup_0005, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
   --  Dialog at resource line 185
@@ -1836,6 +1836,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 564
+  -- Last line of resource script file: 565
 
 end AZip_Resource_GUI;

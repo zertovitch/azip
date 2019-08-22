@@ -119,7 +119,7 @@ Menu_MDI_Child MENU
     }
     POPUP "&Help"
     {
-        MENUITEM "&Quick help", IDM_Quick_Help
+        MENUITEM "&Quick help\tF1", IDM_Quick_Help
         MENUITEM "AZip &Web page (contact, support)", IDM_Web
         MENUITEM "AZip &news", IDM_AZip_Web_news
         MENUITEM SEPARATOR
@@ -152,6 +152,10 @@ Menu_MDI_Main MENU
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tAlt+F4", IDM__QUIT
     }
+    POPUP "&Options"
+    {
+        MENUITEM "&General options", IDM_General_options
+    }
     POPUP "&Window"
     {
         MENUITEM "&Cascade", IDM_WINDOW_CASCADE
@@ -161,15 +165,11 @@ Menu_MDI_Main MENU
     }
     POPUP "&Help"
     {
-        MENUITEM "&Quick help", IDM_Quick_Help
+        MENUITEM "&Quick help\tF1", IDM_Quick_Help
         MENUITEM "AZip &Web page (contact, support)", IDM_Web
         MENUITEM "AZip &news", IDM_AZip_Web_news
         MENUITEM SEPARATOR
         MENUITEM "&About AZip", IDM__ABOUT
-    }
-    POPUP "&Options"
-    {
-        MENUITEM "&General options", IDM_General_options
     }
 }
 
@@ -476,6 +476,7 @@ Main_Menu ACCELERATORS
     "D",            IDM_Properties, VIRTKEY, CONTROL
     VK_UP,         IDM_Up_one_level, VIRTKEY, ALT
     VK_APPS,       IDM_Context_menu_key, VIRTKEY
+    VK_F1,         IDM_Quick_Help, VIRTKEY
 }
 
 

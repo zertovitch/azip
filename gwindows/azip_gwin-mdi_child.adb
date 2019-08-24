@@ -128,10 +128,16 @@ package body AZip_GWin.MDI_Child is
     State (Window.context_menu_file,   Command, IDM_Delete_selected, boolean_to_state (is_any_to_delete));
     State (Window.context_menu_folder, Command, IDM_Delete_selected, boolean_to_state (is_any_to_delete));
     --
-    bar.Enabled(IDM_FIND_IN_ARCHIVE, not_empty_archive);
-    bar.Enabled(IDM_TEST_ARCHIVE, not_empty_archive);
-    bar.Enabled(IDM_UPDATE_ARCHIVE, not_empty_archive);
+    bar.Enabled(IDM_FIND_IN_ARCHIVE,    not_empty_archive);
+    bar.Enabled(IDM_TEST_ARCHIVE,       not_empty_archive);
+    bar.Enabled(IDM_UPDATE_ARCHIVE,     not_empty_archive);
     bar.Enabled(IDM_RECOMPRESS_ARCHIVE, not_empty_archive);
+    --
+    State (Window.Menu.Main, Command, IDM_FIND_IN_ARCHIVE,    boolean_to_state (not_empty_archive));
+    State (Window.Menu.Main, Command, IDM_TEST_ARCHIVE,       boolean_to_state (not_empty_archive));
+    State (Window.Menu.Main, Command, IDM_UPDATE_ARCHIVE,     boolean_to_state (not_empty_archive));
+    State (Window.Menu.Main, Command, IDM_RECOMPRESS_ARCHIVE, boolean_to_state (not_empty_archive));
+    --
     if not Window.is_closing then
       --  Reactivate buttons that might have been disabled upon
       --  closing of another window. These buttons are valid even

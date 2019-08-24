@@ -1,7 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/08/22  10:07:31
--- GWenerator project file: azip.gwen
+-- Transcription time: 2019/08/24  21:02:34
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -209,6 +208,10 @@ package AZip_Resource_GUI is
 
   type File_exists_box_Type is new Window_Type with record
 
+    Conflict_simple_name: Label_Type;
+    Conflict_location: Label_Type;
+    Static_0001: Group_Box_Type;
+    -- Label: IDC_STATIC
     Overwrite_Yes: Dialog_Button_Type;    -- closes parent window after click
     Overwrite_Yes_permanent: Button_Type; -- doesn't close parent window after click
     Overwrite_No: Default_Dialog_Button_Type;    -- closes parent window after click
@@ -221,10 +224,6 @@ package AZip_Resource_GUI is
     Overwrite_Rename_permanent: Button_Type; -- doesn't close parent window after click
     IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
-    Conflict_simple_name: Label_Type;
-    Conflict_location: Label_Type;
-    Static_0001: Group_Box_Type;
-    -- Label: IDC_STATIC
   end record; -- File_exists_box_Type
 
   --  Dialog at resource line 263
@@ -751,7 +750,7 @@ package AZip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion: constant String:= "2.35";
+    FileVersion: constant String:= "2.36";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2019";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;

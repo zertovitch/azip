@@ -1,15 +1,23 @@
+@echo off
+
+if (%1)==(-gen) echo Option -gen
+if (%1)==(-gen) echo Generate Ada code from resource script (dialogs, menus, ...).
+if (%1)==(-gen) call rc2gw AZip.rc
+if (%1)==(-gen) shift
+
 rem Use another compiler.
 rem was for "-march=i686" for MinGW 4.7.2
-echo Option "%1"
 
 REM ADA_INCLUDE_PATH=
 REM C:\Ada\zip-ada\zip_lib;C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework
+
 
 set builder=gprbuild
 set builder=gnatmake
 set target=_MinGW
 if (%1)==() set builder=gprbuild
 if (%1)==() set target=_GPL
+if (%1)==() echo Option for alternative compiler "%1"
 
 del azip.exe
 %builder% -P azip_gwindows -XBuild_Mode=Debug%target%

@@ -239,8 +239,8 @@ FONT 8, "Ms Shell Dlg"
     ICON            Key_Icon, IDC_STATIC, 178, 98, 21, 20, SS_ICON, WS_EX_LEFT
     LTEXT           "(Archive name here)", Drop_archive_name, 39, 26, 285, 32, SS_LEFT, WS_EX_LEFT
     LTEXT           "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", New_archive_msg, 45, 65, 272, 21, NOT WS_VISIBLE | SS_LEFT, WS_EX_STATICEDGE
-    PUSHBUTTON      "No", IDCANCEL, 87, 95, 63, 18, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Yes", IDOK, 10, 95, 63, 18, 0, WS_EX_LEFT
+    PUSHBUTTON      "No", IDCANCEL, 87, 95, 63, 19, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Yes", IDOK, 10, 95, 63, 19, 0, WS_EX_LEFT
 }
 
 
@@ -251,16 +251,16 @@ STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VIS
 CAPTION "File already exists"
 FONT 8, "Ms Shell Dlg"
 {
-    PUSHBUTTON      "Yes", Overwrite_Yes, 4, 74, 50, 14, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "No", Overwrite_No, 64, 74, 50, 14, 0, WS_EX_LEFT
-    PUSHBUTTON      "All", Overwrite_All, 124, 74, 50, 14, 0, WS_EX_LEFT
-    PUSHBUTTON      "None", Overwrite_None, 184, 74, 50, 14, 0, WS_EX_LEFT
-    PUSHBUTTON      "Rename", Overwrite_Rename, 244, 74, 50, 14, 0, WS_EX_LEFT
-    PUSHBUTTON      "Cancel", IDCANCEL, 304, 74, 50, 14, 0, WS_EX_LEFT
     LTEXT           "(name)", Conflict_simple_name, 18, 26, 327, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "(location)", Conflict_location, 18, 41, 319, 8, SS_LEFT, WS_EX_LEFT
     GROUPBOX        "A file with the same name exists on the target location.", IDC_STATIC, 4, 7, 349, 63, 0, WS_EX_LEFT
     LTEXT           "Do you want to replace this file ?", IDC_STATIC, 12, 58, 156, 8, SS_LEFT, WS_EX_LEFT
+    PUSHBUTTON      "Yes", Overwrite_Yes,         4, 72, 50, 19, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "No", Overwrite_No,          64, 72, 50, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "All", Overwrite_All,       124, 72, 50, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "None", Overwrite_None,     184, 72, 50, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "Rename", Overwrite_Rename, 244, 72, 50, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", IDCANCEL,         304, 72, 50, 19, 0, WS_EX_LEFT
 }
 
 
@@ -277,8 +277,8 @@ FONT 8, "Ms Shell Dlg"
     ICON            Binoculars_Icon, IDC_STATIC, 9, 46, 21, 20, SS_ICON, WS_EX_LEFT
     LTEXT           "&Content ( if empty: any content )", IDC_STATIC, 44, 41, 172, 8, SS_LEFT, WS_EX_LEFT
     EDITTEXT        Content_to_be_searched, 44, 54, 172, 12, ES_AUTOHSCROLL, WS_EX_LEFT
-    DEFPUSHBUTTON   "OK", IDOK, 111, 76, 50, 14, 0, WS_EX_LEFT
-    PUSHBUTTON      "Cancel", IDCANCEL, 164, 76, 50, 14, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK,         111, 72, 50, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", IDCANCEL, 164, 72, 50, 19, 0, WS_EX_LEFT
 }
 
 
@@ -346,7 +346,7 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "Some file", Entry_name, 7, 19, 228, 10, SS_LEFT, WS_EX_LEFT
     CONTROL         "", File_Progress, PROGRESS_CLASS, 0, 7, 57, 227, 9, WS_EX_LEFT
     CONTROL         "", Archive_Progress, PROGRESS_CLASS, 0, 7, 74, 227, 17, WS_EX_LEFT
-    PUSHBUTTON      "Cancel", Cancel_button, 96, 96, 50, 14, 0, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", Cancel_button, 96, 94, 50, 19, 0, WS_EX_LEFT
     LTEXT           "Comment 1", Comment_1, 7, 32, 228, 10, SS_LEFT, WS_EX_LEFT
     LTEXT           "Comment 2", Comment_2, 7, 45, 228, 10, SS_LEFT, WS_EX_LEFT
 }
@@ -538,8 +538,8 @@ Plus_icon          ICON           "ico_bmp/plus.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     2,3,5,0
-    PRODUCTVERSION  2,3,5,0
+    FILEVERSION     2,3,6,0
+    PRODUCTVERSION  2,3,6,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -552,7 +552,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
-            VALUE "FileVersion", "2.35"
+            VALUE "FileVersion", "2.36"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2019"
             VALUE "ProductName", "AZip"
         }

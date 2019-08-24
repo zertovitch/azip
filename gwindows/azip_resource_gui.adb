@@ -1,7 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/08/22  10:07:31
--- GWenerator project file: azip.gwen
+-- Transcription time: 2019/08/24  21:02:34
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -454,7 +453,7 @@ package body AZip_Resource_GUI is
     Dlg_to_Scn(  45, 65, 272, 21, x,y,w,h);
     Create( Window.New_archive_msg, Window, "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", x,y,w,h, GWindows.Static_Controls.Left, Half_Sunken, ID => New_archive_msg);
     Hide (Window.New_archive_msg);
-    Dlg_to_Scn(  87, 95, 63, 18, x,y,w,h);
+    Dlg_to_Scn(  87, 95, 63, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -465,7 +464,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  10, 95, 63, 18, x,y,w,h);
+    Dlg_to_Scn(  10, 95, 63, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -548,7 +547,15 @@ package body AZip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  4, 74, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  18, 26, 327, 8, x,y,w,h);
+    Create( Window.Conflict_simple_name, Window, "(name)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Conflict_simple_name);
+    Dlg_to_Scn(  18, 41, 319, 8, x,y,w,h);
+    Create( Window.Conflict_location, Window, "(location)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Conflict_location);
+    Dlg_to_Scn(  4, 7, 349, 63, x,y,w,h);
+    Create( Window.Static_0001, Window, "A file with the same name exists on the target location.", x,y,w,h);
+    Dlg_to_Scn(  12, 58, 156, 8, x,y,w,h);
+    Create_Label( Window, "Do you want to replace this file ?", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  4, 72, 50, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -559,7 +566,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Overwrite_Yes);
     end if;
-    Dlg_to_Scn(  64, 74, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  64, 72, 50, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -570,7 +577,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Overwrite_No);
     end if;
-    Dlg_to_Scn(  124, 74, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  124, 72, 50, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -581,7 +588,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Overwrite_All);
     end if;
-    Dlg_to_Scn(  184, 74, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  184, 72, 50, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -592,7 +599,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Overwrite_None);
     end if;
-    Dlg_to_Scn(  244, 74, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  244, 72, 50, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -603,7 +610,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Overwrite_Rename);
     end if;
-    Dlg_to_Scn(  304, 74, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  304, 72, 50, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -614,14 +621,6 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  18, 26, 327, 8, x,y,w,h);
-    Create( Window.Conflict_simple_name, Window, "(name)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Conflict_simple_name);
-    Dlg_to_Scn(  18, 41, 319, 8, x,y,w,h);
-    Create( Window.Conflict_location, Window, "(location)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Conflict_location);
-    Dlg_to_Scn(  4, 7, 349, 63, x,y,w,h);
-    Create( Window.Static_0001, Window, "A file with the same name exists on the target location.", x,y,w,h);
-    Dlg_to_Scn(  12, 58, 156, 8, x,y,w,h);
-    Create_Label( Window, "Do you want to replace this file ?", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  File_exists_box_Type
 
   --  Dialog at resource line 272
@@ -706,7 +705,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "&Content ( if empty: any content )", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  44, 54, 172, 12, x,y,w,h);
     Create( Window.Content_to_be_searched, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Content_to_be_searched);
-    Dlg_to_Scn(  111, 76, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  111, 72, 50, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -717,7 +716,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  164, 76, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  164, 72, 50, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -1119,7 +1118,7 @@ package body AZip_Resource_GUI is
     Create( Window.File_Progress, Window, x,y,w,h, Horizontal, False);
     Dlg_to_Scn(  7, 74, 227, 17, x,y,w,h);
     Create( Window.Archive_Progress, Window, x,y,w,h, Horizontal, False);
-    Dlg_to_Scn(  96, 96, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  96, 94, 50, 19, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.

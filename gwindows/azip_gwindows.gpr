@@ -21,7 +21,7 @@
 --  *       [zip-ada]\zip_lib
 --  *       Project URL: http://unzip-ada.sf.net
 --  * 
---  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;C:\Ada\zip-ada\zip_lib
+--  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;C:\Ada\za\zip_lib;C:\Ada\ini
 
 project AZip_GWindows is
 

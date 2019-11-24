@@ -1054,7 +1054,6 @@ package body AZip_GWin.MDI_Child is
         Set_user_codes(new_zif, appended);
         Copy_user_codes(Window.zif, new_zif);
       end if;
-      Zip.Delete(Window.zif);
     end if;
     Window.zif:= new_zif;
     Change_View(Window, Window.opt.view_mode, force => True);
@@ -1728,9 +1727,6 @@ package body AZip_GWin.MDI_Child is
       end loop;
     end if;
     if Can_Close then
-      if Is_loaded(Window.zif) then
-        Zip.Delete(Window.zif);
-      end if;
       --  Memorize column widths
       Set_all_column_widths_to_options (Window);
       --

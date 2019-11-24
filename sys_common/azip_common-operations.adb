@@ -241,7 +241,7 @@ package body AZip_Common.Operations is
     begin
       Zip.Set_user_code(to, name, user_code);
     exception
-      when File_name_not_found =>
+      when Entry_name_not_found =>
         null;  --  Nothing bad: 'name' is a directory name that was skipped on recompression.
     end Copy_user_code;
     --
@@ -294,7 +294,7 @@ package body AZip_Common.Operations is
     return_code     :    out Operation_return_code
   )
   is
-    new_zip: Zip.Create.Zip_Create_info;
+    new_zip: Zip.Create.Zip_Create_Info;
     new_fzs: aliased Zip_Streams.File_Zipstream;
     old_fzs: aliased Zip_Streams.File_Zipstream;
     file_percents_done    : Natural := 0;
@@ -420,7 +420,7 @@ package body AZip_Common.Operations is
           Extract(
             Destination      => sst,
             Archive_Info     => zif,
-            Name             => name,
+            Entry_Name       => name,
             Ignore_Directory => False,
             Password         => To_String(To_Wide_String(password))
           );
@@ -536,10 +536,10 @@ package body AZip_Common.Operations is
         external_file_name : String
       )
       is
-        temp_single_entry_zip_zci: Zip.Create.Zip_Create_info;
+        temp_single_entry_zip_zci: Zip.Create.Zip_Create_Info;
         temp_single_entry_zip_fzs: aliased Zip_Streams.File_Zipstream;
       begin
-        Zip.Create.Create(
+        Zip.Create.Create_Archive (
           temp_single_entry_zip_zci,
           temp_single_entry_zip_fzs'Unchecked_Access,
           temp_single_entry_zip_name,
@@ -547,7 +547,7 @@ package body AZip_Common.Operations is
         );
         Add_File(
           Info               => temp_single_entry_zip_zci,
-          Name               => external_file_name,
+          File_Name          => external_file_name,
           Name_in_archive    => name_utf_8_as_in_archive,
           Delete_file_after  => False,
           Name_encoding      => UTF_8,
@@ -753,7 +753,7 @@ package body AZip_Common.Operations is
             begin
               Add_File (
                 Info               => new_zip,
-                Name               => external_file_name,
+                File_Name          => external_file_name,
                 Name_in_archive    => name,
                 Delete_file_after  => False,
                 Name_encoding      => name_encoding,
@@ -943,7 +943,7 @@ package body AZip_Common.Operations is
       when Modifying_Operation =>
         Zip_Streams.Set_Name(old_fzs, Zip.Zip_name(zif));
         Zip_Streams.Open(old_fzs, Zip_Streams.In_File);
-        Zip.Create.Create(
+        Zip.Create.Create_Archive (
           new_zip,
           new_fzs'Unchecked_Access,
           new_temp_name,
@@ -990,7 +990,7 @@ package body AZip_Common.Operations is
                 -- "old DOS" encoding, for compatibility, e.g. with WinZip 10.0 (2005 !)
                 Add_File(
                   Info               => new_zip,
-                  Name               => To_UTF_8(name), -- external file -> UTF-8
+                  File_Name          => To_UTF_8(name), -- external file -> UTF-8
                   Name_in_archive    => To_IBM_437(short_name),
                   Delete_file_after  => False,
                   Name_encoding      => IBM_437,
@@ -1003,7 +1003,7 @@ package body AZip_Common.Operations is
                 when Cannot_encode_to_IBM_437 =>
                   Add_File(
                     Info               => new_zip,
-                    Name               => To_UTF_8(name), -- external file -> UTF-8
+                    File_Name          => To_UTF_8(name), -- external file -> UTF-8
                     Name_in_archive    => To_UTF_8(short_name),
                     Delete_file_after  => False,
                     Name_encoding      => UTF_8,

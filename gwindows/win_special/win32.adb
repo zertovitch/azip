@@ -193,5 +193,3 @@ end Win32;
 --  Log
 --  05/04/1998 - remove Pragma Linker_Options ("-lwin32ada") - this option
 --  is already set in the spec.
-
-

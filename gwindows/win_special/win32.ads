@@ -254,7 +254,6 @@ package Win32 is
      Win32.PSTR;
    type String_Vector_Access is access all String_Vector;
 
-
    --  *******************************************
    --  Bit fields inside C structs and Ada records
    --  *******************************************

@@ -61,5 +61,3 @@ private
    pragma Import (C, stat, "_stat");                        --  stat.h:94
 
 end Win32.crt.Stat;
-
-

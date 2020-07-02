@@ -562,7 +562,7 @@ package body AZip_GWin.MDI_Child is
     Window.Splitter.Create(Window.Bar_and_List, At_Left);
     --  The list:
     Window.Directory_List.Create(Window.Bar_and_List, 50,1,20,20, Multiple, Report_View, Sort_Custom);
-    Window.Directory_List.Set_Extended_Style(AZip_LV_Ex.Full_Row_Select);
+    Window.Directory_List.Set_Extended_Style (Full_Row_Select);
     Window.Directory_List.Color_Mode(AZip_LV_Ex.Subitem);
     Window.Directory_List.Dock(Fill);
 

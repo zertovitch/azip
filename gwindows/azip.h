@@ -124,3 +124,9 @@
 #define Quick_help_tab_command                  40119
 #define ZA_console_BMP                          40122
 #define No_regedit_BMP                          40123
+#define Donate_BMP                              40124
+#define Sponsoring_box                          40125
+#define Label_Paypal                            40126
+#define IDM_Sponsoring                          40127
+#define Sponsoring_button                       40128
+#define Sponsoring_label                        40129

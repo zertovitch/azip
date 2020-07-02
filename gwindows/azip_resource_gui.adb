@@ -1,6 +1,7 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2019/08/24  21:02:34
+-- Transcription time: 2020/07/02  11:25:35
+-- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -20,7 +21,7 @@ package body AZip_Resource_GUI is
 
   -- ** Generated code begins here \/ \/ \/.
 
-  --  Menu at line 37
+  --  Menu at line 41
   procedure Create_Full_Menu
      (Menu        : in out Fake_menu_for_commands_in_no_real_menu_Type)
   is
@@ -33,7 +34,7 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0001, "Activate context menu (by key)", IDM_Context_menu_key);
   end Create_Full_Menu;  --  Fake_menu_for_commands_in_no_real_menu_Type
 
-  --  Menu at line 50
+  --  Menu at line 54
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Child_Type)
   is
@@ -109,11 +110,12 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0008, "&Quick help" & To_GString_From_String((1=>ASCII.HT)) & "F1", IDM_Quick_Help);
     Append_Item(Menu.Popup_0008, "AZip &Web page (contact, support)", IDM_Web);
     Append_Item(Menu.Popup_0008, "AZip &news", IDM_AZip_Web_news);
+    Append_Item(Menu.Popup_0008, "&Sponsoring AZip", IDM_Sponsoring);
     Append_Separator(Menu.Popup_0008);
     Append_Item(Menu.Popup_0008, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  --  Menu at line 133
+  --  Menu at line 138
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -151,11 +153,12 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0005, "&Quick help" & To_GString_From_String((1=>ASCII.HT)) & "F1", IDM_Quick_Help);
     Append_Item(Menu.Popup_0005, "AZip &Web page (contact, support)", IDM_Web);
     Append_Item(Menu.Popup_0005, "AZip &news", IDM_AZip_Web_news);
+    Append_Item(Menu.Popup_0005, "&Sponsoring AZip", IDM_Sponsoring);
     Append_Separator(Menu.Popup_0005);
     Append_Item(Menu.Popup_0005, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  --  Dialog at resource line 185
+  --  Dialog at resource line 191
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -281,9 +284,20 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Credits_button);
     end if;
+    Dlg_to_Scn(  239, 212, 44, 19, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.Sponsoring_button, Window, "Sponsoring", x,y,w,h, ID => Sponsoring_button);
+    Create( Window.Sponsoring_button_permanent, Window, "Sponsoring", x,y,w,h, ID => Sponsoring_button);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.Sponsoring_button_permanent);
+    else -- hide the closing button
+      Hide(Window.Sponsoring_button);
+    end if;
   end Create_Contents;  --  About_box_Type
 
-  --  Dialog at resource line 214
+  --  Dialog at resource line 221
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -370,7 +384,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Credits_box_Type
 
-  --  Dialog at resource line 234
+  --  Dialog at resource line 241
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -477,7 +491,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Drop_files_box_Type
 
-  --  Dialog at resource line 252
+  --  Dialog at resource line 259
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -623,7 +637,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  File_exists_box_Type
 
-  --  Dialog at resource line 272
+  --  Dialog at resource line 279
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -729,7 +743,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Find_box_Type
 
-  --  Dialog at resource line 290
+  --  Dialog at resource line 297
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -824,7 +838,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 305
+  --  Dialog at resource line 312
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -932,7 +946,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Password_decryption_box_Type
 
-  --  Dialog at resource line 324
+  --  Dialog at resource line 331
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1040,7 +1054,7 @@ package body AZip_Resource_GUI is
     Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
   end Create_Contents;  --  Password_encryption_box_Type
 
-  --  Dialog at resource line 343
+  --  Dialog at resource line 350
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1135,7 +1149,7 @@ package body AZip_Resource_GUI is
     Create( Window.Comment_2, Window, "Comment 2", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Comment_2);
   end Create_Contents;  --  Progress_box_Type
 
-  --  Dialog at resource line 360
+  --  Dialog at resource line 367
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1247,7 +1261,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Properties_box_Type
 
-  --  Dialog at resource line 380
+  --  Dialog at resource line 387
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1330,7 +1344,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Quick_help_box_Type
 
-  --  Dialog at resource line 390
+  --  Dialog at resource line 397
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1412,7 +1426,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "Pure command-line tools corresponding to AZip are located in the Zip-Ada project (zipada, unzipada, rezip, find_zip, comp_zip). Follow hyperlink in the About box for download.", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_command_Type
 
-  --  Dialog at resource line 404
+  --  Dialog at resource line 411
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1496,7 +1510,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "You can extract selected files, the selected folder, or the entire archive via the Extract command (Ctrl+E) or a button. BUT: you can also extract files via Drag && Drop to a Windows Explorer window or to the Desktop.", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_gui_Type
 
-  --  Dialog at resource line 419
+  --  Dialog at resource line 426
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1576,7 +1590,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "For convenience, by default, AZip writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_install_Type
 
-  --  Dialog at resource line 433
+  --  Dialog at resource line 440
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1663,7 +1677,96 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Select_column_box_Type
 
-  --  Dialog at resource line 446
+  --  Dialog at resource line 453
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out Sponsoring_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Sponsoring_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Sponsoring AZip";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 316, 185, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- Sponsoring_box_Type
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Sponsoring_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 316, 185, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  10, 56, 55, 13, x,y,w,h);
+    Create( Window.Label_Paypal, Window, "PayPal Donation", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Paypal);
+    Dlg_to_Scn(  209, 157, 56, 18, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDOK, Window, "Close", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "Close", x,y,w,h, ID => IDOK);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDOK_permanent);
+    else -- hide the closing button
+      Hide(Window.IDOK);
+    end if;
+    Dlg_to_Scn(  10, 6, 295, 46, x,y,w,h);
+    Create( Window.Sponsoring_label, Window, "If you use and value AZip, please consider a donation to help me improve this project. The Web link below will open a dedicated PayPal page for proceeding with the donation. Even a small amount will be helpful. Thank you!", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Sponsoring_label);
+    Dlg_to_Scn(  9, 78, 172, 98, x,y,w,h);
+    Create( Window.Static_0001, Window, Num_resource(Donate_BMP), x,y,w,h, GWindows.Static_Controls.Left, Half_Sunken);
+  end Create_Contents;  --  Sponsoring_box_Type
+
+  --  Dialog at resource line 467
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1835,6 +1938,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 565
+  -- Last line of resource script file: 586
 
 end AZip_Resource_GUI;

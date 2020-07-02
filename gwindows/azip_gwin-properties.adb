@@ -1,6 +1,5 @@
 with AZip_Common;                       use AZip_Common;
-with AZip_Resource_GUI;                 use AZip_Resource_GUI;
-with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
+with AZip_Resource_GUI;
 
 with Zip;                               use Zip;
 with UnZip;
@@ -13,9 +12,10 @@ with GWindows.Locales;
 with Ada.Strings;                       use Ada.Strings;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
 with Interfaces;
+with AZip_GWin.Modal_Dialogs;
 
-procedure AZip_GWin.Properties(Window: in out MDI_Child_Type) is
-  box: Properties_box_Type;
+procedure AZip_GWin.Properties (Window: in out MDI_Child.MDI_Child_Type) is
+  box : AZip_Resource_GUI.Properties_box_Type;
   use Interfaces;
   total_uncompressed: Unsigned_64:= 0;
   total_compressed: UnZip.File_size_type:= 0;
@@ -100,7 +100,8 @@ begin
     box.Numb_entries.Text("0 (empty)");
   end if;
   case Show_Dialog (box, Window) is
-    when ID_Button_About_Azip => Window.MDI_Root.On_About;
+    when AZip_Resource_GUI.ID_Button_About_Azip =>
+           AZip_GWin.Modal_Dialogs.Show_About_Box (Window.MDI_Root.all);
     when others => null;
   end case;
-end;
+end AZip_GWin.Properties;

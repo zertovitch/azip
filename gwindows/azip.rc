@@ -14,6 +14,10 @@
 // Bitmap resources
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Donate_BMP         BITMAP         "ico_bmp/ppldonate.bmp"
+
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Folders_BMP        BITMAP         "ico_bmp/folders.bmp"
 
 
@@ -122,6 +126,7 @@ Menu_MDI_Child MENU
         MENUITEM "&Quick help\tF1", IDM_Quick_Help
         MENUITEM "AZip &Web page (contact, support)", IDM_Web
         MENUITEM "AZip &news", IDM_AZip_Web_news
+        MENUITEM "&Sponsoring AZip", IDM_Sponsoring
         MENUITEM SEPARATOR
         MENUITEM "&About AZip", IDM__ABOUT
     }
@@ -168,6 +173,7 @@ Menu_MDI_Main MENU
         MENUITEM "&Quick help\tF1", IDM_Quick_Help
         MENUITEM "AZip &Web page (contact, support)", IDM_Web
         MENUITEM "AZip &news", IDM_AZip_Web_news
+        MENUITEM "&Sponsoring AZip", IDM_Sponsoring
         MENUITEM SEPARATOR
         MENUITEM "&About AZip", IDM__ABOUT
     }
@@ -203,6 +209,7 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "Ini file manager", Ini_files_URL, 23, 180, 80, 8, SS_LEFT, WS_EX_LEFT
     DEFPUSHBUTTON   "Close", IDOK, 87, 212, 115, 19, 0, WS_EX_LEFT
     PUSHBUTTON      "Credits", Credits_button, 5, 212, 44, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "Sponsoring", Sponsoring_button, 239, 212, 44, 19, 0, WS_EX_LEFT
 }
 
 
@@ -255,12 +262,12 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "(location)", Conflict_location, 18, 41, 319, 8, SS_LEFT, WS_EX_LEFT
     GROUPBOX        "A file with the same name exists on the target location.", IDC_STATIC, 4, 7, 349, 63, 0, WS_EX_LEFT
     LTEXT           "Do you want to replace this file ?", IDC_STATIC, 12, 58, 156, 8, SS_LEFT, WS_EX_LEFT
-    PUSHBUTTON      "Yes", Overwrite_Yes,         4, 72, 50, 19, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "No", Overwrite_No,          64, 72, 50, 19, 0, WS_EX_LEFT
-    PUSHBUTTON      "All", Overwrite_All,       124, 72, 50, 19, 0, WS_EX_LEFT
-    PUSHBUTTON      "None", Overwrite_None,     184, 72, 50, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "Yes", Overwrite_Yes, 4, 72, 50, 19, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "No", Overwrite_No, 64, 72, 50, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "All", Overwrite_All, 124, 72, 50, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "None", Overwrite_None, 184, 72, 50, 19, 0, WS_EX_LEFT
     PUSHBUTTON      "Rename", Overwrite_Rename, 244, 72, 50, 19, 0, WS_EX_LEFT
-    PUSHBUTTON      "Cancel", IDCANCEL,         304, 72, 50, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", IDCANCEL, 304, 72, 50, 19, 0, WS_EX_LEFT
 }
 
 
@@ -277,7 +284,7 @@ FONT 8, "Ms Shell Dlg"
     ICON            Binoculars_Icon, IDC_STATIC, 9, 46, 21, 20, SS_ICON, WS_EX_LEFT
     LTEXT           "&Content ( if empty: any content )", IDC_STATIC, 44, 41, 172, 8, SS_LEFT, WS_EX_LEFT
     EDITTEXT        Content_to_be_searched, 44, 54, 172, 12, ES_AUTOHSCROLL, WS_EX_LEFT
-    DEFPUSHBUTTON   "OK", IDOK,         111, 72, 50, 19, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 111, 72, 50, 19, 0, WS_EX_LEFT
     PUSHBUTTON      "Cancel", IDCANCEL, 164, 72, 50, 19, 0, WS_EX_LEFT
 }
 
@@ -440,6 +447,20 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Sponsoring_box DIALOG 0, 0, 316, 185
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+CAPTION "Sponsoring AZip"
+FONT 8, "Ms Shell Dlg"
+{
+    LTEXT           "PayPal Donation", Label_Paypal, 10, 56, 55, 13, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON   "Close", IDOK, 209, 157, 56, 18, 0, WS_EX_LEFT
+    LTEXT           "If you use and value AZip, please consider a donation to help me improve this project. The Web link below will open a dedicated PayPal page for proceeding with the donation. Even a small amount will be helpful. Thank you!", Sponsoring_label, 10, 6, 295, 46, SS_LEFT, WS_EX_LEFT
+    CONTROL         Donate_BMP, IDC_STATIC, WC_STATIC, WS_DLGFRAME | SS_BITMAP | SS_SUNKEN, 9, 78, 172, 98, WS_EX_LEFT
+}
+
+
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 Wait_refresh_box DIALOG 0, 0, 186, 95
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
 CAPTION "Please wait"
@@ -538,8 +559,8 @@ Plus_icon          ICON           "ico_bmp/plus.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     2,3,6,0
-    PRODUCTVERSION  2,3,6,0
+    FILEVERSION     2,3,7,0
+    PRODUCTVERSION  2,3,7,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -552,8 +573,8 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
-            VALUE "FileVersion", "2.36"
-            VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2019"
+            VALUE "FileVersion", "2.37"
+            VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2020"
             VALUE "ProductName", "AZip"
         }
     }

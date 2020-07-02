@@ -16,4 +16,7 @@ package AZip_GWin is
      (G2GU ("JAR (Java archives) (*.jar)"), G2GU ("*.jar" )),
      (G2GU ("All files (*.*)"),             G2GU ("*.*")));
 
+  azip_web_page      : constant String := "http://azip.sf.net/";
+  azip_news_web_page : constant String := "http://sourceforge.net/p/azip/news/";
+
 end AZip_GWin;

@@ -49,6 +49,7 @@ package AZip_Common.User_options is
     sort_direction        : Sort_Direction_Type     := Up;
     ignore_extract_path   : Boolean                 := False;
     extract_directory     : UTF_16_Unbounded_String := Null_Unbounded_Wide_String;
+    first_visit           : Boolean                 := True;
   end record;
 
   -------------------
@@ -80,7 +81,8 @@ package AZip_Common.User_options is
         mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
         show_passwords,
         ignore_extract_path,
-        extract_directory
+        extract_directory,
+        first_visit
       );
   end;
 

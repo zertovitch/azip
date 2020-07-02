@@ -51,11 +51,13 @@ package body AZip_Common.User_options is
                 opt.mru( Key'Pos(k)-Key'Pos(mru1)+1 ):=
                   To_Unbounded_Wide_String(s);
               when show_passwords =>
-                opt.show_passwords:= Boolean'Wide_Value(s);
+                opt.show_passwords := Boolean'Wide_Value(s);
               when ignore_extract_path =>
-                opt.ignore_extract_path:= Boolean'Wide_Value(s);
+                opt.ignore_extract_path := Boolean'Wide_Value(s);
               when extract_directory =>
                 opt.extract_directory := To_Unbounded_Wide_String(s);
+              when first_visit =>
+                opt.first_visit := Boolean'Wide_Value(s);
             end case;
           end;
         exception
@@ -123,6 +125,8 @@ package body AZip_Common.User_options is
               R(Boolean'Wide_Image(opt.ignore_extract_path));
             when extract_directory =>
               R(To_Wide_String(opt.extract_directory));
+            when first_visit =>
+              R(Boolean'Wide_Image(opt.first_visit));
           end case;
         end;
       end loop;

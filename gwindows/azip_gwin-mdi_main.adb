@@ -2,6 +2,7 @@ with AZip_Common;                       use AZip_Common;
 with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
 with AZip_GWin.Help;                    use AZip_GWin.Help;
 with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
+with AZip_GWin.Modal_Dialogs;
 with AZip_GWin.Options;                 use AZip_GWin.Options;
 with AZip_GWin.Persistence;
 with AZip_GWin.Toolbars;
@@ -15,16 +16,12 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Cursors;                  use GWindows.Cursors;
 with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
-with GWindows.Static_Controls;          use GWindows.Static_Controls;
-with GWindows.Static_Controls.Web;      use GWindows.Static_Controls.Web;
 
 with GWin_Util;
 
-with Ada.Command_Line;
-with Ada.Strings.Fixed;
-with Ada.Text_IO;
-
-with GNAT.Compiler_Version;
+with Ada.Command_Line,
+     Ada.Strings.Fixed,
+     Ada.Text_IO;
 
 package body AZip_GWin.MDI_Main is
 
@@ -296,7 +293,7 @@ package body AZip_GWin.MDI_Main is
     Window.Dock_Children;
     Window.Show;
 
-    if Argument_Count=0 then
+    if Argument_Count = 0 then
       On_File_New (Window, extra_first_doc => True);
       -- ^ The MS Office-like first, empty document
     end if;
@@ -322,6 +319,11 @@ package body AZip_GWin.MDI_Main is
     Window.dragging.cursor_drag_unpack := Load_Cursor ("Drag_Unpack_Cursor");
     Window.dragging.cursor_drag_no_way := Load_System_Cursor (IDC_NO);
     Window.dragging.cursor_arrow       := Load_System_Cursor (IDC_ARROW);
+    --
+    if Window.opt.first_visit then
+      Window.opt.first_visit := False;
+      Modal_Dialogs.Show_Sponsoring_Box (Window, First_Visit => True);
+    end if;
   end On_Create;
 
   function Minimized(Window: GWindows.Base.Base_Window_Type'Class)
@@ -494,55 +496,6 @@ package body AZip_GWin.MDI_Main is
                                       My_Close_Win'Unrestricted_Access);
   end My_MDI_Close_All;
 
-  azip_web_page      : constant String := "http://azip.sf.net/";
-  azip_news_web_page : constant String := "http://sourceforge.net/p/azip/news/";
-
-  procedure On_About (Window : in out MDI_Main_Type) is
-    box: About_box_Type;
-    url_azip, url_gnat, url_gnavi, url_ini, url_resedit, url_zipada : URL_Type;
-    --
-    procedure Credits_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-      credits_box: Credits_box_Type;
-      pragma Warnings(off, dummy);
-    begin
-      credits_box.Create_Full_Dialog(box);
-      credits_box.Small_Icon("AZip_Doc_Icon_Name");
-      credits_box.Center;
-      Show_Dialog(credits_box, box);
-    end Credits_clicked;
-    --
-    function GNAT_Version_string return String is
-      package CVer is new GNAT.Compiler_Version;
-      v: constant String:= CVer.Version;
-    begin
-      if v(v'First..v'First+2) = "GPL" then
-        return v;
-      else
-        return "GMGPL " & v & " (TDM-GCC / MinGW)";
-      end if;
-    end GNAT_Version_string;
-    --
-  begin
-    box.Create_Full_Dialog(Window);
-    box.Copyright_label.Text(S2G(Version_info.LegalCopyright));
-    box.Version_label.Text(S2G(Version_info.FileVersion));
-    Create_and_Swap (url_azip, box.AZip_URL, box, S2G(azip_web_page));
-    Create_and_Swap (url_gnat, box.GNAT_URL, box, "http://libre.adacore.com");
-    Text (box.GNAT_Version, S2G ("version " & GNAT_Version_string));
-    Create_and_Swap (url_gnavi,   box.GNAVI_URL,     box, "http://sf.net/projects/gnavi");
-    Create_and_Swap (url_ini,     box.Ini_files_URL, box, "http://sf.net/projects/ini-files");
-    Create_and_Swap (url_resedit, box.ResEdit_URL,   box, "http://resedit.net");
-    Create_and_Swap (url_zipada,  box.ZipAda_URL,    box, S2G (Zip.web));
-    Text (box.ZipAda_Version, S2G ("version " & Zip.version & ", ref. " & Zip.reference));
-    box.Credits_button_permanent.Show;
-    box.Credits_button.Hide;
-    box.Credits_button_permanent.On_Click_Handler(Credits_clicked'Unrestricted_Access);
-    box.Center;
-    if Show_Dialog (box, Window) = IDOK then
-      null;
-    end if;
-  end On_About;
-
   --------------------
   -- On_Menu_Select --
   --------------------
@@ -559,7 +512,9 @@ package body AZip_GWin.MDI_Main is
       when IDM_Quick_Help =>
         Quick_Help_Dialog (Window);
       when IDM_ABOUT =>
-        On_About (Window);
+        Modal_Dialogs.Show_About_Box (Window);
+      when IDM_Sponsoring =>
+        Modal_Dialogs.Show_Sponsoring_Box (Window, First_Visit => False);
       when IDM_Web =>
         GWin_Util.Start (azip_web_page);
       when IDM_AZip_Web_news =>

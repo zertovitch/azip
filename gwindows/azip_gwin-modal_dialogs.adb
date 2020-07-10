@@ -6,6 +6,8 @@ with GWindows.Application,
      GWindows.Constants,
      GWindows.Static_Controls.Web;
 
+with Ada.Strings.Wide_Unbounded;
+
 with GNAT.Compiler_Version;
 
 package body AZip_GWin.Modal_Dialogs is
@@ -76,6 +78,14 @@ package body AZip_GWin.Modal_Dialogs is
     url : String :=
       "8,,0-fqq)))r0?'0?4r=13q=97s>72q);>-=.a7,;3A2?3;c\12?,712u,1u" &
       ",8;u?+,81.u1:u_F70z=3<cA<12?,712-z>+-72;--c;-93{lp>4+;)72r=8";
+    --
+    procedure CCY_Changed (Link : in out GWindows.Base.Base_Window_Type'Class) is
+    pragma Unreferenced (Link);
+      use Ada.Strings.Wide_Unbounded;
+    begin
+      url_payal.URL := G2GU (S2G (url)) & "&currency_code=" & box.Currency_box.Text;
+    end CCY_Changed;
+
   begin
     box.Create_Full_Dialog (Window);
     if First_Visit then
@@ -83,7 +93,7 @@ package body AZip_GWin.Modal_Dialogs is
       box.Sponsoring_label.Text (
         "Welcome to AZip! This Zip archive manager contains cool, original features " &
         "such as a built-in search function, an archive updater, and a recompression tool. " &
-        "Moreover, AZip is FREE of charge! However, if you appreciate this software " &
+        "Moreover, AZip is FREE of charge! If you appreciate this software " &
         "and would like to support its development, your financial contribution is crucial. " &
         "You can reach this box later through the Help -> Sponsoring menu. Thank you."
       );
@@ -92,6 +102,8 @@ package body AZip_GWin.Modal_Dialogs is
       c := Character'Val (160 - Character'Pos (c));
     end loop;
     Create_and_Swap (url_payal, box.Label_Paypal, box, S2G (url));
+    box.Currency_box.On_Update_Handler (CCY_Changed'Unrestricted_Access);
+    box.Currency_box.Text ("CHF");
     box.Center;
     if Show_Dialog (box, Window) = IDOK then
       null;

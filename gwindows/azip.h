@@ -130,3 +130,4 @@
 #define IDM_Sponsoring                          40127
 #define Sponsoring_button                       40128
 #define Sponsoring_label                        40129
+#define Currency_box                            40130

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/07/02  11:25:35
+-- Transcription time: 2020/07/10  09:44:01
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -721,14 +721,17 @@ package AZip_Resource_GUI is
 
   type Sponsoring_box_Type is new Window_Type with record
 
+    Sponsoring_label: Label_Type;
+    -- Label: 0
     Label_Paypal: Label_Type;
+    -- Label: 0
+    Currency_box: Edit_Box_Type;
+    Static_0001: Bitmap_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    Sponsoring_label: Label_Type;
-    Static_0001: Bitmap_Type;
   end record; -- Sponsoring_box_Type
 
-  --  Dialog at resource line 458
+  --  Dialog at resource line 461
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -766,7 +769,7 @@ package AZip_Resource_GUI is
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  --  Dialog at resource line 470
+  --  Dialog at resource line 473
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -935,6 +938,7 @@ package AZip_Resource_GUI is
   IDM_Sponsoring                        : constant:=  40127;
   Sponsoring_button                     : constant:=  40128;
   Sponsoring_label                      : constant:=  40129;
+  Currency_box                          : constant:=  40130;
 
   -- ** Some helper utilities (spec).
 
@@ -946,6 +950,6 @@ package AZip_Resource_GUI is
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 586
+  -- Last line of resource script file: 589
 
 end AZip_Resource_GUI;

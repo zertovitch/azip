@@ -452,10 +452,13 @@ STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VIS
 CAPTION "Sponsoring AZip"
 FONT 8, "Ms Shell Dlg"
 {
-    LTEXT           "PayPal Donation", Label_Paypal, 10, 56, 55, 13, SS_LEFT, WS_EX_LEFT
-    DEFPUSHBUTTON   "Close", IDOK, 209, 157, 56, 18, 0, WS_EX_LEFT
-    LTEXT           "If you use and value AZip, please consider a donation to help me improve this project. The Web link below will open a dedicated PayPal page for proceeding with the donation. Even a small amount will be helpful. Thank you!", Sponsoring_label, 10, 6, 295, 46, SS_LEFT, WS_EX_LEFT
-    CONTROL         Donate_BMP, IDC_STATIC, WC_STATIC, WS_DLGFRAME | SS_BITMAP | SS_SUNKEN, 9, 78, 172, 98, WS_EX_LEFT
+    LTEXT           "If you use and value AZip, please consider a donation to help me improve this project. The Web link below will open a dedicated PayPal page for proceeding with the donation. Even a small amount will be helpful. Thank you!", Sponsoring_label, 10, 6, 295, 42, SS_LEFT, WS_EX_LEFT
+    RTEXT           "Click here:", 0, 10, 54, 40, 12, SS_RIGHT, WS_EX_RIGHT
+    LTEXT           "PayPal Donation", Label_Paypal, 55, 54, 55, 12, SS_LEFT, WS_EX_LEFT
+    RTEXT           "Currency code:", 0, 147, 54, 63, 12, SS_RIGHT, WS_EX_RIGHT
+    EDITTEXT        Currency_box, 220, 52, 40, 14, ES_AUTOHSCROLL, WS_EX_LEFT
+    CONTROL         Donate_BMP, IDC_STATIC, WC_STATIC, WS_DLGFRAME | SS_BITMAP | SS_SUNKEN, 73, 95, 172, 55, WS_EX_LEFT
+    DEFPUSHBUTTON   "Close", IDOK, 113, 159, 102, 18, 0, WS_EX_LEFT
 }
 
 

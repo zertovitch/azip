@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/07/02  11:25:35
+-- Transcription time: 2020/07/10  09:44:01
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -1747,9 +1747,19 @@ package body AZip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  10, 56, 55, 13, x,y,w,h);
+    Dlg_to_Scn(  10, 6, 295, 42, x,y,w,h);
+    Create( Window.Sponsoring_label, Window, "If you use and value AZip, please consider a donation to help me improve this project. The Web link below will open a dedicated PayPal page for proceeding with the donation. Even a small amount will be helpful. Thank you!", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Sponsoring_label);
+    Dlg_to_Scn(  10, 54, 40, 12, x,y,w,h);
+    Create_Label( Window, "Click here:", x,y,w,h, GWindows.Static_Controls.Right, None);
+    Dlg_to_Scn(  55, 54, 55, 12, x,y,w,h);
     Create( Window.Label_Paypal, Window, "PayPal Donation", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Paypal);
-    Dlg_to_Scn(  209, 157, 56, 18, x,y,w,h);
+    Dlg_to_Scn(  147, 54, 63, 12, x,y,w,h);
+    Create_Label( Window, "Currency code:", x,y,w,h, GWindows.Static_Controls.Right, None);
+    Dlg_to_Scn(  220, 52, 40, 14, x,y,w,h);
+    Create( Window.Currency_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Currency_box);
+    Dlg_to_Scn(  73, 95, 172, 55, x,y,w,h);
+    Create( Window.Static_0001, Window, Num_resource(Donate_BMP), x,y,w,h, GWindows.Static_Controls.Right, Half_Sunken);
+    Dlg_to_Scn(  113, 159, 102, 18, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -1760,13 +1770,9 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  10, 6, 295, 46, x,y,w,h);
-    Create( Window.Sponsoring_label, Window, "If you use and value AZip, please consider a donation to help me improve this project. The Web link below will open a dedicated PayPal page for proceeding with the donation. Even a small amount will be helpful. Thank you!", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Sponsoring_label);
-    Dlg_to_Scn(  9, 78, 172, 98, x,y,w,h);
-    Create( Window.Static_0001, Window, Num_resource(Donate_BMP), x,y,w,h, GWindows.Static_Controls.Left, Half_Sunken);
   end Create_Contents;  --  Sponsoring_box_Type
 
-  --  Dialog at resource line 467
+  --  Dialog at resource line 470
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1938,6 +1944,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 586
+  -- Last line of resource script file: 589
 
 end AZip_Resource_GUI;

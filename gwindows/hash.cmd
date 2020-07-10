@@ -1,3 +1,4 @@
-CertUtil -hashfile azip.exe SHA256
-CertUtil -hashfile azip.exe SHA1
-CertUtil -hashfile azip.exe MD5
+CertUtil -hashfile %1 SHA512  >%1.hash.txt
+CertUtil -hashfile %1 SHA256 >>%1.hash.txt
+CertUtil -hashfile %1 SHA1   >>%1.hash.txt
+CertUtil -hashfile %1 MD5    >>%1.hash.txt

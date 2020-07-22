@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/07/10  09:44:01
+-- Transcription time: 2020/07/22  07:23:37
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -99,6 +99,7 @@ package body AZip_Resource_GUI is
     Menu.Popup_0006:= Create_Popup;
     Append_Menu(Menu.Main, "&Options", Menu.Popup_0006);
     Append_Item(Menu.Popup_0006, "&General options", IDM_General_options);
+    Append_Item(Menu.Popup_0006, "&Install AZip", IDM_Install);
     Menu.Popup_0007:= Create_Popup;
     Append_Menu(Menu.Main, "&Window", Menu.Popup_0007);
     Append_Item(Menu.Popup_0007, "&Cascade", IDM_WINDOW_CASCADE);
@@ -115,7 +116,7 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0008, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Child_Type
 
-  --  Menu at line 138
+  --  Menu at line 139
   procedure Create_Full_Menu
      (Menu        : in out Menu_MDI_Main_Type)
   is
@@ -142,6 +143,7 @@ package body AZip_Resource_GUI is
     Menu.Popup_0003:= Create_Popup;
     Append_Menu(Menu.Main, "&Options", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "&General options", IDM_General_options);
+    Append_Item(Menu.Popup_0003, "&Install AZip", IDM_Install);
     Menu.Popup_0004:= Create_Popup;
     Append_Menu(Menu.Main, "&Window", Menu.Popup_0004);
     Append_Item(Menu.Popup_0004, "&Cascade", IDM_WINDOW_CASCADE);
@@ -158,7 +160,7 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0005, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu;  --  Menu_MDI_Main_Type
 
-  --  Dialog at resource line 191
+  --  Dialog at resource line 193
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -297,7 +299,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  --  Dialog at resource line 221
+  --  Dialog at resource line 223
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -384,7 +386,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Credits_box_Type
 
-  --  Dialog at resource line 241
+  --  Dialog at resource line 243
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -491,7 +493,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Drop_files_box_Type
 
-  --  Dialog at resource line 259
+  --  Dialog at resource line 261
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -637,7 +639,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  File_exists_box_Type
 
-  --  Dialog at resource line 279
+  --  Dialog at resource line 281
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -743,7 +745,179 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Find_box_Type
 
-  --  Dialog at resource line 297
+  --  Dialog at resource line 299
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out Install_box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Warnings (Off, Window);
+    pragma Warnings (Off, dwExStyle);
+    WS_SYSMENU: constant:= 16#0008_0000#;
+  begin
+    dwStyle:= dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Install_box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "AZip installation";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x,y,w,h: Integer;
+  begin
+    Dlg_to_Scn(  0, 0, 341, 212, x,y,w,h);
+    if Left   /= Use_Default then x:= Left;   end if;
+    if Top    /= Use_Default then y:= Top;    end if;
+    if Width  /= Use_Default then w:= Width;  end if;
+    if Height /= Use_Default then h:= Height; end if;
+    Create_As_Dialog(
+      Window => Window_Type(Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then Client_Area_Width(Window, w); end if;
+    if Height = Use_Default then Client_Area_Height(Window, h); end if;
+    Use_GUI_Font(Window);
+    Create_Contents(Window, True);
+  end Create_Full_Dialog; -- Install_box_Type
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Install_box_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionally resize Window as designed
+     )
+  is
+    x,y,w,h: Integer;
+  begin
+    if resize then
+    Dlg_to_Scn(  0, 0, 341, 212, x,y,w,h);
+      Move(Window, x,y);
+      Client_Area_Size(Window, w, h);
+    end if;
+    Use_GUI_Font(Window);
+    Dlg_to_Scn(  15, 7, 312, 67, x,y,w,h);
+    Create( Window.Group_box_exe_location, Window, "This instance of AZip is running from...", x,y,w,h);
+    Dlg_to_Scn(  43, 20, 18, 9, x,y,w,h);
+    Create( Window.Check_box_installed_all_users, Window, "", x,y,w,h, ID => Check_box_installed_all_users);
+    Dlg_to_Scn(  43, 36, 18, 9, x,y,w,h);
+    Create( Window.Check_box_installed_current_user, Window, "", x,y,w,h, ID => Check_box_installed_current_user);
+    Dlg_to_Scn(  43, 52, 18, 9, x,y,w,h);
+    Create( Window.Check_box_not_installed, Window, "", x,y,w,h, ID => Check_box_not_installed);
+    Dlg_to_Scn(  63, 20, 204, 9, x,y,w,h);
+    Create_Label( Window, "Program Files  >>>  Installed for all users", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  63, 36, 204, 9, x,y,w,h);
+    Create_Label( Window, "App Data  >>>  Installed for current user", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  63, 52, 204, 9, x,y,w,h);
+    Create_Label( Window, "somewhere else  >>>  NOT installed, runs as portable software", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  15, 81, 312, 34, x,y,w,h);
+    Create( Window.Group_box_pref_location, Window, "AZip stores preferences and options...", x,y,w,h);
+    Dlg_to_Scn(  43, 93, 18, 9, x,y,w,h);
+    Create( Window.Radio_button_registry, Window, "", x,y,w,h, ID => Radio_button_registry);
+    Dlg_to_Scn(  147, 93, 18, 9, x,y,w,h);
+    Create( Window.Radio_button_stealth, Window, "", x,y,w,h, ID => Radio_button_stealth);
+    Dlg_to_Scn(  63, 93, 80, 9, x,y,w,h);
+    Create_Label( Window, "in the registry", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  167, 93, 160, 9, x,y,w,h);
+    Create_Label( Window, "in azip.cfg (stealth mode)", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  17, 121, 312, 33, x,y,w,h);
+    Create( Window.Group_box_Desktop_Explorer_integration, Window, "Desktop and Explorer integration", x,y,w,h);
+    Dlg_to_Scn(  20, 134, 62, 13, x,y,w,h);
+    Create_Label( Window, "Desktop shortcut", x,y,w,h, GWindows.Static_Controls.Right, None);
+    Dlg_to_Scn(  87, 132, 32, 13, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.Button_create_shortcut, Window, "Create", x,y,w,h, ID => Button_create_shortcut);
+    Create( Window.Button_create_shortcut_permanent, Window, "Create", x,y,w,h, ID => Button_create_shortcut);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.Button_create_shortcut_permanent);
+    else -- hide the closing button
+      Hide(Window.Button_create_shortcut);
+    end if;
+    Dlg_to_Scn(  132, 134, 52, 13, x,y,w,h);
+    Create_Label( Window, "Context menu", x,y,w,h, GWindows.Static_Controls.Right, None);
+    Dlg_to_Scn(  188, 132, 38, 13, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.Button_context_add, Window, "Add", x,y,w,h, ID => Button_context_add);
+    Create( Window.Button_context_add_permanent, Window, "Add", x,y,w,h, ID => Button_context_add);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.Button_context_add_permanent);
+    else -- hide the closing button
+      Hide(Window.Button_context_add);
+    end if;
+    Dlg_to_Scn(  238, 134, 42, 13, x,y,w,h);
+    Create_Label( Window, "Extensions", x,y,w,h, GWindows.Static_Controls.Right, None);
+    Dlg_to_Scn(  287, 132, 38, 13, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.Button_extension_choose, Window, "Choose", x,y,w,h, ID => Button_extension_choose);
+    Create( Window.Button_extension_choose_permanent, Window, "Choose", x,y,w,h, ID => Button_extension_choose);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.Button_extension_choose_permanent);
+    else -- hide the closing button
+      Hide(Window.Button_extension_choose);
+    end if;
+    Dlg_to_Scn(  17, 165, 312, 11, x,y,w,h);
+    Create( Window.Label_Install_note_first_visit, Window, "Note on first visit", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Install_note_first_visit);
+    Dlg_to_Scn(  31, 185, 81, 17, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.IDOK, Window, "OK, do nothing", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "OK, do nothing", x,y,w,h, ID => IDOK);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.IDOK_permanent);
+    else -- hide the closing button
+      Hide(Window.IDOK);
+    end if;
+    Dlg_to_Scn(  131, 185, 81, 17, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.ID_Install_all_users, Window, "Install for all users", x,y,w,h, ID => ID_Install_all_users);
+    Create( Window.ID_Install_all_users_permanent, Window, "Install for all users", x,y,w,h, ID => ID_Install_all_users);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.ID_Install_all_users_permanent);
+    else -- hide the closing button
+      Hide(Window.ID_Install_all_users);
+    end if;
+    Dlg_to_Scn(  231, 185, 81, 17, x,y,w,h);
+    -- Both versions of the button are created.
+    -- The more meaningful one is made visible, but this choice
+    -- can be reversed, for instance on a "Browse" button.
+    Create( Window.ID_Install_current_user, Window, "Install for current user", x,y,w,h, ID => ID_Install_current_user);
+    Create( Window.ID_Install_current_user_permanent, Window, "Install for current user", x,y,w,h, ID => ID_Install_current_user);
+    if for_dialog then -- hide the non-closing button
+      Hide(Window.ID_Install_current_user_permanent);
+    else -- hide the closing button
+      Hide(Window.ID_Install_current_user);
+    end if;
+  end Create_Contents;  --  Install_box_Type
+
+  --  Dialog at resource line 332
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -838,7 +1012,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 312
+  --  Dialog at resource line 347
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -946,7 +1120,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Password_decryption_box_Type
 
-  --  Dialog at resource line 331
+  --  Dialog at resource line 366
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1054,7 +1228,7 @@ package body AZip_Resource_GUI is
     Create( Window.Show_password_box, Window, "Show password", x,y,w,h, ID => Show_password_box);
   end Create_Contents;  --  Password_encryption_box_Type
 
-  --  Dialog at resource line 350
+  --  Dialog at resource line 385
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1149,7 +1323,7 @@ package body AZip_Resource_GUI is
     Create( Window.Comment_2, Window, "Comment 2", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Comment_2);
   end Create_Contents;  --  Progress_box_Type
 
-  --  Dialog at resource line 367
+  --  Dialog at resource line 402
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1261,7 +1435,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Properties_box_Type
 
-  --  Dialog at resource line 387
+  --  Dialog at resource line 422
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1344,7 +1518,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Quick_help_box_Type
 
-  --  Dialog at resource line 397
+  --  Dialog at resource line 432
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1418,7 +1592,7 @@ package body AZip_Resource_GUI is
     Create( Window.RC_item_0, Window, "Command-line parameters", x,y,w,h);
     Dlg_to_Scn(  17, 18, 342, 29, x,y,w,h);
     Create_Label( Window, "The activation of AZip with command-line parameters for specific operations is under construction", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  4, 72, 366, 66, x,y,w,h);
+    Dlg_to_Scn(  4, 72, 362, 66, x,y,w,h);
     Create( Window.Static_0001, Window, "Command-line tools with console output", x,y,w,h);
     Dlg_to_Scn(  10, 88, 43, 39, x,y,w,h);
     Create( Window.Static_0002, Window, Num_resource(ZA_console_BMP), x,y,w,h, GWindows.Static_Controls.Left, None);
@@ -1426,7 +1600,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "Pure command-line tools corresponding to AZip are located in the Zip-Ada project (zipada, unzipada, rezip, find_zip, comp_zip). Follow hyperlink in the About box for download.", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_command_Type
 
-  --  Dialog at resource line 411
+  --  Dialog at resource line 446
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1496,13 +1670,13 @@ package body AZip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  4, 3, 366, 46, x,y,w,h);
+    Dlg_to_Scn(  4, 3, 362, 46, x,y,w,h);
     Create( Window.Static_0001, Window, "Adding files and folders", x,y,w,h);
     Dlg_to_Scn(  10, 17, 21, 20, x,y,w,h);
     Create( Window.Static_0002, Window, Num_resource(Plus_icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  46, 18, 316, 29, x,y,w,h);
     Create_Label( Window, "You can add files, or individual folders through menu commands (+) or buttons. BUT: you can also do it easily via Drag && Drop, from a Windows Explorer window or the Desktop, onto an AZip archive window. Any mix of dragged folders and files is supported.", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  4, 50, 366, 46, x,y,w,h);
+    Dlg_to_Scn(  4, 50, 362, 46, x,y,w,h);
     Create( Window.Static_0003, Window, "Unpacking files", x,y,w,h);
     Dlg_to_Scn(  10, 64, 21, 20, x,y,w,h);
     Create( Window.Static_0004, Window, Num_resource(Drag_Unpack_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
@@ -1510,7 +1684,7 @@ package body AZip_Resource_GUI is
     Create_Label( Window, "You can extract selected files, the selected folder, or the entire archive via the Extract command (Ctrl+E) or a button. BUT: you can also extract files via Drag && Drop to a Windows Explorer window or to the Desktop.", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_gui_Type
 
-  --  Dialog at resource line 426
+  --  Dialog at resource line 461
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1580,17 +1754,17 @@ package body AZip_Resource_GUI is
       Client_Area_Size(Window, w, h);
     end if;
     Use_GUI_Font(Window);
-    Dlg_to_Scn(  4, 3, 366, 9, x,y,w,h);
-    Create_Label( Window, "AZip doesn't require any installation. It can even run from a USB stick for instance.", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  4, 23, 366, 66, x,y,w,h);
+    Dlg_to_Scn(  4, 3, 358, 25, x,y,w,h);
+    Create_Label( Window, "AZip doesn't require any installation. It can even run from a USB stick for instance. However, you CAN install AZip on this computer, if it is more practical for your purpose. In the menu, check Options -> Install AZip.", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn(  4, 33, 362, 66, x,y,w,h);
     Create( Window.Static_0001, Window, "Using AZip as a portable software - stealth mode", x,y,w,h);
-    Dlg_to_Scn(  10, 39, 43, 39, x,y,w,h);
+    Dlg_to_Scn(  10, 49, 43, 39, x,y,w,h);
     Create( Window.Static_0002, Window, Num_resource(No_regedit_BMP), x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  69, 38, 288, 40, x,y,w,h);
+    Dlg_to_Scn(  69, 48, 288, 40, x,y,w,h);
     Create_Label( Window, "For convenience, by default, AZip writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", x,y,w,h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_install_Type
 
-  --  Dialog at resource line 440
+  --  Dialog at resource line 475
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1677,7 +1851,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Select_column_box_Type
 
-  --  Dialog at resource line 453
+  --  Dialog at resource line 488
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1772,7 +1946,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Sponsoring_box_Type
 
-  --  Dialog at resource line 470
+  --  Dialog at resource line 505
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1944,6 +2118,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 589
+  -- Last line of resource script file: 624
 
 end AZip_Resource_GUI;

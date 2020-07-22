@@ -95,7 +95,7 @@ package body AZip_GWin.Modal_Dialogs is
         "such as a built-in search function, an archive updater, and a recompression tool. " &
         "Moreover, AZip is FREE of charge! If you appreciate this software " &
         "and would like to support its development, your financial contribution is crucial. " &
-        "You can reach this box later through the Help -> Sponsoring menu. Thank you."
+        "Thank you. You can also reach this box later through the Help -> Sponsoring menu."
       );
     end if;
     for c of url loop

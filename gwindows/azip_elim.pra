@@ -11,20 +11,15 @@ pragma Eliminate (GWindows.Drawing, AlphaBlend);
 ---------------------------------------------------------
 --  List of unused entities to be placed in gnat.adc.  --
 ---------------------------------------------------------
-pragma Eliminate (GWin_Util, To_Lower, Source_Location => "gwin_util.ads:20");
-pragma Eliminate (GWindows.GStrings, To_Lower, Source_Location => "gwindows-gstrings.ads:99");
 pragma Eliminate (GWin_Util, Use_GUI_Font, Source_Location => "gwin_util.ads:30");
 pragma Eliminate (GWin_Util, To_URL_Encoding, Source_Location => "gwin_util.ads:23");
 pragma Eliminate (GWin_Util, Exec, Source_Location => "gwin_util.ads:44");
-pragma Eliminate (GWin_Util, GET_ENV_INFO, Source_Location => "gwin_util.adb:229");
 pragma Eliminate (GWin_Util, Exec_Command, Source_Location => "gwin_util.ads:47");
 pragma Eliminate (GWin_Util, Get_Windows_version, Source_Location => "gwin_util.ads:50");
-pragma Eliminate (GWin_Util, GetVersionExA, Source_Location => "gwin_util.adb:306");
 pragma Eliminate (GWin_Util, Temp_dir, Source_Location => "gwin_util.ads:61");
 pragma Eliminate (GWin_Util, Minimized, Source_Location => "gwin_util.ads:63");
 pragma Eliminate (GWin_Util, Valid_Left_Top, Source_Location => "gwin_util.ads:66");
 pragma Eliminate (GWin_Util, Find_short_path_name, Source_Location => "gwin_util.ads:69");
-pragma Eliminate (GWin_Util, GetShortPathNameA, Source_Location => "gwin_util.adb:364");
 pragma Eliminate (GWin_Util, SetWindowLong, Source_Location => "gwin_util.adb:404");
 pragma Eliminate (GWin_Util, GetWindowLong, Source_Location => "gwin_util.adb:411");
 pragma Eliminate (GWin_Util, Fix_Tabbed_control, Source_Location => "gwin_util.ads:79");

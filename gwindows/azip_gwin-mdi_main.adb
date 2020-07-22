@@ -1,6 +1,7 @@
 with AZip_Common;                       use AZip_Common;
 with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
 with AZip_GWin.Help;                    use AZip_GWin.Help;
+with AZip_GWin.Installation;
 with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
 with AZip_GWin.Modal_Dialogs;
 with AZip_GWin.Options;                 use AZip_GWin.Options;
@@ -321,8 +322,9 @@ package body AZip_GWin.MDI_Main is
     Window.dragging.cursor_arrow       := Load_System_Cursor (IDC_ARROW);
     --
     if Window.opt.first_visit then
-      Window.opt.first_visit := False;
       Modal_Dialogs.Show_Sponsoring_Box (Window, First_Visit => True);
+      Installation.Installation_Dialog (Window, First_Visit => True);
+      Window.opt.first_visit := False;
     end if;
   end On_Create;
 
@@ -515,6 +517,8 @@ package body AZip_GWin.MDI_Main is
         Modal_Dialogs.Show_About_Box (Window);
       when IDM_Sponsoring =>
         Modal_Dialogs.Show_Sponsoring_Box (Window, First_Visit => False);
+      when IDM_Install =>
+        Installation.Installation_Dialog (Window, First_Visit => False);
       when IDM_Web =>
         GWin_Util.Start (azip_web_page);
       when IDM_AZip_Web_news =>

@@ -113,6 +113,7 @@ Menu_MDI_Child MENU
     POPUP "&Options"
     {
         MENUITEM "&General options", IDM_General_options
+        MENUITEM "&Install AZip", IDM_Install
     }
     POPUP "&Window"
     {
@@ -160,6 +161,7 @@ Menu_MDI_Main MENU
     POPUP "&Options"
     {
         MENUITEM "&General options", IDM_General_options
+        MENUITEM "&Install AZip", IDM_Install
     }
     POPUP "&Window"
     {
@@ -290,6 +292,39 @@ FONT 8, "Ms Shell Dlg"
 
 
 
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Install_box DIALOG 0, 0, 341, 212
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+CAPTION "AZip installation"
+FONT 8, "Ms Shell Dlg"
+{
+    GROUPBOX        "This instance of AZip is running from...", Group_box_exe_location, 15, 7, 312, 67, 0, WS_EX_LEFT
+    AUTOCHECKBOX    "", Check_box_installed_all_users, 43, 20, 18, 9, 0, WS_EX_LEFT
+    AUTOCHECKBOX    "", Check_box_installed_current_user, 43, 36, 18, 9, 0, WS_EX_LEFT
+    AUTOCHECKBOX    "", Check_box_not_installed, 43, 52, 18, 9, 0, WS_EX_LEFT
+    LTEXT           "Program Files  >>>  Installed for all users", 0, 63, 20, 204, 9, SS_LEFT, WS_EX_LEFT
+    LTEXT           "App Data  >>>  Installed for current user", 0, 63, 36, 204, 9, SS_LEFT, WS_EX_LEFT
+    LTEXT           "somewhere else  >>>  NOT installed, runs as portable software", 0, 63, 52, 204, 9, SS_LEFT, WS_EX_LEFT
+    GROUPBOX        "AZip stores preferences and options...", Group_box_pref_location, 15, 81, 312, 34, 0, WS_EX_LEFT
+    AUTORADIOBUTTON "", Radio_button_registry, 43, 93, 18, 9, 0, WS_EX_LEFT
+    AUTORADIOBUTTON "", Radio_button_stealth, 147, 93, 18, 9, 0, WS_EX_LEFT
+    LTEXT           "in the registry", 0, 63, 93, 80, 9, SS_LEFT, WS_EX_LEFT
+    LTEXT           "in azip.cfg (stealth mode)", 0, 167, 93, 160, 9, SS_LEFT, WS_EX_LEFT
+    GROUPBOX        "Desktop and Explorer integration", Group_box_Desktop_Explorer_integration, 17, 121, 312, 33, 0, WS_EX_LEFT
+    RTEXT           "Desktop shortcut", 0, 20, 134, 62, 13, SS_RIGHT, WS_EX_LEFT
+    PUSHBUTTON      "Create", Button_create_shortcut, 87, 132, 32, 13, 0, WS_EX_LEFT
+    RTEXT           "Context menu", 0, 132, 134, 52, 13, SS_RIGHT, WS_EX_LEFT
+    PUSHBUTTON      "Add", Button_context_add, 188, 132, 38, 13, 0, WS_EX_LEFT
+    RTEXT           "Extensions", 0, 238, 134, 42, 13, SS_RIGHT, WS_EX_LEFT
+    PUSHBUTTON      "Choose", Button_extension_choose, 287, 132, 38, 13, 0, WS_EX_LEFT
+    LTEXT           "Note on first visit", Label_Install_note_first_visit, 17, 165, 312, 11, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK, do nothing", IDOK, 31, 185, 81, 17, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Install for all users", ID_Install_all_users, 131, 185, 81, 17, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Install for current user", ID_Install_current_user, 231, 185, 81, 17, 0, WS_EX_LEFT
+}
+
+
+
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 Option_box DIALOG 0, 0, 255, 121
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
@@ -398,7 +433,7 @@ FONT 8, "Ms Shell Dlg"
 {
     GROUPBOX        "Command-line parameters", 0, 4, 3, 362, 65, 0, WS_EX_LEFT
     LTEXT           "The activation of AZip with command-line parameters for specific operations is under construction", 0, 17, 18, 342, 29, SS_LEFT, WS_EX_LEFT
-    GROUPBOX        "Command-line tools with console output", IDC_STATIC, 4, 72, 366, 66, 0, WS_EX_LEFT
+    GROUPBOX        "Command-line tools with console output", IDC_STATIC, 4, 72, 362, 66, 0, WS_EX_LEFT
     CONTROL         ZA_console_BMP, IDC_STATIC, WC_STATIC, SS_BITMAP, 10, 88, 43, 39, WS_EX_LEFT
     LTEXT           "Pure command-line tools corresponding to AZip are located in the Zip-Ada project (zipada, unzipada, rezip, find_zip, comp_zip). Follow hyperlink in the About box for download.", 0, 63, 87, 294, 33, SS_LEFT, WS_EX_LEFT
 }
@@ -410,10 +445,10 @@ Quick_help_tab_gui DIALOG 0, 0, 375, 202
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 FONT 8, "Ms Shell Dlg"
 {
-    GROUPBOX        "Adding files and folders", IDC_STATIC, 4, 3, 366, 46, 0, WS_EX_LEFT
+    GROUPBOX        "Adding files and folders", IDC_STATIC, 4, 3, 362, 46, 0, WS_EX_LEFT
     ICON            Plus_icon, IDC_STATIC, 10, 17, 21, 20, SS_ICON, WS_EX_LEFT
     LTEXT           "You can add files, or individual folders through menu commands (+) or buttons. BUT: you can also do it easily via Drag && Drop, from a Windows Explorer window or the Desktop, onto an AZip archive window. Any mix of dragged folders and files is supported.", 0, 46, 18, 316, 29, SS_LEFT, WS_EX_LEFT
-    GROUPBOX        "Unpacking files", IDC_STATIC, 4, 50, 366, 46, 0, WS_EX_LEFT
+    GROUPBOX        "Unpacking files", IDC_STATIC, 4, 50, 362, 46, 0, WS_EX_LEFT
     ICON            Drag_Unpack_Icon, IDC_STATIC, 10, 64, 21, 20, SS_ICON, WS_EX_LEFT
     LTEXT           "You can extract selected files, the selected folder, or the entire archive via the Extract command (Ctrl+E) or a button. BUT: you can also extract files via Drag && Drop to a Windows Explorer window or to the Desktop.", 0, 48, 65, 316, 28, SS_LEFT, WS_EX_LEFT
 }
@@ -425,10 +460,10 @@ Quick_help_tab_install DIALOG 0, 0, 375, 202
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 FONT 8, "Ms Shell Dlg"
 {
-    LTEXT           "AZip doesn't require any installation. It can even run from a USB stick for instance.", 0, 4, 3, 366, 9, SS_LEFT, WS_EX_LEFT
-    GROUPBOX        "Using AZip as a portable software - stealth mode", IDC_STATIC, 4, 23, 366, 66, 0, WS_EX_LEFT
-    CONTROL         No_regedit_BMP, IDC_STATIC, WC_STATIC, SS_BITMAP, 10, 39, 43, 39, WS_EX_LEFT
-    LTEXT           "For convenience, by default, AZip writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", 0, 69, 38, 288, 40, SS_LEFT, WS_EX_LEFT
+    LTEXT           "AZip doesn't require any installation. It can even run from a USB stick for instance. However, you CAN install AZip on this computer, if it is more practical for your purpose. In the menu, check Options -> Install AZip.", 0, 4, 3, 358, 25, SS_LEFT, WS_EX_LEFT
+    GROUPBOX        "Using AZip as a portable software - stealth mode", IDC_STATIC, 4, 33, 362, 66, 0, WS_EX_LEFT
+    CONTROL         No_regedit_BMP, IDC_STATIC, WC_STATIC, SS_BITMAP, 10, 49, 43, 39, WS_EX_LEFT
+    LTEXT           "For convenience, by default, AZip writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", 0, 69, 48, 288, 40, SS_LEFT, WS_EX_LEFT
 }
 
 

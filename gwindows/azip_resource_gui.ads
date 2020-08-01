@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/07/22  07:23:37
+-- Transcription time: 2020/08/01  08:40:43
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -311,14 +311,14 @@ package AZip_Resource_GUI is
     Check_box_installed_all_users: Check_Box_Type;
     Check_box_installed_current_user: Check_Box_Type;
     Check_box_not_installed: Check_Box_Type;
-    -- Label: 0
-    -- Label: 0
-    -- Label: 0
+    Label_Installed_All_Users: Label_Type;
+    Label_Installed_Current_User: Label_Type;
+    Label_NOT_Installed: Label_Type;
     Group_box_pref_location: Group_Box_Type;
     Radio_button_registry: Radio_Button_Type;
     Radio_button_stealth: Radio_Button_Type;
-    -- Label: 0
-    -- Label: 0
+    Label_Registry: Label_Type;
+    Label_Stealth: Label_Type;
     Group_box_Desktop_Explorer_integration: Group_Box_Type;
     -- Label: 0
     Button_create_shortcut: Dialog_Button_Type;    -- closes parent window after click
@@ -860,7 +860,7 @@ package AZip_Resource_GUI is
   package Version_info is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion: constant String:= "2.37";
+    FileVersion: constant String:= "2.38";
     LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2020";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
@@ -1019,6 +1019,11 @@ package AZip_Resource_GUI is
   Group_box_Desktop_Explorer_integration: constant:=  40144;
   Label_Install_note_first_visit        : constant:=  40145;
   IDM_Install                           : constant:=  40146;
+  Label_Installed_All_Users             : constant:=  40147;
+  Label_Installed_Current_User          : constant:=  40148;
+  Label_NOT_Installed                   : constant:=  40149;
+  Label_Registry                        : constant:=  40150;
+  Label_Stealth                         : constant:=  40151;
 
   -- ** Some helper utilities (spec).
 

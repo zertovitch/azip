@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/07/22  07:23:37
+-- Transcription time: 2020/08/01  08:40:43
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -817,29 +817,44 @@ package body AZip_Resource_GUI is
     Use_GUI_Font(Window);
     Dlg_to_Scn(  15, 7, 312, 67, x,y,w,h);
     Create( Window.Group_box_exe_location, Window, "This instance of AZip is running from...", x,y,w,h);
-    Dlg_to_Scn(  43, 20, 18, 9, x,y,w,h);
+    Dlg_to_Scn(  43, 22, 18, 9, x,y,w,h);
     Create( Window.Check_box_installed_all_users, Window, "", x,y,w,h, ID => Check_box_installed_all_users);
-    Dlg_to_Scn(  43, 36, 18, 9, x,y,w,h);
+    Disable (Window.Check_box_installed_all_users);
+    Disable (Window.Check_box_installed_all_users);
+    Dlg_to_Scn(  43, 38, 18, 9, x,y,w,h);
     Create( Window.Check_box_installed_current_user, Window, "", x,y,w,h, ID => Check_box_installed_current_user);
-    Dlg_to_Scn(  43, 52, 18, 9, x,y,w,h);
+    Disable (Window.Check_box_installed_current_user);
+    Disable (Window.Check_box_installed_current_user);
+    Dlg_to_Scn(  43, 54, 18, 9, x,y,w,h);
     Create( Window.Check_box_not_installed, Window, "", x,y,w,h, ID => Check_box_not_installed);
-    Dlg_to_Scn(  63, 20, 204, 9, x,y,w,h);
-    Create_Label( Window, "Program Files  >>>  Installed for all users", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  63, 36, 204, 9, x,y,w,h);
-    Create_Label( Window, "App Data  >>>  Installed for current user", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  63, 52, 204, 9, x,y,w,h);
-    Create_Label( Window, "somewhere else  >>>  NOT installed, runs as portable software", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Disable (Window.Check_box_not_installed);
+    Disable (Window.Check_box_not_installed);
+    Dlg_to_Scn(  63, 22, 204, 9, x,y,w,h);
+    Create( Window.Label_Installed_All_Users, Window, "Program Files  >>>  Installed for all users", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Installed_All_Users);
+    Disable (Window.Label_Installed_All_Users);
+    Dlg_to_Scn(  63, 38, 204, 9, x,y,w,h);
+    Create( Window.Label_Installed_Current_User, Window, "App Data  >>>  Installed for current user", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Installed_Current_User);
+    Disable (Window.Label_Installed_Current_User);
+    Dlg_to_Scn(  63, 54, 204, 9, x,y,w,h);
+    Create( Window.Label_NOT_Installed, Window, "somewhere else  >>>  NOT installed, runs as portable software", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_NOT_Installed);
+    Disable (Window.Label_NOT_Installed);
     Dlg_to_Scn(  15, 81, 312, 34, x,y,w,h);
     Create( Window.Group_box_pref_location, Window, "AZip stores preferences and options...", x,y,w,h);
-    Dlg_to_Scn(  43, 93, 18, 9, x,y,w,h);
+    Dlg_to_Scn(  43, 95, 17, 9, x,y,w,h);
     Create( Window.Radio_button_registry, Window, "", x,y,w,h, ID => Radio_button_registry);
-    Dlg_to_Scn(  147, 93, 18, 9, x,y,w,h);
+    Disable (Window.Radio_button_registry);
+    Disable (Window.Radio_button_registry);
+    Dlg_to_Scn(  147, 95, 14, 9, x,y,w,h);
     Create( Window.Radio_button_stealth, Window, "", x,y,w,h, ID => Radio_button_stealth);
-    Dlg_to_Scn(  63, 93, 80, 9, x,y,w,h);
-    Create_Label( Window, "in the registry", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  167, 93, 160, 9, x,y,w,h);
-    Create_Label( Window, "in azip.cfg (stealth mode)", x,y,w,h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn(  17, 121, 312, 33, x,y,w,h);
+    Disable (Window.Radio_button_stealth);
+    Disable (Window.Radio_button_stealth);
+    Dlg_to_Scn(  67, 95, 76, 9, x,y,w,h);
+    Create( Window.Label_Registry, Window, "in the registry", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Registry);
+    Disable (Window.Label_Registry);
+    Dlg_to_Scn(  169, 95, 154, 9, x,y,w,h);
+    Create( Window.Label_Stealth, Window, "in azip.cfg (stealth mode, cf. Help)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Stealth);
+    Disable (Window.Label_Stealth);
+    Dlg_to_Scn(  15, 121, 312, 33, x,y,w,h);
     Create( Window.Group_box_Desktop_Explorer_integration, Window, "Desktop and Explorer integration", x,y,w,h);
     Dlg_to_Scn(  20, 134, 62, 13, x,y,w,h);
     Create_Label( Window, "Desktop shortcut", x,y,w,h, GWindows.Static_Controls.Right, None);
@@ -880,7 +895,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Button_extension_choose);
     end if;
-    Dlg_to_Scn(  17, 165, 312, 11, x,y,w,h);
+    Dlg_to_Scn(  15, 165, 312, 11, x,y,w,h);
     Create( Window.Label_Install_note_first_visit, Window, "Note on first visit", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Install_note_first_visit);
     Dlg_to_Scn(  31, 185, 81, 17, x,y,w,h);
     -- Both versions of the button are created.

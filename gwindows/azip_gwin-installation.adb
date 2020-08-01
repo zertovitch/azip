@@ -95,22 +95,22 @@ package body AZip_GWin.Installation is
     case Executable_Location is
       when Administrator =>
         box.Check_box_installed_all_users.State (Checked);
+        box.Label_Installed_All_Users.Enable;
       when Current_User =>
         box.Check_box_installed_current_user.State (Checked);
+        box.Label_Installed_All_Users.Enable;
       when Elsewhere =>
         box.Check_box_not_installed.State (Checked);
+        box.Label_NOT_Installed.Enable;
     end case;
-    box.Check_box_installed_all_users.Disable;
-    box.Check_box_installed_current_user.Disable;
-    box.Check_box_not_installed.Disable;
     --
     if AZip_GWin.Persistence.Cfg_file_available then
       box.Radio_button_stealth.State (Checked);
+      box.Label_Stealth.Enable;
     else
       box.Radio_button_registry.State (Checked);
+      box.Label_Registry.Enable;
     end if;
-    box.Radio_button_stealth.Disable;
-    box.Radio_button_registry.Disable;
     --
     box.Button_create_shortcut.Hide;
     box.Button_create_shortcut_permanent.Show;

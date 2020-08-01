@@ -147,3 +147,8 @@
 #define Group_box_Desktop_Explorer_integration  40144
 #define Label_Install_note_first_visit          40145
 #define IDM_Install                             40146
+#define Label_Installed_All_Users               40147
+#define Label_Installed_Current_User            40148
+#define Label_NOT_Installed                     40149
+#define Label_Registry                          40150
+#define Label_Stealth                           40151

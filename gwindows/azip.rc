@@ -299,25 +299,25 @@ CAPTION "AZip installation"
 FONT 8, "Ms Shell Dlg"
 {
     GROUPBOX        "This instance of AZip is running from...", Group_box_exe_location, 15, 7, 312, 67, 0, WS_EX_LEFT
-    AUTOCHECKBOX    "", Check_box_installed_all_users, 43, 20, 18, 9, 0, WS_EX_LEFT
-    AUTOCHECKBOX    "", Check_box_installed_current_user, 43, 36, 18, 9, 0, WS_EX_LEFT
-    AUTOCHECKBOX    "", Check_box_not_installed, 43, 52, 18, 9, 0, WS_EX_LEFT
-    LTEXT           "Program Files  >>>  Installed for all users", 0, 63, 20, 204, 9, SS_LEFT, WS_EX_LEFT
-    LTEXT           "App Data  >>>  Installed for current user", 0, 63, 36, 204, 9, SS_LEFT, WS_EX_LEFT
-    LTEXT           "somewhere else  >>>  NOT installed, runs as portable software", 0, 63, 52, 204, 9, SS_LEFT, WS_EX_LEFT
+    AUTOCHECKBOX    "", Check_box_installed_all_users, 43, 22, 18, 9, WS_DISABLED, WS_EX_LEFT
+    AUTOCHECKBOX    "", Check_box_installed_current_user, 43, 38, 18, 9, WS_DISABLED, WS_EX_LEFT
+    AUTOCHECKBOX    "", Check_box_not_installed, 43, 54, 18, 9, WS_DISABLED, WS_EX_LEFT
+    LTEXT           "Program Files  >>>  Installed for all users", Label_Installed_All_Users, 63, 22, 204, 9, WS_DISABLED | SS_LEFT, WS_EX_LEFT
+    LTEXT           "App Data  >>>  Installed for current user", Label_Installed_Current_User, 63, 38, 204, 9, WS_DISABLED | SS_LEFT, WS_EX_LEFT
+    LTEXT           "somewhere else  >>>  NOT installed, runs as portable software", Label_NOT_Installed, 63, 54, 204, 9, WS_DISABLED | SS_LEFT, WS_EX_LEFT
     GROUPBOX        "AZip stores preferences and options...", Group_box_pref_location, 15, 81, 312, 34, 0, WS_EX_LEFT
-    AUTORADIOBUTTON "", Radio_button_registry, 43, 93, 18, 9, 0, WS_EX_LEFT
-    AUTORADIOBUTTON "", Radio_button_stealth, 147, 93, 18, 9, 0, WS_EX_LEFT
-    LTEXT           "in the registry", 0, 63, 93, 80, 9, SS_LEFT, WS_EX_LEFT
-    LTEXT           "in azip.cfg (stealth mode)", 0, 167, 93, 160, 9, SS_LEFT, WS_EX_LEFT
-    GROUPBOX        "Desktop and Explorer integration", Group_box_Desktop_Explorer_integration, 17, 121, 312, 33, 0, WS_EX_LEFT
+    AUTORADIOBUTTON "", Radio_button_registry, 43, 95, 17, 9, WS_DISABLED, WS_EX_LEFT
+    AUTORADIOBUTTON "", Radio_button_stealth, 147, 95, 14, 9, WS_DISABLED, WS_EX_LEFT
+    LTEXT           "in the registry", Label_Registry, 67, 95, 76, 9, WS_DISABLED | SS_LEFT, WS_EX_LEFT
+    LTEXT           "in azip.cfg (stealth mode, cf. Help)", Label_Stealth, 169, 95, 154, 9, WS_DISABLED | SS_LEFT, WS_EX_LEFT
+    GROUPBOX        "Desktop and Explorer integration", Group_box_Desktop_Explorer_integration, 15, 121, 312, 33, 0, WS_EX_LEFT
     RTEXT           "Desktop shortcut", 0, 20, 134, 62, 13, SS_RIGHT, WS_EX_LEFT
     PUSHBUTTON      "Create", Button_create_shortcut, 87, 132, 32, 13, 0, WS_EX_LEFT
     RTEXT           "Context menu", 0, 132, 134, 52, 13, SS_RIGHT, WS_EX_LEFT
     PUSHBUTTON      "Add", Button_context_add, 188, 132, 38, 13, 0, WS_EX_LEFT
     RTEXT           "Extensions", 0, 238, 134, 42, 13, SS_RIGHT, WS_EX_LEFT
     PUSHBUTTON      "Choose", Button_extension_choose, 287, 132, 38, 13, 0, WS_EX_LEFT
-    LTEXT           "Note on first visit", Label_Install_note_first_visit, 17, 165, 312, 11, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Note on first visit", Label_Install_note_first_visit, 15, 165, 312, 11, SS_LEFT, WS_EX_LEFT
     DEFPUSHBUTTON   "OK, do nothing", IDOK, 31, 185, 81, 17, 0, WS_EX_LEFT
     DEFPUSHBUTTON   "Install for all users", ID_Install_all_users, 131, 185, 81, 17, 0, WS_EX_LEFT
     DEFPUSHBUTTON   "Install for current user", ID_Install_current_user, 231, 185, 81, 17, 0, WS_EX_LEFT
@@ -597,8 +597,8 @@ Plus_icon          ICON           "ico_bmp/plus.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     2,3,7,0
-    PRODUCTVERSION  2,3,7,0
+    FILEVERSION     2,3,8,0
+    PRODUCTVERSION  2,3,8,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -611,7 +611,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
-            VALUE "FileVersion", "2.37"
+            VALUE "FileVersion", "2.38"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2020"
             VALUE "ProductName", "AZip"
         }

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/08/01  08:40:43
+-- Transcription time: 2020/09/25  17:59:05
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -858,7 +858,7 @@ package body AZip_Resource_GUI is
     Create( Window.Group_box_Desktop_Explorer_integration, Window, "Desktop and Explorer integration", x,y,w,h);
     Dlg_to_Scn(  20, 134, 62, 13, x,y,w,h);
     Create_Label( Window, "Desktop shortcut", x,y,w,h, GWindows.Static_Controls.Right, None);
-    Dlg_to_Scn(  87, 132, 32, 13, x,y,w,h);
+    Dlg_to_Scn(  87, 132, 32, 15, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -871,7 +871,7 @@ package body AZip_Resource_GUI is
     end if;
     Dlg_to_Scn(  132, 134, 52, 13, x,y,w,h);
     Create_Label( Window, "Context menu", x,y,w,h, GWindows.Static_Controls.Right, None);
-    Dlg_to_Scn(  188, 132, 38, 13, x,y,w,h);
+    Dlg_to_Scn(  188, 132, 38, 15, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -882,9 +882,9 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Button_context_add);
     end if;
-    Dlg_to_Scn(  238, 134, 42, 13, x,y,w,h);
+    Dlg_to_Scn(  231, 134, 42, 13, x,y,w,h);
     Create_Label( Window, "Extensions", x,y,w,h, GWindows.Static_Controls.Right, None);
-    Dlg_to_Scn(  287, 132, 38, 13, x,y,w,h);
+    Dlg_to_Scn(  280, 132, 38, 15, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.

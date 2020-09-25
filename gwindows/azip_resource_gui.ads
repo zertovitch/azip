@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/08/01  08:40:43
+-- Transcription time: 2020/09/25  17:59:05
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.

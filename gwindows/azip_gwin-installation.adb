@@ -52,16 +52,48 @@ package body AZip_GWin.Installation is
     box : AZip_Resource_GUI.Install_box_Type;
     --
     procedure Create_Shortcut_Clicked (Dummy : in out GWindows.Base.Base_Window_Type'Class) is
+      Exe_Loc : constant Executable_Location_Choice := Executable_Location;
+      procedure Message (Text : GString) is
+      begin
+        Message_Box (box, "AZip Desktop Shortcut", Text, Icon => Information_Icon);
+      end Message;
+      --
+      All_Desktops : Boolean := False;
+      --
+      procedure Message_2 (Extra_Text : GString) is
+      begin
+        if All_Desktops then
+          Message (
+            "If this current instance of AZip is running in Administrator" &
+            " mode, a desktop shortcut" &
+            " has been created on desktops of all users." & Extra_Text
+          );
+        else
+          Message ("A desktop shortcut has been created on your desktop." & Extra_Text);
+        end if;
+      end Message_2;
     begin
+      if Exe_Loc /= Current_User then
+        All_Desktops :=
+          Message_Box (box,
+            "AZip Desktop Shortcut",
+            "Do you want a shortcut on all desktops ?" & NL &
+            "Yes: needs AZip running in admin mode." & NL & 
+            "No: only your desktop.",
+            Yes_No_Box, Question_Icon
+          )
+          = Yes;
+      end if;
       GWin_Util.Create_Desktop_Shortcut (
         "AZip",
         Ada.Command_Line.Command_Name,
-        All_Users => Executable_Location = Administrator
+        All_Users => All_Desktops
       );
-      Message_Box (box,
-        "Desktop shortcut",
-        "Desktop shortcut has been created created.",
-        Icon => Information_Icon);
+      if Exe_Loc = Elsewhere then
+        Message_2 (NL & "*Caution* : shortcut points to this uninstalled instance of AZip.");
+      else
+        Message_2 ("");
+      end if;
     end Create_Shortcut_Clicked;
     --
     procedure Do_Install (Mode : Installation_Mode) is

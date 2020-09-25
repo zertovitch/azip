@@ -312,11 +312,11 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "in azip.cfg (stealth mode, cf. Help)", Label_Stealth, 169, 95, 154, 9, WS_DISABLED | SS_LEFT, WS_EX_LEFT
     GROUPBOX        "Desktop and Explorer integration", Group_box_Desktop_Explorer_integration, 15, 121, 312, 33, 0, WS_EX_LEFT
     RTEXT           "Desktop shortcut", 0, 20, 134, 62, 13, SS_RIGHT, WS_EX_LEFT
-    PUSHBUTTON      "Create", Button_create_shortcut, 87, 132, 32, 13, 0, WS_EX_LEFT
+    PUSHBUTTON      "Create", Button_create_shortcut, 87, 132, 32, 15, 0, WS_EX_LEFT
     RTEXT           "Context menu", 0, 132, 134, 52, 13, SS_RIGHT, WS_EX_LEFT
-    PUSHBUTTON      "Add", Button_context_add, 188, 132, 38, 13, 0, WS_EX_LEFT
-    RTEXT           "Extensions", 0, 238, 134, 42, 13, SS_RIGHT, WS_EX_LEFT
-    PUSHBUTTON      "Choose", Button_extension_choose, 287, 132, 38, 13, 0, WS_EX_LEFT
+    PUSHBUTTON      "Add", Button_context_add, 188, 132, 38, 15, 0, WS_EX_LEFT
+    RTEXT           "Extensions", 0, 231, 134, 42, 13, SS_RIGHT, WS_EX_LEFT
+    PUSHBUTTON      "Choose", Button_extension_choose, 280, 132, 38, 15, 0, WS_EX_LEFT
     LTEXT           "Note on first visit", Label_Install_note_first_visit, 15, 165, 312, 11, SS_LEFT, WS_EX_LEFT
     DEFPUSHBUTTON   "OK, do nothing", IDOK, 31, 185, 81, 17, 0, WS_EX_LEFT
     DEFPUSHBUTTON   "Install for all users", ID_Install_all_users, 131, 185, 81, 17, 0, WS_EX_LEFT

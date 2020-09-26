@@ -78,7 +78,7 @@ package body AZip_GWin.Installation is
           Message_Box (box,
             "AZip Desktop Shortcut",
             "Do you want a shortcut on all desktops ?" & NL &
-            "Yes: needs AZip running in admin mode." & NL & 
+            "Yes: needs AZip running in admin mode." & NL &
             "No: only your desktop.",
             Yes_No_Box, Question_Icon
           )

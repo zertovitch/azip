@@ -30,6 +30,7 @@ with Ada.Exceptions;
 with Ada.IO_Exceptions;
 with Ada.Sequential_IO;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
+with Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
@@ -713,9 +714,7 @@ package body AZip_GWin.MDI_Child is
     return_code    : out Operation_return_code
   )
   is
-    az_names: Name_list(file_names'Range);
-    progress_box: Progress_box_Type;
-    is_aborted: Boolean:= False;
+    is_aborted : Boolean := False;
     --
     procedure Abort_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
       pragma Warnings(off, dummy);
@@ -723,7 +722,8 @@ package body AZip_GWin.MDI_Child is
       is_aborted:= True;  --  Will propagate user_abort upon next Boxed_Feedback.
     end Abort_clicked;
     --
-    tick: Ada.Calendar.Time;
+    tick : Ada.Calendar.Time;
+    progress_box : Progress_box_Type;
     --
     procedure Boxed_Feedback(
       file_percents_done    : Natural;
@@ -735,7 +735,7 @@ package body AZip_GWin.MDI_Child is
       user_abort            : out Boolean
     )
     is
-      use Ada.Calendar;
+      use Ada.Calendar, Ada.Strings.Wide_Fixed;
       now: constant Ada.Calendar.Time:= Clock;
     begin
       -- Display only at most every 4/100 second (i.e. max 25 fps).
@@ -743,8 +743,12 @@ package body AZip_GWin.MDI_Child is
       -- takes much more time due to the display. Typical case: an archive
       -- with many small files - GWin.zip or Java run-time's Jar for instance.
       if now - tick >= 0.04 or else archive_percents_done = 100 then
-        progress_box.File_Progress.Position(file_percents_done);
-        progress_box.Archive_Progress.Position(archive_percents_done);
+        progress_box.File_Progress.Position (file_percents_done);
+        progress_box.Archive_Progress.Position (archive_percents_done);
+        Window.MDI_Root.Text (
+          Trim (Integer'Wide_Image (archive_percents_done), Left) &
+          "% done - AZip"
+        );
         if Window.MDI_Root.Task_bar_gadget_ok then
           Window.MDI_Root.Task_bar_gadget.Set_Progress_Value (Window.MDI_Root.all, archive_percents_done, 100);
         end if;
@@ -808,7 +812,7 @@ package body AZip_GWin.MDI_Child is
       );
     end Get_password_decrypt_for_Common;
     --
-    -- Instanciation of the GUI-agnostic processing
+    --  Instanciation of the GUI-agnostic processing
     --
     procedure Archive_processing is
       new AZip_Common.Operations.Process_archive(
@@ -831,15 +835,16 @@ package body AZip_GWin.MDI_Child is
       end if;
     end Msg_Name_Error;
     --
+    az_names : Name_list (file_names'Range);
   begin -- Process_archive_GWin
     -- Neutral conversion: GStrings (UTF-16) to UTF_16_String
     for i in az_names'Range loop
-      az_names(i).str:= file_names(i);
+      az_names (i).str := file_names (i);
     end loop;
-    tick:= Ada.Calendar."-"(Ada.Calendar.Clock, 1.0);
-    progress_box.Create_Full_Dialog(Window);
-    progress_box.File_Progress.Position(0);
-    progress_box.Archive_Progress.Position(0);
+    tick := Ada.Calendar."-" (Ada.Calendar.Clock, 1.0);
+    progress_box.Create_Full_Dialog (Window);
+    progress_box.File_Progress.Position (0);
+    progress_box.Archive_Progress.Position (0);
     if Window.MDI_Root.Task_bar_gadget_ok then
       Window.MDI_Root.Task_bar_gadget.Set_Progress_Value (Window.MDI_Root.all, 0, 100);
     end if;
@@ -850,7 +855,7 @@ package body AZip_GWin.MDI_Child is
     progress_box.Redraw;
     progress_box.Show;
     Window.MDI_Root.Disable;
-    progress_box.Text(progress_box.Text & " Operation: " & Img(operation));
+    progress_box.Text (progress_box.Text & " Operation: " & Img (operation));
     begin
       Archive_processing(
         zif              => Window.zif,
@@ -868,6 +873,7 @@ package body AZip_GWin.MDI_Child is
         max_code         => Window.last_max_code,
         return_code      => return_code
       );
+      Window.MDI_Root.Text ("AZip");  --  Restore MDI main window title, without progress info.
       Window.last_operation:= operation;
       case return_code is
         when ok =>

@@ -1,6 +1,6 @@
--- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
+-- This is a GNAT, GCC or GNAT Studio project file
 -- for the AZip project ( http://azip.sf.net/ ), version using GWindows.
--- Build me with "gnatmake -p -P azip_gwindows", or open me with GPS
+-- Build me with "gnatmake -P azip_gwindows", or open me with GNAT Studio
 
 --  *** External libraries ***
 --  * 
@@ -31,6 +31,7 @@ project AZip_GWindows is
    for Source_Dirs use ("../sys_common", ".", "win_special", "../testing") & external_as_list("GNAT_SOURCE_PATH", ";");
    for Exec_Dir use ".";
    for Main use ("azip.adb", "test_expand_folders.adb");
+   for Create_Missing_Dirs use "True";  --  Flips by default the "-p" switch
 
    case Build_Mode is
       when "Debug_GPL" =>

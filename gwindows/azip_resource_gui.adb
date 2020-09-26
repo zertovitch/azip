@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/09/25  17:59:05
+-- Transcription time: 2020/09/26  20:50:10
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -139,7 +139,7 @@ package body AZip_Resource_GUI is
     Append_Item(Menu.Popup_0002, "mru_8", IDM_MRU_8);
     Append_Item(Menu.Popup_0002, "mru_9", IDM_MRU_9);
     Append_Separator(Menu.Popup_0001);
-    Append_Item(Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Alt+F4", IDM_QUIT);
+    Append_Item(Menu.Popup_0001, "&Quit" & To_GString_From_String((1=>ASCII.HT)) & "Ctrl+W / Alt+F4", IDM_QUIT);
     Menu.Popup_0003:= Create_Popup;
     Append_Menu(Menu.Main, "&Options", Menu.Popup_0003);
     Append_Item(Menu.Popup_0003, "&General options", IDM_General_options);

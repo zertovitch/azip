@@ -523,8 +523,14 @@ package body AZip_GWin.MDI_Main is
         GWin_Util.Start (azip_web_page);
       when IDM_AZip_Web_news =>
         GWin_Util.Start (azip_news_web_page);
-      when IDM_QUIT  =>
+      when IDM_QUIT =>
         Close (Window);
+      when IDM_CLOSE_ARCHIVE =>
+        if Window.Count_MDI_Children = 0 then
+          Close (Window);  --  Ctrl-W when no subwindow is open.
+        else
+          On_Menu_Select (Window_Type (Window), Item);
+        end if;
       when IDM_WINDOW_CASCADE   =>
         MDI_Cascade (Window);
       when IDM_WINDOW_TILE_HORIZONTAL =>

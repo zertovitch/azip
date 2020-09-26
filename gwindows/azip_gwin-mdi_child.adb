@@ -5,7 +5,6 @@ with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
 with AZip_GWin.Password_dialogs;        use AZip_GWin.Password_dialogs;
 with AZip_GWin.Properties;
 
-with Zip;                               use Zip;
 with Zip_Streams;
 with UnZip;
 with Zip_time_display;
@@ -20,7 +19,7 @@ with GWindows.Cursors;                  use GWindows.Cursors;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Static_Controls;
-with GWindows.Taskbar;                  use GWindows.Taskbar;
+with GWindows.Taskbar;
 
 with Ada.Calendar;
 with Ada.Directories;
@@ -39,7 +38,7 @@ with Interfaces;
 
 package body AZip_GWin.MDI_Child is
 
-  use AZip_GWin.Directory_Lists;
+  use AZip_GWin.Directory_Lists, Zip;
 
   function Folder_Focus (Window : in MDI_Child_Type) return Boolean is
   begin
@@ -725,7 +724,7 @@ package body AZip_GWin.MDI_Child is
     tick : Ada.Calendar.Time;
     progress_box : Progress_box_Type;
     --
-    procedure Boxed_Feedback(
+    procedure Boxed_Feedback (
       file_percents_done    : Natural;
       archive_percents_done : Natural;
       entry_being_processed : GString;
@@ -815,7 +814,7 @@ package body AZip_GWin.MDI_Child is
     --  Instanciation of the GUI-agnostic processing
     --
     procedure Archive_processing is
-      new AZip_Common.Operations.Process_archive(
+      new AZip_Common.Operations.Process_archive (
         Boxed_Feedback,
         Get_password_decrypt_for_Common
       );
@@ -836,8 +835,9 @@ package body AZip_GWin.MDI_Child is
     end Msg_Name_Error;
     --
     az_names : Name_list (file_names'Range);
-  begin -- Process_archive_GWin
-    -- Neutral conversion: GStrings (UTF-16) to UTF_16_String
+    use GWindows.Taskbar;
+  begin  --  Process_archive_GWin
+    --  Neutral conversion: GStrings (UTF-16) to UTF_16_String
     for i in az_names'Range loop
       az_names (i).str := file_names (i);
     end loop;

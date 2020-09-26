@@ -277,7 +277,7 @@ package body AZip_Common.Operations is
   -- Blocking, visible processing of an archive --
   ------------------------------------------------
 
-  procedure Process_archive(
+  procedure Process_archive (
     zif             : in out Zip.Zip_info; -- preserved, even after modifying operation
     operation       :        Archive_Operation;
     entry_name      :        Name_list;
@@ -299,18 +299,18 @@ package body AZip_Common.Operations is
     old_fzs: aliased Zip_Streams.File_Zipstream;
     file_percents_done    : Natural := 0;
     archive_percents_done : Natural := 0;
-    processed_entries, total_entries: Natural:= 0;
-    current_entry_name: UTF_16_Unbounded_String;
-    current_operation: Entry_Operation;
-    current_skip_hint: Boolean;
-    dummy_user_abort : Boolean;
-    total_occurences: Natural:= 0;
-    total_files_with_occurence: Natural:= 0;
+    processed_entries, total_entries : Natural := 0;
+    current_entry_name : UTF_16_Unbounded_String;
+    current_operation : Entry_Operation;
+    current_skip_hint : Boolean;
+    dummy_user_abort  : Boolean;
+    total_occurences : Natural := 0;
+    total_files_with_occurence : Natural := 0;
     --
-    procedure Entry_feedback(
-      percents_done:  in Natural;  -- %'s completed
-      entry_skipped:  in Boolean;  -- indicates one can show "skipped", no %'s
-      user_abort   : out Boolean   -- e.g. transmit a "click on Cancel" here
+    procedure Entry_feedback (
+      percents_done:  in Natural;  --  %'s completed
+      entry_skipped:  in Boolean;  --  indicates one can show "skipped", no %'s
+      user_abort   : out Boolean   --  e.g. transmit a "click on Cancel" here
     )
     is
     begin
@@ -321,9 +321,9 @@ package body AZip_Common.Operations is
       end if;
       -- Call the given non-portable feedback box
       -- (Windows GUI, Gtk, Lumen, iOS, console, ...)
-      Feedback(
+      Feedback (
         file_percents_done,
-        archive_percents_done,
+        archive_percents_done + file_percents_done / total_entries,
         To_Wide_String(current_entry_name),
         current_operation,
         "", "",
@@ -682,13 +682,12 @@ package body AZip_Common.Operations is
       --
       use type Zip.File_size_type;
     begin  --  Action_1_entry
-      user_code:= nothing;
+      user_code := nothing;
       if return_code = aborted then
         return;
       end if;
-      processed_entries:= processed_entries + 1;
-      archive_percents_done:= (100 * processed_entries) / total_entries;
-      file_percents_done:= 0;
+      archive_percents_done := (100 * processed_entries) / total_entries;
+      file_percents_done := 0;
       --
       -- !! we could use rather hashed maps for searching
       --
@@ -923,21 +922,22 @@ package body AZip_Common.Operations is
             null; -- Nothing to do here
         end case;
       end if;
+      processed_entries := processed_entries + 1;
     end Action_1_entry;
 
     procedure Traverse_archive is new Zip.Traverse_verbose (Action_1_entry);
 
-  begin -- Process_archive
-    max_code:= 0;
+  begin  --  Process_archive
+    max_code := 0;
     return_code := ok;
-    if not Zip.Is_loaded(zif) then
-      return; -- we have a "null" archive (not even a file with 0 entries)
+    if not Zip.Is_loaded (zif) then
+      return;  --  We have a "null" archive (not even a file with 0 entries).
     end if;
     case operation is
       when Add =>
-        total_entries:= Zip.Entries(zif) + entry_name'Length;
+        total_entries := Zip.Entries(zif) + entry_name'Length;
       when Update | Recompress | Remove | Read_Only_Operation =>
-        total_entries:= Zip.Entries(zif);
+        total_entries := Zip.Entries(zif);
     end case;
     case operation is
       when Modifying_Operation =>
@@ -956,19 +956,18 @@ package body AZip_Common.Operations is
     end case;
     UnZip.current_user_attitude:= UnZip.yes;
     current_skip_hint:= False;
-    --------------------------------
-    -- The main job is done here: --
-    --------------------------------
+    ----------------------------------
+    --  The main job is done here:  --
+    ----------------------------------
     Traverse_archive(zif);
-    --------------------------------------------------------------
-    --  Almost done, we only need to process new entries (Add)  --
-    --  or to give a final feedback (Search).                   --
-    --------------------------------------------------------------
+    --------------------------------------------------------------------------
+    --  Almost done. We only need to process new entries that weren't in    --
+    --  initial Zip archive (Add) or to give a final feedback (Search).     --
+    --------------------------------------------------------------------------
     case operation is
       when Add =>
         for i in entry_name'Range loop
-          processed_entries:= processed_entries + 1;
-          archive_percents_done:= (100 * processed_entries) / total_entries;
+          archive_percents_done := (100 * processed_entries) / total_entries;
           declare
             name: constant UTF_16_String:= To_Wide_String(entry_name(i).str);
             short_name: constant UTF_16_String:=
@@ -983,35 +982,34 @@ package body AZip_Common.Operations is
             end;
             ex:= ex or Zip.Exists(zif, To_UTF_8(short_name));
             if not ex then
-              current_operation:= Append;
-              current_entry_name:= U(short_name);
-              begin
-                -- We try to convert as many names as possible to the
-                -- "old DOS" encoding, for compatibility, e.g. with WinZip 10.0 (2005 !)
-                Add_File(
-                  Info               => new_zip,
-                  File_Name          => To_UTF_8(name), -- external file -> UTF-8
-                  Name_in_archive    => To_IBM_437(short_name),
-                  Delete_file_after  => False,
-                  Name_encoding      => IBM_437,
-                  Modification_time  => Zip.Convert(Modification_Time(To_UTF_8(name))),
-                  Is_read_only       => False, -- !!
-                  Feedback           => Entry_feedback'Unrestricted_Access,
-                  Password           => Encryption_password
-                );
-              exception
-                when Cannot_encode_to_IBM_437 =>
+              current_operation := Append;
+              current_entry_name := U (short_name);
+              declare
+                procedure Add_with_encoding (
+                  encoded_name : String;
+                  encoding     : Zip.Zip_name_encoding
+                )
+                is
+                begin
                   Add_File(
                     Info               => new_zip,
                     File_Name          => To_UTF_8(name), -- external file -> UTF-8
-                    Name_in_archive    => To_UTF_8(short_name),
+                    Name_in_archive    => encoded_name,
                     Delete_file_after  => False,
-                    Name_encoding      => UTF_8,
+                    Name_encoding      => encoding,
                     Modification_time  => Zip.Convert(Modification_Time(To_UTF_8(name))),
                     Is_read_only       => False, -- !!
                     Feedback           => Entry_feedback'Unrestricted_Access,
                     Password           => Encryption_password
                   );
+                end Add_with_encoding;
+              begin
+                -- We try to convert as many names as possible to the
+                -- "old DOS" encoding, for compatibility, e.g. with WinZip 10.0 (2005 !)
+                Add_with_encoding (To_IBM_437(short_name), IBM_437);
+              exception
+                when Cannot_encode_to_IBM_437 =>
+                  Add_with_encoding (To_UTF_8(short_name), UTF_8);
               end;
             end if;
           exception
@@ -1022,6 +1020,7 @@ package body AZip_Common.Operations is
               return_code := archive_too_large;  --  In Zip-Ada v. > 55, on Add_Compressed_Stream.
               exit;                              --  At latest, on Finish below.
           end;
+          processed_entries := processed_entries + 1;
         end loop;
       when Update | Remove | Recompress =>
         --  There should be no file to be updated, recompressed or removed which is

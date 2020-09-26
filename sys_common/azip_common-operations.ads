@@ -120,7 +120,7 @@ package AZip_Common.Operations is
   );
 
   generic
-    with procedure Feedback(
+    with procedure Feedback (
       file_percents_done    : Natural;
       archive_percents_done : Natural;
       entry_being_processed : UTF_16_String;
@@ -129,12 +129,12 @@ package AZip_Common.Operations is
       skip_hint             : Boolean;
       user_abort            : out Boolean
     );
-    with procedure Change_password(
+    with procedure Change_password (
       entry_name : in     UTF_16_String;
       password   : in out Unbounded_Wide_String;
       cancelled  :    out Boolean
     );
-  procedure Process_archive(
+  procedure Process_archive (
     zif             : in out Zip.Zip_info; -- preserved, even after modifying operation
     operation       :        Archive_Operation;
     entry_name      :        Name_list;

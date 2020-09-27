@@ -1030,11 +1030,12 @@ package body AZip_GWin.MDI_Child is
         if not Is_loaded (Window.zif) then
           Window.On_Save_As;
         end if;
+        --
         if Is_loaded (Window.zif) then
           if encrypt then
             Get_password_for_encryption (Window, cancelled);
           else
-            cancelled:= False;
+            cancelled := False;
           end if;
           if not cancelled then
             Window.Go_for_adding (File_Names, Encrypt => encrypt);

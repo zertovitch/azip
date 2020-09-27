@@ -5,6 +5,7 @@ with AZip_GWin.Installation;
 with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
 with AZip_GWin.Modal_Dialogs;
 with AZip_GWin.Options;                 use AZip_GWin.Options;
+with AZip_GWin.Password_dialogs;
 with AZip_GWin.Persistence;
 with AZip_GWin.Toolbars;
 
@@ -442,8 +443,10 @@ package body AZip_GWin.MDI_Main is
   procedure On_File_Drop (Window     : in out MDI_Main_Type;
                           File_Names : in     Array_Of_File_Names) is
     New_Window : MDI_Child_Access;
-    encrypt    : Boolean:= False;
+    encrypt    : Boolean := False;
     yes        : Boolean;
+    cancelled  : Boolean;
+    use AZip_GWin.Password_dialogs, Zip;
   begin
     Window.Focus;
     if Window.Count_MDI_Children > 0 and then Window.opt.MDI_childen_maximized then
@@ -477,7 +480,17 @@ package body AZip_GWin.MDI_Main is
           New_Window := new MDI_Child_Type;
           On_File_New (Window, extra_first_doc => False, New_Window => New_Window);
           New_Window.On_Save_As;
-          New_Window.Go_for_adding(File_Names, Encrypt => encrypt);
+          --
+          if Is_loaded (New_Window.zif) then
+            if encrypt then
+              Get_password_for_encryption (New_Window.all, cancelled);
+            else
+              cancelled := False;
+            end if;
+            if not cancelled then
+              New_Window.Go_for_adding (File_Names, Encrypt => encrypt);
+            end if;
+          end if;
         end if;
       end if;
     end if;

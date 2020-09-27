@@ -1007,34 +1007,37 @@ package body AZip_GWin.MDI_Child is
     parent    : MDI_Main_Access;
   begin
     Window.Focus;
-    if Confirm_archives_if_all_Zip_files(Window, File_Names) then
-      --  We save the parent access since Window may be closed when
-      --  i > File_Names'First if Window is a temporary MS-Office-like
+    if Confirm_archives_if_all_Zip_files (Window, File_Names) then
+      --  All files are Zip archives (even those without .zip extension).
+      --
+      --  We save the parent access since Window may have been closed
+      --  since the second iteration if Window was a temporary MS-Office-like
       --  blank window - See procedure Close_extra_first_child.
       parent:= Window.MDI_Root;
+      --
       for i in File_Names'Range loop
-        Open_Child_Window_And_Load(parent.all, File_Names(i));
+        Open_Child_Window_And_Load (parent.all, File_Names(i));
       end loop;
     else
-      Do_drop_file_dialog(
+      Do_drop_file_dialog (
         Parent         => Window,
-        archive_name   => GU2G(Window.Short_Name) & Eventual_folder,
-        new_archive    => not Is_loaded(Window.zif),
+        archive_name   => GU2G (Window.Short_Name) & Eventual_folder,
+        new_archive    => not Is_loaded (Window.zif),
         encrypt        => encrypt,
         yes            => yes
       );
       if yes then
-        if not Is_loaded(Window.zif) then
+        if not Is_loaded (Window.zif) then
           Window.On_Save_As;
         end if;
-        if Is_loaded(Window.zif) then
+        if Is_loaded (Window.zif) then
           if encrypt then
-            Get_password_for_encryption(Window, cancelled);
+            Get_password_for_encryption (Window, cancelled);
           else
             cancelled:= False;
           end if;
           if not cancelled then
-            Window.Go_for_adding(File_Names, Encrypt => encrypt);
+            Window.Go_for_adding (File_Names, Encrypt => encrypt);
           end if;
         end if;
       end if;

@@ -450,7 +450,7 @@ package body AZip_GWin.MDI_Main is
           File_Names(i)
         );
       end loop;
-    elsif Window.opt.MDI_childen_maximized then
+    elsif Window.Count_MDI_Children > 0 and then Window.opt.MDI_childen_maximized then
       --  If children windows are maximized, it is intuitive that files dropped (on the small
       --   areas like the window borders or the tool bar) are for the focused child window.
       declare

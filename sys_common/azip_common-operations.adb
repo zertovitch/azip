@@ -1104,15 +1104,17 @@ package body AZip_Common.Operations is
       procedure Full_Walk(Name : Wide_String; Count_only: Boolean; New_list: out Name_list) is
         --
         procedure Walk (Name : Wide_String) is
+          --
           procedure Print (Item : Directory_Entry_Type) is
           begin
             if Simple_Name (Item) /= "." and then Simple_Name (Item) /= ".." then
-              files:= files + 1;
+              files := files + 1;
               if not Count_only then
-                New_list(files):= (U((To_Wide_String(Full_Name (Item)))), sep);
+                New_list(files) := (U((To_Wide_String(Full_Name (Item)))), sep);
               end if;
             end if;
           end Print;
+          --
           procedure Subdir (Item : Directory_Entry_Type) is
           begin
             if Simple_Name (Item) /= "." and then Simple_Name (Item) /= ".." then
@@ -1121,25 +1123,28 @@ package body AZip_Common.Operations is
           exception
             when Ada.IO_Exceptions.Name_Error => null;
           end Subdir;
+          --
         begin
-          -- The files
+          --  The files in the directory Name:
           Search (To_String(Name), "*", (Directory => False, others => True), Print'Access);
-          -- The subfolders
+          --  The subfolders of Name:
           Search (To_String(Name), "", (Directory => True, others => False), Subdir'Access);
         end Walk;
       begin
-        Walk(Name);
+        Walk (Name);
       end Full_Walk;
 
-      Dir: constant Wide_String:= To_Wide_String(Name.str);
-      fake_list: Name_list(1..0);
+      Dir : constant Wide_String := To_Wide_String (Name.str);
+      fake_list: Name_list (1..0);
       --
     begin
+      --  First round, to count the files in the file tree:
       Full_Walk (Name => Dir, Count_only => True, New_list => fake_list);
-      total_files:= files;
-      files:= 0;
+      --  Second round, with a stack-allocated array for the names in the file tree:
+      total_files := files;
+      files := 0;
       declare
-        new_list: Name_list(1..total_files);
+        new_list: Name_list (1..total_files);
       begin
         for i in Dir'Range loop
           if Dir(i) = '\' or Dir(i) = '/' then
@@ -1159,9 +1164,9 @@ package body AZip_Common.Operations is
       return l;
     else
       return
-        -- Looks like LISP, doesn't it ?...
-        ( Expand_one_entry(l(l'First)) &            -- car - first item
-          Expand_folders(l(l'First + 1 .. l'Last))  -- cdr - rest of the list
+        --  Looks like LISP, doesn't it ?...
+        ( Expand_one_entry (l(l'First)) &            --  car - first item
+          Expand_folders (l(l'First + 1 .. l'Last))  --  cdr - rest of the list
         );
     end if;
   end Expand_folders;

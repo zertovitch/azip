@@ -10,6 +10,10 @@ package AZip_GWin.Installation is
 
   function Is_Installed return Boolean is (Executable_Location in Installation_Mode);
 
+  function AZip_Title return String is (
+    (if AZip_GWin.Installation.Is_Installed then "AZip" else "AZip (non-installed)")
+  );
+
   procedure Installation_Dialog
    (Main_Window : in out MDI_Main.MDI_Main_Type;
     First_Visit : in     Boolean

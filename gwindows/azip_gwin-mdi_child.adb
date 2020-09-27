@@ -2,6 +2,7 @@ with AZip_Common;                       use AZip_Common;
 with AZip_GWin.Columns;                 use AZip_GWin.Columns;
 with AZip_GWin.Dragging;                use AZip_GWin.Dragging;
 with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
+with AZip_GWin.Installation;
 with AZip_GWin.Password_dialogs;        use AZip_GWin.Password_dialogs;
 with AZip_GWin.Properties;
 
@@ -746,7 +747,7 @@ package body AZip_GWin.MDI_Child is
         progress_box.Archive_Progress.Position (archive_percents_done);
         Window.MDI_Root.Text (
           Trim (Integer'Wide_Image (archive_percents_done), Left) &
-          "% done - AZip"
+          "% done - " & S2G (AZip_GWin.Installation.AZip_Title)
         );
         if Window.MDI_Root.Task_bar_gadget_ok then
           Window.MDI_Root.Task_bar_gadget.Set_Progress_Value (Window.MDI_Root.all, archive_percents_done, 100);
@@ -873,7 +874,7 @@ package body AZip_GWin.MDI_Child is
         max_code         => Window.last_max_code,
         return_code      => return_code
       );
-      Window.MDI_Root.Text ("AZip");  --  Restore MDI main window title, without progress info.
+      Window.MDI_Root.Text (S2G (AZip_GWin.Installation.AZip_Title));  --  Remove progress info.
       Window.last_operation:= operation;
       case return_code is
         when ok =>

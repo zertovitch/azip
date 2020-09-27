@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/09/26  20:50:10
+-- Transcription time: 2020/09/27  06:59:22
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -901,8 +901,8 @@ package body AZip_Resource_GUI is
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDOK, Window, "OK, do nothing", x,y,w,h, ID => IDOK);
-    Create( Window.IDOK_permanent, Window, "OK, do nothing", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK, Window, "Close", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "Close", x,y,w,h, ID => IDOK);
     if for_dialog then -- hide the non-closing button
       Hide(Window.IDOK_permanent);
     else -- hide the closing button

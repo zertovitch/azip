@@ -3,17 +3,20 @@
 --  The GWindows* packages need to be visible to the compiler.
 --  See installation instructions in the header part of the azip_gwindows.gpr file.
 --
-with GWindows.Application;        use GWindows.Application;
-with GWindows.Base;
-with GWindows.GStrings;           use GWindows.GStrings;
-with GWindows.Message_Boxes;      use GWindows.Message_Boxes;
+with AZip_GWin.Installation,
+     AZip_GWin.MDI_Main;
 
-with AZip_GWin.MDI_Main; use AZip_GWin.MDI_Main;
+with GWindows.Application,
+     GWindows.Base,
+     GWindows.GStrings,
+     GWindows.Message_Boxes;
 
 with Ada.Exceptions;
 with GNAT.Traceback.Symbolic;
 
 procedure AZip is
+
+  use GWindows.GStrings;
 
   Top: AZip_GWin.MDI_Main.MDI_Main_Type;
 
@@ -28,17 +31,18 @@ procedure AZip is
     insult: constant String:=
         small_insult & ASCII.LF &
         GNAT.Traceback.Symbolic.Symbolic_Traceback(E);
+    use GWindows.Message_Boxes;
   begin
-    GWindows.Base.On_Exception_Handler (Handler => null); -- Avoid infinite recursion!
+    GWindows.Base.On_Exception_Handler (Handler => null);  --  Avoid infinite recursion!
     Message_Box
       ("Crash in AZip (GWindows)",
-        To_GString_From_String(insult),
+        To_GString_From_String (insult),
         OK_Box
       );
   end Interactive_crash;
 
 begin
     GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
-    Create_MDI_Top (Top, "AZip");
-    Message_Loop;
+    Top.Create_MDI_Top (To_GString_From_String (AZip_GWin.Installation.AZip_Title));
+    GWindows.Application.Message_Loop;
 end AZip;

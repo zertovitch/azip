@@ -77,7 +77,7 @@ package body AZip_GWin.Installation is
         All_Desktops :=
           Message_Box (box,
             "AZip Desktop Shortcut",
-            "Do you want a shortcut on all desktops ?" & NL &
+            "Do you want a shortcut on all desktops ?" & NL & NL &
             "Yes: needs AZip running in admin mode." & NL &
             "No: only your desktop.",
             Yes_No_Box, Question_Icon
@@ -85,7 +85,7 @@ package body AZip_GWin.Installation is
           = Yes;
       end if;
       GWin_Util.Create_Desktop_Shortcut (
-        "AZip",
+        (if All_Desktops then "AZip" else "My AZip"),
         Ada.Command_Line.Command_Name,
         All_Users => All_Desktops
       );
@@ -105,14 +105,14 @@ package body AZip_GWin.Installation is
       Create_Path (App_Folder);
       Copy_File (Ada.Command_Line.Command_Name, New_Exe);
       GWin_Util.Create_Desktop_Shortcut (
-        "AZip",
+        (if Mode = Administrator then "AZip" else "My AZip"),
         New_Exe,
         All_Users => Mode = Administrator
       );
       Message_Box (Main_Window,
         "Installation successful",
-        "AZip has installed itself successfully." & NL &
-        "For your next use of the installed copy of AZip," & NL &
+        "AZip has installed itself successfully." & NL & NL &
+        "For your next use of the *installed* copy of AZip," & NL &
         "a desktop shortcut has been created.",
         Icon => Information_Icon
       );

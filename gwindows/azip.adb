@@ -42,7 +42,7 @@ procedure AZip is
   end Interactive_crash;
 
 begin
-    GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
-    Top.Create_MDI_Top (To_GString_From_String (AZip_GWin.Installation.AZip_Title));
-    GWindows.Application.Message_Loop;
+  GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
+  Top.Create_MDI_Top (To_GString_From_String (AZip_GWin.Installation.AZip_Title));
+  GWindows.Application.Message_Loop;
 end AZip;

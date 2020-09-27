@@ -58,14 +58,14 @@ package body AZip_GWin.Installation is
         Message_Box (box, "AZip Desktop Shortcut", Text, Icon => Information_Icon);
       end Message;
       --
-      All_Desktops : Boolean := False;
+      All_Desktops : Boolean;
       --
       procedure Message_2 (Extra_Text : GString) is
       begin
         if All_Desktops then
           Message (
-            "If this current instance of AZip is running in Administrator" &
-            " mode, a desktop shortcut" &
+            "If this current instance of AZip is running in" &
+            " Administrator mode, a desktop shortcut" &
             " has been created on desktops of all users." & Extra_Text
           );
         else
@@ -73,7 +73,11 @@ package body AZip_GWin.Installation is
         end if;
       end Message_2;
     begin
-      if Exe_Loc /= Current_User then
+      if Exe_Loc = Current_User then
+        All_Desktops := False;
+        --  A shortcut, visible on all desktops, to a personal copy of
+        --  the exectuable, is not something we want...
+      else
         All_Desktops :=
           Message_Box (box,
             "AZip Desktop Shortcut",

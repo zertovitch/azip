@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/09/27  06:59:22
+-- Transcription time: 2020/09/27  19:53:23
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -407,7 +407,7 @@ package body AZip_Resource_GUI is
   procedure Create_Full_Dialog
      (Window      : in out Drop_files_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "File(s) dropped";
+      Title       : in     GString := "File(s) dropped or right-clicked from Explorer";
       Left        : in     Integer := Use_Default; -- Default = as designed
       Top         : in     Integer := Use_Default; -- Default = as designed
       Width       : in     Integer := Use_Default; -- Default = as designed
@@ -461,7 +461,7 @@ package body AZip_Resource_GUI is
     Dlg_to_Scn(  205, 100, 123, 16, x,y,w,h);
     Create( Window.Encrypt_check_box, Window, " Encrypt data in archive", x,y,w,h, ID => Encrypt_check_box);
     Dlg_to_Scn(  31, 7, 250, 14, x,y,w,h);
-    Create_Label( Window, "Add dropped file(s) to...", x,y,w,h, GWindows.Static_Controls.Left, None);
+    Create_Label( Window, "Add file(s) to...", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  178, 98, 21, 20, x,y,w,h);
     Create( Window.Static_0002, Window, Num_resource(Key_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  39, 26, 285, 32, x,y,w,h);

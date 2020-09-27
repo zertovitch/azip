@@ -297,16 +297,19 @@ package body AZip_GWin.MDI_Main is
     if Argument_Count = 0 then
       On_File_New (Window, extra_first_doc => True);
       -- ^ The MS Office-like first, empty document
+    else
+      declare
+        args : Array_Of_File_Names (1 .. Argument_Count);
+      begin
+        for I in 1 .. Argument_Count loop
+          args (I) := G2GU (To_UTF_16 (Argument (I), Zip.UTF_8));
+        end loop;
+        --  We simulate a file dropping onto the MDI main window.
+        Window.On_File_Drop (args);
+      end;
     end if;
-    -- !! This works on 1st instance only:
-    for I in 1..Argument_Count loop
-      Open_Child_Window_And_Load(
-        Window,
-        G2GU(To_UTF_16(Argument(I), Zip.UTF_8))
-      );
-    end loop;
+    --  Dropping files on the background will trigger creating an archive:
     Window.Accept_File_Drag_And_Drop;
-    -- Dropping files on the background will trigger creating an archive
     Window.record_dimensions:= True;
     --
     begin
@@ -443,14 +446,7 @@ package body AZip_GWin.MDI_Main is
     yes        : Boolean;
   begin
     Window.Focus;
-    if Confirm_archives_if_all_Zip_files(Window, File_Names) then
-      for i in File_Names'Range loop
-        Open_Child_Window_And_Load(
-          Window,
-          File_Names(i)
-        );
-      end loop;
-    elsif Window.Count_MDI_Children > 0 and then Window.opt.MDI_childen_maximized then
+    if Window.Count_MDI_Children > 0 and then Window.opt.MDI_childen_maximized then
       --  If children windows are maximized, it is intuitive that files dropped (on the small
       --   areas like the window borders or the tool bar) are for the focused child window.
       declare
@@ -461,18 +457,28 @@ package body AZip_GWin.MDI_Main is
         end if;
       end;
     else
-      Do_drop_file_dialog(
-        Parent         => Window,
-        archive_name   => "(A new Zip archive)",
-        new_archive    => True,
-        encrypt        => encrypt,
-        yes            => yes
-      );
-      if yes then
-        New_Window := new MDI_Child_Type;
-        On_File_New (Window, extra_first_doc => False, New_Window => New_Window);
-        New_Window.On_Save_As;
-        New_Window.Go_for_adding(File_Names, Encrypt => encrypt);
+      --  Files are dropped onto the background
+      --  area of the MDI main window.
+      --
+      if All_Zip_files (File_Names) then
+        --  All files are Zip archives (even those without .zip extension).
+        for i in File_Names'Range loop
+          Open_Child_Window_And_Load (Window, File_Names(i));
+        end loop;
+      else
+        Do_drop_file_dialog (
+          Parent         => Window,
+          archive_name   => "(A new Zip archive)",
+          new_archive    => True,
+          encrypt        => encrypt,
+          yes            => yes
+        );
+        if yes then
+          New_Window := new MDI_Child_Type;
+          On_File_New (Window, extra_first_doc => False, New_Window => New_Window);
+          New_Window.On_Save_As;
+          New_Window.Go_for_adding(File_Names, Encrypt => encrypt);
+        end if;
       end if;
     end if;
   end On_File_Drop;
@@ -678,33 +684,33 @@ package body AZip_GWin.MDI_Main is
   end All_Zip_files;
 
   function Confirm_archives_if_all_Zip_files(
-    Window: GWindows.Base.Base_Window_Type'Class;
-    File_Names: Array_Of_File_Names
+    Window : GWindows.Base.Base_Window_Type'Class;
+    File_Names : Array_Of_File_Names
   )
   return Boolean
   is
-    answer: Message_Box_Result;
+    answer : Message_Box_Result;
   begin
-    if All_Zip_files(File_Names) then
+    if All_Zip_files (File_Names) then
       if File_Names'Length = 1 then
         answer :=
-          Message_Box(
+          Message_Box (
             Window,
             "File is a Zip archive",
             "Should AZip open this Zip archive individually," & NL &
             "in a separate window ?" & NL &
-            "If not, it will be added as a file into an archive.",
+            "If not, it will be added as a file *into* a Zip archive.",
             Yes_No_Box,
             Question_Icon
           );
       else
         answer :=
-          Message_Box(
+          Message_Box (
             Window,
             "Files are Zip archives",
             "Should AZip open these Zip archives individually," & NL &
             "in separate windows ?" & NL &
-            "If not, they will be added as files into an archive.",
+            "If not, they will be added as files *into* a Zip archive.",
             Yes_No_Box,
             Question_Icon
           );

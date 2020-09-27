@@ -239,12 +239,12 @@ FONT 8, "Ms Shell Dlg"
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 Drop_files_box DIALOG 0, 0, 337, 119
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
-CAPTION "File(s) dropped"
+CAPTION "File(s) dropped or right-clicked from Explorer"
 FONT 8, "Ms Shell Dlg"
 {
     ICON            Plus_icon, IDC_STATIC, 2, 2, 21, 20, SS_ICON, WS_EX_LEFT
     AUTOCHECKBOX    " Encrypt data in archive", Encrypt_check_box, 205, 100, 123, 16, 0, WS_EX_LEFT
-    LTEXT           "Add dropped file(s) to...", 0, 31, 7, 250, 14, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Add file(s) to...", 0, 31, 7, 250, 14, SS_LEFT, WS_EX_LEFT
     ICON            Key_Icon, IDC_STATIC, 178, 98, 21, 20, SS_ICON, WS_EX_LEFT
     LTEXT           "(Archive name here)", Drop_archive_name, 39, 26, 285, 32, SS_LEFT, WS_EX_LEFT
     LTEXT           "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", New_archive_msg, 45, 65, 272, 21, NOT WS_VISIBLE | SS_LEFT, WS_EX_STATICEDGE

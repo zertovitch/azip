@@ -2,11 +2,11 @@ with AZip_GWin.MDI_Main;
 
 package AZip_GWin.Installation is
 
-  type Executable_Location_Choice is (Administrator, Current_User, Elsewhere);
+  type Executable_Location_Choice is (All_Users, Current_User, Elsewhere);
 
   function Executable_Location return Executable_Location_Choice;
 
-  subtype Installation_Mode is Executable_Location_Choice range Administrator .. Current_User;
+  subtype Installation_Mode is Executable_Location_Choice range All_Users .. Current_User;
 
   function Is_Installed return Boolean is (Executable_Location in Installation_Mode);
 

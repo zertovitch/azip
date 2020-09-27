@@ -35,13 +35,31 @@ package body AZip_GWin.Installation is
     Appdata_Path : constant String := Value ("APPDATA");
   begin
     if Head (Current_Exe, Admin_Path'Length) = Admin_Path then
-      return Administrator;
+      return All_Users;
     elsif Head (Current_Exe, Appdata_Path'Length) = Appdata_Path then
       return Current_User;
     else
       return Elsewhere;
     end if;
   end Executable_Location;
+
+  --  Here is an explanation about the shortcut creation (same applies to context menu):
+  --
+  --                                           Shortcut for...
+  --      Executable Location         \ Current User  |   All Users
+  --      -------------------------------------------------------------
+  --      All_Users (Prog. Files)     |      OK       |    Install    |
+  --      -------------------------------------------------------------
+  --      Current_User  (%appdata%)   |    Install    |*** No Way! ***|
+  --      -------------------------------------------------------------
+  --      Elsewhere                   |      OK       |      OK       |
+  --      -------------------------------------------------------------
+  --
+  --          OK      : possible with the "Create Shortcut" button
+  --                      (a warning is given if Location = Elsewhere)
+  --          Install : done by default on installation but also
+  --                      available with the "Create Shortcut" button
+  --                      for restoring a deleted shortcut
 
   procedure Installation_Dialog
    (Main_Window : in out MDI_Main.MDI_Main_Type;
@@ -105,15 +123,15 @@ package body AZip_GWin.Installation is
     procedure Do_Install (Mode : Installation_Mode) is
       use Ada.Directories, Ada.Environment_Variables;
       App_Folder : constant String :=
-        (if Mode = Administrator then Program_Files_32_Bit_Folder else Value ("APPDATA")) & "\AZip";
+        (if Mode = All_Users then Program_Files_32_Bit_Folder else Value ("APPDATA")) & "\AZip";
       New_Exe : constant String := App_Folder & "\AZip.exe";
     begin
       Create_Path (App_Folder);
       Copy_File (Ada.Command_Line.Command_Name, New_Exe);
       GWin_Util.Create_Desktop_Shortcut (
-        (if Mode = Administrator then "AZip" else "My AZip"),
+        (if Mode = All_Users then "AZip" else "My AZip"),
         New_Exe,
-        All_Users => Mode = Administrator
+        All_Users => Mode = All_Users
       );
       Message_Box (Main_Window,
         "Installation successful",
@@ -143,7 +161,7 @@ package body AZip_GWin.Installation is
     end if;
     --
     case Executable_Location is
-      when Administrator =>
+      when All_Users =>
         box.Check_box_installed_all_users.State (Checked);
         box.Label_Installed_All_Users.Enable;
       when Current_User =>
@@ -182,7 +200,7 @@ package body AZip_GWin.Installation is
     box.Center;
     --
     case Show_Dialog (box, Main_Window) is
-      when ID_Install_all_users    => Do_Install (Administrator);
+      when ID_Install_all_users    => Do_Install (All_Users);
       when ID_Install_current_user => Do_Install (Current_User);
       when others =>  --  Includes IDOK
         null;

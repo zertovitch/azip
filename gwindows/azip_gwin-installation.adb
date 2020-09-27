@@ -94,7 +94,9 @@ package body AZip_GWin.Installation is
         All_Users => All_Desktops
       );
       if Exe_Loc = Elsewhere then
-        Message_2 (NL & "*Caution* : shortcut points to this uninstalled instance of AZip.");
+        Message_2 (
+          NL & NL & "*Caution* : shortcut points to this non-installed instance of AZip."
+        );
       else
         Message_2 ("");
       end if;

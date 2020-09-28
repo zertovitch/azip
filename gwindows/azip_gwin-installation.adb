@@ -109,7 +109,7 @@ package body AZip_GWin.Installation is
       GWin_Util.Create_Desktop_Shortcut (
         (if All_Desktops then "AZip" else "My AZip"),
         Ada.Command_Line.Command_Name,
-        All_Users => All_Desktops
+        User_Scope => (if All_Desktops then GWin_Util.All_Users else GWin_Util.Current_User)
       );
       if Exe_Loc = Elsewhere then
         Message_2 (
@@ -131,7 +131,7 @@ package body AZip_GWin.Installation is
       GWin_Util.Create_Desktop_Shortcut (
         (if Mode = All_Users then "AZip" else "My AZip"),
         New_Exe,
-        All_Users => Mode = All_Users
+        User_Scope => (if Mode = All_Users then GWin_Util.All_Users else GWin_Util.Current_User)
       );
       Message_Box (Main_Window,
         "Installation successful",

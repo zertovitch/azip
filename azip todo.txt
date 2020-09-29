@@ -1,3 +1,12 @@
+Console mode through command lines options:
+  -a : Add
+  -d : Delete
+  -i : Install
+  -ia: Install for All Users
+  -t : Text mode (only console output)
+  -g : Graphic mode (GUI mode)
+  -q : Quiet: neither console output, nor GUI (for deamons or context menu operations)
+
 gw - drop to empty main window (0 archive) should trigger "New archive" command
 
 gw - drag & drop from list to another folder in a tree (same archive child window)
@@ -16,10 +25,6 @@ gw - "copy" saves directory list or tree into text clipboard
 gw - add some Windows Explorer context menu options for packing files into a .zip
      or for unpacking .zip files (suggestion by Rolf Ebert). Would use the
      console mode described below.
-
-console mode through command lines options (GUI not started then)
-  -a for Add, -d for Delete, etc.
-  -q: quiet: neither console output, nor gui (for deamons or context menu operations)
 
 gw - disable sorting on large lists
 gw - copy/paste entre fenêtres

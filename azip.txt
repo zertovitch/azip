@@ -14,15 +14,16 @@ Features
 
    * Aimed at simplicity, minimal option set
    * Usual archive management: Add / Remove / Extract files
-   * Useful tools:
-       * Content and/or entry name built-in search function through an archive - no need to extract contents!
-       * Archive updater: changes only new, modified files
-       * Archive recompression
+   * Useful & unique tools:
+       * Search     : content and/or entry name built-in search function
+                        through an archive - no need to extract contents!
+       * Update     : changes only new, modified files in an archive
+       * Recompress : make a Zip archive smaller
    * Flat view / Tree view
    * Multi-document
    * Methods supported: Reduce, Shrink, Implode, Deflate, Deflate64, BZip2, LZMA
    * Encryption
-   * Portable (no installation needed, no DLL, no configuration file (*))
+   * Portable (installation not needed, but supported; no DLL; no configuration file (*))
    * Free, open-source
 ___
 (*)  AZip can alternatively operate in a stealth "no trace in registry" mode.

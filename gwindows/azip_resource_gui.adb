@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/09/27  19:53:23
+-- Transcription time: 2020/09/29  17:02:36
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -869,14 +869,14 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.Button_create_shortcut);
     end if;
-    Dlg_to_Scn(  132, 134, 52, 13, x,y,w,h);
+    Dlg_to_Scn(  125, 134, 52, 13, x,y,w,h);
     Create_Label( Window, "Context menu", x,y,w,h, GWindows.Static_Controls.Right, None);
-    Dlg_to_Scn(  188, 132, 38, 15, x,y,w,h);
+    Dlg_to_Scn(  181, 132, 45, 15, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
-    Create( Window.Button_context_add, Window, "Add", x,y,w,h, ID => Button_context_add);
-    Create( Window.Button_context_add_permanent, Window, "Add", x,y,w,h, ID => Button_context_add);
+    Create( Window.Button_context_add, Window, "Manage", x,y,w,h, ID => Button_context_add);
+    Create( Window.Button_context_add_permanent, Window, "Manage", x,y,w,h, ID => Button_context_add);
     if for_dialog then -- hide the non-closing button
       Hide(Window.Button_context_add_permanent);
     else -- hide the closing button

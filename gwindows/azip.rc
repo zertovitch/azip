@@ -313,8 +313,8 @@ FONT 8, "Ms Shell Dlg"
     GROUPBOX        "Desktop and Explorer integration", Group_box_Desktop_Explorer_integration, 15, 121, 312, 33, 0, WS_EX_LEFT
     RTEXT           "Desktop shortcut", 0, 20, 134, 62, 13, SS_RIGHT, WS_EX_LEFT
     PUSHBUTTON      "Create", Button_create_shortcut, 87, 132, 32, 15, 0, WS_EX_LEFT
-    RTEXT           "Context menu", 0, 132, 134, 52, 13, SS_RIGHT, WS_EX_LEFT
-    PUSHBUTTON      "Add", Button_context_add, 188, 132, 38, 15, 0, WS_EX_LEFT
+    RTEXT           "Context menu", 0, 125, 134, 52, 13, SS_RIGHT, WS_EX_LEFT
+    PUSHBUTTON      "Manage", Button_context_add, 181, 132, 45, 15, 0, WS_EX_LEFT
     RTEXT           "Extensions", 0, 231, 134, 42, 13, SS_RIGHT, WS_EX_LEFT
     PUSHBUTTON      "Choose", Button_extension_choose, 280, 132, 38, 15, 0, WS_EX_LEFT
     LTEXT           "Note on first visit", Label_Install_note_first_visit, 15, 165, 312, 11, SS_LEFT, WS_EX_LEFT
@@ -597,8 +597,8 @@ Plus_icon          ICON           "ico_bmp/plus.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     2,3,8,0
-    PRODUCTVERSION  2,3,8,0
+    FILEVERSION     2,4,0,0
+    PRODUCTVERSION  2,4,0,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -611,7 +611,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
-            VALUE "FileVersion", "2.38"
+            VALUE "FileVersion", "2.40"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2020"
             VALUE "ProductName", "AZip"
         }

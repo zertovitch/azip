@@ -89,7 +89,8 @@ package body AZip_GWin.Installation is
     for Subject in Context_Menu_Subject loop
       begin
         Explorer_Context_Menu (
-          Entry_Name  => "AZip_Menu_Item",
+          Entry_Name  => "AZip_Menu_Item_" &
+                         (if All_Menus then "All_Users" else "Curr_User"),
           Subject     => Subject,
           User_Scope  => (if All_Menus then
                             GWin_Util.All_Users

@@ -89,8 +89,9 @@ package body AZip_GWin.Installation is
     for Subject in Context_Menu_Subject loop
       begin
         Explorer_Context_Menu (
-          Entry_Name  => "AZip_Menu_Item_" &
-                         (if All_Menus then "All_Users" else "Curr_User"),
+          Entry_Name  => "AZip_Menu_Item"
+                         --  & (if All_Menus then "_All_Users" else "_Curr_User"),
+                         ,
           Subject     => Subject,
           User_Scope  => (if All_Menus then
                             GWin_Util.All_Users
@@ -164,7 +165,7 @@ package body AZip_GWin.Installation is
             Desktop_Shortcut_Msg_Box_Title,
             "Do you want a shortcut on all desktops ?" & NL & NL &
             "Yes : Needs AZip running in admin mode." & NL &
-            "No  : Only on your desktop.",
+            "No : Only on your desktop.",
             Yes_No_Box, Question_Icon
           )
           = Yes;
@@ -226,7 +227,7 @@ package body AZip_GWin.Installation is
               Context_Menu_Msg_Box_Title,
               "Do you want to manage context menu entries for all users ?" & NL & NL &
               "Yes : Needs AZip running in admin mode." & NL &
-              "No  : Will influence only *your* context menu.",
+              "No : Will influence only *your* context menu.",
               Yes_No_Box, Question_Icon
             )
           = Yes;
@@ -236,7 +237,7 @@ package body AZip_GWin.Installation is
         Context_Menu_Msg_Box_Title,
         "Do you want to add or remove context menu entries ?" & NL & NL &
         "Yes : Add." & NL &
-        "No  : Remove.",
+        "No : Remove.",
         Yes_No_Box, Question_Icon
         )
         = Yes

@@ -78,14 +78,16 @@ package body AZip_GWin.Installation is
     "AZip Desktop Shortcut";
 
   procedure Do_Manage_Context_Menu (
-    Parent_Box : AZip_Resource_GUI.Install_box_Type;
-    Target_Exe : String;
-    All_Menus  : Boolean;
-    Action     : GWin_Util.Context_Menu_Action
+    Parent_Box :     AZip_Resource_GUI.Install_box_Type;
+    Target_Exe :     String;
+    All_Menus  :     Boolean;
+    Action     :     GWin_Util.Context_Menu_Action;
+    Success    : out Boolean
   )
   is
     use GWin_Util, GWindows.Message_Boxes;
   begin
+    Success := True;
     for Subject in Context_Menu_Subject loop
       begin
         Explorer_Context_Menu (
@@ -121,6 +123,7 @@ package body AZip_GWin.Installation is
                 "or there is an access right issue.",
                 Icon => Error_Icon);
           end case;
+          Success := False;
       end;
     end loop;
   end Do_Manage_Context_Menu;
@@ -183,6 +186,7 @@ package body AZip_GWin.Installation is
     procedure Manage_Context_Menu_Clicked (Dummy : in out GWindows.Base.Base_Window_Type'Class) is
       use Ada.Command_Line, GWin_Util;
       Action : Context_Menu_Action;
+      Success : Boolean;
       --
       procedure Message (Text : GString) is
       begin
@@ -194,21 +198,16 @@ package body AZip_GWin.Installation is
       procedure Message_2 (Extra_Text : GString) is
         Action_Img : constant GString :=
           (if Action = Add then "added" else "removed");
+        Destination : constant GString :=
+          (if Menus_All_Users then "all users" else "you");
       begin
-        if Menus_All_Users then
-          Message (
-            "If this current instance of AZip is running in" &
-            " Administrator mode, the context menu entries" &
-            " for Any File and Any Folder have been " & Action_Img &
-            " for all users." & Extra_Text
-          );
-        else
-          Message (
-            "Context menu entries for Any File and Any Folder have been " & Action_Img &
-            " for you." &
-            Extra_Text
-          );
-        end if;
+        Message (
+          "Context menu entries for Any File and Any Folder have been " &
+          Action_Img &
+          " for " &
+          Destination & "." &
+          Extra_Text
+        );
       end Message_2;
       --
     begin
@@ -247,14 +246,17 @@ package body AZip_GWin.Installation is
         Action := Remove;
       end if;
       --
-      Do_Manage_Context_Menu (box, Command_Name, Menus_All_Users, Action);
+      Do_Manage_Context_Menu (box, Command_Name, Menus_All_Users, Action, Success);
       --
-      if Action = Add and then Exe_Loc = Elsewhere then
-        Message_2 (
-          NL & NL & "*Caution* : context menu commands points to this non-installed instance of AZip."
-        );
-      else
-        Message_2 ("");
+      if Success then
+        if Action = Add and then Exe_Loc = Elsewhere then
+          Message_2 (
+            NL & NL &
+            "*Caution* : context menu commands points to this non-installed instance of AZip."
+          );
+        else
+          Message_2 ("");
+        end if;
       end if;
     end Manage_Context_Menu_Clicked;
     --
@@ -265,31 +267,40 @@ package body AZip_GWin.Installation is
       App_Folder : constant String :=
         (if Mode = All_Users then Program_Files_32_Bit_Folder else Value ("APPDATA")) & "\AZip";
       New_Exe : constant String := App_Folder & "\AZip.exe";
+      Success : Boolean;
+      procedure Complaint is
+      begin
+        Message_Box (Main_Window,
+          "Installation not successful",
+          "AZip could not be installed successfully." & NL & NL &
+          "There is perhaps an access right issue (Administrator mode is " &
+          "needed for an installation for all users).",
+          Icon => Error_Icon
+        );
+      end Complaint;
     begin
       Create_Path (App_Folder);
       Copy_File (Ada.Command_Line.Command_Name, New_Exe);  --  Self-propagation :-)
       --
       Do_Create_Shortcut (New_Exe, Mode = All_Users);
-      Do_Manage_Context_Menu (box, New_Exe, Mode = All_Users, Add);
-      --
-      Message_Box (Main_Window,
-        "Installation successful",
-        "AZip has installed itself successfully." & NL & NL &
-        "For your next use of the *installed* copy of AZip," & NL &
-        "   - a desktop shortcut has been created;" & NL &
-        "   - context menu (""right-click"") entries have been added.",
-        Icon => Information_Icon
-      );
+      Do_Manage_Context_Menu (box, New_Exe, Mode = All_Users, Add, Success);
+      if Success then
+        Message_Box (Main_Window,
+          "Installation successful",
+          "AZip has installed itself successfully." & NL & NL &
+          "For your next use of the *installed* copy of AZip," & NL &
+          "   - a desktop shortcut has been created;" & NL &
+          "   - context menu (""right-click"") entries have been added.",
+          Icon => Information_Icon
+        );
+      else
+        Complaint;
+      end if;
     exception
       when others =>
-        Message_Box (Main_Window,
-          "Installation not successful",
-          "AZip could not be installed successfully." & NL &
-          "Check your access rights.",
-          Icon => Error_Icon
-      );
+        Complaint;
     end Do_Install;
-    use AZip_Resource_GUI;
+    use AZip_Resource_GUI, GWin_Util;
   begin
     box.Create_Full_Dialog (Main_Window);
     if First_Visit then
@@ -306,7 +317,7 @@ package body AZip_GWin.Installation is
         box.Label_Installed_All_Users.Enable;
       when Current_User =>
         box.Check_box_installed_current_user.State (Checked);
-        box.Label_Installed_All_Users.Enable;
+        box.Label_Installed_Current_User.Enable;
       when Elsewhere =>
         box.Check_box_not_installed.State (Checked);
         box.Label_NOT_Installed.Enable;
@@ -335,6 +346,9 @@ package body AZip_GWin.Installation is
     if Is_Installed then
       box.ID_Install_all_users.Disable;
       box.ID_Install_current_user.Disable;
+    else
+      box.ID_Install_all_users.Text (   Right_Arrow & "  " & box.ID_Install_all_users.Text);
+      box.ID_Install_current_user.Text (Right_Arrow & "  " & box.ID_Install_current_user.Text);
     end if;
     --
     box.Center;

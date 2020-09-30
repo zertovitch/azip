@@ -307,6 +307,7 @@ package body AZip_GWin.MDI_Main is
         end loop;
         --  We simulate a file dropping onto the MDI main window.
         Window.On_File_Drop (args);
+        Update_Common_Menus (Window);
       end;
     end if;
     --  Dropping files on the background will trigger creating an archive:

@@ -836,7 +836,7 @@ package body AZip_GWin.MDI_Child is
     end Msg_Name_Error;
     --
     az_names : Name_list (file_names'Range);
-    use GWindows.Taskbar;
+    use GWindows.Taskbar, GWin_Util;
   begin  --  Process_archive_GWin
     --  Neutral conversion: GStrings (UTF-16) to UTF_16_String
     for i in az_names'Range loop
@@ -850,8 +850,9 @@ package body AZip_GWin.MDI_Child is
       Window.MDI_Root.Task_bar_gadget.Set_Progress_Value (Window.MDI_Root.all, 0, 100);
     end if;
     progress_box.Cancel_button.Hide;
+    progress_box.Cancel_button_permanent.Text (Cross & "   Cancel");
     progress_box.Cancel_button_permanent.Show;
-    progress_box.Cancel_button_permanent.On_Click_Handler(Abort_clicked'Unrestricted_Access);
+    progress_box.Cancel_button_permanent.On_Click_Handler (Abort_clicked'Unrestricted_Access);
     progress_box.Center;
     progress_box.Redraw;
     progress_box.Show;

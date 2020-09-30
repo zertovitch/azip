@@ -318,9 +318,9 @@ FONT 8, "Ms Shell Dlg"
     RTEXT           "Extensions", 0, 231, 134, 42, 13, SS_RIGHT, WS_EX_LEFT
     PUSHBUTTON      "Choose", Button_extension_choose, 280, 132, 38, 15, 0, WS_EX_LEFT
     LTEXT           "Note on first visit", Label_Install_note_first_visit, 15, 165, 312, 11, SS_LEFT, WS_EX_LEFT
-    DEFPUSHBUTTON   "Close", IDOK, 31, 185, 81, 17, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Install for all users", ID_Install_all_users, 131, 185, 81, 17, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Install for current user", ID_Install_current_user, 231, 185, 81, 17, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Close",                    IDOK,                     27, 185, 89, 17, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Install for all users",    ID_Install_all_users,    127, 185, 89, 17, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Install for current user", ID_Install_current_user, 227, 185, 89, 17, 0, WS_EX_LEFT
 }
 
 

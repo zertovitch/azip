@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/09/29  17:02:36
+-- Transcription time: 2020/09/30  07:40:20
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -897,7 +897,7 @@ package body AZip_Resource_GUI is
     end if;
     Dlg_to_Scn(  15, 165, 312, 11, x,y,w,h);
     Create( Window.Label_Install_note_first_visit, Window, "Note on first visit", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Install_note_first_visit);
-    Dlg_to_Scn(  31, 185, 81, 17, x,y,w,h);
+    Dlg_to_Scn(  27, 185, 89, 17, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -908,7 +908,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  131, 185, 81, 17, x,y,w,h);
+    Dlg_to_Scn(  127, 185, 89, 17, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -919,7 +919,7 @@ package body AZip_Resource_GUI is
     else -- hide the closing button
       Hide(Window.ID_Install_all_users);
     end if;
-    Dlg_to_Scn(  231, 185, 81, 17, x,y,w,h);
+    Dlg_to_Scn(  227, 185, 89, 17, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.

@@ -246,7 +246,7 @@ package body AZip_GWin.Installation is
         Action := Remove;
       end if;
       --
-      Do_Manage_Context_Menu (box, Command_Name, Menus_All_Users, Action, Success);
+      Do_Manage_Context_Menu (box, '"' & Command_Name & '"', Menus_All_Users, Action, Success);
       --
       if Success then
         if Action = Add and then Exe_Loc = Elsewhere then

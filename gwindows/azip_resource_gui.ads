@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: AZip.rc
--- Transcription time: 2020/09/30  07:40:20
+-- Transcription time: 2021/01/05  21:13:21
 -- GWenerator project file: azip.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -26,6 +26,8 @@ with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Menus;                    use GWindows.Menus;
 use GWindows;
 with Interfaces.C;                      use Interfaces.C;
+
+pragma Warnings ("U");  --  turn off warnings for unused entity
 
 package AZip_Resource_GUI is
 

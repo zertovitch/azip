@@ -226,8 +226,8 @@ package body AZip_Common.Operations is
     procedure Copy_user_code(
       name             : String; -- 'name' is compressed entry's full name
       file_index       : Zip_Streams.ZS_Index_Type;
-      comp_size        : Zip.File_size_type;
-      uncomp_size      : Zip.File_size_type;
+      comp_size        : Zip.Zip_32_Data_Size_Type;
+      uncomp_size      : Zip.Zip_32_Data_Size_Type;
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
       method           : Zip.PKZip_method;
@@ -498,8 +498,8 @@ package body AZip_Common.Operations is
     procedure Action_1_entry (
       name             : String; -- 'name' is compressed entry's full name
       file_index       : Zip_Streams.ZS_Index_Type;
-      comp_size        : Zip.File_size_type;
-      uncomp_size      : Zip.File_size_type;
+      comp_size        : Zip.Zip_32_Data_Size_Type;
+      uncomp_size      : Zip.Zip_32_Data_Size_Type;
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
       method           : Zip.PKZip_method;
@@ -588,8 +588,8 @@ package body AZip_Common.Operations is
         temp_single_entry_zip_zif : Zip.Zip_info;
         dummy_name_encoding       : Zip_name_encoding;
         single_file_index         : Zip_Streams.ZS_Index_Type;
-        dummy_comp_size           : Zip.File_size_type;
-        dummy_uncomp_size         : Zip.File_size_type;
+        dummy_comp_size           : Zip.Zip_32_Data_Size_Type;
+        dummy_uncomp_size         : Zip.Zip_32_Data_Size_Type;
         new_crc_32                : Interfaces.Unsigned_32;
         use Interfaces;
       begin
@@ -631,8 +631,8 @@ package body AZip_Common.Operations is
         temp_single_entry_zip_zif : Zip.Zip_info;
         dummy_name_encoding       : Zip_name_encoding;
         single_file_index         : Zip_Streams.ZS_Index_Type;
-        new_comp_size             : Zip.File_size_type;
-        dummy_uncomp_size         : Zip.File_size_type;
+        new_comp_size             : Zip.Zip_32_Data_Size_Type;
+        dummy_uncomp_size         : Zip.Zip_32_Data_Size_Type;
         new_crc_32                : Interfaces.Unsigned_32;
         use Interfaces;
       begin
@@ -680,7 +680,7 @@ package body AZip_Common.Operations is
           return_code := aborted;
       end Recompress_entry;
       --
-      use type Zip.File_size_type;
+      use type Zip.Zip_32_Data_Size_Type;
     begin  --  Action_1_entry
       user_code := nothing;
       if return_code = aborted then
@@ -1179,8 +1179,8 @@ package body AZip_Common.Operations is
     procedure Action(
       name             : String; -- 'name' is compressed entry's full name
       file_index       : Zip_Streams.ZS_Index_Type;
-      comp_size        : Zip.File_size_type;
-      uncomp_size      : Zip.File_size_type;
+      comp_size        : Zip.Zip_32_Data_Size_Type;
+      uncomp_size      : Zip.Zip_32_Data_Size_Type;
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
       method           : Zip.PKZip_method;

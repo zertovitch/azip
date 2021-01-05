@@ -457,56 +457,56 @@ package body AZip_Common is
 
   end Gen_Size_Images;
 
-  package Inst_Size_Images_32 is new Gen_Size_Images(Zip.File_size_type);
-  package Inst_Size_Images_64 is new Gen_Size_Images(Interfaces.Unsigned_64);
+  package Inst_Size_Images_32 is new Gen_Size_Images (Zip.Zip_32_Data_Size_Type);
+  package Inst_Size_Images_64 is new Gen_Size_Images (Interfaces.Unsigned_64);
 
-  function File_Size_Image(x: Zip.File_size_type) return UTF_16_String
+  function File_Size_Image(x: Zip.Zip_32_Data_Size_Type) return UTF_16_String
     renames Inst_Size_Images_32.File_Size_Image;
 
-  function Image_1000(r: Zip.File_size_type; separator: Wide_Character) return Wide_String
+  function Image_1000(r: Zip.Zip_32_Data_Size_Type; separator: Wide_Character) return Wide_String
     renames Inst_Size_Images_32.Image_1000;
 
-  function Long_file_size_image(x: Zip.File_size_type; separator: Wide_Character) return UTF_16_String
+  function Long_file_size_image(x: Zip.Zip_32_Data_Size_Type; separator: Wide_Character) return UTF_16_String
     renames Inst_Size_Images_32.Long_file_size_image;
 
   function Long_file_size_image(x: Interfaces.Unsigned_64; separator: Wide_Character) return UTF_16_String
     renames Inst_Size_Images_64.Long_file_size_image;
 
-  function Ratio_pct_Image(nom, den: Zip.File_size_type) return UTF_16_String
+  function Ratio_pct_Image(nom, den: Zip.Zip_32_Data_Size_Type) return UTF_16_String
     renames Inst_Size_Images_32.Ratio_pct_Image;
 
   function Ratio_pct_Image(nom, den: Interfaces.Unsigned_64) return UTF_16_String
     renames Inst_Size_Images_64.Ratio_pct_Image;
 
-  function File_Size_Value(s: UTF_16_String) return Zip.File_size_type is
-    use type File_size_type;
+  function File_Size_Value(s: UTF_16_String) return Zip.Zip_32_Data_Size_Type is
+    use type Zip_32_Data_Size_Type;
   begin
     if s'Length >= 4 and then (s(s'Last-1) = 'K' or s(s'Last-1) = 'M' or s(s'Last-1) = 'G') then
       if Index(s, ".") > 0 then
         case s(s'Last-1) is
           when 'K' =>
-            return File_size_type(Long_Float'Wide_Value(s(s'First..s'Last-3)) * 1024.0);
+            return Zip_32_Data_Size_Type(Long_Float'Wide_Value(s(s'First..s'Last-3)) * 1024.0);
           when 'M' =>
-            return File_size_type(Long_Float'Wide_Value(s(s'First..s'Last-3)) * 1024.0**2);
+            return Zip_32_Data_Size_Type(Long_Float'Wide_Value(s(s'First..s'Last-3)) * 1024.0**2);
           when 'G' =>
-            return File_size_type(Long_Float'Wide_Value(s(s'First..s'Last-3)) * 1024.0**3);
+            return Zip_32_Data_Size_Type(Long_Float'Wide_Value(s(s'First..s'Last-3)) * 1024.0**3);
           when others =>
             null;
         end case;
       else
         case s(s'Last-1) is
           when 'K' =>
-            return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024;
+            return Zip_32_Data_Size_Type'Wide_Value(s(s'First..s'Last-3)) * 1024;
           when 'M' =>
-            return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024**2;
+            return Zip_32_Data_Size_Type'Wide_Value(s(s'First..s'Last-3)) * 1024**2;
           when 'G' =>
-            return File_size_type'Wide_Value(s(s'First..s'Last-3)) * 1024**3;
+            return Zip_32_Data_Size_Type'Wide_Value(s(s'First..s'Last-3)) * 1024**3;
           when others =>
             null;
         end case;
       end if;
     end if;
-    return File_size_type'Wide_Value(s);
+    return Zip_32_Data_Size_Type'Wide_Value(s);
   end File_Size_Value;
 
   function Pct_Value(s: UTF_16_String) return Natural is -- 0..101
@@ -616,8 +616,8 @@ package body AZip_Common is
     procedure Detect_encryption(
       name             : String; -- 'name' is compressed entry's name
       file_index       : Zip_Streams.ZS_Index_Type;
-      comp_size        : File_size_type;
-      uncomp_size      : File_size_type;
+      comp_size        : Zip_32_Data_Size_Type;
+      uncomp_size      : Zip_32_Data_Size_Type;
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Time;
       method           : PKZip_method;

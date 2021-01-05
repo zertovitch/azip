@@ -1,39 +1,36 @@
-with AZip_Common;                       use AZip_Common;
+with AZip_Common;
 with AZip_Resource_GUI;
+with AZip_GWin.Modal_Dialogs;
 
-with Zip;                               use Zip;
-with UnZip;
+with Zip;
 with Zip_Streams;
 
-with GWindows;                          use GWindows;
-with GWindows.Application;              use GWindows.Application;
-with GWindows.Locales;
+with GWindows.Application,
+     GWindows.Locales;
 
-with Ada.Strings;                       use Ada.Strings;
-with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
+with Ada.Strings.Wide_Fixed;
 with Interfaces;
-with AZip_GWin.Modal_Dialogs;
 
 procedure AZip_GWin.Properties (Window: in out MDI_Child.MDI_Child_Type) is
   box : AZip_Resource_GUI.Properties_box_Type;
   use Interfaces;
   total_uncompressed: Unsigned_64:= 0;
-  total_compressed: UnZip.File_size_type:= 0;
+  total_compressed: Zip.Zip_32_Data_Size_Type:= 0;
   -- total_entries: Natural:= 0;
-  files_per_method: array(UnZip.PKZip_method) of Natural:= (others => 0);
-  uncompressed_per_method: array(UnZip.PKZip_method) of Unsigned_64:= (others => 0);
-  compressed_per_method: array(UnZip.PKZip_method) of UnZip.File_size_type:= (others => 0);
+  files_per_method: array(Zip.PKZip_method) of Natural:= (others => 0);
+  uncompressed_per_method: array(Zip.PKZip_method) of Unsigned_64:= (others => 0);
+  compressed_per_method: array(Zip.PKZip_method) of Zip.Zip_32_Data_Size_Type:= (others => 0);
   sep_str: constant GString:= GWindows.Locales.Get_Thousands_Separator;
   sep: constant Wide_Character:= sep_str(sep_str'First);
 
-  use Interfaces;
+  use Ada.Strings, Ada.Strings.Wide_Fixed, AZip_Common, Interfaces, Zip;
 
-  procedure Action(
+  procedure Action (
       name             : String; -- 'name' is compressed entry's name
       file_index       : Zip_Streams.ZS_Index_Type;
-      comp_size        : File_size_type;
-      uncomp_size      : File_size_type;
-      crc_32           : Interfaces.Unsigned_32;
+      comp_size        : Zip_32_Data_Size_Type;
+      uncomp_size      : Zip_32_Data_Size_Type;
+      crc_32           : Unsigned_32;
       date_time        : Time;
       method           : PKZip_method;
       name_encoding    : Zip_name_encoding;
@@ -99,7 +96,7 @@ begin
   else
     box.Numb_entries.Text("0 (empty)");
   end if;
-  case Show_Dialog (box, Window) is
+  case GWindows.Application.Show_Dialog (box, Window) is
     when AZip_Resource_GUI.ID_Button_About_Azip =>
            AZip_GWin.Modal_Dialogs.Show_About_Box (Window.MDI_Root.all);
     when others => null;

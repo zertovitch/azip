@@ -158,22 +158,27 @@ package body AZip_GWin.MDI_Child is
 
     cidx: Column_integer_array renames Window.opt.column_index;
 
-    procedure Define_columns is
+    procedure Clear_List_and_Define_Columns is
       Lst: Directory_list_type renames Window.Directory_List;
       --
     begin
+      case need is
+        when first_display | archive_changed | node_selected =>
+          Lst.Clear;
+        when results_refresh | status_bar | toolbar_and_menu =>
+          null;
+      end case;
+      --
       for topic in Entry_topic loop
         case need is
           when first_display =>
-            Lst.Clear;
-            Lst.Insert_Column(
+            Lst.Insert_Column (  --  Insert new column
               Image(topic),
               cidx(topic) - 1,
               Get_column_width_from_options (Window, topic)
             );
           when archive_changed | node_selected =>
-            Lst.Clear;
-            Lst.Set_Column(
+            Lst.Set_Column (     --  Change existing column's properties
               Image(topic),
               cidx(topic) - 1,
               Get_column_width_from_options (Window, topic)
@@ -182,16 +187,16 @@ package body AZip_GWin.MDI_Child is
             null;
         end case;
       end loop;
-    end Define_columns;
+    end Clear_List_and_Define_Columns;
 
     -- Window.zif is assumed to be loaded
     --
     procedure Feed_directory_list(prefix_path: GString) is
       row, last_row: Integer:= -1;
       Lst: Directory_list_type renames Window.Directory_List;
-      max_entries: constant Natural:= Entries(Window.zif);
+      max_entries : constant Natural := Entries(Window.zif);
       -- This includes potential invisible entries (directory names from Info-Zip, WinZip)
-      sorted_index, unsorted_index, result_code: array(0..max_entries-1) of Integer;
+      sorted_index, result_code : array(0 .. max_entries - 1) of Integer;
       --
       procedure Process_row (
         name_8_bit        : String; -- 'name' is compressed entry's name, with Zip encoding
@@ -319,9 +324,7 @@ package body AZip_GWin.MDI_Child is
             Message_Check;
           end if;
         end if;
-        -- This is equal to row if the list is unsorted.
-        unsorted_index(row) := Lst.Item_Data(row).index_before_sorting;
-        result_code(row) := entry_user_code;
+        result_code (row) := entry_user_code;
       end Process_row;
 
       procedure Traverse is new Zip.Traverse_verbose (Process_row);
@@ -331,6 +334,7 @@ package body AZip_GWin.MDI_Child is
       use GWindows.Colors;
       intensity: Float;
       font_color: Color_Type;
+      unsorted_index : Integer;
     begin -- Feed_directory_list
       if need > results_refresh then
         return;
@@ -345,15 +349,16 @@ package body AZip_GWin.MDI_Child is
       --
       --  List is entirely filled on next instruction:
       --
-      Traverse(Window.zif);
+      Traverse (Window.zif);
       --
       --  Finishing touch: the colours in the "Results" column.
       --
-      last_row:= row;
-      for i in 0..last_row loop
-        sorted_index(unsorted_index(i)):= i; -- Nice one, isn't it ?
+      last_row := row;
+      for s in 0 .. last_row loop
+        unsorted_index := Lst.Item_Data(s).index_before_sorting;
+        sorted_index (unsorted_index) := s;  --  Nice one, isn't it ?
       end loop;
-      for u in 0..last_row loop
+      for u in 0 .. last_row loop
         row:= sorted_index(u);
         Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, result_code(u))), row, cidx(Result)-1);
         Result_color(Window.last_operation, result_code(u), Window.last_max_code, az_color, intensity);
@@ -385,7 +390,7 @@ package body AZip_GWin.MDI_Child is
     w_root: Tree_Item_Node;
 
   begin
-    Define_columns;
+    Clear_List_and_Define_Columns;
     case Window.opt.view_mode is
       when Flat =>
         if Is_loaded(Window.zif) then

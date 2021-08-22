@@ -189,13 +189,13 @@ package body AZip_GWin.MDI_Child is
       end loop;
     end Clear_List_and_Define_Columns;
 
-    -- Window.zif is assumed to be loaded
+    --  Window.zif is assumed to be loaded
     --
     procedure Feed_directory_list(prefix_path: GString) is
       row, last_row: Integer:= -1;
       Lst: Directory_list_type renames Window.Directory_List;
       max_entries : constant Natural := Entries(Window.zif);
-      -- This includes potential invisible entries (directory names from Info-Zip, WinZip)
+      --  This includes potential invisible entries (directory names from Info-Zip, WinZip)
       result_code : array(0 .. max_entries - 1) of Integer;
       --
       procedure Process_row (
@@ -235,11 +235,11 @@ package body AZip_GWin.MDI_Child is
         for i in name'Range loop
           case name(i) is
             when '/' | '\' =>
-              -- Directory separator, ok with Unicode UTF-8 names
+              --  Directory separator, ok with Unicode UTF-8 names
               previous_idx:= simple_name_idx;
               simple_name_idx:= i + 1;
               --
-              -- Feed eventual folder tree
+              --  Feed eventual folder tree
               --
               if Window.opt.view_mode = Tree and need in first_display .. archive_changed then
                 declare
@@ -269,7 +269,7 @@ package body AZip_GWin.MDI_Child is
                 end;
               end if;
             when '.' =>
-              -- Last dot is the extension separator
+              --  Last dot is the extension separator
               extension_idx:= i + 1;
             when others =>
               null;
@@ -286,14 +286,14 @@ package body AZip_GWin.MDI_Child is
           return; -- not in a part of the tree to be displayed
         end if;
         if extension_idx < simple_name_idx then
-          -- last dot was in a directory name (like: .svn/entries)
+          --  last dot was in a directory name (like: .svn/entries)
           extension_idx:= name'Last + 1; -- will be empty
         end if;
         row:= row + 1;
         if need in first_display .. node_selected then
           Lst.Insert_Item(name(simple_name_idx..name'Last) & Encryption_suffix, row);
           --
-          -- Payload
+          --  Payload
           --
           payload_access:= new LV_Payload'(index_before_sorting => row);
           Lst.Item_Data(row, payload_access);
@@ -318,7 +318,7 @@ package body AZip_GWin.MDI_Child is
           end if;
           Lst.Set_Sub_Item(Zip_name_encoding'Wide_Image(name_encoding), row, cidx(Encoding)-1);
           --
-          -- Show some response if the zip directory is very large
+          --  Show some response if the zip directory is very large
           --
           if row mod 2048 = 0 then
             Message_Check;
@@ -341,7 +341,7 @@ package body AZip_GWin.MDI_Child is
       end if;
       Window.Directory_List.refreshing := True;
       if need in first_display .. node_selected then
-        -- This will be set to True if there is any path during the listing
+        --  This will be set to True if there is any path during the listing
         Window.any_path_in_zip:= False;
       end if;
       --  Performance is meant to be better with the All_Items mode.
@@ -365,7 +365,7 @@ package body AZip_GWin.MDI_Child is
            Unused => 0
           );
         if need = results_refresh or az_color /= AZip_Common.Operations.white then
-          -- Ensure user can read the text, given the background color.
+          --  Ensure user can read the text, given the background color.
           if intensity > 0.58 then
             font_color:= Black;
           else
@@ -373,7 +373,7 @@ package body AZip_GWin.MDI_Child is
           end if;
           Lst.Subitem_Color (font_color, To_Color(gw_color), sorted_index, cidx(Result)-1);
         end if;
-        -- Show some response if the zip directory is very large
+        --  Show some response if the zip directory is very large
         --
         if sorted_index mod 2048 = 0 then
           Message_Check;
@@ -519,7 +519,7 @@ package body AZip_GWin.MDI_Child is
       when Flat =>
         if not force then
           Memorize_splitter(Window);
-          -- Remember tree portion for user persistence or for next time we toggle back to tree view.
+          --  Remember tree portion for user persistence or for next time we toggle back to tree view.
         end if;
         Window.Splitter.Hide;
         Window.Folder_Tree.Hide;
@@ -542,9 +542,9 @@ package body AZip_GWin.MDI_Child is
   begin
     Window.Small_Icon("Box_Closed_Icon_Name");
 
-    -- Filial feelings:
+    --  Filial feelings:
     Window.MDI_Root:= MDI_Main_Access (Controlling_Parent(Window));
-    -- We copy options to child level:
+    --  We copy options to child level:
     Window.opt:= Window.MDI_Root.opt;
 
     Window.Tree_Bar_and_List.Create(Window, Direction => Horizontal);
@@ -588,7 +588,7 @@ package body AZip_GWin.MDI_Child is
     Append_Item (Window.context_menu_folder, "&Extract folder", IDM_EXTRACT);
     Append_Item (Window.context_menu_folder, "&Delete folder",  IDM_Delete_selected);
 
-    -- Maximize-demaximize (non-maximized case) to avoid invisible windows...
+    --  Maximize-demaximize (non-maximized case) to avoid invisible windows...
     declare
       memo_unmaximized_children: constant Boolean:=
         not Window.MDI_Root.opt.MDI_childen_maximized;
@@ -631,12 +631,12 @@ package body AZip_GWin.MDI_Child is
     File_Title             : GWindows.GString_Unbounded;
     user_choice_successful : Boolean;
     --
-    -- If needed, an empty Zip file is created with the contents below.
+    --  If needed, an empty Zip file is created with the contents below.
     --
     package CIO is new Ada.Sequential_IO(Character);
     use CIO;
     empty_zip: File_Type;
-    -- This is the empty Zip archive:
+    --  This is the empty Zip archive:
     contents: constant String:= "PK" & ASCII.ENQ & ASCII.ACK & 18 * ASCII.NUL;
   begin
     New_File_Name := Window.File_Name;
@@ -738,10 +738,10 @@ package body AZip_GWin.MDI_Child is
       use Ada.Calendar, Ada.Strings.Wide_Fixed;
       now: constant Ada.Calendar.Time:= Clock;
     begin
-      -- Display only at most every 4/100 second (i.e. max 25 fps).
-      -- Otherwise Windows may be overflown by messages and the operation
-      -- takes much more time due to the display. Typical case: an archive
-      -- with many small files - GWin.zip or Java run-time's Jar for instance.
+      --  Display only at most every 4/100 second (i.e. max 25 fps).
+      --  Otherwise Windows may be overflown by messages and the operation
+      --  takes much more time due to the display. Typical case: an archive
+      --  with many small files - GWin.zip or Java run-time's Jar for instance.
       if now - tick >= 0.04 or else archive_percents_done = 100 then
         progress.File_Progress.Position (file_percents_done);
         progress.Archive_Progress.Position (archive_percents_done);
@@ -784,7 +784,7 @@ package body AZip_GWin.MDI_Child is
       box.Conflict_simple_name.Text(Remove_path(To_UTF_16(name, name_encoding)));
       box.Conflict_location.Text(output_folder);
       box.Overwrite_Rename.Disable;
-      -- !! ^ Needs some effort to make an idiot-proof name query ;-)
+      --  !! ^ Needs some effort to make an idiot-proof name query ;-)
       box.Center;
       case Show_Dialog(box, progress) is
         when Overwrite_Yes    =>  action:= yes;
@@ -940,7 +940,7 @@ package body AZip_GWin.MDI_Child is
         num0: constant String:=
           Float'Image(Ada.Numerics.Float_Random.Random(Window.temp_name_gen));
         num: constant String:= num0(num0'First+1 .. num0'Last);
-        -- ^ Skip the @#*% leading space
+        --  ^ Skip the @#*% leading space
         test_name: constant String:= Value("TEMP") & "\AZip_Temp_" & num & ".zip";
       begin
         if not Ada.Directories.Exists(test_name) then
@@ -1046,7 +1046,7 @@ package body AZip_GWin.MDI_Child is
     end if;
   end On_File_Drop;
 
-  -- This will update File menu of parent, itself, and all brothers and sisters
+  --  This will update File menu of parent, itself, and all brothers and sisters
   procedure Update_Common_Menus(Window : MDI_Child_Type;
                                 top_entry : GString:= "" ) is
   begin
@@ -1069,8 +1069,8 @@ package body AZip_GWin.MDI_Child is
     end if;
     Window.zif := new_zif;
     Change_View (Window, Window.opt.view_mode, force => True);
-    -- Update_display(Window, archive_changed); -- included in Change_View
-    -- Window.Status_deamon.Display(Window'Unchecked_Access);
+    --  Update_display(Window, archive_changed); -- included in Change_View
+    --  Window.Status_deamon.Display(Window'Unchecked_Access);
   end Load_archive_catalogue;
 
   procedure On_Size (Window : in out MDI_Child_Type;
@@ -1096,7 +1096,7 @@ package body AZip_GWin.MDI_Child is
       when Tree =>
         Window.Folder_Tree.Location(Rectangle_Type'(0, 0, tree_w, h));
         Window.Bar_and_List.Location(Rectangle_Type'(tree_w, 0, w, h));
-        -- Splitter bar and directory list are inside the Bar_and_List panel
+        --  Splitter bar and directory list are inside the Bar_and_List panel
         Window.Splitter.Location(Rectangle_Type'(0, 0, splitter_w, h));
         Window.Directory_List.Location(Rectangle_Type'(splitter_w, 0, Window.Bar_and_List.Width, h));
     end case;
@@ -1116,7 +1116,7 @@ package body AZip_GWin.MDI_Child is
           Window.Directory_List.Text(i, SubItem => 0)   -- simple name
           );
         if Element(names(j), Length(names(j))) = '*' then
-          -- Remove the " *" appended on encrypted entries.
+          --  Remove the " *" appended on encrypted entries.
           names(j):= Unbounded_Slice(names(j), 1, Length(names(j))-2);
         end if;
       end if;
@@ -1124,7 +1124,7 @@ package body AZip_GWin.MDI_Child is
     return names(1..j);
   end Get_selected_entry_list;
 
-  -- Selected folder's and subfolder's contents (Tree view)
+  --  Selected folder's and subfolder's contents (Tree view)
   function Get_selected_folder_entry_list(Window: MDI_Child_Type) return Array_Of_File_Names is
     items: constant Natural:= Entries(Window.zif);
     names: Array_Of_File_Names(1..items);
@@ -1516,7 +1516,7 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Update(Window : in out MDI_Child_Type) is
     mem_dir: constant String:= Ada.Directories.Current_Directory;
-    -- !! Not UTF-8 capable
+    --  !! Not UTF-8 capable
     new_dir: constant String:= Ada.Directories.Containing_Directory(
       To_UTF_8(GU2G (Window.File_Name))
     ); -- !! Not UTF-8 capable
@@ -1554,7 +1554,7 @@ package body AZip_GWin.MDI_Child is
         return_code    => return_code
       );
       if mem_dir'Length > 0 and then mem_dir(mem_dir'Last) =':' then
-        -- Bug in GNAT up to GPL 2011 - cf issue [L216-021 public], fixed in 2012.
+        --  Bug in GNAT up to GPL 2011 - cf issue [L216-021 public], fixed in 2012.
         Ada.Directories.Set_Directory(mem_dir & '\'); -- !! Check if UTF-8 capable
       else
         Ada.Directories.Set_Directory(mem_dir); -- !! Check if UTF-8 capable
@@ -1764,8 +1764,8 @@ package body AZip_GWin.MDI_Child is
              AZip_LV_Ex.Sort_Direction_Type'Image(sd)
           );
       end if;
-      -- Pass view mode and the tree width portion to parent,
-      -- this will memorize choice of last closed window.
+      --  Pass view mode and the tree width portion to parent,
+      --  this will memorize choice of last closed window.
       Window.MDI_Root.opt.view_mode:= Window.opt.view_mode;
       Memorize_splitter(Window);
       Window.MDI_Root.opt.tree_portion:= Window.opt.tree_portion;
@@ -1877,7 +1877,7 @@ package body AZip_GWin.MDI_Child is
           accept Test(w: MDI_Child_Access) do
             current_child_window:= w;
           end Test;
-          -- (perform test)
+          --  (perform test)
         or
           delay 0.05; -- relax
         end select;

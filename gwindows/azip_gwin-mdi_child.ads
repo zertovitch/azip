@@ -35,7 +35,7 @@ package AZip_GWin.MDI_Child is
          entry Start;
          entry Display(w: AZip_GWin.MDI_Child.MDI_Child_Access);
          entry Stop;
-      end;
+      end Status_display;
 
       -----------------------------------------------------------------
       -- This background task calls an archive test on demand        --
@@ -45,7 +45,7 @@ package AZip_GWin.MDI_Child is
          entry Start;
          entry Test(w: AZip_GWin.MDI_Child.MDI_Child_Access);
          entry Stop;
-      end;
+      end Testing_type;
    end Daemons;
 
   type MDI_Child_Status_bar_part is ( directory_info, task_message );
@@ -81,10 +81,10 @@ package AZip_GWin.MDI_Child is
       record
         File_Name           : GString_Unbounded;
         Short_Name          : GString_Unbounded;
-        -- ^ Window title = Short_Name & {""|" *"}
+        --  ^ Window title = Short_Name & {""|" *"}
         MDI_Root            : MDI_Main_Access; -- -> access to the containing window
         Extra_first_doc     : Boolean:= False;
-        -- ^ new file closed if kept virgin when opening another one (like blank Excel sheet).
+        --  ^ new file closed if kept virgin when opening another one (like blank Excel sheet).
         Menu                : Menu_MDI_Child_Type;
         context_menu_file   : Menu_Type := Create_Popup;
         context_menu_folder : Menu_Type := Create_Popup;
@@ -119,14 +119,14 @@ package AZip_GWin.MDI_Child is
   overriding procedure On_Create (Window : in out MDI_Child_Type);
 
   procedure On_Save (Window : in out MDI_Child_Type);
-  -- This would be abstract in a 'generic' Office framework.
+  --  This would be abstract in a 'generic' Office framework.
 
   function Is_file_saved (Window : in MDI_Child_Type) return Boolean;
-  -- This would be abstract in a 'generic' Office framework.
+  --  This would be abstract in a 'generic' Office framework.
 
   procedure On_Save_As (Window : in out MDI_Child_Type);
 
-  -- Add files (past all dialogs)
+  --  Add files (past all dialogs)
   procedure Go_for_adding (
     Window     : in out MDI_Child_Type;
     File_Names : in     Array_Of_File_Names;

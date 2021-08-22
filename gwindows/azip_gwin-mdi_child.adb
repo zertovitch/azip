@@ -1439,13 +1439,31 @@ package body AZip_GWin.MDI_Child is
     end if;
   end On_Find;
 
-  procedure Full_Select(Window: in out MDI_Child_Type; as: Boolean) is
+  type Selection_Change_Type is (select_all, unselect_all, invert);
+
+  procedure Change_Selection (Window : in out MDI_Child_Type; select_mode : Selection_Change_Type) is
+    DL : Directory_list_type renames Window.Directory_List;
   begin
-    for i in 1..Window.Directory_List.Item_Count loop
-      Window.Directory_List.Selected(i-1, as); -- Item seems 0-based...
-    end loop;
-    Window.Directory_List.Focus;
-  end Full_Select;
+    Window.refreshing_list := True;
+    --  NB: LV item index is 0-based.
+    case select_mode is
+      when select_all =>
+        for i in reverse 0 .. DL.Item_Count - 1 loop
+          DL.Selected (i, True);
+        end loop;
+      when unselect_all =>
+        for i in reverse 0 .. DL.Item_Count - 1 loop
+          DL.Selected (i, False);
+        end loop;
+      when invert =>
+        for i in reverse 0 .. DL.Item_Count - 1 loop
+          DL.Selected (i, not DL.Is_Selected (i));
+        end loop;
+    end case;
+    Window.refreshing_list := False;
+    DL.On_Item_Changed;
+    DL.Focus;
+  end Change_Selection;
 
   procedure On_Test(Window : in out MDI_Child_Type) is
     count_ok, count_ko, count_nt: Natural;
@@ -1628,22 +1646,17 @@ package body AZip_GWin.MDI_Child is
         Window.Close;
       when IDM_Properties =>
         AZip_GWin.Properties(Window);
-      when IDM_Select_all =>
-        Full_Select(Window, True);
-      when IDM_Unselect_all =>
-        Full_Select(Window, False);
-      when IDM_EXTRACT =>
-        On_Extract (Window, dropped => False);
-      when IDM_ADD_FILES =>
-        On_Add_files(Window, encrypted => False);
-      when IDM_Add_Files_Encryption =>
-        On_Add_files(Window, encrypted => True);
-      when IDM_Add_Folder =>
-        On_Add_folder(Window, encrypted => False);
-      when IDM_Add_Folder_Encryption =>
-        On_Add_folder(Window, encrypted => True);
-      when IDM_Delete_selected =>
-        On_Delete(Window);
+      --  Edit  --
+      when IDM_Select_all       => Change_Selection (Window, select_all);
+      when IDM_Unselect_all     => Change_Selection (Window, unselect_all);
+      when IDM_Invert_Selection => Change_Selection (Window, invert);
+      when IDM_EXTRACT               => On_Extract (Window, dropped => False);
+      when IDM_ADD_FILES             => On_Add_files (Window, encrypted => False);
+      when IDM_Add_Files_Encryption  => On_Add_files (Window, encrypted => True);
+      when IDM_Add_Folder            => On_Add_folder (Window, encrypted => False);
+      when IDM_Add_Folder_Encryption => On_Add_folder (Window, encrypted => True);
+      when IDM_Delete_selected       => On_Delete (Window);
+      --
       when IDM_TEST_ARCHIVE =>
         On_Test(Window);
       when IDM_UPDATE_ARCHIVE =>

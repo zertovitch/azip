@@ -196,7 +196,7 @@ package body AZip_GWin.MDI_Child is
       Lst: Directory_list_type renames Window.Directory_List;
       max_entries : constant Natural := Entries(Window.zif);
       -- This includes potential invisible entries (directory names from Info-Zip, WinZip)
-      sorted_index, result_code : array(0 .. max_entries - 1) of Integer;
+      result_code : array(0 .. max_entries - 1) of Integer;
       --
       procedure Process_row (
         name_8_bit        : String; -- 'name' is compressed entry's name, with Zip encoding
@@ -354,14 +354,10 @@ package body AZip_GWin.MDI_Child is
       --  Finishing touch: the colours in the "Results" column.
       --
       last_row := row;
-      for s in 0 .. last_row loop
-        unsorted_index := Lst.Item_Data(s).index_before_sorting;
-        sorted_index (unsorted_index) := s;  --  Nice one, isn't it ?
-      end loop;
-      for u in 0 .. last_row loop
-        row:= sorted_index(u);
-        Lst.Set_Sub_Item(S2G(Result_message(Window.last_operation, result_code(u))), row, cidx(Result)-1);
-        Result_color(Window.last_operation, result_code(u), Window.last_max_code, az_color, intensity);
+      for sorted_index in 0 .. last_row loop
+        unsorted_index := Lst.Item_Data (sorted_index).index_before_sorting;
+        Lst.Set_Sub_Item (S2G(Result_message(Window.last_operation, result_code (unsorted_index))), sorted_index, cidx (Result)-1);
+        Result_color (Window.last_operation, result_code (unsorted_index), Window.last_max_code, az_color, intensity);
         gw_color:=
           (Red    => GWindows.Colors.Color_Range(az_color.Red),
            Green  => GWindows.Colors.Color_Range(az_color.Green),
@@ -375,11 +371,11 @@ package body AZip_GWin.MDI_Child is
           else
             font_color:= GWindows.Colors.White;
           end if;
-          Lst.Subitem_Color(font_color, To_Color(gw_color), row, cidx(Result)-1);
+          Lst.Subitem_Color (font_color, To_Color(gw_color), sorted_index, cidx(Result)-1);
         end if;
         -- Show some response if the zip directory is very large
         --
-        if u mod 2048 = 0 then
+        if sorted_index mod 2048 = 0 then
           Message_Check;
         end if;
       end loop;

@@ -62,7 +62,7 @@ package body AZip_GWin.Directory_Lists is
           return less;
         end if;
       when Result =>  --  E.g. 1234
-        -- Message_Box("Falk forever", "Waaaah!");
+        --  Message_Box("Falk forever", "Waaaah!");
         i1:= Result_value(Value1);
         i2:= Result_value(Value2);
         if i1 = i2 then
@@ -153,16 +153,16 @@ package body AZip_GWin.Directory_Lists is
     end case;
   end On_Notify;
 
-  -- !! Missing in EX_LV: freeing internal tables on Delete_Item, Clear.
+  --  !! Missing in EX_LV: freeing internal tables on Delete_Item, Clear.
   --    Rem. 20-Aug-2014
-  -- !! Missing in EX_LV: a On_Free_Payload that one can override
-  -- overriding procedure On_Free_Payload(
+  --  !! Missing in EX_LV: a On_Free_Payload that one can override
+  --  overriding procedure On_Free_Payload(
   --              Control: in out Directory_list_type;
   --              Payload: out AZip_LV_Ex.Data_access) is
   --   procedure Dispose is new Ada.Unchecked_Deallocation(LV_Payload, AZip_LV_Ex.Data_Access);
-  -- begin
+  --  begin
   --   Dispose(Payload);
-  -- end On_Free_Payload;
+  --  end On_Free_Payload;
 
   overriding procedure On_Right_Click (Control : in out Directory_list_type) is
     Child_Window : MDI_Child_Type renames

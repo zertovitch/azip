@@ -16,7 +16,7 @@ procedure AZip_GWin.Properties (Window: in out MDI_Child.MDI_Child_Type) is
   use Interfaces;
   total_uncompressed: Unsigned_64:= 0;
   total_compressed: Zip.Zip_32_Data_Size_Type:= 0;
-  -- total_entries: Natural:= 0;
+  --  total_entries: Natural:= 0;
   files_per_method: array(Zip.PKZip_method) of Natural:= (others => 0);
   uncompressed_per_method: array(Zip.PKZip_method) of Unsigned_64:= (others => 0);
   compressed_per_method: array(Zip.PKZip_method) of Zip.Zip_32_Data_Size_Type:= (others => 0);

@@ -67,6 +67,6 @@ package body AZip_GWin.Options is
       when others   =>
         null;  --  Contains the IDCANCEL case
     end case;
-  end;
+  end On_General_Options;
 
-end;
+end AZip_GWin.Options;

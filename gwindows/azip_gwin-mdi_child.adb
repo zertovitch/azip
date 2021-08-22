@@ -209,7 +209,7 @@ package body AZip_GWin.MDI_Child is
         name_encoding     : Zip_name_encoding;
         read_only         : Boolean;
         encrypted_2_x     : Boolean; -- PKZip 2.x encryption
-        entry_user_code         : in out Integer
+        entry_user_code   : in out Integer
       )
       is
         pragma Unreferenced (file_index);
@@ -218,7 +218,6 @@ package body AZip_GWin.MDI_Child is
         previous_idx: Positive:= name'First;
         extension_idx: Positive:= name'Last + 1;
         R_mark: constant array (Boolean) of Character:= (' ', 'R');
-        payload_access: AZip_LV_Ex.Data_Access;
         --
         function Encryption_suffix return GString is
         begin
@@ -230,7 +229,9 @@ package body AZip_GWin.MDI_Child is
         end Encryption_suffix;
         --
         w_node, w_parent: Tree_Item_Node;
-      begin -- Process_row
+        compression_ratio : Long_Float;
+        use type Zip_32_Data_Size_Type;
+      begin  --  Process_row
         Scan_for_path:
         for i in name'Range loop
           case name(i) is
@@ -291,12 +292,25 @@ package body AZip_GWin.MDI_Child is
         end if;
         row:= row + 1;
         if need in first_display .. node_selected then
-          Lst.Insert_Item(name(simple_name_idx..name'Last) & Encryption_suffix, row);
+          Lst.Insert_Item (name(simple_name_idx..name'Last) & Encryption_suffix, row);
+          if entry_uncomp_size > 0 then
+            compression_ratio := Long_Float (entry_comp_size) / Long_Float (entry_uncomp_size);
+          else
+            compression_ratio := 0.0;
+          end if;
           --
           --  Payload
           --
-          payload_access:= new LV_Payload'(index_before_sorting => row);
-          Lst.Item_Data(row, payload_access);
+          Lst.Item_Data (
+            row,
+            new LV_Payload'(
+              index_before_sorting => row,
+              uncompressed_size    => Interfaces.Integer_64 (entry_uncomp_size),
+              compressed_size      => Interfaces.Integer_64 (entry_comp_size),
+              ratio                => compression_ratio,
+              result_code          => entry_user_code  --  Updated elsewhere if need = results_refresh
+            )
+          );
           --
           Lst.Set_Sub_Item(name(extension_idx..name'Last), row, cidx(FType)-1);
           begin
@@ -351,27 +365,29 @@ package body AZip_GWin.MDI_Child is
       --
       Traverse (Window.zif);
       --
-      --  Finishing touch: the colours in the "Results" column.
+      --  Finishing touch: the messages and colours in the "Results" column.
       --
       last_row := row;
       for sorted_index in 0 .. last_row loop
         unsorted_index := Lst.Item_Data (sorted_index).index_before_sorting;
+        --  Ada.Text_IO.put_line (G2S(Lst.Text(sorted_index,0)) & Lst.Item_Data (sorted_index).uncompressed_size'image);
         Lst.Set_Sub_Item (S2G(Result_message(Window.last_operation, result_code (unsorted_index))), sorted_index, cidx (Result)-1);
         Result_color (Window.last_operation, result_code (unsorted_index), Window.last_max_code, az_color, intensity);
-        gw_color:=
-          (Red    => GWindows.Colors.Color_Range(az_color.Red),
-           Green  => GWindows.Colors.Color_Range(az_color.Green),
-           Blue   => GWindows.Colors.Color_Range(az_color.Blue),
-           Unused => 0
-          );
+        Lst.Item_Data (sorted_index).result_code := result_code (unsorted_index);
         if need = results_refresh or az_color /= AZip_Common.Operations.white then
           --  Ensure user can read the text, given the background color.
           if intensity > 0.58 then
-            font_color:= Black;
+            font_color := Black;
           else
-            font_color:= GWindows.Colors.White;
+            font_color := GWindows.Colors.White;
           end if;
-          Lst.Subitem_Color (font_color, To_Color(gw_color), sorted_index, cidx(Result)-1);
+          gw_color :=
+            (Red    => GWindows.Colors.Color_Range(az_color.Red),
+             Green  => GWindows.Colors.Color_Range(az_color.Green),
+             Blue   => GWindows.Colors.Color_Range(az_color.Blue),
+             Unused => 0
+            );
+          Lst.Subitem_Color (font_color, To_Color (gw_color), sorted_index, cidx(Result)-1);
         end if;
         --  Show some response if the zip directory is very large
         --

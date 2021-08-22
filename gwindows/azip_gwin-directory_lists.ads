@@ -3,11 +3,16 @@ with AZip_Common.User_options;
 with GWindows.Base;
 with GWindows.Common_Controls.Ex_List_View;
 with GWindows.Types;
+with Interfaces;
 
 package AZip_GWin.Directory_Lists is
 
   type LV_Payload is record
-    index_before_sorting: Integer;
+    index_before_sorting : Integer;
+    uncompressed_size    : Interfaces.Integer_64;
+    compressed_size      : Interfaces.Integer_64;
+    ratio                : Long_Float;  --  Compressed / Uncompressed ratio
+    result_code          : Integer;
   end record;
 
   package AZip_LV_Ex is new GWindows.Common_Controls.Ex_List_View(LV_Payload);
@@ -56,7 +61,7 @@ package AZip_GWin.Directory_Lists is
       Return_Value : in out GWindows.Types.Lresult
   );
 
-  -- overriding procedure On_Free_Payload(
+  --  overriding procedure On_Free_Payload(
   --              Control: in out Directory_list_type;
   --              Payload: out AZip_LV_Ex.Data_access);
 

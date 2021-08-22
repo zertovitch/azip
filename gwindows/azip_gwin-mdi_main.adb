@@ -61,7 +61,7 @@ package body AZip_GWin.MDI_Main is
   is
   begin
     if Window.all in MDI_Child_Type'Class then
-      -- !! some content refresh, dbl buffering
+      --  !! some content refresh, dbl buffering
       Window.Redraw;
     end if;
   end Redraw_Child;
@@ -69,7 +69,7 @@ package body AZip_GWin.MDI_Main is
   procedure Redraw_all(Window: in out MDI_Main_Type) is
   begin
     Window.Redraw;
-    -- Redraw(Window.Tool_bar);
+    --  Redraw(Window.Tool_bar);
     Enumerate_Children(MDI_Client_Window (Window).all,Redraw_Child'Access);
   end Redraw_all;
 
@@ -102,7 +102,7 @@ package body AZip_GWin.MDI_Main is
       Zoom(c);
       Redraw_all(m);
     end if;
-    -- Show things in the main status bar - effective only after Thaw!
+    --  Show things in the main status bar - effective only after Thaw!
   end Finish_subwindow_opening;
 
   procedure Open_Child_Window_And_Load (
@@ -159,7 +159,7 @@ package body AZip_GWin.MDI_Main is
     declare
       New_Window : constant MDI_Child_Access := new MDI_Child_Type;
     begin
-      -- We do here like Excel or Word: close the unused blank window
+      --  We do here like Excel or Word: close the unused blank window
       Close_extra_first_child(Window);
       --
       Window.User_maximize_restore:= False;
@@ -243,7 +243,7 @@ package body AZip_GWin.MDI_Main is
   procedure On_Create ( Window : in out MDI_Main_Type ) is
     use Ada.Command_Line;
     --
-    -- Replace AZip default values by system-dependent ones (here those of GWindows)
+    --  Replace AZip default values by system-dependent ones (here those of GWindows)
     --
     procedure Replace_default(x: in out Integer) is
     begin
@@ -262,7 +262,7 @@ package body AZip_GWin.MDI_Main is
     Small_Icon (Window, "AAA_Main_Icon");
     Large_Icon (Window, "AAA_Main_Icon");
 
-    -- ** Menus and accelerators:
+    --  ** Menus and accelerators:
 
     AZip_Resource_GUI.Create_Full_Menu(Window.Menu);
     MDI_Menu (Window, Window.Menu.Main, Window_Menu => 3);
@@ -273,14 +273,14 @@ package body AZip_GWin.MDI_Main is
        IDM_MRU_9
       );
 
-    -- ** Main tool bar (add / remove / ...) at top left of the main window:
+    --  ** Main tool bar (add / remove / ...) at top left of the main window:
 
     AZip_GWin.Toolbars.Init_Main_toolbar(Window.Tool_Bar, Window.Toolbar_Images, Window);
 
-    -- ** Other resources
+    --  ** Other resources
     Window.Folders_Images.Create (Num_resource(Folders_BMP), 16);
 
-    -- ** Resize according to options:
+    --  ** Resize according to options:
 
     if Valid_Left_Top(Window.opt.win_left, Window.opt.win_top) then
       Left(Window, Window.opt.win_left);
@@ -297,7 +297,7 @@ package body AZip_GWin.MDI_Main is
 
     if Argument_Count = 0 then
       On_File_New (Window, extra_first_doc => True);
-      -- ^ The MS Office-like first, empty document
+      --  ^ The MS Office-like first, empty document
     else
       declare
         args : Array_Of_File_Names (1 .. Argument_Count);
@@ -347,11 +347,11 @@ package body AZip_GWin.MDI_Main is
     if Window.record_dimensions and
        not (Zoom(Window) or Minimized(Window))
     then
-      -- ^ Avoids recording dimensions before restoring them
+      --  ^ Avoids recording dimensions before restoring them
       --   from previous session.
       Window.opt.win_left  := Left;
       Window.opt.win_top   := Top;
-      -- Will remember position if moved, maximized and closed
+      --  Will remember position if moved, maximized and closed
     end if;
   end On_Move;
 
@@ -363,11 +363,11 @@ package body AZip_GWin.MDI_Main is
     if Window.record_dimensions and
        not (Zoom(Window) or Minimized(Window))
     then
-      -- ^ Avoids recording dimensions before restoring them
+      --  ^ Avoids recording dimensions before restoring them
       --   from previous session.
       Window.opt.win_width := Width;
       Window.opt.win_height:= Height;
-      -- Will remember position if sized, maximized and closed
+      --  Will remember position if sized, maximized and closed
     end if;
   end On_Size;
 
@@ -402,16 +402,16 @@ package body AZip_GWin.MDI_Main is
     New_Window.Short_Name:= G2GU(File_Title);
     MDI_Active_Window (Window, New_Window.all);
 
-    -- Transfer user-defined default options:
-    -- New_Window.xxx.Opt:= Gen_Opt.Options_For_New;
-    -- Refresh_size_dependent_parameters(
+    --  Transfer user-defined default options:
+    --  New_Window.xxx.Opt:= Gen_Opt.Options_For_New;
+    --  Refresh_size_dependent_parameters(
     --  New_Window.Draw_Control.Picture,
     --  objects => True
-    -- );
+    --  );
 
     Current_MDI_Window := Current_MDI_Window + 1;
 
-    -- This is just to set the MRUs in the new window's menu:
+    --  This is just to set the MRUs in the new window's menu:
     Update_Common_Menus(Window);
 
     Finish_subwindow_opening(Window, New_Window.all);
@@ -589,18 +589,18 @@ package body AZip_GWin.MDI_Main is
       Window.opt.win_height:= Height(Window);
     end if;
 
-    -- TC.GWin.Options.Save;
+    --  TC.GWin.Options.Save;
 
     My_MDI_Close_All(Window);
-    -- ^ Don't forget to save unsaved files !
-    -- Operation can be cancelled by user for one unsaved picture.
+    --  ^ Don't forget to save unsaved files !
+    --  Operation can be cancelled by user for one unsaved picture.
     Can_Close:= Window.Success_in_enumerated_close;
     --
     if Can_Close then
       AZip_GWin.Persistence.Save (Window.opt);
       GWindows.Base.On_Exception_Handler (Handler => null);
-      -- !! Trick to remove a strange crash on Destroy_Children
-      -- !! on certain Windows platforms - 29-Jun-2012
+      --  !! Trick to remove a strange crash on Destroy_Children
+      --  !! on certain Windows platforms - 29-Jun-2012
     end if;
   end On_Close;
 
@@ -614,7 +614,7 @@ package body AZip_GWin.MDI_Main is
   begin
     To_Upper(up_name);
 
-    -- Search for name in the list
+    --  Search for name in the list
     for m in Window.opt.mru'Range loop
       declare
         up_mru_m: GString:= GU2G(Window.opt.mru(m));
@@ -627,21 +627,21 @@ package body AZip_GWin.MDI_Main is
       end;
     end loop;
 
-    -- name exists in list ?
+    --  name exists in list ?
     if x /= 0 then
-      -- roll up entries after it, erasing it
+      --  roll up entries after it, erasing it
       for i in x .. Window.opt.mru'Last-1 loop
         Window.opt.mru(i):= Window.opt.mru(i+1);
       end loop;
       Window.opt.mru(Window.opt.mru'Last):= Null_GString_Unbounded;
     end if;
 
-    -- roll down the full list
+    --  roll down the full list
     for i in reverse Window.opt.mru'First .. Window.opt.mru'Last-1 loop
       Window.opt.mru(i+1):= Window.opt.mru(i);
     end loop;
 
-    -- name exists in list
+    --  name exists in list
     Window.opt.mru(Window.opt.mru'First):= G2GU(name);
 
   end Add_MRU;
@@ -667,7 +667,7 @@ package body AZip_GWin.MDI_Main is
         cw: MDI_Child_Type renames MDI_Child_Type(Window.all);
       begin
         Update_MRU_Menu (cw.MDI_Root.all, cw.Menu.Popup_0001);
-        -- Update_Toolbar_Menu(cw.View_menu, cw.parent.Floating_toolbars);
+        --  Update_Toolbar_Menu(cw.View_menu, cw.parent.Floating_toolbars);
       end;
     end if;
   end Update_Common_Menus_Child;
@@ -679,7 +679,7 @@ package body AZip_GWin.MDI_Main is
       Add_MRU(Window, top_entry);
     end if;
     Update_MRU_Menu(Window, Window.Menu.Popup_0001);
-    -- Update_Toolbar_Menu(Window.View_menu, Window.Floating_toolbars);
+    --  Update_Toolbar_Menu(Window.View_menu, Window.Floating_toolbars);
     GWindows.Base.Enumerate_Children(
       MDI_Client_Window (Window).all,
       Update_Common_Menus_Child'Access

@@ -4,4 +4,4 @@ package AZip_GWin.Options is
 
    procedure On_General_Options (main : in out MDI_Main_Type);
 
-end;
+end AZip_GWin.Options;

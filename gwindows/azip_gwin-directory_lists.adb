@@ -27,69 +27,94 @@ package body AZip_GWin.Directory_Lists is
     end if;
   end On_Item_Changed;
 
-  function On_Compare(
-               Control: in Directory_list_type;
-               Column : in Natural;
-               Value1 : in GString;
-               Value2 : in GString
+  function On_Compare (
+               Control : in Directory_list_type;
+               Column  : in Natural;
+               Index_1 : in Natural;
+               Index_2 : in Natural
   )
   return Integer
   is
+    use Interfaces;
     i1, i2  : Integer;
+    s1, s2  : Integer_64;
+    r1, r2  : Long_Float;
     less    : constant := -1;
     greater : constant := +1;
     equal   : constant :=  0;
   begin
     case Control.curr_col_topic (Column) is
-      when Size | Packed =>  --  E.g. 3 KB
-        i1:= Integer(File_Size_Value(Value1));
-        i2:= Integer(File_Size_Value(Value2));
-        if i1 = i2 then
+      when Size =>
+        s1 := Control.Item_Data (Index_1).uncompressed_size;
+        s2 := Control.Item_Data (Index_2).uncompressed_size;
+        if s1 = s2 then
           return equal;
-        elsif i1 > i2 then
+        elsif s1 > s2 then
           return greater;
         else
           return less;
         end if;
-      when Ratio =>  --  E.g. 77%
-        i1:= Pct_Value(Value1);
-        i2:= Pct_Value(Value2);
-        if i1 = i2 then
+      when Packed =>
+        s1 := Control.Item_Data (Index_1).compressed_size;
+        s2 := Control.Item_Data (Index_2).compressed_size;
+        if s1 = s2 then
           return equal;
-        elsif i1 > i2 then
+        elsif s1 > s2 then
+          return greater;
+        else
+          return less;
+        end if;
+      when Ratio =>
+        r1 := Control.Item_Data (Index_1).ratio;
+        r2 := Control.Item_Data (Index_2).ratio;
+        if r1 = r2 then
+          return equal;
+        elsif r1 > r2 then
           return greater;
         else
           return less;
         end if;
       when Result =>  --  E.g. 1234
-        --  Message_Box("Falk forever", "Waaaah!");
-        i1:= Result_value(Value1);
-        i2:= Result_value(Value2);
-        if i1 = i2 then
-          return equal;
-        elsif i1 > i2 then
-          return greater;
-        else
-          return less;
-        end if;
+        --  !! Use the payload, but beware the special cases...
+        declare
+          Value1 : constant GString := Control.Text (Index_1, Column);
+          Value2 : constant GString := Control.Text (Index_2, Column);
+        begin
+          --  Message_Box("Falk forever", "Waaaah!");
+          i1:= Result_value(Value1);
+          i2:= Result_value(Value2);
+          if i1 = i2 then
+            return equal;
+          elsif i1 > i2 then
+            return greater;
+          else
+            return less;
+          end if;
+        end;
       when others =>
         null;  --  The sort column has the default behaviour.
     end case;
-    --  Default behaviour: lexicographic.
-    if Value1 = Value2 then
-      return equal;
-    elsif Value1 > Value2 then
-      return greater;
-    else
-      return less;
-    end if;
+    declare
+      Value1 : constant GString := Control.Text (Index_1, Column);
+      Value2 : constant GString := Control.Text (Index_2, Column);
+    begin
+      --  Default behaviour: lexicographic.
+      if Value1 = Value2 then
+        return equal;
+      elsif Value1 > Value2 then
+        return greater;
+      else
+        return less;
+      end if;
+    end;
   end On_Compare;
 
-  overriding procedure Sort(
-    Control   : in out Directory_list_type;
-    Column    : in Natural;
-    Direction : in AZip_LV_Ex.Sort_Direction_Type;
-    Show_Icon : in Boolean := True)
+  procedure Sort (
+    Control    : in out Directory_list_type;
+    Column     : in Natural;
+    Direction  : in AZip_LV_Ex.Sort_Direction_Type;
+    Show_Icon  : in Boolean := True;
+    Technique  : in AZip_LV_Ex.Comparison_Technique_Type := AZip_LV_Ex.As_Strings)
   is
     timing : constant Boolean := False;
     use Ada.Calendar;
@@ -103,8 +128,9 @@ package body AZip_GWin.Directory_Lists is
     for t in Entry_topic loop
       Control.curr_col_topic(window.opt.column_index(t)-1) := t;
     end loop;
-    --  Call parent method
-    AZip_LV_Ex.Ex_List_View_Control_Type (Control).Sort(Column, Direction, Show_Icon);
+    --  Call parent method, but with the General comparison technique.
+    AZip_LV_Ex.Ex_List_View_Control_Type (Control).Sort (Column, Direction, Show_Icon, AZip_LV_Ex.General);
+    --
     if timing then
       t1 := Clock;
       MDI_Child_Type(Control.Parent.Parent.Parent.all).Status_Bar.Text (

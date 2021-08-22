@@ -31,9 +31,9 @@ package AZip_Common is
   -- Strings --
   -------------
 
-  -- Internal format for AZip: UTF-16
-  -- Format for file names on Open / Create operations: UTF-8
-  -- In zip archives, names can be either UTF-8 or IBM 437.
+  --  Internal format for AZip: UTF-16
+  --  Format for file names on Open / Create operations: UTF-8
+  --  In zip archives, names can be either UTF-8 or IBM 437.
 
   subtype UTF_8_String is Ada.Strings.UTF_Encoding.UTF_8_String;
 
@@ -53,7 +53,7 @@ package AZip_Common is
   -- Maps of paths and nodes, for navigating through paths in a tree view --
   --------------------------------------------------------------------------
 
-  -- Find quickly a node number given a path name.
+  --  Find quickly a node number given a path name.
 
   package Path_Catalogues is new Ada.Containers.Hashed_Maps
     (Key_Type        => UTF_16_Unbounded_String,
@@ -64,7 +64,7 @@ package AZip_Common is
 
   root_key: constant UTF_16_Unbounded_String:= To_Unbounded_Wide_String("");
 
-  -- Find quickly a path name given a node number.
+  --  Find quickly a path name given a node number.
 
   package Node_Catalogues is new Ada.Containers.Ordered_Maps
     (Key_Type        => Integer,
@@ -77,19 +77,17 @@ package AZip_Common is
 
   function Image(topic: Entry_topic) return UTF_16_String;
   function Hexadecimal(x: Interfaces.Unsigned_32) return UTF_16_String;
-  -- File sizes (in GB, MB, KB or bytes)
+  --  File sizes (in GB, MB, KB or bytes)
   function File_Size_Image(x: Zip.Zip_32_Data_Size_Type) return UTF_16_String;
-  function File_Size_Value(s: UTF_16_String) return Zip.Zip_32_Data_Size_Type;
-  -- Image with thousands separator
+  --  Image with thousands separator
   function Image_1000(r: Zip.Zip_32_Data_Size_Type; separator: Wide_Character) return Wide_String;
-  -- Long format: e.g. "321 MB (337'477'113 bytes)"
+  --  Long format: e.g. "321 MB (337'477'113 bytes)"
   function Long_file_size_image(x: Zip.Zip_32_Data_Size_Type; separator: Wide_Character) return UTF_16_String;
   function Long_file_size_image(x: Interfaces.Unsigned_64; separator: Wide_Character) return UTF_16_String;
-  -- Percentages
+  --  Percentages
   function Ratio_pct_Image(nom, den: Zip.Zip_32_Data_Size_Type) return UTF_16_String;
   function Ratio_pct_Image(nom, den: Interfaces.Unsigned_64) return UTF_16_String;
-  function Pct_Value(s: UTF_16_String) return Natural; -- 0..100
-  -- Results: see AZip_Common.Operations.
+  --  Results: see AZip_Common.Operations.
 
   --  "Correct" casing for <Enum>'Image
   generic
@@ -102,14 +100,14 @@ package AZip_Common is
 
   function Remove_path(s: UTF_16_String) return UTF_16_String;
   function Give_path(s: UTF_16_String) return UTF_16_String;
-  -- s is always equal to: Give_path & Remove_path
+  --  s is always equal to: Give_path & Remove_path
 
   procedure Load_insensitive_if_possible(info: out Zip_info; from: String);
 
-  -- This function will tell if a file is actually a Zip file.
-  -- It is useful for instance when files are dropped onto AZip,
-  -- to determine whether AZip has to open the files as archives,
-  -- or it is meant to add the files into an archive.
+  --  This function will tell if a file is actually a Zip file.
+  --  It is useful for instance when files are dropped onto AZip,
+  --  to determine whether AZip has to open the files as archives,
+  --  or it is meant to add the files into an archive.
 
   type Archive_validity is
     (valid,

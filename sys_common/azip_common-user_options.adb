@@ -63,9 +63,9 @@ package body AZip_Common.User_options is
         exception
           when others =>
             null;
-            -- This key is missing (from registry, config file,...)
-            -- Data_Error or something else.
-            -- We just continue...
+            --  This key is missing (from registry, config file,...)
+            --  Data_Error or something else.
+            --  We just continue...
         end;
       end loop;
     end Load;

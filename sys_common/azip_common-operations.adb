@@ -18,7 +18,7 @@ package body AZip_Common.Operations is
   function Result_message(op: Archive_Operation; code: Integer) return String
   is
   begin
-    -- Following codes have a single explanation over all operations
+    --  Following codes have a single explanation over all operations
     case code is
       when wrong_pwd =>
         return "Password wrong" & Integer'Image(UnZip.tolerance_wrong_password) & " times";
@@ -161,7 +161,7 @@ package body AZip_Common.Operations is
           val:= Color_range(Float'Floor(f_max * code_rel));
           color:= (Green => max_color - val / 4, Red | Blue => max_color - val);
         end if;
-      -- For other operations, we have a simple color code: green or white
+      --  For other operations, we have a simple color code: green or white
       when others =>
         case code is
           when success | appended =>
@@ -170,7 +170,7 @@ package body AZip_Common.Operations is
             color:= white;
         end case;
     end case;
-    -- Errors are always shown - in red of course!
+    --  Errors are always shown - in red of course!
     case code is
       when wrong_pwd | corrupt | bad_crc | unsupported =>
         color:= (Red => (max_color * 3) / 4, Green | Blue => 0);
@@ -197,8 +197,8 @@ package body AZip_Common.Operations is
         return "Appending...";
       when Replace =>
         if a_op = Update then
-          -- Since the replacement is only taken when contents are different
-          -- we prefer not to confuse the user by saying "Replacing"...
+          --  Since the replacement is only taken when contents are different
+          --  we prefer not to confuse the user by saying "Replacing"...
           return "Processing...";
         else
           return "Replacing...";
@@ -319,8 +319,8 @@ package body AZip_Common.Operations is
       else
         file_percents_done:= percents_done;
       end if;
-      -- Call the given non-portable feedback box
-      -- (Windows GUI, Gtk, Lumen, iOS, console, ...)
+      --  Call the given non-portable feedback box
+      --  (Windows GUI, Gtk, Lumen, iOS, console, ...)
       Feedback (
         file_percents_done,
         archive_percents_done + file_percents_done / total_entries,
@@ -343,7 +343,7 @@ package body AZip_Common.Operations is
       stl: Natural; -- string length
       l: Character; -- last character of the search string
       use UnZip.Streams;
-      -- Define a circular buffer
+      --  Define a circular buffer
       siz: constant:= max;
       type Buffer_range is mod siz;
       buf: array(Buffer_range) of Character:= (others => ' ');
@@ -403,7 +403,7 @@ package body AZip_Common.Operations is
       sst: Search_stream;
 
     begin
-      -- First we copy the string
+      --  First we copy the string
       -- !! wide or not : what to do ? --
       stl:= 0;
       for w in search_pattern'Range loop
@@ -445,7 +445,7 @@ package body AZip_Common.Operations is
     return UTF_8_String
     is
       UTF_8_Name: constant UTF_8_String:= To_UTF_8(File_Name, Name_Encoding);
-      -- AZip writes all files with names that passed UTF_8 encoded to the system
+      --  AZip writes all files with names that passed UTF_8 encoded to the system
     begin
       if output_folder = "" then
         return UTF_8_Name;
@@ -455,7 +455,7 @@ package body AZip_Common.Operations is
         return To_UTF_8(output_folder) & UTF_8_Name;
       else
         return To_UTF_8(output_folder) & '/' & UTF_8_Name;
-        -- '/' is also accepted by Windows
+        --  '/' is also accepted by Windows
       end if;
     end Add_extract_directory;
     --
@@ -466,7 +466,7 @@ package body AZip_Common.Operations is
       if cancelled then
         raise UnZip.User_abort;
       end if;
-      -- persistence over entries + wide strings...
+      --  persistence over entries + wide strings...
       pwd:=  To_Unbounded_String(To_String(To_Wide_String(password)));
     end Get_password_internal;
     --
@@ -517,7 +517,7 @@ package body AZip_Common.Operations is
       skip_if_conflict: Boolean;
       match : Boolean:= False;
       add_file_idx : Natural;  --  Index in the entry_name list (file to be added)
-      -- Just copy entry from old to new archive (Modifying_Operation):
+      --  Just copy entry from old to new archive (Modifying_Operation):
       procedure Preserve_entry is
       begin
         current_operation:= Copy;
@@ -583,7 +583,7 @@ package body AZip_Common.Operations is
       --
       procedure Update_entry is
         stamp: constant Time:= Zip.Convert(Modification_Time(name_utf_8_with_extra_folder));
-        -- Ada.Directories not utf-8 compatible !!
+        --  Ada.Directories not utf-8 compatible !!
         use Zip_Streams.Calendar;
         temp_single_entry_zip_zif : Zip.Zip_info;
         dummy_name_encoding       : Zip_name_encoding;
@@ -600,9 +600,9 @@ package body AZip_Common.Operations is
         end if;
         current_operation:= Replace;
         current_entry_short_name:= U(short_name_utf_16);
-        -- We write first a one-file zip file with the new data
+        --  We write first a one-file zip file with the new data
         Tentative_compress(stamp, quick_method, name_utf_8_with_extra_folder);
-        -- We load the one-file zip file's information
+        --  We load the one-file zip file's information
         Load(temp_single_entry_zip_zif, temp_single_entry_zip_name);
         Find_offset(
           info          => temp_single_entry_zip_zif,
@@ -651,7 +651,7 @@ package body AZip_Common.Operations is
           Zip.Compress.Preselection_Method'Last,
           temp_entry_data_name
         );
-        -- We load the one-file zip file's information
+        --  We load the one-file zip file's information
         Load(temp_single_entry_zip_zif, temp_single_entry_zip_name);
         Find_offset(
           info          => temp_single_entry_zip_zif,
@@ -689,14 +689,14 @@ package body AZip_Common.Operations is
       archive_percents_done := (100 * processed_entries) / total_entries;
       file_percents_done := 0;
       --
-      -- !! we could use rather hashed maps for searching
+      --  !! we could use rather hashed maps for searching
       --
       case operation is
         when Add =>
           for i in entry_name'Range loop
             if base_folder & Remove_external_path(entry_name(i)) = name_utf_16 then
-              -- The path removed is from an external file name.
-              -- The file will be added with the base_folder from archive
+              --  The path removed is from an external file name.
+              --  The file will be added with the base_folder from archive
               match := True;
               add_file_idx := i;
               exit;
@@ -745,7 +745,7 @@ package body AZip_Common.Operations is
           when Add =>
             current_operation := Replace;
             current_entry_short_name := U (short_name_utf_16);
-            -- Here we compress new contents for replacing an existing entry
+            --  Here we compress new contents for replacing an existing entry
             declare
               external_file_name : constant UTF_8_String :=
                 To_UTF_8 (To_Wide_String (entry_name (add_file_idx).str));
@@ -798,7 +798,7 @@ package body AZip_Common.Operations is
             current_operation:= Test;
             current_entry_short_name:= U(short_name_utf_16);
             Entry_feedback(1, False, dummy_user_abort);
-            -- ^ Just have the right title if password is asked for
+            --  ^ Just have the right title if password is asked for
             begin
               Extract(
                 from                 => zif,
@@ -828,14 +828,14 @@ package body AZip_Common.Operations is
             current_operation:= Extract;
             current_entry_short_name:= U(short_name_utf_16);
             Entry_feedback(1, False, dummy_user_abort);
-            -- ^ Just have the right title if password is asked for
+            --  ^ Just have the right title if password is asked for
             if current_user_attitude = none then
               skip_if_conflict:= Zip.Exists(name_utf_8_with_extra_folder);
               current_skip_hint:= True;
             else
               skip_if_conflict:= True;
-              -- Covers the case where current_user_attitude is "yes" before
-              -- call to Extract, then "none" after.
+              --  Covers the case where current_user_attitude is "yes" before
+              --  call to Extract, then "none" after.
             end if;
             begin
               Extract(
@@ -882,7 +882,7 @@ package body AZip_Common.Operations is
               total_files_with_occurence:= total_files_with_occurence + 1;
             else
               begin
-                -- We need to search the pattern string in the compressed entry...
+                --  We need to search the pattern string in the compressed entry...
                 Search_1_file(entry_full_name => entry_full_name, occ  => entry_user_code);
                 if entry_user_code > 0 then
                   total_files_with_occurence:= total_files_with_occurence + 1;
@@ -951,8 +951,8 @@ package body AZip_Common.Operations is
         );
       when Read_Only_Operation =>
         null;
-        -- Read-only operation, doesn't need a new archive file;
-        -- current archive opened only at entry testing / extracting
+        --  Read-only operation, doesn't need a new archive file;
+        --  current archive opened only at entry testing / extracting
     end case;
     UnZip.current_user_attitude:= UnZip.yes;
     current_skip_hint:= False;
@@ -1004,8 +1004,8 @@ package body AZip_Common.Operations is
                   );
                 end Add_with_encoding;
               begin
-                -- We try to convert as many names as possible to the
-                -- "old DOS" encoding, for compatibility, e.g. with WinZip 10.0 (2005 !)
+                --  We try to convert as many names as possible to the
+                --  "old DOS" encoding, for compatibility, e.g. with WinZip 10.0 (2005 !)
                 Add_with_encoding (To_IBM_437(short_name), IBM_437);
               exception
                 when Cannot_encode_to_IBM_437 =>
@@ -1088,18 +1088,18 @@ package body AZip_Common.Operations is
 
   function Expand_folders(l: Name_list) return Name_list is
     --
-    -- The challenge is to do it all without heap allocation :-)
+    --  The challenge is to do it all without heap allocation :-)
     --
     function Expand_one_entry(Name: Name_descriptor) return Name_list is
       --
       files, total_files: Natural:= 0;
       sep: Natural:= 0;
       --
-      -- Position of separator in "d:\ada\azip\gwindows\test\jaja\"
+      --  Position of separator in "d:\ada\azip\gwindows\test\jaja\"
 
       --
-      -- This is a modified version of the Rosetta code example
-      -- http://rosettacode.org/wiki/Walk_a_directory/Recursively#Ada
+      --  This is a modified version of the Rosetta code example
+      --  http://rosettacode.org/wiki/Walk_a_directory/Recursively#Ada
       --
       procedure Full_Walk(Name : Wide_String; Count_only: Boolean; New_list: out Name_list) is
         --

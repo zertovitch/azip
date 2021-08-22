@@ -25,7 +25,7 @@ procedure Test_Expand_folders is
       Put_Line("   " & To_Wide_String(l(i).str));
     end loop;
     New_Line;
-  end;
+  end Show;
 
 begin
   for i in l1'Range loop
@@ -39,4 +39,4 @@ begin
   end;
   Put("Press [return]");
   Skip_Line;
-end;
+end Test_Expand_folders;

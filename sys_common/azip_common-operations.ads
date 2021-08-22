@@ -31,12 +31,12 @@ package AZip_Common.Operations is
   corrupt     : constant:= -3;
   unsupported : constant:= -4;
 
-  -- Convention for operation results set Zip_info's user_code:
-  -- Add          : 0 = preserved; 1 = replaced; 2 = appended
-  -- Update       : 0 = preserved; 1 = file only in archive; 2 = updated
-  -- Search       : number of strings found, or 1 for file
-  --                     name found (no text search)
-  -- Compare      : 0 = same; 1 = different; 2 = missing in the other archive
+  --  Convention for operation results set Zip_info's user_code:
+  --  Add          : 0 = preserved; 1 = replaced; 2 = appended
+  --  Update       : 0 = preserved; 1 = file only in archive; 2 = updated
+  --  Search       : number of strings found, or 1 for file
+  --                      name found (no text search)
+  --  Compare      : 0 = same; 1 = different; 2 = missing in the other archive
 
   function Result_message(op: Archive_Operation; code: Integer) return String;
   function Result_value(s: UTF_16_String) return Integer; -- can be a non-number
@@ -67,15 +67,15 @@ package AZip_Common.Operations is
   );
 
   type Entry_Operation is (
-    -- Operations related to "Add"
+    --  Operations related to "Add"
     Append,  -- file is not in original archive and has to be added to new one
     Replace, -- file replaces an entry in original archive
     Recompress,
-    -- Operations related to "Remove"
+    --  Operations related to "Remove"
     Skip,    -- file is in original archive but won't be copied (-> "deleted")
-    -- Neutral (happens with both "Add" and "Remove")
+    --  Neutral (happens with both "Add" and "Remove")
     Copy,    -- file is in original archive and copied into new one
-    -- Read-Only operations
+    --  Read-Only operations
     Test,
     Extract,
     Search
@@ -91,24 +91,24 @@ package AZip_Common.Operations is
   type Name_descriptor is record
     str : UTF_16_Unbounded_String;
     sep : Natural:= 0;
-    -- if sep > 0, it indicates, for an external file name, where to put
-    -- the separation for the portion of the path to be matched with zip
-    -- entries.
-    -- Example:
+    --  if sep > 0, it indicates, for an external file name, where to put
+    --  the separation for the portion of the path to be matched with zip
+    --  entries.
+    --  Example:
     --
-    -- I drop the folder "jaja" into an AZip archive window.
-    -- jaja is located here: d:\ada\azip\gwindows\test .
-    -- then the function Expand_folders will give many names, like:
-    -- d:\ada\azip\gwindows\test\jaja\javax\swing\JProgressBar.class
-    -- sep indicates this point ^
-    -- the Zip entry to be replaced or appended will be:
-    -- jaja\javax\swing\JProgressBar.class
+    --  I drop the folder "jaja" into an AZip archive window.
+    --  jaja is located here: d:\ada\azip\gwindows\test .
+    --  then the function Expand_folders will give many names, like:
+    --  d:\ada\azip\gwindows\test\jaja\javax\swing\JProgressBar.class
+    --  sep indicates this point ^
+    --  the Zip entry to be replaced or appended will be:
+    --  jaja\javax\swing\JProgressBar.class
   end record;
 
   type Name_list is array(Positive range <>) of Name_descriptor;
 
-  -- Replace any folder name by the names of files it contains
-  -- including those of subfolders, recursively.
+  --  Replace any folder name by the names of files it contains
+  --  including those of subfolders, recursively.
   --
   function Expand_folders(l: Name_list) return Name_list;
 

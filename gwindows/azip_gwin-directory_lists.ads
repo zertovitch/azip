@@ -40,17 +40,18 @@ package AZip_GWin.Directory_Lists is
   overriding procedure On_Item_Changed
     (Control : in out Directory_list_type);
 
-  overriding function On_Compare(
-               Control: in Directory_list_type;
-               Column : in Natural;
-               Value1 : in GString;
-               Value2 : in GString) return Integer;
+  overriding function On_Compare (
+               Control : in Directory_list_type;
+               Column  : in Natural;
+               Index_1 : in Natural;
+               Index_2 : in Natural) return Integer;
 
-  overriding procedure Sort(
-    Control   : in out Directory_list_type;
-    Column    : in Natural;
-    Direction : in AZip_LV_Ex.Sort_Direction_Type;
-    Show_Icon : in Boolean := True);
+  overriding procedure Sort (
+    Control    : in out Directory_list_type;
+    Column     : in Natural;
+    Direction  : in AZip_LV_Ex.Sort_Direction_Type;
+    Show_Icon  : in Boolean := True;
+    Technique  : in AZip_LV_Ex.Comparison_Technique_Type := AZip_LV_Ex.As_Strings);
 
   overriding procedure On_Focus (Control : in out Directory_list_type);
 

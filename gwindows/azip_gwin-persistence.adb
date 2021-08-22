@@ -87,7 +87,7 @@ package body AZip_GWin.Persistence is
       Put_Line (nf, Configuration_persistence.Key'Image (k) & '=');
     end loop;
     Close (nf);
-  end;
+  end Create_new_config;
 
   ---------------------------------------------------------------------
   --  Persistence using either the registry or a configuration file  --
@@ -96,7 +96,7 @@ package body AZip_GWin.Persistence is
   function Cfg_file_available return Boolean is
   begin
     return Zip.Exists (Config_name);
-  end;
+  end Cfg_file_available;
 
   procedure Load (opt: out AZip_Common.User_options.Option_Pack_Type) is
   begin

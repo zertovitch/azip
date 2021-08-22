@@ -5,21 +5,21 @@ package AZip_Common.User_options is
 
   use_default: constant:= -1;
 
-  -- MRU (Most Recently Used) files names:
+  --  MRU (Most Recently Used) files names:
   type MRU_List is array(1..9) of UTF_16_Unbounded_String;
 
   type Sort_Direction_Type is (Up, Down, Auto);
 
   no_sorting : constant := -1;  --  Column index is 0-based; -1 if no sorting column
 
-  -- The GUI-agnostic part of user options are stored in this record
+  --  The GUI-agnostic part of user options are stored in this record
   --
   type Option_Pack_Type is record
     view_mode      : View_Mode_Type:= Tree;
     tree_portion   : Float:= 0.25;
-      -- Horizontal portion of the window for the tree, when view_mode = Tree
+      --  Horizontal portion of the window for the tree, when view_mode = Tree
     column_width   : Column_integer_array:=
-      -- Defaults for GWindows. May be scaled for other GUI metrics.
+      --  Defaults for GWindows. May be scaled for other GUI metrics.
       (Name => 150, Modified => 120, others => 70);
     visible_column : Column_boolean_array :=
       (others => True);
@@ -84,6 +84,6 @@ package AZip_Common.User_options is
         extract_directory,
         first_visit
       );
-  end;
+  end Persistence;
 
 end AZip_Common.User_options;

@@ -10,7 +10,7 @@ with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 
 package body AZip_Common is
 
-  -- http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/PC/CP437.TXT
+  --  http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/PC/CP437.TXT
 
   IBM_437_to_UTF_16: constant array(Character) of Wide_Character :=
   (
@@ -357,7 +357,7 @@ package body AZip_Common is
     function Image_1000(r: Size_type; separator: Wide_Character) return Wide_String;
     function Long_file_size_image(x: Size_type; separator: Wide_Character) return UTF_16_String;
     function Ratio_pct_Image(nom, den: Size_type) return UTF_16_String;
-  end;
+  end Gen_Size_Images;
 
   package body Gen_Size_Images is
 
@@ -478,46 +478,6 @@ package body AZip_Common is
   function Ratio_pct_Image(nom, den: Interfaces.Unsigned_64) return UTF_16_String
     renames Inst_Size_Images_64.Ratio_pct_Image;
 
-  function File_Size_Value(s: UTF_16_String) return Zip.Zip_32_Data_Size_Type is
-    use type Zip_32_Data_Size_Type;
-  begin
-    if s'Length >= 4 and then (s(s'Last-1) = 'K' or s(s'Last-1) = 'M' or s(s'Last-1) = 'G') then
-      if Index(s, ".") > 0 then
-        case s(s'Last-1) is
-          when 'K' =>
-            return Zip_32_Data_Size_Type(Long_Float'Wide_Value(s(s'First..s'Last-3)) * 1024.0);
-          when 'M' =>
-            return Zip_32_Data_Size_Type(Long_Float'Wide_Value(s(s'First..s'Last-3)) * 1024.0**2);
-          when 'G' =>
-            return Zip_32_Data_Size_Type(Long_Float'Wide_Value(s(s'First..s'Last-3)) * 1024.0**3);
-          when others =>
-            null;
-        end case;
-      else
-        case s(s'Last-1) is
-          when 'K' =>
-            return Zip_32_Data_Size_Type'Wide_Value(s(s'First..s'Last-3)) * 1024;
-          when 'M' =>
-            return Zip_32_Data_Size_Type'Wide_Value(s(s'First..s'Last-3)) * 1024**2;
-          when 'G' =>
-            return Zip_32_Data_Size_Type'Wide_Value(s(s'First..s'Last-3)) * 1024**3;
-          when others =>
-            null;
-        end case;
-      end if;
-    end if;
-    return Zip_32_Data_Size_Type'Wide_Value(s);
-  end File_Size_Value;
-
-  function Pct_Value(s: UTF_16_String) return Natural is -- 0..101
-  begin
-    if s = "--" then
-      return 101;
-    else
-      return Integer'Wide_Value(s(s'First..s'Last-1));
-    end if;
-  end Pct_Value;
-
   function Enum_Img_Mixed(e: Enum) return UTF_16_String is
     s: UTF_16_String:= Enum'Wide_Image(e);
     low: Boolean:= False;
@@ -563,7 +523,7 @@ package body AZip_Common is
 
   procedure Load_insensitive_if_possible(info: out Zip_info; from: String) is
   begin
-    -- Whenever possible, we try to load the directory as case insensitive
+    --  Whenever possible, we try to load the directory as case insensitive
     Zip.Load(
       info           => info,
       from           => from,
@@ -577,7 +537,7 @@ package body AZip_Common is
         case_sensitive  => True,  --  Perhaps a .jar with a.txt and A.txt
         duplicate_names => admit_duplicates  --  twice a.txt (check with Is_valid_Zip_archive)
       );
-      -- If Duplicate_name is raised again, well, it is really invalid!
+      --  If Duplicate_name is raised again, well, it is really invalid!
   end Load_insensitive_if_possible;
 
   function Is_valid_Zip_archive(file_name: String) return Archive_validity is

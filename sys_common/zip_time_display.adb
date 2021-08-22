@@ -15,7 +15,7 @@ begin
     subtype Sec_int is Long_Integer; -- must contain 86_400
     s : constant Sec_int:= Sec_int( Seconds_in_day );
     m : constant Sec_int:= s / 60;
-    -- + 100: trick for obtaining 0x
+    --  + 100: trick for obtaining 0x
     sY : constant String:= Integer'Image( Year);
     sM : constant String:= Integer'Image( Month + 100);
     sD : constant String:= Integer'Image(  Day  + 100);

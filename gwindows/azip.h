@@ -152,3 +152,4 @@
 #define Label_NOT_Installed                     40149
 #define Label_Registry                          40150
 #define Label_Stealth                           40151
+#define IDM_Invert_Selection                    40152

@@ -193,18 +193,18 @@ package body AZip_GWin.MDI_Child is
       -- This includes potential invisible entries (directory names from Info-Zip, WinZip)
       sorted_index, unsorted_index, result_code: array(0..max_entries-1) of Integer;
       --
-      procedure Process_row(
-        name_8_bit       : String; -- 'name' is compressed entry's name, with Zip encoding
-        file_index       : Zip_Streams.ZS_Index_Type;
-        comp_size        : Zip_32_Data_Size_Type;
-        uncomp_size      : Zip_32_Data_Size_Type;
-        crc_32           : Interfaces.Unsigned_32;
-        date_time        : Time;
-        method           : PKZip_method;
-        name_encoding    : Zip_name_encoding;
-        read_only        : Boolean;
-        encrypted_2_x    : Boolean; -- PKZip 2.x encryption
-        user_code        : in out Integer
+      procedure Process_row (
+        name_8_bit        : String; -- 'name' is compressed entry's name, with Zip encoding
+        file_index        : Zip_Streams.ZS_Index_Type;
+        entry_comp_size   : Zip_32_Data_Size_Type;
+        entry_uncomp_size : Zip_32_Data_Size_Type;
+        crc_32            : Interfaces.Unsigned_32;
+        entry_date_time   : Time;
+        method            : PKZip_method;
+        name_encoding     : Zip_name_encoding;
+        read_only         : Boolean;
+        encrypted_2_x     : Boolean; -- PKZip 2.x encryption
+        entry_user_code         : in out Integer
       )
       is
         pragma Unreferenced (file_index);
@@ -295,7 +295,7 @@ package body AZip_GWin.MDI_Child is
           --
           Lst.Set_Sub_Item(name(extension_idx..name'Last), row, cidx(FType)-1);
           begin
-            Lst.Set_Sub_Item(S2G(Zip_time_display(date_time)), row, cidx(Modified)-1);
+            Lst.Set_Sub_Item(S2G(Zip_time_display(entry_date_time)), row, cidx(Modified)-1);
           exception
             when Zip_Streams.Calendar.Time_Error =>
               Lst.Set_Sub_Item("(invalid)", row, cidx(Modified)-1);
@@ -303,9 +303,9 @@ package body AZip_GWin.MDI_Child is
           if read_only then -- any attribute
             Lst.Set_Sub_Item(S2G((1 => R_mark(read_only))), row, cidx(Attributes)-1);
           end if;
-          Lst.Set_Sub_Item(File_Size_Image(uncomp_size), row, cidx(Size)-1);
-          Lst.Set_Sub_Item(File_Size_Image(comp_size), row, cidx(Packed)-1);
-          Lst.Set_Sub_Item(Ratio_pct_Image(comp_size, uncomp_size), row, cidx(Ratio)-1);
+          Lst.Set_Sub_Item(File_Size_Image(entry_uncomp_size), row, cidx(Size)-1);
+          Lst.Set_Sub_Item(File_Size_Image(entry_comp_size), row, cidx(Packed)-1);
+          Lst.Set_Sub_Item(Ratio_pct_Image(entry_comp_size, entry_uncomp_size), row, cidx(Ratio)-1);
           Lst.Set_Sub_Item(S2G(Zip.Image(method)), row, cidx(Format)-1);
           Lst.Set_Sub_Item(Hexadecimal(crc_32), row, cidx(CRC32)-1);
           if simple_name_idx > name'First then
@@ -320,11 +320,11 @@ package body AZip_GWin.MDI_Child is
           end if;
         end if;
         -- This is equal to row if the list is unsorted.
-        unsorted_index(row):= Lst.Item_Data(row).index_before_sorting;
-        result_code(row):= user_code;
+        unsorted_index(row) := Lst.Item_Data(row).index_before_sorting;
+        result_code(row) := entry_user_code;
       end Process_row;
 
-      procedure Traverse is new Zip.Traverse_verbose(Process_row);
+      procedure Traverse is new Zip.Traverse_verbose (Process_row);
 
       az_color: AZip_Common.Operations.RGB_type;
       gw_color: GWindows.Colors.RGB_Type;
@@ -626,9 +626,9 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Save_As (Window : in out MDI_Child_Type)
   is
-    New_File_Name : GWindows.GString_Unbounded;
-    File_Title    : GWindows.GString_Unbounded;
-    Success       : Boolean;
+    New_File_Name          : GWindows.GString_Unbounded;
+    File_Title             : GWindows.GString_Unbounded;
+    user_choice_successful : Boolean;
     --
     -- If needed, an empty Zip file is created with the contents below.
     --
@@ -642,9 +642,9 @@ package body AZip_GWin.MDI_Child is
     Save_File (
       Window, "Save Zip archive as...", New_File_Name, Zip_archives_filters,
       ".zip", File_Title,
-      Success
+      user_choice_successful
     );
-    if not Success then
+    if not user_choice_successful then
       return;
     end if;
     if Zip.Exists(To_UTF_8(GU2G(New_File_Name))) then
@@ -717,22 +717,21 @@ package body AZip_GWin.MDI_Child is
     is_aborted : Boolean := False;
     --
     procedure Abort_clicked ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-      pragma Warnings(off, dummy);
     begin
       is_aborted:= True;  --  Will propagate user_abort upon next Boxed_Feedback.
     end Abort_clicked;
     --
     tick : Ada.Calendar.Time;
-    progress_box : Progress_box_Type;
+    progress : Progress_box_Type;
     --
     procedure Boxed_Feedback (
-      file_percents_done    : Natural;
-      archive_percents_done : Natural;
-      entry_being_processed : GString;
-      e_operation           : Entry_Operation;
-      comment_1, comment_2  : String; -- e.g. #found so far, time elpased,...
-      skip_hint             : Boolean;
-      user_abort            : out Boolean
+      file_percents_done           : Natural;
+      archive_percents_done        : Natural;
+      entry_being_processed        : GString;
+      e_operation                  : Entry_Operation;
+      for_comment_1, for_comment_2 : String;  --  e.g. #found so far, time elpased,...
+      skip_hint                    : Boolean;
+      user_abort                   : out Boolean
     )
     is
       use Ada.Calendar, Ada.Strings.Wide_Fixed;
@@ -743,8 +742,8 @@ package body AZip_GWin.MDI_Child is
       -- takes much more time due to the display. Typical case: an archive
       -- with many small files - GWin.zip or Java run-time's Jar for instance.
       if now - tick >= 0.04 or else archive_percents_done = 100 then
-        progress_box.File_Progress.Position (file_percents_done);
-        progress_box.Archive_Progress.Position (archive_percents_done);
+        progress.File_Progress.Position (file_percents_done);
+        progress.Archive_Progress.Position (archive_percents_done);
         Window.MDI_Root.Text (
           Trim (Integer'Wide_Image (archive_percents_done), Left) &
           "% done - " & S2G (AZip_GWin.Installation.AZip_Title)
@@ -752,15 +751,15 @@ package body AZip_GWin.MDI_Child is
         if Window.MDI_Root.Task_bar_gadget_ok then
           Window.MDI_Root.Task_bar_gadget.Set_Progress_Value (Window.MDI_Root.all, archive_percents_done, 100);
         end if;
-        progress_box.Entry_name.Text(entry_being_processed);
-        progress_box.Entry_operation_name.Text(
+        progress.Entry_name.Text(entry_being_processed);
+        progress.Entry_operation_name.Text(
           Description(e_operation, operation, skip_hint)
         );
-        progress_box.Comment_1.Text(S2G(comment_1));
-        progress_box.Comment_2.Text(S2G(comment_2));
-        if archive_percents_done = 100 and then comment_1 /= "" then
-          Window.last_op_comment_1:= G2GU(S2G(comment_1));
-          Window.last_op_comment_2:= G2GU(S2G(comment_2));
+        progress.Comment_1.Text(S2G(for_comment_1));
+        progress.Comment_2.Text(S2G(for_comment_2));
+        if archive_percents_done = 100 and then for_comment_1 /= "" then
+          Window.last_op_comment_1:= G2GU(S2G(for_comment_1));
+          Window.last_op_comment_2:= G2GU(S2G(for_comment_2));
         end if;
         Message_Check;
         tick:= now;
@@ -780,13 +779,13 @@ package body AZip_GWin.MDI_Child is
       box: File_exists_box_Type;
       use UnZip;
     begin
-      box.Create_Full_Dialog(progress_box);
+      box.Create_Full_Dialog(progress);
       box.Conflict_simple_name.Text(Remove_path(To_UTF_16(name, name_encoding)));
       box.Conflict_location.Text(output_folder);
       box.Overwrite_Rename.Disable;
       -- !! ^ Needs some effort to make an idiot-proof name query ;-)
       box.Center;
-      case Show_Dialog(box, progress_box) is
+      case Show_Dialog(box, progress) is
         when Overwrite_Yes    =>  action:= yes;
         when Overwrite_No     =>  action:= no;
         when Overwrite_All    =>  action:= yes_to_all;
@@ -805,7 +804,7 @@ package body AZip_GWin.MDI_Child is
     begin
       Get_password_for_decryption(
         Window     => Window,
-        Parent     => progress_box,
+        Parent     => progress,
         entry_name => entry_name,
         password   => password,
         cancelled  => cancelled
@@ -843,21 +842,21 @@ package body AZip_GWin.MDI_Child is
       az_names (i).str := file_names (i);
     end loop;
     tick := Ada.Calendar."-" (Ada.Calendar.Clock, 1.0);
-    progress_box.Create_Full_Dialog (Window);
-    progress_box.File_Progress.Position (0);
-    progress_box.Archive_Progress.Position (0);
+    progress.Create_Full_Dialog (Window);
+    progress.File_Progress.Position (0);
+    progress.Archive_Progress.Position (0);
     if Window.MDI_Root.Task_bar_gadget_ok then
       Window.MDI_Root.Task_bar_gadget.Set_Progress_Value (Window.MDI_Root.all, 0, 100);
     end if;
-    progress_box.Cancel_button.Hide;
-    progress_box.Cancel_button_permanent.Text (Cross & "   Cancel");
-    progress_box.Cancel_button_permanent.Show;
-    progress_box.Cancel_button_permanent.On_Click_Handler (Abort_clicked'Unrestricted_Access);
-    progress_box.Center;
-    progress_box.Redraw;
-    progress_box.Show;
+    progress.Cancel_button.Hide;
+    progress.Cancel_button_permanent.Text (Cross & "   Cancel");
+    progress.Cancel_button_permanent.Show;
+    progress.Cancel_button_permanent.On_Click_Handler (Abort_clicked'Unrestricted_Access);
+    progress.Center;
+    progress.Redraw;
+    progress.Show;
     Window.MDI_Root.Disable;
-    progress_box.Text (progress_box.Text & " Operation: " & Img (operation));
+    progress.Text (progress.Text & " Operation: " & Img (operation));
     begin
       Archive_processing(
         zif              => Window.zif,
@@ -1060,24 +1059,23 @@ package body AZip_GWin.MDI_Child is
   is
     new_zif: Zip_info;
   begin
-    Load_insensitive_if_possible(new_zif, To_UTF_8(GU2G(Window.File_Name)));
-    if Zip.Is_loaded(Window.zif) then
+    Load_insensitive_if_possible (new_zif, To_UTF_8(GU2G(Window.File_Name)));
+    if Zip.Is_loaded (Window.zif) then
       if copy_codes then
-        Set_user_codes(new_zif, appended);
-        Copy_user_codes(Window.zif, new_zif);
+        Set_user_codes (new_zif, appended);
+        Copy_user_codes (Window.zif, new_zif);  --  Copy `replaced` labels from old archive's info
       end if;
     end if;
-    Window.zif:= new_zif;
-    Change_View(Window, Window.opt.view_mode, force => True);
+    Window.zif := new_zif;
+    Change_View (Window, Window.opt.view_mode, force => True);
     -- Update_display(Window, archive_changed); -- included in Change_View
     -- Window.Status_deamon.Display(Window'Unchecked_Access);
   end Load_archive_catalogue;
 
   procedure On_Size (Window : in out MDI_Child_Type;
                      Width  : in     Integer;
-                     Height : in     Integer) is
-    pragma Warnings (Off, Width);   -- only client area is considered
-    pragma Warnings (Off, Height);  -- only client area is considered
+                     Height : in     Integer)
+  is
     w: constant Natural:= Window.Client_Area_Width;
     h: constant Natural:= Integer'Max(2, Window.Client_Area_Height - Window.Status_Bar.Height);
     splitter_w: constant:= 4; -- between tree and list
@@ -1399,7 +1397,6 @@ package body AZip_GWin.MDI_Child is
     box: Find_box_Type;
     --
     procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-      pragma Warnings(off, dummy);
     begin
       Window.name_search:= G2GU(box.Name_to_be_searched.Text);
       Window.content_search:= G2GU(box.Content_to_be_searched.Text);

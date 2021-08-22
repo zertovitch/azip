@@ -112,11 +112,11 @@ package body AZip_GWin.Directory_Lists is
   end Sort;
 
   overriding procedure On_Focus (Control : in out Directory_list_type) is
-    MDI_Child : MDI_Child_Type renames
+    Child_Window : MDI_Child_Type renames
       MDI_Child_Type (Control.Parent.Parent.Parent.all);
   begin
-    MDI_Child.Update_status_bar;
-    MDI_Child.Update_tool_bar_and_menus;
+    Child_Window.Update_status_bar;
+    Child_Window.Update_tool_bar_and_menus;
   end On_Focus;
 
   overriding procedure On_Notify (
@@ -129,8 +129,8 @@ package body AZip_GWin.Directory_Lists is
     LVN_FIRST      : constant := -100;
     LVN_BEGINDRAG  : constant := LVN_FIRST - 9;
     --  WM_CONTEXTMENU : constant := 16#7B#;
-    MDI_Child : MDI_Child_Type renames MDI_Child_Type (Window.Parent.Parent.Parent.all);
-    MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Root.all;
+    Child_Window : MDI_Child_Type renames MDI_Child_Type (Window.Parent.Parent.Parent.all);
+    Main_Window  : MDI_Main_Type  renames Child_Window.MDI_Root.all;
   begin
     --  Call parent method
     AZip_LV_Ex.Ex_List_View_Control_Type (Window).On_Notify
@@ -138,8 +138,8 @@ package body AZip_GWin.Directory_Lists is
     case Message.Code is
       when LVN_BEGINDRAG =>
         Window.Focus;
-        Capture_Mouse (MDI_Child);
-        MDI_Main.dragging.is_dragging := True;
+        Capture_Mouse (Child_Window);
+        Main_Window.dragging.is_dragging := True;
         --  The rest of the dragging operation is handled by the parent window, of
         --  type MDI_Child_Type: see On_Mouse_Move, On_Left_Mouse_Button_Up.
       --
@@ -163,10 +163,10 @@ package body AZip_GWin.Directory_Lists is
   -- end On_Free_Payload;
 
   overriding procedure On_Right_Click (Control : in out Directory_list_type) is
-    MDI_Child : MDI_Child_Type renames
+    Child_Window : MDI_Child_Type renames
       MDI_Child_Type (Control.Parent.Parent.Parent.all);
   begin
-    Immediate_Popup_Menu (MDI_Child.context_menu_file, MDI_Child);
+    Immediate_Popup_Menu (Child_Window.context_menu_file, Child_Window);
   end On_Right_Click;
 
 end AZip_GWin.Directory_Lists;

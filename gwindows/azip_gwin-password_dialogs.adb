@@ -27,14 +27,12 @@ package body AZip_GWin.Password_dialogs is
     pwd_candidate: GString_Unbounded:= Window.current_password;
     --
     procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-      pragma Warnings(off, dummy);
     begin
       pwd_candidate:= G2GU(box.Password_edit.Text);
       Window.MDI_Root.opt.show_passwords:= box.Show_password_box.State = Checked;
     end Get_Data;
     --
     procedure Show_or_Hide_Password ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-      pragma Warnings(off, dummy);
     begin
       if box.Show_password_box.State = Checked then
         box.Password_edit.Password(Off);
@@ -82,7 +80,6 @@ package body AZip_GWin.Password_dialogs is
     confirm_ok: Boolean;
     --
     procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-      pragma Warnings(off, dummy);
     begin
       pwd_candidate:= G2GU(box.Password_edit.Text);
       pwd_confirm_candidate:= G2GU(box.Password_confirm_edit.Text);
@@ -90,7 +87,6 @@ package body AZip_GWin.Password_dialogs is
     end Get_Data;
     --
     procedure Show_or_Hide_Password ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-      pragma Warnings(off, dummy);
     begin
       if box.Show_password_box.State = Checked then
         box.Password_edit.Password(Off);

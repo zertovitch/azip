@@ -1,14 +1,14 @@
 ---------------------------------------------------------------------------
--- GUI contents of resource script file: AZip.rc
--- Transcription time: 2021/01/05  21:13:21
--- GWenerator project file: azip.gwen
+--  GUI contents of resource script file: AZip.rc
+--  Transcription time: 2021/08/22  07:42:38
+--  GWenerator project file: azip.gwen
 --
--- Translated by the RC2GW or by the GWenerator tool.
--- URL: http://sf.net/projects/gnavi
+--  Translated by the RC2GW or by the GWenerator tool.
+--  URL: http://sf.net/projects/gnavi
 --
--- This file contains only automatically generated code. Do not edit this.
--- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 20-Jul-2019
+--  This file contains only automatically generated code. Do not edit this.
+--  Rework the resource script instead, and re-run the translator.
+--  RC Grammar version: 14-Apr-2021
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -32,71 +32,68 @@ pragma Warnings ("U");  --  turn off warnings for unused entity
 package AZip_Resource_GUI is
 
   type Fake_menu_for_commands_in_no_real_menu_Type is tagged record
-    Main: Menu_Type; -- Root of the whole menu tree
-    Popup_0001: Menu_Type;  -- level 1; title: "Fake"
+    Main: Menu_Type;  --  Root of the whole menu tree
+    Popup_0001 : Menu_Type;   --  Popup level: 1; title: "Fake"
   end record;  --  Fake_menu_for_commands_in_no_real_menu_Type
 
   --  Menu at line 48
-  procedure Create_Full_Menu
-     (Menu        : in out Fake_menu_for_commands_in_no_real_menu_Type);
+  procedure Create_Full_Menu (New_Menu : in out Fake_menu_for_commands_in_no_real_menu_Type);
 
   type Menu_MDI_Child_Type is tagged record
-    Main: Menu_Type; -- Root of the whole menu tree
-    Popup_0001: Menu_Type;  -- level 1; title: "&File"
-    Popup_0002: Menu_Type;  -- level 2; title: "&Recent"
-    Popup_0003: Menu_Type;  -- level 1; title: "&Edit"
-    Popup_0004: Menu_Type;  -- level 1; title: "&Tools"
-    Popup_0005: Menu_Type;  -- level 1; title: "&View"
-    Popup_0006: Menu_Type;  -- level 1; title: "&Options"
-    Popup_0007: Menu_Type;  -- level 1; title: "&Window"
-    Popup_0008: Menu_Type;  -- level 1; title: "&Help"
+    Main: Menu_Type;  --  Root of the whole menu tree
+    Popup_0001 : Menu_Type;   --  Popup level: 1; title: "&File"
+    Popup_0002 : Menu_Type;   --  Popup level: 2; title: "&Recent"
+    Popup_0003 : Menu_Type;   --  Popup level: 1; title: "&Edit"
+    Popup_0004 : Menu_Type;   --  Popup level: 1; title: "&Tools"
+    Popup_0005 : Menu_Type;   --  Popup level: 1; title: "&View"
+    Popup_0006 : Menu_Type;   --  Popup level: 1; title: "&Options"
+    Popup_0007 : Menu_Type;   --  Popup level: 1; title: "&Window"
+    Popup_0008 : Menu_Type;   --  Popup level: 1; title: "&Help"
   end record;  --  Menu_MDI_Child_Type
 
-  --  Menu at line 133
-  procedure Create_Full_Menu
-     (Menu        : in out Menu_MDI_Child_Type);
+  --  Menu at line 134
+  procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Child_Type);
 
   type Menu_MDI_Main_Type is tagged record
-    Main: Menu_Type; -- Root of the whole menu tree
-    Popup_0001: Menu_Type;  -- level 1; title: "&File"
-    Popup_0002: Menu_Type;  -- level 2; title: "&Recent"
-    Popup_0003: Menu_Type;  -- level 1; title: "&Options"
-    Popup_0004: Menu_Type;  -- level 1; title: "&Window"
-    Popup_0005: Menu_Type;  -- level 1; title: "&Help"
+    Main: Menu_Type;  --  Root of the whole menu tree
+    Popup_0001 : Menu_Type;   --  Popup level: 1; title: "&File"
+    Popup_0002 : Menu_Type;   --  Popup level: 2; title: "&Recent"
+    Popup_0003 : Menu_Type;   --  Popup level: 1; title: "&Options"
+    Popup_0004 : Menu_Type;   --  Popup level: 1; title: "&Window"
+    Popup_0005 : Menu_Type;   --  Popup level: 1; title: "&Help"
   end record;  --  Menu_MDI_Main_Type
 
-  --  Menu at line 181
-  procedure Create_Full_Menu
-     (Menu        : in out Menu_MDI_Main_Type);
+  --  Menu at line 182
+  procedure Create_Full_Menu (New_Menu : in out Menu_MDI_Main_Type);
 
   type About_box_Type is new Window_Type with record
 
     Static_0001: Icon_Type;
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
     Copyright_label: Label_Type;
-    -- Label: IDC_STATIC
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
+    --  Label: IDC_STATIC
     AZip_URL: Label_Type;
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
     Version_label: Label_Type;
     Static_0006: Group_Box_Type;
     GNAT_URL: Label_Type;
     GNAT_Version: Label_Type;
     GNAVI_URL: Label_Type;
     ResEdit_URL: Label_Type;
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
     ZipAda_URL: Label_Type;
     ZipAda_Version: Label_Type;
     Ini_files_URL: Label_Type;
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    Credits_button: Dialog_Button_Type;    -- closes parent window after click
-    Credits_button_permanent: Button_Type; -- doesn't close parent window after click
-    Sponsoring_button: Dialog_Button_Type;    -- closes parent window after click
-    Sponsoring_button_permanent: Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
+    Credits_button: Dialog_Button_Type;    --  Closes parent window after click
+    Credits_button_permanent: Button_Type;  --  Doesn't close parent window after click
+    Sponsoring_button: Dialog_Button_Type;    --  Closes parent window after click
+    Sponsoring_button_permanent: Button_Type;  --  Doesn't close parent window after click
   end record; -- About_box_Type
 
-  --  Dialog at resource line 214
+  --  Dialog at resource line 215
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -130,19 +127,19 @@ package AZip_Resource_GUI is
   type Credits_box_Type is new Window_Type with record
 
     Static_0001: Group_Box_Type;
-    -- Label: IDC_STATIC
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
+    --  Label: IDC_STATIC
     Static_0004: Group_Box_Type;
-    -- Label: IDC_STATIC
-    -- Label: IDC_STATIC
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
+    --  Label: IDC_STATIC
+    --  Label: IDC_STATIC
     Static_0008: Group_Box_Type;
-    -- Label: 0
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    --  Label: 0
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Credits_box_Type
 
-  --  Dialog at resource line 234
+  --  Dialog at resource line 235
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -170,17 +167,17 @@ package AZip_Resource_GUI is
 
     Static_0001: Icon_Type;
     Encrypt_check_box: Check_Box_Type;
-    -- Label: 0
+    --  Label: 0
     Static_0002: Icon_Type;
     Drop_archive_name: Label_Type;
     New_archive_msg: Label_Type;
-    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
-    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent: Button_Type;  --  Doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Drop_files_box_Type
 
-  --  Dialog at resource line 252
+  --  Dialog at resource line 253
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -216,22 +213,22 @@ package AZip_Resource_GUI is
     Conflict_simple_name: Label_Type;
     Conflict_location: Label_Type;
     Static_0001: Group_Box_Type;
-    -- Label: IDC_STATIC
-    Overwrite_Yes: Dialog_Button_Type;    -- closes parent window after click
-    Overwrite_Yes_permanent: Button_Type; -- doesn't close parent window after click
-    Overwrite_No: Default_Dialog_Button_Type;    -- closes parent window after click
-    Overwrite_No_permanent: Default_Button_Type; -- doesn't close parent window after click
-    Overwrite_All: Dialog_Button_Type;    -- closes parent window after click
-    Overwrite_All_permanent: Button_Type; -- doesn't close parent window after click
-    Overwrite_None: Dialog_Button_Type;    -- closes parent window after click
-    Overwrite_None_permanent: Button_Type; -- doesn't close parent window after click
-    Overwrite_Rename: Dialog_Button_Type;    -- closes parent window after click
-    Overwrite_Rename_permanent: Button_Type; -- doesn't close parent window after click
-    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
-    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    --  Label: IDC_STATIC
+    Overwrite_Yes: Dialog_Button_Type;    --  Closes parent window after click
+    Overwrite_Yes_permanent: Button_Type;  --  Doesn't close parent window after click
+    Overwrite_No: Default_Dialog_Button_Type;    --  Closes parent window after click
+    Overwrite_No_permanent: Default_Button_Type;  --  Doesn't close parent window after click
+    Overwrite_All: Dialog_Button_Type;    --  Closes parent window after click
+    Overwrite_All_permanent: Button_Type;  --  Doesn't close parent window after click
+    Overwrite_None: Dialog_Button_Type;    --  Closes parent window after click
+    Overwrite_None_permanent: Button_Type;  --  Doesn't close parent window after click
+    Overwrite_Rename: Dialog_Button_Type;    --  Closes parent window after click
+    Overwrite_Rename_permanent: Button_Type;  --  Doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent: Button_Type;  --  Doesn't close parent window after click
   end record; -- File_exists_box_Type
 
-  --  Dialog at resource line 272
+  --  Dialog at resource line 273
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -265,18 +262,18 @@ package AZip_Resource_GUI is
   type Find_box_Type is new Window_Type with record
 
     Static_0001: Icon_Type;
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
     Name_to_be_searched: Edit_Box_Type;
     Static_0003: Icon_Type;
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
     Content_to_be_searched: Edit_Box_Type;
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
-    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent: Button_Type;  --  Doesn't close parent window after click
   end record; -- Find_box_Type
 
-  --  Dialog at resource line 290
+  --  Dialog at resource line 291
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -322,25 +319,25 @@ package AZip_Resource_GUI is
     Label_Registry: Label_Type;
     Label_Stealth: Label_Type;
     Group_box_Desktop_Explorer_integration: Group_Box_Type;
-    -- Label: 0
-    Button_create_shortcut: Dialog_Button_Type;    -- closes parent window after click
-    Button_create_shortcut_permanent: Button_Type; -- doesn't close parent window after click
-    -- Label: 0
-    Button_context_add: Dialog_Button_Type;    -- closes parent window after click
-    Button_context_add_permanent: Button_Type; -- doesn't close parent window after click
-    -- Label: 0
-    Button_extension_choose: Dialog_Button_Type;    -- closes parent window after click
-    Button_extension_choose_permanent: Button_Type; -- doesn't close parent window after click
+    --  Label: 0
+    Button_create_shortcut: Dialog_Button_Type;    --  Closes parent window after click
+    Button_create_shortcut_permanent: Button_Type;  --  Doesn't close parent window after click
+    --  Label: 0
+    Button_context_add: Dialog_Button_Type;    --  Closes parent window after click
+    Button_context_add_permanent: Button_Type;  --  Doesn't close parent window after click
+    --  Label: 0
+    Button_extension_choose: Dialog_Button_Type;    --  Closes parent window after click
+    Button_extension_choose_permanent: Button_Type;  --  Doesn't close parent window after click
     Label_Install_note_first_visit: Label_Type;
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    ID_Install_all_users: Default_Dialog_Button_Type;    -- closes parent window after click
-    ID_Install_all_users_permanent: Default_Button_Type; -- doesn't close parent window after click
-    ID_Install_current_user: Default_Dialog_Button_Type;    -- closes parent window after click
-    ID_Install_current_user_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
+    ID_Install_all_users: Default_Dialog_Button_Type;    --  Closes parent window after click
+    ID_Install_all_users_permanent: Default_Button_Type;  --  Doesn't close parent window after click
+    ID_Install_current_user: Default_Dialog_Button_Type;    --  Closes parent window after click
+    ID_Install_current_user_permanent: Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Install_box_Type
 
-  --  Dialog at resource line 323
+  --  Dialog at resource line 324
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -375,15 +372,15 @@ package AZip_Resource_GUI is
 
     RC_item_0: Group_Box_Type;
     Extract_directory_edit_box: Edit_Box_Type;
-    Choose_extract_directory_button: Dialog_Button_Type;    -- closes parent window after click
-    Choose_extract_directory_button_permanent: Button_Type; -- doesn't close parent window after click
-    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
-    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    Choose_extract_directory_button: Dialog_Button_Type;    --  Closes parent window after click
+    Choose_extract_directory_button_permanent: Button_Type;  --  Doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent: Button_Type;  --  Doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Option_box_Type
 
-  --  Dialog at resource line 338
+  --  Dialog at resource line 339
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -411,18 +408,18 @@ package AZip_Resource_GUI is
 
     Static_0001: Group_Box_Type;
     Encrypted_entry: Label_Type;
-    -- Label: IDC_STATIC
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
+    --  Label: IDC_STATIC
     Static_0004: Icon_Type;
     Password_edit: Edit_Box_Type;
     Show_password_box: Check_Box_Type;
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
-    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent: Button_Type;  --  Doesn't close parent window after click
   end record; -- Password_decryption_box_Type
 
-  --  Dialog at resource line 357
+  --  Dialog at resource line 358
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -456,19 +453,19 @@ package AZip_Resource_GUI is
   type Password_encryption_box_Type is new Window_Type with record
 
     Static_0001: Icon_Type;
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
     Password_edit: Edit_Box_Type;
     Confirm_Icon: Icon_Type;
     Confirm_Password_Label: Label_Type;
     Password_confirm_edit: Edit_Box_Type;
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
-    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent: Button_Type;  --  Doesn't close parent window after click
     Show_password_box: Check_Box_Type;
   end record; -- Password_encryption_box_Type
 
-  --  Dialog at resource line 376
+  --  Dialog at resource line 377
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -505,13 +502,13 @@ package AZip_Resource_GUI is
     Entry_name: Label_Type;
     File_Progress: Progress_Control_Type;
     Archive_Progress: Progress_Control_Type;
-    Cancel_button: Dialog_Button_Type;    -- closes parent window after click
-    Cancel_button_permanent: Button_Type; -- doesn't close parent window after click
+    Cancel_button: Dialog_Button_Type;    --  Closes parent window after click
+    Cancel_button_permanent: Button_Type;  --  Doesn't close parent window after click
     Comment_1: Label_Type;
     Comment_2: Label_Type;
   end record; -- Progress_box_Type
 
-  --  Dialog at resource line 393
+  --  Dialog at resource line 394
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -544,21 +541,21 @@ package AZip_Resource_GUI is
 
   type Properties_box_Type is new Window_Type with record
 
-    -- Label: 0
+    --  Label: 0
     Uncomp_size: Edit_Box_Type;
-    -- Label: 1
+    --  Label: 1
     Comp_size: Edit_Box_Type;
     Comp_ratio: Label_Type;
-    -- Label: 02
+    --  Label: 02
     Numb_entries: Label_Type;
     Stats_list: List_View_Control_Type;
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
-    ID_Button_About_Azip: Default_Dialog_Button_Type;    -- closes parent window after click
-    ID_Button_About_Azip_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
+    ID_Button_About_Azip: Default_Dialog_Button_Type;    --  Closes parent window after click
+    ID_Button_About_Azip_permanent: Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Properties_box_Type
 
-  --  Dialog at resource line 413
+  --  Dialog at resource line 414
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -591,11 +588,11 @@ package AZip_Resource_GUI is
 
   type Quick_help_box_Type is new Window_Type with record
 
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Quick_help_box_Type
 
-  --  Dialog at resource line 424
+  --  Dialog at resource line 425
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -629,13 +626,13 @@ package AZip_Resource_GUI is
   type Quick_help_tab_command_Type is new Window_Type with record
 
     RC_item_0: Group_Box_Type;
-    -- Label: 0
+    --  Label: 0
     Static_0001: Group_Box_Type;
     Static_0002: Bitmap_Type;
-    -- Label: 0
+    --  Label: 0
   end record; -- Quick_help_tab_command_Type
 
-  --  Dialog at resource line 438
+  --  Dialog at resource line 439
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -670,13 +667,13 @@ package AZip_Resource_GUI is
 
     Static_0001: Group_Box_Type;
     Static_0002: Icon_Type;
-    -- Label: 0
+    --  Label: 0
     Static_0003: Group_Box_Type;
     Static_0004: Icon_Type;
-    -- Label: 0
+    --  Label: 0
   end record; -- Quick_help_tab_gui_Type
 
-  --  Dialog at resource line 453
+  --  Dialog at resource line 454
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -709,13 +706,13 @@ package AZip_Resource_GUI is
 
   type Quick_help_tab_install_Type is new Window_Type with record
 
-    -- Label: 0
+    --  Label: 0
     Static_0001: Group_Box_Type;
     Static_0002: Bitmap_Type;
-    -- Label: 0
+    --  Label: 0
   end record; -- Quick_help_tab_install_Type
 
-  --  Dialog at resource line 466
+  --  Dialog at resource line 467
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -750,11 +747,11 @@ package AZip_Resource_GUI is
 
     Dummy_check_box_1: Check_Box_Type;
     Dummy_check_box_2: Check_Box_Type;
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Select_column_box_Type
 
-  --  Dialog at resource line 479
+  --  Dialog at resource line 480
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -788,16 +785,16 @@ package AZip_Resource_GUI is
   type Sponsoring_box_Type is new Window_Type with record
 
     Sponsoring_label: Label_Type;
-    -- Label: 0
+    --  Label: 0
     Label_Paypal: Label_Type;
-    -- Label: 0
+    --  Label: 0
     Currency_box: Edit_Box_Type;
     Static_0001: Bitmap_Type;
-    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
-    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent: Default_Button_Type;  --  Doesn't close parent window after click
   end record; -- Sponsoring_box_Type
 
-  --  Dialog at resource line 496
+  --  Dialog at resource line 497
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -830,12 +827,12 @@ package AZip_Resource_GUI is
 
   type Wait_refresh_box_Type is new Window_Type with record
 
-    -- Label: IDC_STATIC
-    -- Label: IDC_STATIC
+    --  Label: IDC_STATIC
+    --  Label: IDC_STATIC
     null; -- empty!
   end record; -- Wait_refresh_box_Type
 
-  --  Dialog at resource line 508
+  --  Dialog at resource line 509
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -863,17 +860,17 @@ package AZip_Resource_GUI is
     Authors: constant String:= "Gautier de Montmollin";
     FileDescription: constant String:= "AZip - A portable Zip Archive Manager - Free, MIT license";
     FileVersion: constant String:= "2.40";
-    LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2020";
+    LegalCopyright: constant String:= "Copyright © Gautier de Montmollin 2012 .. 2021";
     ProductName: constant String:= "AZip";
     Translation: constant:= 1033;
   end Version_info;
 
-  ------------------------------------------------
-  -- Defined resource symbols --> Ada constants --
-  ------------------------------------------------
+  --------------------------------------------------
+  --  Defined resource symbols --> Ada constants  --
+  --------------------------------------------------
 
-  -- NB: only items with a defined symbol get a constant here
-  -- These constants are needed for getting button and menu feedbacks.
+  --  NB: only items with a defined symbol get a constant here
+  --  These constants are needed for getting button and menu feedbacks.
 
   IDC_STATIC                            : constant:=     -1;
   About_box                             : constant:=  40000;
@@ -1026,17 +1023,18 @@ package AZip_Resource_GUI is
   Label_NOT_Installed                   : constant:=  40149;
   Label_Registry                        : constant:=  40150;
   Label_Stealth                         : constant:=  40151;
+  IDM_Invert_Selection                  : constant:=  40152;
 
-  -- ** Some helper utilities (spec).
+  --  ** Some helper utilities (spec).
 
   procedure Dlg_to_Scn(
-    xd,yd,wd,hd:  in Integer;
-    xs,ys,ws,hs: out Integer);
+    xd,yd,wd,hd :  in Integer;
+    xs,ys,ws,hs : out Integer);
 
-  procedure Use_GUI_Font(Window: in out GWindows.Base.Base_Window_Type'Class);
+  procedure Use_GUI_Font (Window : in out GWindows.Base.Base_Window_Type'Class);
 
-  function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
+  function Num_resource (id : Natural) return GString;  --  Just turn 123 into "#123".
 
-  -- Last line of resource script file: 624
+  --  Last line of resource script file: 626
 
 end AZip_Resource_GUI;

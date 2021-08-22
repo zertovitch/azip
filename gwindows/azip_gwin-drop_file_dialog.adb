@@ -16,7 +16,6 @@ package body AZip_GWin.Drop_file_dialog is
   is
     box: Drop_files_box_Type;
     procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-      pragma Warnings(off, dummy);
     begin
       encrypt:= box.Encrypt_check_box.State = Checked;
     end Get_Data;

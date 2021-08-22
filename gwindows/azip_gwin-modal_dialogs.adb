@@ -19,7 +19,6 @@ package body AZip_GWin.Modal_Dialogs is
     --
     procedure Credits_clicked (dummy : in out GWindows.Base.Base_Window_Type'Class) is
       credits_box : AZip_Resource_GUI.Credits_box_Type;
-      pragma Warnings(off, dummy);
     begin
       credits_box.Create_Full_Dialog(box);
       credits_box.Small_Icon("AZip_Doc_Icon_Name");

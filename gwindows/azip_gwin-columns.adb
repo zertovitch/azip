@@ -78,7 +78,6 @@ package body AZip_GWin.Columns is
     check_box_topic : array (Entry_topic) of Check_Box_Type;
     --
     procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-      pragma Warnings(off, dummy);
     begin
       for t in Entry_topic'Range loop
         case t is

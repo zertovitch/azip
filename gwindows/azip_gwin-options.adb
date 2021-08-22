@@ -33,7 +33,6 @@ package body AZip_GWin.Options is
     end Get_Data;
     --
     procedure Choose_extract_directory ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
-      pragma Warnings(off, dummy);
       dir : GString_Unbounded;
       use type GString_Unbounded;
     begin

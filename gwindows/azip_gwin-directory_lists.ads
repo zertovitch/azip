@@ -24,6 +24,9 @@ package AZip_GWin.Directory_Lists is
   type Directory_list_type is
     new AZip_LV_Ex.Ex_List_View_Control_Type with
   record
+    --  During a refresh, we skip status display.
+    --  Otherwise, the status would be updated for each item's change!
+    refreshing     : Boolean := False;
     --  Inverse of parent window's opt.column_index,
     --  for a bit quicker sorting (see On_Compare).
     curr_col_topic : Column_topic_array;

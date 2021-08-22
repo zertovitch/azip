@@ -14,14 +14,16 @@ with Ada.Unchecked_Conversion;
 package body AZip_GWin.Directory_Lists is
 
   procedure On_Item_Changed (Control : in out Directory_list_type) is
-    PW: MDI_Child_Type renames MDI_Child_Type(Control.Parent.Parent.Parent.all);
   begin
-    if PW.refreshing_list then
+    if Control.refreshing then
+      --  Avoid call to Update_display, item by item, during a full refresh...
       null;
-      -- We avoid a call to Update_display during a full refresh...
-      -- with Update_display.
     else
-      PW.Update_display(status_bar);
+      declare
+        PW : MDI_Child_Type renames MDI_Child_Type (Control.Parent.Parent.Parent.all);
+      begin
+        PW.Update_display (status_bar);
+      end;
     end if;
   end On_Item_Changed;
 

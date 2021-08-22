@@ -335,13 +335,13 @@ package body AZip_GWin.MDI_Child is
       if need > results_refresh then
         return;
       end if;
-      Window.refreshing_list:= True;
+      Window.Directory_List.refreshing := True;
       if need in first_display .. node_selected then
         -- This will be set to True if there is any path during the listing
         Window.any_path_in_zip:= False;
       end if;
       --  Performance is meant to be better with the All_Items mode.
-      Window.Directory_List.Color_Mode(AZip_LV_Ex.All_Items);
+      Window.Directory_List.Color_Mode (AZip_LV_Ex.All_Items);
       --
       --  List is entirely filled on next instruction:
       --
@@ -378,8 +378,8 @@ package body AZip_GWin.MDI_Child is
           Message_Check;
         end if;
       end loop;
-      Window.Directory_List.Color_Mode(AZip_LV_Ex.Subitem);
-      Window.refreshing_list:= False;
+      Window.Directory_List.Color_Mode (AZip_LV_Ex.Subitem);
+      Window.Directory_List.refreshing := False;
     end Feed_directory_list;
 
     w_root: Tree_Item_Node;
@@ -1444,7 +1444,7 @@ package body AZip_GWin.MDI_Child is
   procedure Change_Selection (Window : in out MDI_Child_Type; select_mode : Selection_Change_Type) is
     DL : Directory_list_type renames Window.Directory_List;
   begin
-    Window.refreshing_list := True;
+    DL.refreshing := True;
     --  NB: LV item index is 0-based.
     case select_mode is
       when select_all =>
@@ -1460,7 +1460,7 @@ package body AZip_GWin.MDI_Child is
           DL.Selected (i, not DL.Is_Selected (i));
         end loop;
     end case;
-    Window.refreshing_list := False;
+    DL.refreshing := False;
     DL.On_Item_Changed;
     DL.Focus;
   end Change_Selection;

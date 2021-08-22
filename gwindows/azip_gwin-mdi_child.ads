@@ -108,7 +108,6 @@ package AZip_GWin.MDI_Child is
         last_max_code       : Integer;
         any_path_in_zip     : Boolean;
         extract_dir         : GString_Unbounded;
-        refreshing_list     : Boolean:= False;
         is_closing          : Boolean:= False;
         last_op_comment_1   : GString_Unbounded;
         last_op_comment_2   : GString_Unbounded;

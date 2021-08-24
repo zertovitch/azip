@@ -43,46 +43,48 @@ package body AZip_GWin.Directory_Lists is
     greater : constant := +1;
     equal   : constant :=  0;
   begin
+    --  Comparison strategy: for topics where identical values are likely
+    --  to be rare, such as file sizes, we start with an inequality test.
     case Control.curr_col_topic (Column) is
       when Size =>
         s1 := Control.Item_Data (Index_1).uncompressed_size;
         s2 := Control.Item_Data (Index_2).uncompressed_size;
-        if s1 = s2 then
-          return equal;
-        elsif s1 > s2 then
+        if s1 > s2 then
           return greater;
+        elsif s1 = s2 then
+          return equal;
         else
           return less;
         end if;
       when Packed =>
         s1 := Control.Item_Data (Index_1).compressed_size;
         s2 := Control.Item_Data (Index_2).compressed_size;
-        if s1 = s2 then
-          return equal;
-        elsif s1 > s2 then
+        if s1 > s2 then
           return greater;
+        elsif s1 = s2 then
+          return equal;
         else
           return less;
         end if;
       when Ratio =>
         r1 := Control.Item_Data (Index_1).ratio;
         r2 := Control.Item_Data (Index_2).ratio;
-        if r1 = r2 then
-          return equal;
-        elsif r1 > r2 then
+        if r1 > r2 then
           return greater;
-        else
+        elsif r1 < r2 then
           return less;
+        else
+          --  Equality test on floats is a BAD thing, we avoid it.
+          return equal;
         end if;
-      when Result =>  --  E.g. 1234
-        --  !! Use the payload, but beware the special cases...
+      when Result =>
+        --  !! TBD: use the payload instead, but beware the special cases...
         declare
-          Value1 : constant GString := Control.Text (Index_1, Column);
-          Value2 : constant GString := Control.Text (Index_2, Column);
+          Value_1 : constant GString := Control.Text (Index_1, Column);
+          Value_2 : constant GString := Control.Text (Index_2, Column);
         begin
-          --  Message_Box("Falk forever", "Waaaah!");
-          i1:= Result_value(Value1);
-          i2:= Result_value(Value2);
+          i1 := Result_value (Value_1);
+          i2 := Result_value (Value_2);
           if i1 = i2 then
             return equal;
           elsif i1 > i2 then
@@ -95,13 +97,13 @@ package body AZip_GWin.Directory_Lists is
         null;  --  The sort column has the default behaviour.
     end case;
     declare
-      Value1 : constant GString := Control.Text (Index_1, Column);
-      Value2 : constant GString := Control.Text (Index_2, Column);
+      Value_1 : constant GString := Control.Text (Index_1, Column);
+      Value_2 : constant GString := Control.Text (Index_2, Column);
     begin
       --  Default behaviour: lexicographic.
-      if Value1 = Value2 then
+      if Value_1 = Value_2 then
         return equal;
-      elsif Value1 > Value2 then
+      elsif Value_1 > Value_2 then
         return greater;
       else
         return less;

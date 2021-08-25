@@ -11,7 +11,6 @@ with Ada.Calendar;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
-with Ada.Text_IO;
 
 package body AZip_GWin.Directory_Lists is
 
@@ -190,7 +189,6 @@ package body AZip_GWin.Directory_Lists is
   is
     procedure Dispose is new Ada.Unchecked_Deallocation (LV_Payload, AZip_LV_Ex.Data_Access);
   begin
-  Ada.Text_IO.put_line("ciao");
     Dispose (Payload);
   end On_Free_Payload;
 

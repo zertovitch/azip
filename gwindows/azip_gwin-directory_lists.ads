@@ -15,7 +15,7 @@ package AZip_GWin.Directory_Lists is
     result_code          : Integer;
   end record;
 
-  package AZip_LV_Ex is new GWindows.Common_Controls.Ex_List_View(LV_Payload);
+  package AZip_LV_Ex is new GWindows.Common_Controls.Ex_List_View (LV_Payload);
 
   ----------------------------------------------
   --  Directory_list_type                     --
@@ -62,9 +62,10 @@ package AZip_GWin.Directory_Lists is
       Return_Value : in out GWindows.Types.Lresult
   );
 
-  --  overriding procedure On_Free_Payload(
-  --              Control: in out Directory_list_type;
-  --              Payload: out AZip_LV_Ex.Data_access);
+  overriding procedure On_Free_Payload (
+    Control : in out Directory_list_type;
+    Payload :    out AZip_LV_Ex.Data_Access
+  );
 
   overriding procedure On_Right_Click (Control : in out Directory_list_type);
 

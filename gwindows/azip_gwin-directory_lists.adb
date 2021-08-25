@@ -10,6 +10,8 @@ with GWindows.Menus;                    use GWindows.Menus;
 with Ada.Calendar;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
 with Ada.Unchecked_Conversion;
+with Ada.Unchecked_Deallocation;
+with Ada.Text_IO;
 
 package body AZip_GWin.Directory_Lists is
 
@@ -181,16 +183,16 @@ package body AZip_GWin.Directory_Lists is
     end case;
   end On_Notify;
 
-  --  !! Missing in EX_LV: freeing internal tables on Delete_Item, Clear.
-  --    Rem. 20-Aug-2014
-  --  !! Missing in EX_LV: a On_Free_Payload that one can override
-  --  overriding procedure On_Free_Payload(
-  --              Control: in out Directory_list_type;
-  --              Payload: out AZip_LV_Ex.Data_access) is
-  --   procedure Dispose is new Ada.Unchecked_Deallocation(LV_Payload, AZip_LV_Ex.Data_Access);
-  --  begin
-  --   Dispose(Payload);
-  --  end On_Free_Payload;
+  overriding procedure On_Free_Payload (
+    Control : in out Directory_list_type;
+    Payload :    out AZip_LV_Ex.Data_Access
+  )
+  is
+    procedure Dispose is new Ada.Unchecked_Deallocation (LV_Payload, AZip_LV_Ex.Data_Access);
+  begin
+  Ada.Text_IO.put_line("ciao");
+    Dispose (Payload);
+  end On_Free_Payload;
 
   overriding procedure On_Right_Click (Control : in out Directory_list_type) is
     Child_Window : MDI_Child_Type renames

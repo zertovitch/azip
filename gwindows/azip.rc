@@ -599,8 +599,8 @@ Plus_icon          ICON           "ico_bmp/plus.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     2,4,0,0
-    PRODUCTVERSION  2,4,0,0
+    FILEVERSION     2,4,1,0
+    PRODUCTVERSION  2,4,1,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -613,7 +613,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
-            VALUE "FileVersion", "2.40"
+            VALUE "FileVersion", "2.41"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2021"
             VALUE "ProductName", "AZip"
         }

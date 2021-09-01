@@ -363,47 +363,52 @@ package body AZip_Common is
 
     function File_Size_Image(x: Size_type) return UTF_16_String is
       function Img_dec(x: Size_type; decimals: Natural) return UTF_16_String is
+      pragma Inline (Img_dec);
         s: constant UTF_16_String:= Size_type'Wide_Image(x);
       begin
         case decimals is
-          when 1 => --  x is 10x too large, on purpose
+          when 1 =>  --  x is 10x too large, on purpose
             if s(s'Last) = '0' then
-              return s(s'First+1..s'Last-1);
+              return s(s'First+1..s'Last-1);                              --  "1230"  -> "123"
             else
-              return s(s'First+1..s'Last-1) & '.' & s(s'Last);
+              return s(s'First+1..s'Last-1) & '.' & s(s'Last);            --  "1234"  -> "123.4"
             end if;
-          when 2 => --  x is 100x too large, on purpose
-            if s(s'Last-1..s'Last) = "00" then
-              return s(s'First+1..s'Last-2);
-            elsif s(s'Last) = '0' then
-              return s(s'First+1..s'Last-2) & '.' & s(s'Last-1);
+          when 2 =>  --  x is 100x too large, on purpose
+            if s(s'Last) = '0' then
+              if s(s'Last - 1) = '0' then
+                return s(s'First+1..s'Last-2);                            --  "12300" -> "123"
+              else
+                return s(s'First+1..s'Last-2) & '.' & s(s'Last-1);        --  "12340" -> "123.4"
+              end if;
             else
-              return s(s'First+1..s'Last-2) & '.' & s(s'Last-1..s'Last);
+              return s(s'First+1..s'Last-2) & '.' & s(s'Last-1..s'Last);  --  "12345" -> "123.45"
             end if;
           when others =>
             return s(s'First+1..s'Last);
         end case;
       end Img_dec;
-      GB: constant:= 1024 ** 3;
-      MB: constant:= 1024 ** 2;
-      KB: constant:= 1024;
+      --  We use the IEC binary convention
+      --  https://en.wikipedia.org/wiki/Kilobyte
+      GiB : constant := 1024 ** 3;
+      MiB : constant := 1024 ** 2;
+      KiB : constant := 1024;
     begin
-      if x >= GB then
-        return Img_dec(x / GB, 0) & " GB";
-      elsif x >= 100 * MB then
-        return Img_dec(x / MB, 0) & " MB";
-      elsif x >= 10 * MB then
-        return Img_dec((x * 10) / MB, 1) & " MB";
-      elsif x >= 2  * MB then
-        return Img_dec((x * 100) / MB, 2) & " MB";
-      elsif x >= 100 * KB then
-        return Img_dec(x / KB, 0) & " KB";
-      elsif x >= 10 * KB then
-        return Img_dec((x * 10) / KB, 1) & " KB";
-      elsif x >= KB then
-        return Img_dec((x * 100) / KB, 2) & " KB";
-      else
+      if x < KiB then
         return Img_dec(x, 0);
+      elsif x < 10 * KiB then
+        return Img_dec((x * 100) / KiB, 2) & " KiB";
+      elsif x < 100 * KiB then
+        return Img_dec((x * 10) / KiB, 1) & " KiB";
+      elsif x < 2  * MiB then
+        return Img_dec(x / KiB, 0) & " KiB";
+      elsif x < 10 * MiB then
+        return Img_dec((x * 100) / MiB, 2) & " MiB";
+      elsif x < 100 * MiB then
+        return Img_dec((x * 10) / MiB, 1) & " MiB";
+      elsif x < GiB then
+        return Img_dec(x / MiB, 0) & " MiB";
+      else
+        return Img_dec(x / GiB, 0) & " GiB";
       end if;
     end File_Size_Image;
 

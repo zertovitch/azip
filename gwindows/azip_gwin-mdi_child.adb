@@ -24,7 +24,6 @@ with GWindows.Taskbar;
 
 with Ada.Calendar;
 with Ada.Directories;
-with Ada_Directories_Extensions;
 with Ada.Environment_Variables;         use Ada.Environment_Variables;
 with Ada.Exceptions;
 with Ada.IO_Exceptions;
@@ -36,6 +35,8 @@ with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
 
 with Interfaces;
+
+with Set_Modification_Time_GNAT;
 
 package body AZip_GWin.MDI_Child is
 
@@ -712,7 +713,7 @@ package body AZip_GWin.MDI_Child is
   procedure Set_Modification_Time_B (Name : in String;
                                      To   : in Ada.Calendar.Time) is
   begin
-    Ada_Directories_Extensions.Set_Modification_Time(Name, To);
+    Set_Modification_Time_GNAT (Name, To);
   exception
     when others =>
       null; -- !! utf-8 or ascii names with characters > pos 127 fail

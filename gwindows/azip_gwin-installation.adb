@@ -17,22 +17,12 @@ with Ada.Command_Line,
 
 package body AZip_GWin.Installation is
 
-  function Program_Files_32_Bit_Folder return String is
-    use Ada.Environment_Variables;
-    P_32  : constant String := "ProgramFiles(x86)";  --  This one doesn't exist on 32-bit Windows
-    P_Any : constant String := "ProgramFiles";
-  begin
-    if Exists (P_32) then
-      return Value (P_32);
-    else
-      return Value (P_Any);
-    end if;
-  end Program_Files_32_Bit_Folder;
+  Program_Files_Folder : constant String := "ProgramFiles";
 
   function Executable_Location return Executable_Location_Choice is
     Current_Exe : constant String := Ada.Command_Line.Command_Name;
     use Ada.Environment_Variables, Ada.Strings.Fixed;
-    Admin_Path   : constant String := Program_Files_32_Bit_Folder;
+    Admin_Path   : constant String := Program_Files_Folder;
     Appdata_Path : constant String := Value ("APPDATA");
   begin
     if Head (Current_Exe, Admin_Path'Length) = Admin_Path then
@@ -265,7 +255,7 @@ package body AZip_GWin.Installation is
     procedure Do_Install (Mode : Installation_Mode) is
       use Ada.Directories, Ada.Environment_Variables, GWin_Util;
       App_Folder : constant String :=
-        (if Mode = All_Users then Program_Files_32_Bit_Folder else Value ("APPDATA")) & "\AZip";
+        (if Mode = All_Users then Program_Files_Folder else Value ("APPDATA")) & "\AZip";
       New_Exe : constant String := App_Folder & "\AZip.exe";
       Success : Boolean;
       procedure Complaint is

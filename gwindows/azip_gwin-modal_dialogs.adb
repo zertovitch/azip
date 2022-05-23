@@ -4,7 +4,8 @@ with Zip;
 
 with GWindows.Application,
      GWindows.Constants,
-     GWindows.Static_Controls.Web;
+     GWindows.Static_Controls.Web,
+     GWindows.Types;
 
 with Ada.Strings.Wide_Unbounded;
 
@@ -45,13 +46,16 @@ package body AZip_GWin.Modal_Dialogs is
   begin
     box.Create_Full_Dialog (Window);
     box.Copyright_label.Text (S2G(AZip_Resource_GUI.Version_info.LegalCopyright));
-    box.Version_label.Text (S2G(AZip_Resource_GUI.Version_info.FileVersion));
+    box.Version_label.Text
+      (S2G(AZip_Resource_GUI.Version_info.FileVersion) & ", built as" &
+      GWindows.GStrings.To_GString_From_String (Integer'Image (GWindows.Types.Wparam'Size)) &
+      " bit app."
+      );
     Create_and_Swap (url_azip, box.AZip_URL, box, S2G(azip_web_page));
-    Create_and_Swap (url_gnat, box.GNAT_URL, box, "http://libre.adacore.com");
+    Create_and_Swap (url_gnat, box.GNAT_URL, box, "https://www.adacore.com/community");
     box.GNAT_Version.Text (S2G ("version " & GNAT_Version_string));
     Create_and_Swap (url_gnavi,   box.GNAVI_URL,     box, "http://sf.net/projects/gnavi");
     Create_and_Swap (url_ini,     box.Ini_files_URL, box, "http://sf.net/projects/ini-files");
-    Create_and_Swap (url_resedit, box.ResEdit_URL,   box, "http://resedit.net");
     Create_and_Swap (url_zipada,  box.ZipAda_URL,    box, S2G (Zip.web));
     box.ZipAda_Version.Text (S2G ("version " & Zip.version & ", ref. " & Zip.reference));
     box.Credits_button_permanent.Show;

@@ -1421,39 +1421,51 @@ package body AZip_GWin.MDI_Child is
     end Get_Data;
     --
     return_code : Operation_return_code;
+    no_matches : Boolean;
   begin
-    box.Create_Full_Dialog(Window);
-    box.Name_to_be_searched.Text(GU2G(Window.name_search));
-    box.Content_to_be_searched.Text(GU2G(Window.content_search));
+    box.Create_Full_Dialog (Window);
+    box.Name_to_be_searched.Text (GU2G (Window.name_search));
+    box.Content_to_be_searched.Text (GU2G (Window.content_search));
     box.Center;
-    box.On_Destroy_Handler(Get_Data'Unrestricted_Access);
+    box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
     box.Name_to_be_searched.Focus;
     if Show_Dialog (box, Window) = IDOK then
-      Process_archive_GWin(
-        Window         => Window,
+      Process_archive_GWin
+       (Window         => Window,
         operation      => Search,
         file_names     => (1 => Window.name_search),
         base_folder    => "",
-        search_pattern => GU2G(Window.content_search),
+        search_pattern => GU2G (Window.content_search),
         output_folder  => "",
         ignore_path    => False,
         encrypt        => False,
         new_temp_name  => "",
         return_code    => return_code
-      );
-      if Message_Box(Window,
-          "Find in archive",
+       );
+      no_matches :=
+        Index (Window.last_op_comment_1, " 0") > 0
+        and Index (Window.last_op_comment_2, " 0") > 0;
+      declare
+        msg : constant GString :=
           "Search completed." & NL & NL &
-          GU2G(Window.last_op_comment_1) & NL &
-          GU2G(Window.last_op_comment_2) & NL & NL &
-          "Do you want to see full results (flat view & result sort) ?",
-          Yes_No_Box,
-          Question_Icon)
-        = Yes
-      then
-        Change_View(Window, Flat, force => False);
-        Window.Directory_List.Sort(Window.opt.column_index(Result) - 1, AZip_LV_Ex.Down);
-      end if;
+          GU2G (Window.last_op_comment_1) & NL &
+          GU2G (Window.last_op_comment_2);
+      begin
+        if no_matches then
+          Message_Box (Window, "Find in archive", msg, OK_Box, Information_Icon);
+        elsif Message_Box
+          (Window,
+           "Find in archive",
+           msg & NL & NL & "Do you want to see full results (flat view & result sort) ?",
+           Yes_No_Box,
+           Question_Icon)
+          = Yes
+        then
+          Change_View (Window, Flat, force => False);
+          Window.Directory_List.Sort
+            (Window.opt.column_index (Result) - 1, AZip_LV_Ex.Down);
+        end if;
+      end;
     end if;
   end On_Find;
 

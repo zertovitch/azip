@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2021/09/01  15:49:42
+--  Transcription time: 2022/05/23  20:41:32
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -189,13 +189,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 289, 238, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -247,7 +247,7 @@ package body AZip_Resource_GUI is
     Dlg_to_Scn ( 157, 81, 118, 8, x,y,w,h);
     Create (Window.Version_label, Window, "(ver)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Version_label);
     Dlg_to_Scn ( 5, 105, 278, 102, x,y,w,h);
-    Create( Window.Static_0006, Window, "AZip is made with the following free, open source components:", x,y,w,h);
+    Create( Window.Static_0006, Window, "AZip is made with the following free, open source components:", x, y, w, h);
     Dlg_to_Scn ( 23, 120, 88, 8, x,y,w,h);
     Create (Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x,y,w,h, GWindows.Static_Controls.Left, None, ID => GNAT_URL);
     Dlg_to_Scn ( 115, 120, 139, 8, x,y,w,h);
@@ -314,13 +314,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 301, 199, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -356,13 +356,13 @@ package body AZip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn ( 11, 4, 283, 44, x,y,w,h);
-    Create( Window.Static_0001, Window, "Zip-Ada - Zip archive management library", x,y,w,h);
+    Create( Window.Static_0001, Window, "Zip-Ada - Zip archive management library", x, y, w, h);
     Dlg_to_Scn ( 25, 18, 260, 8, x,y,w,h);
     Create_Label (Window, "Stratégies Software team: intensive profiling and contributions", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 25, 32, 260, 8, x,y,w,h);
     Create_Label (Window, "ITEC team at NXP Semiconductors: contributions", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 11, 54, 283, 62, x,y,w,h);
-    Create( Window.Static_0004, Window, "GWindows - native MS Windows framework", x,y,w,h);
+    Create( Window.Static_0004, Window, "GWindows - native MS Windows framework", x, y, w, h);
     Dlg_to_Scn ( 25, 69, 260, 8, x,y,w,h);
     Create_Label (Window, "David Botton: main author", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 25, 83, 260, 8, x,y,w,h);
@@ -370,7 +370,7 @@ package body AZip_Resource_GUI is
     Dlg_to_Scn ( 25, 97, 260, 8, x,y,w,h);
     Create_Label (Window, "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 11, 121, 283, 52, x,y,w,h);
-    Create( Window.Static_0008, Window, "Miscellaneous comments - contributions - ideas", x,y,w,h);
+    Create( Window.Static_0008, Window, "Miscellaneous comments - contributions - ideas", x, y, w, h);
     Dlg_to_Scn ( 21, 134, 268, 32, x,y,w,h);
     Create_Label (Window, "Asen Anastassov, Nicolas F. Mirkov", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 107, 177, 88, 19, x,y,w,h);
@@ -415,13 +415,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 337, 119, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -522,13 +522,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 359, 95, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -568,7 +568,7 @@ package body AZip_Resource_GUI is
     Dlg_to_Scn ( 18, 41, 319, 8, x,y,w,h);
     Create (Window.Conflict_location, Window, "(location)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Conflict_location);
     Dlg_to_Scn ( 4, 7, 349, 63, x,y,w,h);
-    Create( Window.Static_0001, Window, "A file with the same name exists on the target location.", x,y,w,h);
+    Create( Window.Static_0001, Window, "A file with the same name exists on the target location.", x, y, w, h);
     Dlg_to_Scn ( 12, 58, 156, 8, x,y,w,h);
     Create_Label (Window, "Do you want to replace this file ?", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 4, 72, 50, 19, x,y,w,h);
@@ -668,13 +668,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 227, 95, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -774,13 +774,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 341, 212, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -816,7 +816,7 @@ package body AZip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn ( 15, 7, 312, 67, x,y,w,h);
-    Create( Window.Group_box_exe_location, Window, "This instance of AZip is running from...", x,y,w,h);
+    Create( Window.Group_box_exe_location, Window, "This instance of AZip is running from...", x, y, w, h);
     Dlg_to_Scn ( 43, 22, 18, 9, x,y,w,h);
     Create (Window.Check_box_installed_all_users, Window, "", x,y,w,h, ID => Check_box_installed_all_users);
     Disable (Window.Check_box_installed_all_users);
@@ -839,7 +839,7 @@ package body AZip_Resource_GUI is
     Create (Window.Label_NOT_Installed, Window, "somewhere else  >>>  NOT installed, runs as portable software", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_NOT_Installed);
     Disable (Window.Label_NOT_Installed);
     Dlg_to_Scn ( 15, 81, 312, 34, x,y,w,h);
-    Create( Window.Group_box_pref_location, Window, "AZip stores preferences and options...", x,y,w,h);
+    Create( Window.Group_box_pref_location, Window, "AZip stores preferences and options...", x, y, w, h);
     Dlg_to_Scn ( 43, 95, 17, 9, x,y,w,h);
     Create (Window.Radio_button_registry, Window, "", x,y,w,h, ID => Radio_button_registry);
     Disable (Window.Radio_button_registry);
@@ -855,7 +855,7 @@ package body AZip_Resource_GUI is
     Create (Window.Label_Stealth, Window, "in azip.cfg (stealth mode, cf. Help)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Label_Stealth);
     Disable (Window.Label_Stealth);
     Dlg_to_Scn ( 15, 121, 312, 33, x,y,w,h);
-    Create( Window.Group_box_Desktop_Explorer_integration, Window, "Desktop and Explorer integration", x,y,w,h);
+    Create( Window.Group_box_Desktop_Explorer_integration, Window, "Desktop and Explorer integration", x, y, w, h);
     Dlg_to_Scn ( 20, 134, 62, 13, x,y,w,h);
     Create_Label (Window, "Desktop shortcut", x,y,w,h, GWindows.Static_Controls.Right, None);
     Dlg_to_Scn ( 87, 132, 32, 15, x,y,w,h);
@@ -947,13 +947,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 255, 121, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -989,7 +989,7 @@ package body AZip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn ( 7, 7, 240, 33, x,y,w,h);
-    Create( Window.RC_item_0, Window, "Directory suggested for archive extraction ( if empty: archive's location )", x,y,w,h);
+    Create( Window.RC_item_0, Window, "Directory suggested for archive extraction ( if empty: archive's location )", x, y, w, h);
     Dlg_to_Scn ( 12, 21, 188, 13, x,y,w,h);
     Create (Window.Extract_directory_edit_box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Extract_directory_edit_box);
     Dlg_to_Scn ( 205, 20, 35, 15, x,y,w,h);
@@ -1056,13 +1056,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 228, 137, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -1098,7 +1098,7 @@ package body AZip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn ( 12, 10, 206, 26, x,y,w,h);
-    Create( Window.Static_0001, Window, "This entry is encrypted.", x,y,w,h);
+    Create( Window.Static_0001, Window, "This entry is encrypted.", x, y, w, h);
     Dlg_to_Scn ( 26, 21, 175, 8, x,y,w,h);
     Create (Window.Encrypted_entry, Window, "(name)", x,y,w,h, GWindows.Static_Controls.Left, None, ID => Encrypted_entry);
     Dlg_to_Scn ( 12, 42, 159, 8, x,y,w,h);
@@ -1164,13 +1164,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 228, 137, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -1272,13 +1272,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 242, 116, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -1367,13 +1367,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 265, 166, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -1479,13 +1479,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 375, 202, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -1562,13 +1562,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 375, 202, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -1604,11 +1604,11 @@ package body AZip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn ( 4, 3, 362, 65, x,y,w,h);
-    Create( Window.RC_item_0, Window, "Command-line parameters", x,y,w,h);
+    Create( Window.RC_item_0, Window, "Command-line parameters", x, y, w, h);
     Dlg_to_Scn ( 17, 18, 342, 29, x,y,w,h);
     Create_Label (Window, "The activation of AZip with command-line parameters for specific operations is under construction", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 4, 72, 362, 66, x,y,w,h);
-    Create( Window.Static_0001, Window, "Command-line tools with console output", x,y,w,h);
+    Create( Window.Static_0001, Window, "Command-line tools with console output", x, y, w, h);
     Dlg_to_Scn ( 10, 88, 43, 39, x,y,w,h);
     Create (Window.Static_0002, Window, Num_resource (ZA_console_BMP), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 63, 87, 294, 33, x,y,w,h);
@@ -1644,13 +1644,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 375, 202, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -1686,13 +1686,13 @@ package body AZip_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn ( 4, 3, 362, 46, x,y,w,h);
-    Create( Window.Static_0001, Window, "Adding files and folders", x,y,w,h);
+    Create( Window.Static_0001, Window, "Adding files and folders", x, y, w, h);
     Dlg_to_Scn ( 10, 17, 21, 20, x,y,w,h);
     Create (Window.Static_0002, Window, Num_resource (Plus_icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 46, 18, 316, 29, x,y,w,h);
     Create_Label (Window, "You can add files, or individual folders through menu commands (+) or buttons. BUT: you can also do it easily via Drag && Drop, from a Windows Explorer window or the Desktop, onto an AZip archive window. Any mix of dragged folders and files is supported.", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 4, 50, 362, 46, x,y,w,h);
-    Create( Window.Static_0003, Window, "Unpacking files", x,y,w,h);
+    Create( Window.Static_0003, Window, "Unpacking files", x, y, w, h);
     Dlg_to_Scn ( 10, 64, 21, 20, x,y,w,h);
     Create (Window.Static_0004, Window, Num_resource (Drag_Unpack_Icon), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 48, 65, 316, 28, x,y,w,h);
@@ -1728,13 +1728,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 375, 202, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -1772,7 +1772,7 @@ package body AZip_Resource_GUI is
     Dlg_to_Scn ( 4, 3, 358, 25, x,y,w,h);
     Create_Label (Window, "AZip doesn't require any installation. It can even run from a USB stick for instance. However, you CAN install AZip on this computer, if it is more practical for your purpose. In the menu, check Options -> Install AZip.", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 4, 33, 362, 66, x,y,w,h);
-    Create( Window.Static_0001, Window, "Using AZip as a portable software - stealth mode", x,y,w,h);
+    Create( Window.Static_0001, Window, "Using AZip as a portable software - stealth mode", x, y, w, h);
     Dlg_to_Scn ( 10, 49, 43, 39, x,y,w,h);
     Create (Window.Static_0002, Window, Num_resource (No_regedit_BMP), x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn ( 69, 48, 288, 40, x,y,w,h);
@@ -1808,13 +1808,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 141, 254, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -1895,13 +1895,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 316, 185, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,
@@ -1976,13 +1976,13 @@ package body AZip_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False)
   is
-    x,y,w,h: Integer;
+    x, y, w, h: Integer;
   begin
     Dlg_to_Scn ( 0, 0, 186, 95, x,y,w,h);
-    if Left   /= Use_Default then x:= Left;   end if;
-    if Top    /= Use_Default then y:= Top;    end if;
-    if Width  /= Use_Default then w:= Width;  end if;
-    if Height /= Use_Default then h:= Height; end if;
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
     Create_As_Dialog(
       Window => Window_Type(Window),
       Parent => Parent,

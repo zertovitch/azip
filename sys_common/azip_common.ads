@@ -76,17 +76,15 @@ package AZip_Common is
   --------------------------
 
   function Image(topic: Entry_topic) return UTF_16_String;
-  function Hexadecimal(x: Interfaces.Unsigned_32) return UTF_16_String;
+  function Hexadecimal (x: Interfaces.Unsigned_32) return UTF_16_String;
   --  File sizes (in GB, MB, KB or bytes)
-  function File_Size_Image(x: Zip.Zip_32_Data_Size_Type) return UTF_16_String;
+  function File_Size_Image (x: Zip.Zip_64_Data_Size_Type) return UTF_16_String;
   --  Image with thousands separator
-  function Image_1000(r: Zip.Zip_32_Data_Size_Type; separator: Wide_Character) return Wide_String;
+  function Image_1000 (r: Zip.Zip_64_Data_Size_Type; separator: Wide_Character) return Wide_String;
   --  Long format: e.g. "321 MB (337'477'113 bytes)"
-  function Long_file_size_image(x: Zip.Zip_32_Data_Size_Type; separator: Wide_Character) return UTF_16_String;
-  function Long_file_size_image(x: Interfaces.Unsigned_64; separator: Wide_Character) return UTF_16_String;
+  function Long_file_size_image (x: Interfaces.Unsigned_64; separator: Wide_Character) return UTF_16_String;
   --  Percentages
-  function Ratio_pct_Image(nom, den: Zip.Zip_32_Data_Size_Type) return UTF_16_String;
-  function Ratio_pct_Image(nom, den: Interfaces.Unsigned_64) return UTF_16_String;
+  function Ratio_pct_Image (nom, den: Interfaces.Unsigned_64) return UTF_16_String;
   --  Results: see AZip_Common.Operations.
 
   --  "Correct" casing for <Enum>'Image

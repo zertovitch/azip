@@ -14,22 +14,22 @@ with Interfaces;
 procedure AZip_GWin.Properties (Window: in out MDI_Child.MDI_Child_Type) is
   box : AZip_Resource_GUI.Properties_box_Type;
   use Interfaces;
-  total_uncompressed: Unsigned_64:= 0;
-  total_compressed: Zip.Zip_32_Data_Size_Type:= 0;
+  total_uncompressed : Zip.Zip_64_Data_Size_Type := 0;
+  total_compressed   : Zip.Zip_64_Data_Size_Type := 0;
   --  total_entries: Natural:= 0;
-  files_per_method: array(Zip.PKZip_method) of Natural:= (others => 0);
-  uncompressed_per_method: array(Zip.PKZip_method) of Unsigned_64:= (others => 0);
-  compressed_per_method: array(Zip.PKZip_method) of Zip.Zip_32_Data_Size_Type:= (others => 0);
-  sep_str: constant GString:= GWindows.Locales.Get_Thousands_Separator;
-  sep: constant Wide_Character:= sep_str(sep_str'First);
+  files_per_method : array (Zip.PKZip_method) of Natural := (others => 0);
+  uncompressed_per_method : array (Zip.PKZip_method) of Unsigned_64 := (others => 0);
+  compressed_per_method : array (Zip.PKZip_method) of Zip.Zip_64_Data_Size_Type := (others => 0);
+  sep_str : constant GString := GWindows.Locales.Get_Thousands_Separator;
+  sep : constant Wide_Character := sep_str(sep_str'First);
 
   use Ada.Strings, Ada.Strings.Wide_Fixed, AZip_Common, Interfaces, Zip;
 
   procedure Action (
       name             : String; -- 'name' is compressed entry's name
       file_index       : Zip_Streams.ZS_Index_Type;
-      comp_size        : Zip_32_Data_Size_Type;
-      uncomp_size      : Zip_32_Data_Size_Type;
+      comp_size        : Zip_64_Data_Size_Type;
+      uncomp_size      : Zip_64_Data_Size_Type;
       crc_32           : Unsigned_32;
       date_time        : Time;
       method           : PKZip_method;
@@ -48,7 +48,7 @@ procedure AZip_GWin.Properties (Window: in out MDI_Child.MDI_Child_Type) is
     files_per_method(method)        := files_per_method(method) + 1;
   end Action;
   --
-  procedure Gather_stats is new Traverse_verbose(Action);
+  procedure Gather_stats is new Traverse_verbose (Action);
   --
   row: Integer:= -1;
 begin

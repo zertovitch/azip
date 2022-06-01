@@ -226,8 +226,8 @@ package body AZip_Common.Operations is
     procedure Copy_user_code (
       entry_full_name  : String;
       file_index       : Zip_Streams.ZS_Index_Type;
-      comp_size        : Zip.Zip_32_Data_Size_Type;
-      uncomp_size      : Zip.Zip_32_Data_Size_Type;
+      comp_size        : Zip.Zip_64_Data_Size_Type;
+      uncomp_size      : Zip.Zip_64_Data_Size_Type;
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
       method           : Zip.PKZip_method;
@@ -498,8 +498,8 @@ package body AZip_Common.Operations is
     procedure Action_1_entry (
       entry_full_name  : String;
       file_index       : Zip_Streams.ZS_Index_Type;
-      comp_size        : Zip.Zip_32_Data_Size_Type;
-      uncomp_size      : Zip.Zip_32_Data_Size_Type;
+      comp_size        : Zip.Zip_64_Data_Size_Type;
+      uncomp_size      : Zip.Zip_64_Data_Size_Type;
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
       method           : Zip.PKZip_method;
@@ -588,8 +588,8 @@ package body AZip_Common.Operations is
         temp_single_entry_zip_zif : Zip.Zip_info;
         dummy_name_encoding       : Zip_name_encoding;
         single_file_index         : Zip_Streams.ZS_Index_Type;
-        dummy_comp_size           : Zip.Zip_32_Data_Size_Type;
-        dummy_uncomp_size         : Zip.Zip_32_Data_Size_Type;
+        dummy_comp_size           : Zip.Zip_64_Data_Size_Type;
+        dummy_uncomp_size         : Zip.Zip_64_Data_Size_Type;
         new_crc_32                : Interfaces.Unsigned_32;
         use Interfaces;
       begin
@@ -604,7 +604,7 @@ package body AZip_Common.Operations is
         Tentative_compress(stamp, quick_method, name_utf_8_with_extra_folder);
         --  We load the one-file zip file's information
         Load(temp_single_entry_zip_zif, temp_single_entry_zip_name);
-        Find_offset(
+        Find_offset (
           info          => temp_single_entry_zip_zif,
           name          => name_utf_8_as_in_archive,
           name_encoding => dummy_name_encoding,
@@ -631,8 +631,8 @@ package body AZip_Common.Operations is
         temp_single_entry_zip_zif : Zip.Zip_info;
         dummy_name_encoding       : Zip_name_encoding;
         single_file_index         : Zip_Streams.ZS_Index_Type;
-        new_comp_size             : Zip.Zip_32_Data_Size_Type;
-        dummy_uncomp_size         : Zip.Zip_32_Data_Size_Type;
+        new_comp_size             : Zip.Zip_64_Data_Size_Type;
+        dummy_uncomp_size         : Zip.Zip_64_Data_Size_Type;
         new_crc_32                : Interfaces.Unsigned_32;
         use Interfaces;
       begin
@@ -680,7 +680,7 @@ package body AZip_Common.Operations is
           return_code := aborted;
       end Recompress_entry;
       --
-      use type Zip.Zip_32_Data_Size_Type;
+      use type Zip.Zip_64_Data_Size_Type;
     begin  --  Action_1_entry
       entry_user_code := nothing;
       if return_code = aborted then
@@ -1176,11 +1176,11 @@ package body AZip_Common.Operations is
     count_ok, count_ko, count_nt: out Natural
   )
   is
-    procedure Action(
+    procedure Action (
       name             : String; -- 'name' is compressed entry's full name
       file_index       : Zip_Streams.ZS_Index_Type;
-      comp_size        : Zip.Zip_32_Data_Size_Type;
-      uncomp_size      : Zip.Zip_32_Data_Size_Type;
+      comp_size        : Zip.Zip_64_Data_Size_Type;
+      uncomp_size      : Zip.Zip_64_Data_Size_Type;
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
       method           : Zip.PKZip_method;
@@ -1201,12 +1201,12 @@ package body AZip_Common.Operations is
         when others  => count_ko:= count_ko + 1;
       end case;
     end Action;
-    procedure Count_totals is new Zip.Traverse_verbose(Action);
+    procedure Count_Totals is new Zip.Traverse_verbose (Action);
   begin
     count_ok:= 0;
     count_ko:= 0;
     count_nt:= 0;
-    Count_totals(archive);
+    Count_Totals(archive);
   end Count_test_totals;
 
 end AZip_Common.Operations;

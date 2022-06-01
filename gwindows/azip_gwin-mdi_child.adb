@@ -199,11 +199,11 @@ package body AZip_GWin.MDI_Child is
       --  This includes potential invisible entries (directory names from Info-Zip, WinZip)
       result_code : array(0 .. max_entries - 1) of Integer;
       --
-      procedure Process_row (
+      procedure Process_Row (
         name_8_bit        : String; -- 'name' is compressed entry's name, with Zip encoding
         file_index        : Zip_Streams.ZS_Index_Type;
-        entry_comp_size   : Zip_32_Data_Size_Type;
-        entry_uncomp_size : Zip_32_Data_Size_Type;
+        entry_comp_size   : Zip_64_Data_Size_Type;
+        entry_uncomp_size : Zip_64_Data_Size_Type;
         crc_32            : Interfaces.Unsigned_32;
         entry_date_time   : Time;
         method            : PKZip_method;
@@ -231,7 +231,7 @@ package body AZip_GWin.MDI_Child is
         --
         w_node, w_parent: Tree_Item_Node;
         compression_ratio : Long_Float;
-        use type Zip_32_Data_Size_Type;
+        use type Zip_64_Data_Size_Type;
       begin  --  Process_row
         Scan_for_path:
         for i in name'Range loop
@@ -340,9 +340,9 @@ package body AZip_GWin.MDI_Child is
           end if;
         end if;
         result_code (row) := entry_user_code;
-      end Process_row;
+      end Process_Row;
 
-      procedure Traverse is new Zip.Traverse_verbose (Process_row);
+      procedure Traverse is new Zip.Traverse_verbose (Process_Row);
 
       az_color: AZip_Common.Operations.RGB_type;
       gw_color: GWindows.Colors.RGB_Type;
@@ -1423,40 +1423,41 @@ package body AZip_GWin.MDI_Child is
     return_code : Operation_return_code;
     no_matches : Boolean;
   begin
-    box.Create_Full_Dialog (Window);
-    box.Name_to_be_searched.Text (GU2G (Window.name_search));
-    box.Content_to_be_searched.Text (GU2G (Window.content_search));
+    box.Create_Full_Dialog(Window);
+    box.Name_to_be_searched.Text(GU2G(Window.name_search));
+    box.Content_to_be_searched.Text(GU2G(Window.content_search));
     box.Center;
-    box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
+    box.On_Destroy_Handler(Get_Data'Unrestricted_Access);
     box.Name_to_be_searched.Focus;
     if Show_Dialog (box, Window) = IDOK then
-      Process_archive_GWin
-       (Window         => Window,
+      Process_archive_GWin(
+        Window         => Window,
         operation      => Search,
         file_names     => (1 => Window.name_search),
         base_folder    => "",
-        search_pattern => GU2G (Window.content_search),
+        search_pattern => GU2G(Window.content_search),
         output_folder  => "",
         ignore_path    => False,
         encrypt        => False,
         new_temp_name  => "",
         return_code    => return_code
-       );
+      );
       no_matches :=
         Index (Window.last_op_comment_1, " 0") > 0
         and Index (Window.last_op_comment_2, " 0") > 0;
       declare
         msg : constant GString :=
           "Search completed." & NL & NL &
-          GU2G (Window.last_op_comment_1) & NL &
-          GU2G (Window.last_op_comment_2);
+          GU2G(Window.last_op_comment_1) & NL &
+          GU2G(Window.last_op_comment_2);
       begin
         if no_matches then
           Message_Box (Window, "Find in archive", msg, OK_Box, Information_Icon);
         elsif Message_Box
           (Window,
            "Find in archive",
-           msg & NL & NL & "Do you want to see full results (flat view & result sort) ?",
+           msg & NL & NL &
+           "Do you want to see full results (flat view & result sort) ?",
            Yes_No_Box,
            Question_Icon)
           = Yes

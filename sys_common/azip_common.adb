@@ -462,28 +462,21 @@ package body AZip_Common is
 
   end Gen_Size_Images;
 
-  package Inst_Size_Images_32 is new Gen_Size_Images (Zip.Zip_32_Data_Size_Type);
   package Inst_Size_Images_64 is new Gen_Size_Images (Interfaces.Unsigned_64);
 
-  function File_Size_Image(x: Zip.Zip_32_Data_Size_Type) return UTF_16_String
-    renames Inst_Size_Images_32.File_Size_Image;
+  function File_Size_Image (x: Zip.Zip_64_Data_Size_Type) return UTF_16_String
+    renames Inst_Size_Images_64.File_Size_Image;
 
-  function Image_1000(r: Zip.Zip_32_Data_Size_Type; separator: Wide_Character) return Wide_String
-    renames Inst_Size_Images_32.Image_1000;
+  function Image_1000 (r: Zip.Zip_64_Data_Size_Type; separator: Wide_Character) return Wide_String
+    renames Inst_Size_Images_64.Image_1000;
 
-  function Long_file_size_image(x: Zip.Zip_32_Data_Size_Type; separator: Wide_Character) return UTF_16_String
-    renames Inst_Size_Images_32.Long_file_size_image;
-
-  function Long_file_size_image(x: Interfaces.Unsigned_64; separator: Wide_Character) return UTF_16_String
+  function Long_file_size_image (x: Interfaces.Unsigned_64; separator: Wide_Character) return UTF_16_String
     renames Inst_Size_Images_64.Long_file_size_image;
 
-  function Ratio_pct_Image(nom, den: Zip.Zip_32_Data_Size_Type) return UTF_16_String
-    renames Inst_Size_Images_32.Ratio_pct_Image;
-
-  function Ratio_pct_Image(nom, den: Interfaces.Unsigned_64) return UTF_16_String
+  function Ratio_pct_Image (nom, den: Interfaces.Unsigned_64) return UTF_16_String
     renames Inst_Size_Images_64.Ratio_pct_Image;
 
-  function Enum_Img_Mixed(e: Enum) return UTF_16_String is
+  function Enum_Img_Mixed (e: Enum) return UTF_16_String is
     s: UTF_16_String:= Enum'Wide_Image(e);
     low: Boolean:= False;
   begin
@@ -578,11 +571,11 @@ package body AZip_Common is
 
   function Has_Zip_archive_encrypted_entries(info: Zip_info) return Boolean is
     encrypted: Boolean:= False;
-    procedure Detect_encryption(
+    procedure Detect_Encryption (
       name             : String; -- 'name' is compressed entry's name
       file_index       : Zip_Streams.ZS_Index_Type;
-      comp_size        : Zip_32_Data_Size_Type;
-      uncomp_size      : Zip_32_Data_Size_Type;
+      comp_size        : Zip_64_Data_Size_Type;
+      uncomp_size      : Zip_64_Data_Size_Type;
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Time;
       method           : PKZip_method;
@@ -590,16 +583,17 @@ package body AZip_Common is
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
       user_code        : in out Integer
-    ) is
+    )
+    is
     pragma Unreferenced (
       name, file_index, comp_size, uncomp_size, crc_32, date_time, method,
       name_encoding, read_only, user_code);
     begin
-      encrypted:= encrypted or encrypted_2_x;
-    end Detect_encryption;
-    procedure Scan_encryption is new Traverse_verbose(Detect_encryption);
+      encrypted := encrypted or encrypted_2_x;
+    end Detect_Encryption;
+    procedure Scan_Encryption is new Traverse_verbose (Detect_Encryption);
   begin
-    Scan_encryption(info);
+    Scan_Encryption (info);
     return encrypted;
   end Has_Zip_archive_encrypted_entries;
 

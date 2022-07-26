@@ -15,7 +15,7 @@ with Interfaces;
 
 package body AZip_Common.Operations is
 
-  function Result_message(op: Archive_Operation; code: Integer) return String
+  function Result_Message (op: Archive_Operation; code: Integer) return String
   is
   begin
     --  Following codes have a single explanation over all operations
@@ -81,54 +81,20 @@ package body AZip_Common.Operations is
     end case;
     --
     return "";
-  end Result_message;
+  end Result_Message;
 
-  function Result_value(s: UTF_16_String) return Integer is -- can be a non-number
-  begin
-    return Integer'Wide_Value(s);
-  exception
-    when others =>
-      --  !! Consider some hashing here...
-      if s'Length < 2 then
-        return nothing;
-      elsif s = "OK" then
-        return success;
-      elsif s = "Compressed data is corrupt" then
-        return corrupt;
-      elsif s = "CRC test failed" then
-        return bad_crc;
-      elsif s = "Compression format not supported" then
-        return unsupported;
-      elsif s = "Replaced" then
-        return replaced;
-      elsif s = "Only in archive; no file" then
-        return only_archive;
-      elsif s = "Updated from file" then
-        return updated;
-      elsif s = "Cannot recompress more" then
-        return 0;
-      elsif s(s'First..s'First+1) = "To" then
-        for i in s'First+3 .. s'Last loop
-          if s(i)='%' then
-            return 101 - Integer'Wide_Value(s(s'First+3 .. i-1));
-          end if;
-        end loop;
-      end if;
-      return -100;
-  end Result_value;
-
-  max_color : constant Color_range := Color_range'Last;
+  max_color : constant Color_Range := Color_Range'Last;
   f_max : constant Float := Float (max_color);
 
-  procedure Result_color(
+  procedure Result_Color(
     op        : Archive_Operation;
     code      : Integer;
     max_code  : Integer;
-    color     : out RGB_type;
+    color     : out RGB_Type;
     intensity : out Float      --  Useful for setting a font black or white given the background
   )
   is
-    val: Color_range;
+    val: Color_Range;
     raw_intensity_sq: Natural;
     max_raw_intensity_sq: constant:= max_color * max_color * 3;
     code_rel: Float;
@@ -140,7 +106,7 @@ package body AZip_Common.Operations is
         else
           code_rel:= Float(code) / Float(max_code);
           code_rel:= code_rel ** 0.25; -- we skew the value (visual effect)
-          val:= Color_range(Float'Floor(f_max * code_rel));
+          val:= Color_Range (Float'Floor (f_max * code_rel));
         end if;
         color:= (Blue => max_color - val / 4, Red | Green => max_color - val);
       when Update =>
@@ -158,7 +124,7 @@ package body AZip_Common.Operations is
         else
           code_rel:= Float(code) / Float(max_code);
           code_rel:= code_rel ** 0.5; -- we skew the value (visual effect)
-          val:= Color_range(Float'Floor(f_max * code_rel));
+          val:= Color_Range (Float'Floor (f_max * code_rel));
           color:= (Green => max_color - val / 4, Red | Blue => max_color - val);
         end if;
       --  For other operations, we have a simple color code: green or white
@@ -182,7 +148,7 @@ package body AZip_Common.Operations is
       Integer(color.Green) ** 2 +
       Integer(color.Blue)  ** 2;
     intensity:= Sqrt(Float(raw_intensity_sq) / Float(max_raw_intensity_sq));
-  end Result_color;
+  end Result_Color;
 
   function Description(
     e_op      : Entry_Operation;

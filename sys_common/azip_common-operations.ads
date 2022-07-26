@@ -31,38 +31,38 @@ package AZip_Common.Operations is
   corrupt     : constant:= -3;
   unsupported : constant:= -4;
 
-  --  Convention for operation results set Zip_info's user_code:
-  --  Add          : 0 = preserved; 1 = replaced; 2 = appended
-  --  Update       : 0 = preserved; 1 = file only in archive; 2 = updated
-  --  Search       : number of strings found, or 1 for file
-  --                      name found (no text search)
-  --  Compare      : 0 = same; 1 = different; 2 = missing in the other archive
+  --  Convention for operation results set in Zip_info's user_code:
+  --
+  --    Add          : 0 = preserved; 1 = replaced; 2 = appended
+  --    Update       : 0 = preserved; 1 = file only in archive; 2 = updated
+  --    Search       : number of strings found, or 1 for file
+  --                        name found (no text search)
+  --    Compare      : 0 = same; 1 = different; 2 = missing in the other archive
 
-  function Result_message(op: Archive_Operation; code: Integer) return String;
-  function Result_value(s: UTF_16_String) return Integer; -- can be a non-number
+  function Result_Message (op: Archive_Operation; code: Integer) return String;
 
-  type Color_range is new Integer range 0 .. 255;
+  type Color_Range is new Integer range 0 .. 255;
 
-  type RGB_type is
+  type RGB_Type is
     record
-      Red    : Color_range;
-      Green  : Color_range;
-      Blue   : Color_range;
+      Red    : Color_Range;
+      Green  : Color_Range;
+      Blue   : Color_Range;
     end record;
 
-  white: constant RGB_type:= (others => Color_range'Last);
-  green: constant RGB_type:=
-    (Red => 0, Green => (Color_range'Last * 3) / 4, Blue => 0);
-  yellow: constant RGB_type:=
-    (Red   => (Color_range'Last * 4) / 4,
-     Green => (Color_range'Last * 4) / 5,
+  white: constant RGB_Type:= (others => Color_Range'Last);
+  green: constant RGB_Type:=
+    (Red => 0, Green => (Color_Range'Last * 3) / 4, Blue => 0);
+  yellow: constant RGB_Type:=
+    (Red   => (Color_Range'Last * 4) / 4,
+     Green => (Color_Range'Last * 4) / 5,
      Blue  => 0);
 
-  procedure Result_color(
+  procedure Result_Color (
     op        : Archive_Operation;
     code      : Integer;
     max_code  : Integer;
-    color     : out RGB_type;
+    color     : out RGB_Type;
     intensity : out Float      --  Useful for setting a font black or white given the background
   );
 

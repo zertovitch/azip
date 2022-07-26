@@ -344,7 +344,7 @@ package body AZip_GWin.MDI_Child is
 
       procedure Traverse is new Zip.Traverse_verbose (Process_Row);
 
-      az_color: AZip_Common.Operations.RGB_type;
+      az_color: AZip_Common.Operations.RGB_Type;
       gw_color: GWindows.Colors.RGB_Type;
       use GWindows.Colors;
       intensity: Float;
@@ -371,9 +371,14 @@ package body AZip_GWin.MDI_Child is
       last_row := row;
       for sorted_index in 0 .. last_row loop
         unsorted_index := Lst.Item_Data (sorted_index).index_before_sorting;
-        --  Ada.Text_IO.put_line (G2S(Lst.Text(sorted_index,0)) & Lst.Item_Data (sorted_index).uncompressed_size'image);
-        Lst.Set_Sub_Item (S2G(Result_message(Window.last_operation, result_code (unsorted_index))), sorted_index, cidx (Result)-1);
-        Result_color (Window.last_operation, result_code (unsorted_index), Window.last_max_code, az_color, intensity);
+        --  Ada.Text_IO.put_line (G2S(Lst.Text(sorted_index,0)) &
+        --    Lst.Item_Data (sorted_index).uncompressed_size'image);
+        Lst.Set_Sub_Item
+          (S2G (Result_Message
+            (Window.last_operation, result_code (unsorted_index))),
+            sorted_index, cidx (Result)-1);
+        Result_Color
+          (Window.last_operation, result_code (unsorted_index), Window.last_max_code, az_color, intensity);
         Lst.Item_Data (sorted_index).result_code := result_code (unsorted_index);
         if need = results_refresh or az_color /= AZip_Common.Operations.white then
           --  Ensure user can read the text, given the background color.

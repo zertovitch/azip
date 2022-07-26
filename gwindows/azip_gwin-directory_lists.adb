@@ -79,37 +79,33 @@ package body AZip_GWin.Directory_Lists is
           return equal;
         end if;
       when Result =>
-        --  !! TBD: use the payload instead, but beware the special cases...
+        i1 := Control.Item_Data (Index_1).result_code;
+        i2 := Control.Item_Data (Index_2).result_code;
+        if i1 > i2 then
+          return greater;
+        elsif i1 = i2 then
+          return equal;
+        elsif i1 > i2 then
+          return greater;
+        else
+          return less;
+        end if;
+      when others =>
+        --  The sort column has the default behaviour with text comparison.
         declare
           Value_1 : constant GString := Control.Text (Index_1, Column);
           Value_2 : constant GString := Control.Text (Index_2, Column);
         begin
-          i1 := Result_value (Value_1);
-          i2 := Result_value (Value_2);
-          if i1 = i2 then
+          --  Default behaviour: lexicographic.
+          if Value_1 = Value_2 then
             return equal;
-          elsif i1 > i2 then
+          elsif Value_1 > Value_2 then
             return greater;
           else
             return less;
           end if;
         end;
-      when others =>
-        null;  --  The sort column has the default behaviour.
     end case;
-    declare
-      Value_1 : constant GString := Control.Text (Index_1, Column);
-      Value_2 : constant GString := Control.Text (Index_2, Column);
-    begin
-      --  Default behaviour: lexicographic.
-      if Value_1 = Value_2 then
-        return equal;
-      elsif Value_1 > Value_2 then
-        return greater;
-      else
-        return less;
-      end if;
-    end;
   end On_Compare;
 
   procedure Sort (
@@ -131,8 +127,10 @@ package body AZip_GWin.Directory_Lists is
     for t in Entry_topic loop
       Control.curr_col_topic(window.opt.column_index(t)-1) := t;
     end loop;
-    --  Call parent method, but with the General comparison technique.
-    AZip_LV_Ex.Ex_List_View_Control_Type (Control).Sort (Column, Direction, Show_Icon, AZip_LV_Ex.General);
+    --  Call parent method, but with the `General` comparison technique,
+    --  which avoids strings if possible.
+    AZip_LV_Ex.Ex_List_View_Control_Type (Control).Sort
+      (Column, Direction, Show_Icon, AZip_LV_Ex.General);
     --
     if timing then
       t1 := Clock;

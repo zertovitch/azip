@@ -40,7 +40,7 @@ package AZip_Common is
   subtype UTF_16_String is Ada.Strings.UTF_Encoding.UTF_16_Wide_String;
   subtype UTF_16_Unbounded_String is Unbounded_Wide_String;
 
-  function To_UTF_16 (s : String; encoding : Zip_name_encoding) return UTF_16_String;
+  function To_UTF_16 (s : String; name_encoding : Zip_name_encoding) return UTF_16_String;
 
   function To_UTF_8 (s : UTF_16_String) return UTF_8_String;
 
@@ -100,7 +100,7 @@ package AZip_Common is
   function Give_path (s : UTF_16_String) return UTF_16_String;
   --  s is always equal to: Give_path & Remove_path
 
-  procedure Load_insensitive_if_possible(info : out Zip_info; from : String);
+  procedure Load_insensitive_if_possible (info : out Zip_info; from : String);
 
   --  This function will tell if a file is actually a Zip file.
   --  It is useful for instance when files are dropped onto AZip,

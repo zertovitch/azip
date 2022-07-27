@@ -23,7 +23,7 @@ package body AZip_GWin.Directory_Lists is
       declare
         PW : MDI_Child_Type renames MDI_Child_Type (Control.Parent.Parent.Parent.all);
       begin
-        PW.Update_display (status_bar);
+        PW.Update_Display (status_bar);
       end;
     end if;
   end On_Item_Changed;

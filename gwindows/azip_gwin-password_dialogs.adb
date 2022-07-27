@@ -54,13 +54,13 @@ package body AZip_GWin.Password_dialogs is
     box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
     box.Show_password_box.On_Click_Handler (Show_or_Hide_Password'Unrestricted_Access);
     Show_or_Hide_Password (box);
-    box.Password_edit.Set_Selection (0, Length(password));
-    case Show_Dialog(box, Parent) is
+    box.Password_edit.Set_Selection (0, Length (password));
+    case Show_Dialog (box, Parent) is
       when IDOK =>
-        password:= pwd_candidate;
-        cancelled:= False;
+        password := pwd_candidate;
+        cancelled := False;
       when others =>
-        cancelled:= True; -- abandon pwd change and cancel current operation
+        cancelled := True; -- abandon pwd change and cancel current operation
     end case;
   end Get_password_for_decryption;
 
@@ -68,56 +68,56 @@ package body AZip_GWin.Password_dialogs is
   --  Dialog: password for *encryption*  --
   -----------------------------------------
 
-  procedure Get_password_for_encryption(
+  procedure Get_password_for_encryption (
     Window     : in out MDI_Child_Type;
     cancelled  :    out Boolean
   )
   is
-    box: Password_encryption_box_Type;
-    pwd_candidate: GString_Unbounded:= Window.current_password;
-    pwd_confirm_candidate: GString_Unbounded;
-    confirm_ok: Boolean;
+    box : Password_encryption_box_Type;
+    pwd_candidate : GString_Unbounded := Window.current_password;
+    pwd_confirm_candidate : GString_Unbounded;
+    confirm_ok : Boolean;
     --
-    procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
+    procedure Get_Data (dummy : in out GWindows.Base.Base_Window_Type'Class) is
     begin
-      pwd_candidate:= G2GU(box.Password_edit.Text);
-      pwd_confirm_candidate:= G2GU(box.Password_confirm_edit.Text);
-      Window.MDI_Root.opt.show_passwords:= box.Show_password_box.State = Checked;
+      pwd_candidate := G2GU (box.Password_edit.Text);
+      pwd_confirm_candidate := G2GU (box.Password_confirm_edit.Text);
+      Window.MDI_Root.opt.show_passwords := box.Show_password_box.State = Checked;
     end Get_Data;
     --
-    procedure Show_or_Hide_Password ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
+    procedure Show_or_Hide_Password (dummy : in out GWindows.Base.Base_Window_Type'Class) is
     begin
       if box.Show_password_box.State = Checked then
-        box.Password_edit.Password(Off);
+        box.Password_edit.Password (Off);
         box.Password_confirm_edit.Disable;
         box.Confirm_Icon.Hide;
         box.Confirm_Password_Label.Disable;
       else
-        box.Password_edit.Password('=');
+        box.Password_edit.Password ('=');
         box.Password_confirm_edit.Enable;
         box.Confirm_Icon.Show;
         box.Confirm_Password_Label.Enable;
       end if;
-      box.Password_confirm_edit.Text("");
+      box.Password_confirm_edit.Text ("");
       box.Password_confirm_edit.Redraw;
       box.Password_edit.Redraw;
       box.Password_edit.Focus;
     end Show_or_Hide_Password;
   begin
     loop
-      box.Create_Full_Dialog(Window);
-      box.Password_edit.Text(GU2G(Window.current_password));
+      box.Create_Full_Dialog (Window);
+      box.Password_edit.Text (GU2G (Window.current_password));
       if Window.MDI_Root.opt.show_passwords then
-        box.Show_password_box.State(Checked);
+        box.Show_password_box.State (Checked);
       else
-        box.Show_password_box.State(Unchecked);
+        box.Show_password_box.State (Unchecked);
       end if;
       box.Center;
-      box.On_Destroy_Handler(Get_Data'Unrestricted_Access);
-      box.Show_password_box.On_Click_Handler(Show_or_Hide_Password'Unrestricted_Access);
-      Show_or_Hide_Password(box);
-      box.Password_confirm_edit.Password('=');
-      box.Password_edit.Set_Selection(0,Length(Window.current_password));
+      box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
+      box.Show_password_box.On_Click_Handler (Show_or_Hide_Password'Unrestricted_Access);
+      Show_or_Hide_Password (box);
+      box.Password_confirm_edit.Password ('=');
+      box.Password_edit.Set_Selection (0, Length (Window.current_password));
       case Show_Dialog (box, Window) is
         when IDOK =>
           Window.current_password := pwd_candidate;
@@ -128,7 +128,7 @@ package body AZip_GWin.Password_dialogs is
             confirm_ok := pwd_confirm_candidate = pwd_candidate;
           end if;
           if not confirm_ok then
-            Message_Box(
+            Message_Box (
               Window, "Password mismatch", "Passwords do not match, please retry",
               OK_Box, Exclamation_Icon
             );

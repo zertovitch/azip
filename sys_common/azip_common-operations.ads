@@ -104,12 +104,12 @@ package AZip_Common.Operations is
     --  jaja\javax\swing\JProgressBar.class
   end record;
 
-  type Name_list is array(Positive range <>) of Name_descriptor;
+  type Name_List is array (Positive range <>) of Name_descriptor;
 
   --  Replace any folder name by the names of files it contains
   --  including those of subfolders, recursively.
   --
-  function Expand_folders(l: Name_list) return Name_list;
+  function Expand_Folders (l : Name_List) return Name_List;
 
   type Operation_return_code is (
     ok,
@@ -128,15 +128,15 @@ package AZip_Common.Operations is
       skip_hint             : Boolean;
       user_abort            : out Boolean
     );
-    with procedure Change_password (
+    with procedure Change_Password (
       entry_name : in     UTF_16_String;
       password   : in out Unbounded_Wide_String;
       cancelled  :    out Boolean
     );
-  procedure Process_archive (
+  procedure Process_Archive (
     zif             :        Zip.Zip_info; -- preserved, even after modifying operation
     operation       :        Archive_Operation;
-    entry_name      :        Name_list;
+    entry_name      :        Name_List;
     base_folder     :        UTF_16_String;
     search_pattern  :        UTF_16_String;
     output_folder   :        UTF_16_String;
@@ -154,13 +154,13 @@ package AZip_Common.Operations is
   -- Some goodies --
   ------------------
 
-  procedure Copy_user_codes (from: Zip.Zip_info; to: in out Zip.Zip_info);
+  procedure Copy_user_codes (from : Zip.Zip_info; to : in out Zip.Zip_info);
 
-  procedure Set_user_codes (info: in out Zip.Zip_info; code: Integer);
+  procedure Set_user_codes (info : in out Zip.Zip_info; code : Integer);
 
-  procedure Count_test_totals(
-    archive: Zip.Zip_info;
-    count_ok, count_ko, count_nt: out Natural
+  procedure Count_test_totals (
+    archive : Zip.Zip_info;
+    count_ok, count_ko, count_nt : out Natural
   );
 
 end AZip_Common.Operations;

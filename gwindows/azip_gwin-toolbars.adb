@@ -48,9 +48,9 @@ package body AZip_GWin.Toolbars is
   end Num_resource;
 
   procedure Init_Main_Toolbar
-    (tb    : in out GWindows.Common_Controls.Toolbar_Control_Type'Class;
-     il    : in out GWindows.Image_Lists.Image_List_Type;
-     parent: in out AZip_GWin.MDI_Main.MDI_Main_Type)
+    (tb     : in out GWindows.Common_Controls.Toolbar_Control_Type'Class;
+     il     : in out GWindows.Image_Lists.Image_List_Type;
+     parent : in out AZip_GWin.MDI_Main.MDI_Main_Type)
   is
     string_count : Natural := 0;
     Fake_Menu : Menu_MDI_Child_Type;
@@ -85,7 +85,7 @@ package body AZip_GWin.Toolbars is
 
     Create (il, Num_resource (Toolbar_BMP), 32);
     Set_Image_List (tb, il);
-    st:= Get_Style (tb);
+    st := Get_Style (tb);
     Set_Style (tb, TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST or st);
     Set_Extended_Style (tb, TBSTYLE_EX_MIXEDBUTTONS);
 

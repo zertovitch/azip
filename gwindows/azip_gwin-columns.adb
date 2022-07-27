@@ -67,7 +67,7 @@ package body AZip_GWin.Columns is
   procedure Set_all_column_widths_to_options (Window : in out MDI_Child_Type) is
   begin
     for t in Entry_topic'Range loop
-      Set_column_width_to_options (Window, t, Window.Directory_List.Column_Width (Entry_topic'Pos(t)));
+      Set_column_width_to_options (Window, t, Window.Directory_List.Column_Width (Entry_topic'Pos (t)));
     end loop;
   end Set_all_column_widths_to_options;
 
@@ -128,7 +128,7 @@ package body AZip_GWin.Columns is
       check_box_topic (t).On_Click_Handler (Get_Data'Unrestricted_Access);
     end loop;
     --
-    box.On_Destroy_Handler(Get_Data'Unrestricted_Access);
+    box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
     Show_Dialog (box, Window);
   end Select_columns_dialog;
 

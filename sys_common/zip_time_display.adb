@@ -6,7 +6,7 @@ function Zip_time_display
    Intra_day : Boolean      := True)
   return String
 is
-  Year, Month, Day: Integer;
+  Year, Month, Day : Integer;
   Seconds_in_day : Duration;
 begin
   Zip_Streams.Calendar.Split (T, Year, Month, Day, Seconds_in_day);
@@ -25,7 +25,7 @@ begin
     function Optional_seconds return String is
     begin
       if Seconds then
-        return ':' & ssc (ssc'Last-1 .. ssc'Last);
+        return ':' & ssc (ssc'Last - 1 .. ssc'Last);
       else
         return "";
       end if;
@@ -36,8 +36,8 @@ begin
       if Intra_day then
         return
           "  " &
-          shr ( shr'Last-1 .. shr'Last) & ':' &
-          smn ( smn'Last-1 .. smn'Last) & Optional_seconds;
+          shr (shr'Last - 1 .. shr'Last) & ':' &
+          smn (smn'Last - 1 .. smn'Last) & Optional_seconds;
       else
         return "";
       end if;
@@ -45,9 +45,9 @@ begin
 
   begin
     return
-      sY ( sY'Last-3 .. sY'Last) & '/' &  --  not Year 10'000 compliant.
-      sM ( sM'Last-1 .. sM'Last) & '/' &
-      sD ( sD'Last-1 .. sD'Last) &
+      sY (sY'Last - 3 .. sY'Last) & '/' &  --  not Year 10'000 compliant.
+      sM (sM'Last - 1 .. sM'Last) & '/' &
+      sD (sD'Last - 1 .. sD'Last) &
       Optional_intra_day;
   end;
 end Zip_time_display;

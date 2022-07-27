@@ -29,10 +29,10 @@ package body AZip_GWin.Options is
       candidate.extract_directory := G2GU (box.Extract_directory_edit_box.Text);
     exception
       when others =>
-        Message_Box(Window, "Invalid data", "Incomplete reading of your changes", OK_Box, Error_Icon);
+        Message_Box (Window, "Invalid data", "Incomplete reading of your changes", OK_Box, Error_Icon);
     end Get_Data;
     --
-    procedure Choose_extract_directory ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
+    procedure Choose_extract_directory (dummy : in out GWindows.Base.Base_Window_Type'Class) is
       dir : GString_Unbounded;
       use type GString_Unbounded;
     begin
@@ -47,22 +47,22 @@ package body AZip_GWin.Options is
       end if;
     end Choose_extract_directory;
     --
-    has_changes: Boolean;
+    has_changes : Boolean;
     --
   begin
-    box.Create_Full_Dialog(main);
+    box.Create_Full_Dialog (main);
     Set_Data;
     box.Choose_extract_directory_button_permanent.Show;
     box.Choose_extract_directory_button.Hide;
-    box.Choose_extract_directory_button_permanent.On_Click_Handler(Choose_extract_directory'Unrestricted_Access);
-    box.Center(main);
+    box.Choose_extract_directory_button_permanent.On_Click_Handler (Choose_extract_directory'Unrestricted_Access);
+    box.Center (main);
     box.Small_Icon ("Options_Icon");
     On_Destroy_Handler (box, Get_Data'Unrestricted_Access);
     case Show_Dialog (box, main) is
       when IDOK     =>
         has_changes := main.opt /= candidate;
         if has_changes then
-          main.opt:= candidate;
+          main.opt := candidate;
         end if;
       when others   =>
         null;  --  Contains the IDCANCEL case

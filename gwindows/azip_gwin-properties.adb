@@ -73,21 +73,21 @@ begin
       );
     end if;
     for m in files_per_method'Range loop
-      if files_per_method(m) > 0 then
-        row:= row + 1;
+      if files_per_method (m) > 0 then
+        row := row + 1;
         --  Format (""method"")"
-        box.Stats_list.Insert_Item(S2G(Zip.Image(m)),row);
+        box.Stats_list.Insert_Item (S2G (Zip.Image (m)), row);
         --  Entries
-        box.Stats_list.Set_Sub_Item(Integer'Wide_Image(files_per_method(m)),row,1);
-        if uncompressed_per_method(m) > 0 then
+        box.Stats_list.Set_Sub_Item (Integer'Wide_Image (files_per_method (m)), row, 1);
+        if uncompressed_per_method (m) > 0 then
           --  % of data
-          box.Stats_list.Set_Sub_Item(
-            Ratio_pct_Image(uncompressed_per_method(m), total_uncompressed),
+          box.Stats_list.Set_Sub_Item (
+            Ratio_pct_Image (uncompressed_per_method (m), total_uncompressed),
             row, 2
           );
           --  Ratio
-          box.Stats_list.Set_Sub_Item(
-            Ratio_pct_Image(Unsigned_64(compressed_per_method(m)), uncompressed_per_method(m)),
+          box.Stats_list.Set_Sub_Item (
+            Ratio_pct_Image (Unsigned_64 (compressed_per_method (m)), uncompressed_per_method (m)),
             row, 3
           );
         end if;

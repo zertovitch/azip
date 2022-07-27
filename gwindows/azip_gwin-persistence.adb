@@ -77,12 +77,12 @@ package body AZip_GWin.Persistence is
     nf : File_Type;
   begin
     Create (nf, Out_File, Config_name);
-    Put_Line(nf, ";  This is the configuration file for AZip, in the ""no trace in registry"" mode.");
-    Put_Line(nf, ";  Delete this file for using the registry again.");
-    Put_Line(nf, ";  NB: the settings are the same for all users.");
-    Put_Line(nf, ";  AZip Web site: https://azip.sourceforge.io/");
-    Put_Line(nf, ";");
-    Put_Line(nf, '[' & azip_section & ']');
+    Put_Line (nf, ";  This is the configuration file for AZip, in the ""no trace in registry"" mode.");
+    Put_Line (nf, ";  Delete this file for using the registry again.");
+    Put_Line (nf, ";  NB: the settings are the same for all users.");
+    Put_Line (nf, ";  AZip Web site: https://azip.sourceforge.io/");
+    Put_Line (nf, ";");
+    Put_Line (nf, '[' & azip_section & ']');
     for k in Configuration_persistence.Key loop
       Put_Line (nf, Configuration_persistence.Key'Image (k) & '=');
     end loop;
@@ -98,7 +98,7 @@ package body AZip_GWin.Persistence is
     return Zip.Exists (Config_name);
   end Cfg_file_available;
 
-  procedure Load (opt: out AZip_Common.User_options.Option_Pack_Type) is
+  procedure Load (opt : out AZip_Common.User_options.Option_Pack_Type) is
   begin
     if Cfg_file_available then
       Configuration_persistence.Load (opt);
@@ -107,7 +107,7 @@ package body AZip_GWin.Persistence is
     end if;
   end Load;
 
-  procedure Save (opt: in  AZip_Common.User_options.Option_Pack_Type) is
+  procedure Save (opt : in  AZip_Common.User_options.Option_Pack_Type) is
   begin
     if Cfg_file_available then
       Configuration_persistence.Save (opt);

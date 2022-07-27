@@ -16,9 +16,9 @@ procedure Test_Expand_folders is
   use AZip_Common, AZip_Common.Operations;
   use Ada.Command_Line, Ada.Strings.Wide_Unbounded, Ada.Wide_Text_IO;
 
-  l1 : Name_list (1 .. Argument_Count);
+  l1 : Name_List (1 .. Argument_Count);
 
-  procedure Show (l : Name_list; title : Wide_String) is
+  procedure Show (l : Name_List; title : Wide_String) is
   begin
     Put_Line (title);
     New_Line;
@@ -34,7 +34,7 @@ begin
   end loop;
   Show (l1, "1) Not expanded");
   declare
-    l2 : constant Name_list := Expand_folders (l1);
+    l2 : constant Name_List := Expand_Folders (l1);
   begin
     Show (l2, "2) Expanded");
   end;

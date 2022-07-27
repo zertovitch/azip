@@ -176,7 +176,7 @@ package body AZip_GWin.Installation is
     procedure Manage_Context_Menu_Clicked (Dummy : in out GWindows.Base.Base_Window_Type'Class) is
       use Ada.Command_Line, GWin_Util;
       Action : Context_Menu_Action;
-      Success : Boolean;
+      is_success : Boolean;
       --
       procedure Message (Text : GString) is
       begin
@@ -236,9 +236,9 @@ package body AZip_GWin.Installation is
         Action := Remove;
       end if;
       --
-      Do_Manage_Context_Menu (box, '"' & Command_Name & '"', Menus_All_Users, Action, Success);
+      Do_Manage_Context_Menu (box, '"' & Command_Name & '"', Menus_All_Users, Action, is_success);
       --
-      if Success then
+      if is_success then
         if Action = Add and then Exe_Loc = Elsewhere then
           Message_2 (
             NL & NL &

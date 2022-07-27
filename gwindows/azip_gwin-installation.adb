@@ -337,7 +337,7 @@ package body AZip_GWin.Installation is
       box.ID_Install_all_users.Disable;
       box.ID_Install_current_user.Disable;
     else
-      box.ID_Install_all_users.Text (   Right_Arrow & "  " & box.ID_Install_all_users.Text);
+      box.ID_Install_all_users.Text    (Right_Arrow & "  " & box.ID_Install_all_users.Text);
       box.ID_Install_current_user.Text (Right_Arrow & "  " & box.ID_Install_current_user.Text);
     end if;
     --

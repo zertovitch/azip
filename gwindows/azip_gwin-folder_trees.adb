@@ -16,9 +16,9 @@ package body AZip_GWin.Folder_Trees is
   use GWindows.Common_Controls;
 
   overriding procedure On_Selection_Change (Control : in out Folder_tree_type) is
-    w_node: constant Tree_Item_Node:= Control.Selected_Item;
-    parent_window: MDI_Child_Type renames MDI_Child_Type(Control.Parent.Parent.all);
-    new_path: GString_Unbounded;
+    w_node : constant Tree_Item_Node := Control.Selected_Item;
+    parent_window : MDI_Child_Type renames MDI_Child_Type (Control.Parent.Parent.all);
+    new_path : GString_Unbounded;
     use AZip_Common.Node_Catalogues;
     curs : constant Cursor :=
       parent_window.node_map.Find (Integer (w_node));
@@ -32,8 +32,8 @@ package body AZip_GWin.Folder_Trees is
       parent_window.Update_status_bar;
       return; -- the same node as before has been selected, no further refresh needed.
     end if;
-    parent_window.selected_path:= new_path;
-    parent_window.Update_display(node_selected);
+    parent_window.selected_path := new_path;
+    parent_window.Update_display (node_selected);
   end On_Selection_Change;
 
   overriding procedure On_Focus (Control : in out Folder_tree_type) is

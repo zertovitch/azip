@@ -40,14 +40,14 @@ package AZip_Common is
   subtype UTF_16_String is Ada.Strings.UTF_Encoding.UTF_16_Wide_String;
   subtype UTF_16_Unbounded_String is Unbounded_Wide_String;
 
-  function To_UTF_16(s: String; encoding: Zip_name_encoding) return UTF_16_String;
+  function To_UTF_16 (s : String; encoding : Zip_name_encoding) return UTF_16_String;
 
-  function To_UTF_8(s: UTF_16_String) return UTF_8_String;
+  function To_UTF_8 (s : UTF_16_String) return UTF_8_String;
 
-  function To_UTF_8(s: String; encoding: Zip_name_encoding) return UTF_8_String;
+  function To_UTF_8 (s : String; encoding : Zip_name_encoding) return UTF_8_String;
 
-  function To_IBM_437(s: UTF_16_String) return String;
-  Cannot_encode_to_IBM_437: exception;
+  function To_IBM_437 (s : UTF_16_String) return String;
+  Cannot_encode_to_IBM_437 : exception;
 
   --------------------------------------------------------------------------
   -- Maps of paths and nodes, for navigating through paths in a tree view --
@@ -62,7 +62,7 @@ package AZip_Common is
      Equivalent_Keys => Ada.Strings.Wide_Unbounded."="
     );
 
-  root_key: constant UTF_16_Unbounded_String:= To_Unbounded_Wide_String("");
+  root_key : constant UTF_16_Unbounded_String := Null_Unbounded_Wide_String;
 
   --  Find quickly a path name given a node number.
 
@@ -75,32 +75,32 @@ package AZip_Common is
   -- Text display helpers --
   --------------------------
 
-  function Image(topic: Entry_topic) return UTF_16_String;
-  function Hexadecimal (x: Interfaces.Unsigned_32) return UTF_16_String;
+  function Image (topic : Entry_topic) return UTF_16_String;
+  function Hexadecimal (x : Interfaces.Unsigned_32) return UTF_16_String;
   --  File sizes (in GB, MB, KB or bytes)
-  function File_Size_Image (x: Zip.Zip_64_Data_Size_Type) return UTF_16_String;
+  function File_Size_Image (x : Zip.Zip_64_Data_Size_Type) return UTF_16_String;
   --  Image with thousands separator
-  function Image_1000 (r: Zip.Zip_64_Data_Size_Type; separator: Wide_Character) return Wide_String;
+  function Image_1000 (r : Zip.Zip_64_Data_Size_Type; separator : Wide_Character) return Wide_String;
   --  Long format: e.g. "321 MB (337'477'113 bytes)"
-  function Long_file_size_image (x: Interfaces.Unsigned_64; separator: Wide_Character) return UTF_16_String;
+  function Long_file_size_image (x : Interfaces.Unsigned_64; separator : Wide_Character) return UTF_16_String;
   --  Percentages
-  function Ratio_pct_Image (nom, den: Interfaces.Unsigned_64) return UTF_16_String;
+  function Ratio_pct_Image (nom, den : Interfaces.Unsigned_64) return UTF_16_String;
   --  Results: see AZip_Common.Operations.
 
   --  "Correct" casing for <Enum>'Image
   generic
     type Enum is (<>);
-  function Enum_Img_Mixed(e: Enum) return UTF_16_String;
+  function Enum_Img_Mixed (e : Enum) return UTF_16_String;
 
   ---------------------
   -- Various helpers --
   ---------------------
 
-  function Remove_path(s: UTF_16_String) return UTF_16_String;
-  function Give_path(s: UTF_16_String) return UTF_16_String;
+  function Remove_path (s : UTF_16_String) return UTF_16_String;
+  function Give_path (s : UTF_16_String) return UTF_16_String;
   --  s is always equal to: Give_path & Remove_path
 
-  procedure Load_insensitive_if_possible(info: out Zip_info; from: String);
+  procedure Load_insensitive_if_possible(info : out Zip_info; from : String);
 
   --  This function will tell if a file is actually a Zip file.
   --  It is useful for instance when files are dropped onto AZip,
@@ -113,8 +113,8 @@ package AZip_Common is
      invalid,
      file_doesnt_exist
      );
-  function Is_valid_Zip_archive(file_name: String) return Archive_validity;
+  function Is_valid_Zip_archive (file_name : String) return Archive_validity;
 
-  function Has_Zip_archive_encrypted_entries(info: Zip_info) return Boolean;
+  function Has_Zip_archive_encrypted_entries (info : Zip_info) return Boolean;
 
 end AZip_Common;

@@ -12,7 +12,7 @@ package body AZip_Common is
 
   --  http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/PC/CP437.TXT
 
-  IBM_437_to_UTF_16: constant array(Character) of Wide_Character :=
+  IBM_437_to_UTF_16 : constant array (Character) of Wide_Character :=
   (
     Character'Val(16#00#) => Wide_Character'Val(16#0000#) , -- NULL
     Character'Val(16#01#) => Wide_Character'Val(16#0001#) , -- START OF HEADING
@@ -272,49 +272,49 @@ package body AZip_Common is
     Character'Val(16#ff#) => Wide_Character'Val(16#00a0#)   -- NO-BREAK SPACE
   );
 
-  function To_UTF_16(s: String; encoding: Zip_name_encoding) return Wide_String
+  function To_UTF_16(s: String; encoding : Zip_name_encoding) return Wide_String
   is
   begin
     case encoding is
       when IBM_437 =>
         declare
-          ws: Wide_String(s'Range);
+          ws : Wide_String (s'Range);
         begin
           for i in s'Range loop
-            ws(i):= IBM_437_to_UTF_16(s(i));
+            ws (i) := IBM_437_to_UTF_16 (s (i));
           end loop;
           return ws;
         end;
       when UTF_8 =>
-        return Ada.Strings.UTF_Encoding.Conversions.Convert(s);
+        return Ada.Strings.UTF_Encoding.Conversions.Convert (s);
     end case;
   end To_UTF_16;
 
-  function To_UTF_8(s: UTF_16_String) return UTF_8_String is
+  function To_UTF_8 (s : UTF_16_String) return UTF_8_String is
   begin
-    return Ada.Strings.UTF_Encoding.Conversions.Convert(s);
+    return Ada.Strings.UTF_Encoding.Conversions.Convert (s);
   end To_UTF_8;
 
-  function To_UTF_8(s: String; encoding: Zip_name_encoding) return UTF_8_String is
+  function To_UTF_8(s: String; encoding : Zip_name_encoding) return UTF_8_String is
   begin
     case encoding is
       when UTF_8 =>
         return s; -- nothing to do :-)
       when IBM_437 =>
-        return To_UTF_8(To_UTF_16(s, encoding));
+        return To_UTF_8 (To_UTF_16 (s, encoding));
     end case;
   end To_UTF_8;
 
-  function To_IBM_437(s: UTF_16_String) return String is
-    res: String(s'Range);
-    found: Boolean;
+  function To_IBM_437 (s : UTF_16_String) return String is
+    res : String (s'Range);
+    found : Boolean;
   begin
     for i in s'Range loop
-      found:= False;
+      found := False;
       for c in Character loop
-        if IBM_437_to_UTF_16(c) = s(i) then
-          res(i):= c;
-          found:= True;
+        if IBM_437_to_UTF_16 (c) = s (i) then
+          res (i) := c;
+          found := True;
           exit;
         end if;
       end loop;
@@ -325,9 +325,9 @@ package body AZip_Common is
     return res;
   end To_IBM_437;
 
-  function Image(topic: Entry_topic) return UTF_16_String is
-    u: constant UTF_16_String:= Entry_topic'Wide_Image(topic);
-    l: constant UTF_16_String:= To_Lower(u);
+  function Image (topic : Entry_topic) return UTF_16_String is
+    u : constant UTF_16_String := Entry_topic'Wide_Image (topic);
+    l : constant UTF_16_String := To_Lower (u);
   begin
     case topic is
       when FType =>
@@ -337,34 +337,34 @@ package body AZip_Common is
       when Encoding =>
         return "Name encoding";
       when others =>
-        return u(u'First) & l(l'First+1..l'Last);
+        return u (u'First) & l (l'First + 1 .. l'Last);
     end case;
   end Image;
 
-  function Hexadecimal(x: Interfaces.Unsigned_32) return UTF_16_String
+  function Hexadecimal (x : Interfaces.Unsigned_32) return UTF_16_String
   is
-    package MIO is new Ada.Wide_Text_IO.Modular_IO(Interfaces.Unsigned_32);
-    str: UTF_16_String(1..12);
+    package MIO is new Ada.Wide_Text_IO.Modular_IO (Interfaces.Unsigned_32);
+    str : UTF_16_String (1 .. 12);
   begin
-    MIO.Put(str, x, 16);
-    return str(Index(str,"#")+1..11);
+    MIO.Put (str, x, 16);
+    return str (Index (str, "#") + 1 .. 11);
   end Hexadecimal;
 
   generic
-    type Size_type is mod <>;
+    type Size_Type is mod <>;
   package Gen_Size_Images is
-    function File_Size_Image(x: Size_type) return UTF_16_String;
-    function Image_1000(r: Size_type; separator: Wide_Character) return Wide_String;
-    function Long_file_size_image(x: Size_type; separator: Wide_Character) return UTF_16_String;
-    function Ratio_pct_Image(nom, den: Size_type) return UTF_16_String;
+    function File_Size_Image (x : Size_Type) return UTF_16_String;
+    function Image_1000 (r : Size_Type; separator : Wide_Character) return Wide_String;
+    function Long_file_size_image (x : Size_Type; separator : Wide_Character) return UTF_16_String;
+    function Ratio_pct_Image (nom, den : Size_Type) return UTF_16_String;
   end Gen_Size_Images;
 
   package body Gen_Size_Images is
 
-    function File_Size_Image(x: Size_type) return UTF_16_String is
-      function Img_dec(x: Size_type; decimals: Natural) return UTF_16_String is
+    function File_Size_Image(x: Size_Type) return UTF_16_String is
+      function Img_dec(x: Size_Type; decimals: Natural) return UTF_16_String is
       pragma Inline (Img_dec);
-        s: constant UTF_16_String:= Size_type'Wide_Image(x);
+        s: constant UTF_16_String:= Size_Type'Wide_Image(x);
       begin
         case decimals is
           when 1 =>  --  x is 10x too large, on purpose
@@ -412,10 +412,10 @@ package body AZip_Common is
       end if;
     end File_Size_Image;
 
-    function Image_1000(r: Size_type; separator: Wide_Character) return Wide_String is
-      s: constant Wide_String:= Size_type'Wide_Image(r);
-      t: Wide_String(s'First..s'First+(s'Length*4)/3);
-      j, c: Natural;
+    function Image_1000 (r : Size_Type; separator : Wide_Character) return Wide_String is
+      s : constant Wide_String := Size_Type'Wide_Image(r);
+      t : Wide_String (s'First .. s'First+(s'Length*4)/3);
+      j, c : Natural;
     begin
       --  For signed integers
       --
@@ -424,37 +424,37 @@ package body AZip_Common is
       --  end if;
       --
       --  We build result string t from right to left
-      j:= t'Last + 1;
-      c:= 0;
-      for i in reverse s'First..s'Last loop
-        exit when s(i) = ' ' or s(i) = '-';
+      j := t'Last + 1;
+      c := 0;
+      for i in reverse s'First .. s'Last loop
+        exit when s (i) = ' ' or s (i) = '-';
         if c > 0 and then c mod 3 = 0 then
-          j:= j - 1;
-          t(j):= separator;
+          j := j - 1;
+          t(j) := separator;
         end if;
-        j:= j - 1;
-        t(j):= s(i);
-        c:= c + 1;
+        j := j - 1;
+        t(j) := s(i);
+        c := c + 1;
       end loop;
-      return t(j..t'Last);
+      return t (j .. t'Last);
     end Image_1000;
 
-    function Long_file_size_image(x: Size_type; separator: Wide_Character) return UTF_16_String is
+    function Long_file_size_image (x : Size_Type; separator : Wide_Character) return UTF_16_String is
     begin
       if x < 1024 then
         return Image_1000(x, separator) & " bytes";
       else
-        return File_Size_Image(x) & " (" & Image_1000(x, separator) & " bytes)";
+        return File_Size_Image (x) & " (" & Image_1000 (x, separator) & " bytes)";
       end if;
     end Long_file_size_image;
 
-    function Ratio_pct_Image(nom, den: Size_type) return UTF_16_String is
+    function Ratio_pct_Image (nom, den : Size_Type) return UTF_16_String is
     begin
       if den = 0 then
         return "--";
       else
-        return Trim(Integer'Wide_Image(
-          Integer(100.0 * Long_Float(nom) / Long_Float(den))),
+        return Trim (Integer'Wide_Image(
+          Integer (100.0 * Long_Float(nom) / Long_Float(den))),
           Left
         ) & '%';
       end if;
@@ -464,56 +464,56 @@ package body AZip_Common is
 
   package Inst_Size_Images_64 is new Gen_Size_Images (Interfaces.Unsigned_64);
 
-  function File_Size_Image (x: Zip.Zip_64_Data_Size_Type) return UTF_16_String
+  function File_Size_Image (x : Zip.Zip_64_Data_Size_Type) return UTF_16_String
     renames Inst_Size_Images_64.File_Size_Image;
 
-  function Image_1000 (r: Zip.Zip_64_Data_Size_Type; separator: Wide_Character) return Wide_String
+  function Image_1000 (r : Zip.Zip_64_Data_Size_Type; separator : Wide_Character) return Wide_String
     renames Inst_Size_Images_64.Image_1000;
 
-  function Long_file_size_image (x: Interfaces.Unsigned_64; separator: Wide_Character) return UTF_16_String
+  function Long_file_size_image (x : Interfaces.Unsigned_64; separator : Wide_Character) return UTF_16_String
     renames Inst_Size_Images_64.Long_file_size_image;
 
-  function Ratio_pct_Image (nom, den: Interfaces.Unsigned_64) return UTF_16_String
+  function Ratio_pct_Image (nom, den : Interfaces.Unsigned_64) return UTF_16_String
     renames Inst_Size_Images_64.Ratio_pct_Image;
 
   function Enum_Img_Mixed (e: Enum) return UTF_16_String is
-    s: UTF_16_String:= Enum'Wide_Image(e);
-    low: Boolean:= False;
+    s : UTF_16_String := Enum'Wide_Image(e);
+    low : Boolean := False;
   begin
     for i in s'Range loop
       if low then
-        s(i):= To_Lower(s(i));
+        s(i) := To_Lower(s(i));
       end if;
-      low:= s(i) /= '_';
+      low := s(i) /= '_';
     end loop;
     return s;
   end Enum_Img_Mixed;
 
   function Give_path(s: UTF_16_String) return UTF_16_String is
-    i: Positive;
+    i : Positive;
   begin
     if s = "" then
       return "";
     end if;
-    i:= s'First;
+    i := s'First;
     for j in s'Range loop
-      if s(j)= '/' or s(j)= '\' then
-        i:= j+1;
+      if s(j) = '/' or s(j) = '\' then
+        i := j+1;
       end if;
     end loop;
-    return s(s'First..i-1);
+    return s (s'First .. i - 1);
   end Give_path;
 
-  function Remove_path(s: UTF_16_String) return UTF_16_String is
-    i: Positive;
+  function Remove_path (s : UTF_16_String) return UTF_16_String is
+    i : Positive;
   begin
     if s = "" then
       return "";
     end if;
-    i:= s'First;
+    i := s'First;
     for j in s'Range loop
-      if s(j)= '/' or s(j)= '\' then
-        i:= j+1;
+      if s(j) = '/' or s(j) = '\' then
+        i := j+1;
       end if;
     end loop;
     return s(i..s'Last);
@@ -538,7 +538,7 @@ package body AZip_Common is
       --  If Duplicate_name is raised again, well, it is really invalid!
   end Load_insensitive_if_possible;
 
-  function Is_valid_Zip_archive(file_name: String) return Archive_validity is
+  function Is_valid_Zip_archive (file_name : String) return Archive_validity is
     info: Zip.Zip_info;
   begin
     Zip.Load(
@@ -550,12 +550,11 @@ package body AZip_Common is
   exception
     when Duplicate_name =>
       begin
-        Zip.Load(
-          info            => info,
-          from            => file_name,
-          case_sensitive  => True,
-          duplicate_names => admit_duplicates
-        );
+        Zip.Load
+          (info            => info,
+           from            => file_name,
+           case_sensitive  => True,
+           duplicate_names => admit_duplicates);
         return with_case_sensitive_duplicates;
       exception
         when Zip.Archive_open_error =>
@@ -569,10 +568,10 @@ package body AZip_Common is
       return invalid;
   end Is_valid_Zip_archive;
 
-  function Has_Zip_archive_encrypted_entries(info: Zip_info) return Boolean is
-    encrypted: Boolean:= False;
+  function Has_Zip_archive_encrypted_entries (info : Zip_info) return Boolean is
+    encrypted : Boolean := False;
     procedure Detect_Encryption (
-      name             : String; -- 'name' is compressed entry's name
+      name             : String;  --  'name' is compressed entry's name
       file_index       : Zip_Streams.ZS_Index_Type;
       comp_size        : Zip_64_Data_Size_Type;
       uncomp_size      : Zip_64_Data_Size_Type;

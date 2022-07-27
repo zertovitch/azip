@@ -23,7 +23,7 @@ package AZip_GWin.Directory_Lists is
   ----------------------------------------------
 
   type Column_topic_array is
-    array (0 .. AZip_Common.User_options.Column_integer_array'Length)
+    array (0 .. AZip_Common.User_options.Column_Integer_Array'Length)
       of AZip_Common.Entry_topic;
 
   type Directory_list_type is

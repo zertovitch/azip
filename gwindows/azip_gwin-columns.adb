@@ -50,25 +50,24 @@ package body AZip_GWin.Columns is
 
   procedure Get_all_column_widths_from_options (Window : MDI_Main_Type) is
     --
-    procedure Do_child_window (Window : GWindows.Base.Pointer_To_Base_Window_Class)
+    procedure Do_child_window (Child_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
     begin
-      if Window.all in MDI_Child_Type'Class then
-        Get_all_column_widths_from_options (MDI_Child_Type(Window.all));
+      if Child_Window.all in MDI_Child_Type'Class then
+        Get_all_column_widths_from_options (MDI_Child_Type (Child_Window.all));
       end if;
     end Do_child_window;
     --
   begin
-    Enumerate_Children(
-      MDI_Client_Window (Window).all,
-      Do_child_window'Unrestricted_Access
-    );
+    Enumerate_Children
+      (MDI_Client_Window (Window).all,
+       Do_child_window'Unrestricted_Access);
   end Get_all_column_widths_from_options;
 
   procedure Set_all_column_widths_to_options (Window : in out MDI_Child_Type) is
   begin
     for t in Entry_topic'Range loop
-      Set_column_width_to_options (Window, t, Window.Directory_List.Column_Width(Entry_topic'Pos(t)));
+      Set_column_width_to_options (Window, t, Window.Directory_List.Column_Width (Entry_topic'Pos(t)));
     end loop;
   end Set_all_column_widths_to_options;
 
@@ -77,7 +76,7 @@ package body AZip_GWin.Columns is
     x, y, dy, w, h : Integer;
     check_box_topic : array (Entry_topic) of Check_Box_Type;
     --
-    procedure Get_Data ( dummy : in out GWindows.Base.Base_Window_Type'Class ) is
+    procedure Get_Data (dummy : in out GWindows.Base.Base_Window_Type'Class) is
     begin
       for t in Entry_topic'Range loop
         case t is
@@ -126,7 +125,7 @@ package body AZip_GWin.Columns is
             State (check_box_topic (t), Unchecked);
           end if;
       end case;
-      check_box_topic (t).On_Click_Handler(Get_Data'Unrestricted_Access);
+      check_box_topic (t).On_Click_Handler (Get_Data'Unrestricted_Access);
     end loop;
     --
     box.On_Destroy_Handler(Get_Data'Unrestricted_Access);

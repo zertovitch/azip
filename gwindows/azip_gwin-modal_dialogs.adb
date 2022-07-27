@@ -21,8 +21,8 @@ package body AZip_GWin.Modal_Dialogs is
     procedure Credits_clicked (dummy : in out GWindows.Base.Base_Window_Type'Class) is
       credits_box : AZip_Resource_GUI.Credits_box_Type;
     begin
-      credits_box.Create_Full_Dialog(box);
-      credits_box.Small_Icon("AZip_Doc_Icon_Name");
+      credits_box.Create_Full_Dialog (box);
+      credits_box.Small_Icon ("AZip_Doc_Icon_Name");
       credits_box.Center;
       Show_Dialog (credits_box, box);
     end Credits_clicked;
@@ -34,9 +34,9 @@ package body AZip_GWin.Modal_Dialogs is
     --
     function GNAT_Version_string return String is
       package CVer is new GNAT.Compiler_Version;
-      v: constant String:= CVer.Version;
+      v : constant String := CVer.Version;
     begin
-      if v(v'First..v'First+2) = "GPL" then
+      if v (v'First .. v'First + 2) = "GPL" then
         return v;
       else
         return "GMGPL " & v & " (TDM-GCC / MinGW)";
@@ -45,13 +45,13 @@ package body AZip_GWin.Modal_Dialogs is
     --
   begin
     box.Create_Full_Dialog (Window);
-    box.Copyright_label.Text (S2G(AZip_Resource_GUI.Version_info.LegalCopyright));
+    box.Copyright_label.Text (S2G (AZip_Resource_GUI.Version_info.LegalCopyright));
     box.Version_label.Text
-      (S2G(AZip_Resource_GUI.Version_info.FileVersion) & ", built as" &
+      (S2G (AZip_Resource_GUI.Version_info.FileVersion) & ", built as" &
       GWindows.GStrings.To_GString_From_String (Integer'Image (GWindows.Types.Wparam'Size)) &
       " bit app."
       );
-    Create_and_Swap (url_azip, box.AZip_URL, box, S2G(azip_web_page));
+    Create_and_Swap (url_azip, box.AZip_URL, box, S2G (azip_web_page));
     Create_and_Swap (url_gnat, box.GNAT_URL, box, "https://www.adacore.com/community");
     box.GNAT_Version.Text (S2G ("version " & GNAT_Version_string));
     Create_and_Swap (url_gnavi,   box.GNAVI_URL,     box, "http://sf.net/projects/gnavi");

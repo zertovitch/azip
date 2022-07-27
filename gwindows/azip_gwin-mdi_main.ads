@@ -22,12 +22,12 @@ package AZip_GWin.MDI_Main is
                               Item    : in     Integer);
   --  Handle click on toolbar
 
-  type IDM_MRU_List is array(AZip_Common.User_options.MRU_List'Range) of Natural;
+  type IDM_MRU_List is array (AZip_Common.User_options.MRU_List'Range) of Natural;
 
   type MDI_Main_Type is
     new GWindows.Windows.MDI.MDI_Main_Window_Type with
       record
-        Success_in_enumerated_close: Boolean;
+        Success_in_enumerated_close : Boolean;
         --  MRU (Most recently used) files names:
         --  Menu ID's stored into a handy array
         IDM_MRU                : IDM_MRU_List;
@@ -36,9 +36,9 @@ package AZip_GWin.MDI_Main is
         Folders_Images         : GWindows.Image_Lists.Image_List_Type;
         Menu                   : Menu_MDI_Main_Type;
         --  record_dimensions      : Boolean:= False; -- in On_Move, On_Size
-        User_maximize_restore  : Boolean:= True;
+        User_maximize_restore  : Boolean := True;
         --  ^ Detect user-triggered max/restore commands
-        record_dimensions      : Boolean:= False; -- in On_Move, On_Size
+        record_dimensions      : Boolean := False; -- in On_Move, On_Size
         --  Options of a "model" child window.
         opt                    : AZip_Common.User_options.Option_Pack_Type;
         remember_sorting       : Boolean := True;
@@ -54,7 +54,7 @@ package AZip_GWin.MDI_Main is
   overriding procedure On_Create (Window : in out MDI_Main_Type);
   --  Handles setting up icons, menus, etc.
 
-  procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc: Boolean);
+  procedure On_File_New (Window : in out MDI_Main_Type; extra_first_doc : Boolean);
   --  File|New event
 
   procedure On_Move (Window : in out MDI_Main_Type;
@@ -84,21 +84,20 @@ package AZip_GWin.MDI_Main is
 
   overriding procedure On_Menu_Select (
         Window : in out MDI_Main_Type;
-        Item   : in     Integer        );
+        Item   : in     Integer);
 
   overriding procedure On_Close (
         Window    : in out MDI_Main_Type;
-        Can_Close :    out Boolean        );
+        Can_Close :    out Boolean);
 
-  procedure Update_Common_Menus(Window    : in out MDI_Main_Type;
-                                top_entry : GString:= "" );
+  procedure Update_Common_Menus (Window    : in out MDI_Main_Type;
+                                 top_entry :        GString := "");
 
-  function All_Zip_files(File_Names: Array_Of_File_Names) return Boolean;
+  function All_Zip_files (File_Names : Array_Of_File_Names) return Boolean;
 
-  function Confirm_archives_if_all_Zip_files(
-    Window: GWindows.Base.Base_Window_Type'Class;
-    File_Names: Array_Of_File_Names
-  )
+  function Confirm_archives_if_all_Zip_files
+    (Window     : GWindows.Base.Base_Window_Type'Class;
+     File_Names : Array_Of_File_Names)
   return Boolean;
 
 end AZip_GWin.MDI_Main;

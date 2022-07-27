@@ -18,19 +18,19 @@ procedure AZip is
 
   use GWindows.GStrings;
 
-  Top: AZip_GWin.MDI_Main.MDI_Main_Type;
+  Top : AZip_GWin.MDI_Main.MDI_Main_Type;
 
-  procedure Interactive_crash(
+  procedure Interactive_Crash (
     Window : in out GWindows.Base.Base_Window_Type'Class;
-    E: Ada.Exceptions.Exception_Occurrence)
+    E : Ada.Exceptions.Exception_Occurrence)
   is
     pragma Unreferenced (Window);
-    small_insult: constant String:=
+    small_insult : constant String :=
         Ada.Exceptions.Exception_Name (E) & ASCII.LF &
         Ada.Exceptions.Exception_Message (E);
-    insult: constant String:=
+    insult : constant String :=
         small_insult & ASCII.LF &
-        GNAT.Traceback.Symbolic.Symbolic_Traceback(E);
+        GNAT.Traceback.Symbolic.Symbolic_Traceback (E);
     use GWindows.Message_Boxes;
   begin
     GWindows.Base.On_Exception_Handler (Handler => null);  --  Avoid infinite recursion!
@@ -39,10 +39,10 @@ procedure AZip is
         To_GString_From_String (insult),
         OK_Box
       );
-  end Interactive_crash;
+  end Interactive_Crash;
 
 begin
-  GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
+  GWindows.Base.On_Exception_Handler (Handler => Interactive_Crash'Unrestricted_Access);
   Top.Create_MDI_Top (To_GString_From_String (AZip_GWin.Installation.AZip_Title));
   GWindows.Application.Message_Loop;
 end AZip;

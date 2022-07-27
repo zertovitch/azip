@@ -18,18 +18,18 @@ package AZip_Common.Operations is
   subtype Modifying_Operation is Archive_Operation range Add .. Remove;
   subtype Read_Only_Operation is Archive_Operation range Test .. Search;
 
-  function Img is new Enum_Img_Mixed(Archive_Operation);
+  function Img is new Enum_Img_Mixed (Archive_Operation);
 
-  appended    : constant:=  2;
-  updated     : constant:=  2;
-  success     : constant:=  1;
-  only_archive: constant:=  1;
-  replaced    : constant:=  1;
-  nothing     : constant:=  0;
-  bad_crc     : constant:= -1;
-  wrong_pwd   : constant:= -2; -- After N attempts, password was still wrong
-  corrupt     : constant:= -3;
-  unsupported : constant:= -4;
+  appended     : constant :=  2;
+  updated      : constant :=  2;
+  success      : constant :=  1;
+  only_archive : constant :=  1;
+  replaced     : constant :=  1;
+  nothing      : constant :=  0;
+  bad_crc      : constant := -1;
+  wrong_pwd    : constant := -2; -- After N attempts, password was still wrong
+  corrupt      : constant := -3;
+  unsupported  : constant := -4;
 
   --  Convention for operation results set in Zip_info's user_code:
   --
@@ -39,7 +39,7 @@ package AZip_Common.Operations is
   --                        name found (no text search)
   --    Compare      : 0 = same; 1 = different; 2 = missing in the other archive
 
-  function Result_Message (op: Archive_Operation; code: Integer) return String;
+  function Result_Message (op : Archive_Operation; code : Integer) return String;
 
   type Color_Range is new Integer range 0 .. 255;
 
@@ -50,10 +50,10 @@ package AZip_Common.Operations is
       Blue   : Color_Range;
     end record;
 
-  white: constant RGB_Type:= (others => Color_Range'Last);
-  green: constant RGB_Type:=
+  white : constant RGB_Type := (others => Color_Range'Last);
+  green : constant RGB_Type :=
     (Red => 0, Green => (Color_Range'Last * 3) / 4, Blue => 0);
-  yellow: constant RGB_Type:=
+  yellow : constant RGB_Type :=
     (Red   => (Color_Range'Last * 4) / 4,
      Green => (Color_Range'Last * 4) / 5,
      Blue  => 0);
@@ -81,16 +81,15 @@ package AZip_Common.Operations is
     Search
   );
 
-  function Description(
-    e_op      : Entry_Operation;
-    a_op      : Archive_Operation;
-    skip_hint : Boolean
-  )
+  function Description
+    (e_op      : Entry_Operation;
+     a_op      : Archive_Operation;
+     skip_hint : Boolean)
   return UTF_16_String;
 
   type Name_descriptor is record
     str : UTF_16_Unbounded_String;
-    sep : Natural:= 0;
+    sep : Natural := 0;
     --  if sep > 0, it indicates, for an external file name, where to put
     --  the separation for the portion of the path to be matched with zip
     --  entries.

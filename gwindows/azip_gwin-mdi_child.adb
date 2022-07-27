@@ -62,17 +62,17 @@ package body AZip_GWin.MDI_Child is
           return "";
       end case;
     end Destination_image;
-    sel: Natural;
+    sel : Natural;
     is_folder_focused : Boolean;
   begin
-    if not Is_loaded(Window.zif) then
+    if not Is_loaded (Window.zif) then
       Window.Status_Bar.Text ("No archive loaded", 0, Flat);
       return;
     end if;
     --  Here the non-trivial cases.
     is_folder_focused := Folder_Focus (Window);
     if not is_folder_focused then
-      sel:= Window.Directory_List.Selected_Item_Count;
+      sel := Window.Directory_List.Selected_Item_Count;
     end if;
     if Window.MDI_Root.dragging.is_dragging then
       --  Here are the dragging-from-tree or dragging-from-list cases.
@@ -82,22 +82,22 @@ package body AZip_GWin.MDI_Child is
          );
       else
         Window.Status_Bar.Text (
-          "Dragging " & Integer'Wide_Image(sel) &
+          "Dragging " & Integer'Wide_Image (sel) &
           " selected file(s) " & Destination_image, 0, Sunken
          );
       end if;
     else
       --  Cases without dragging
       if is_folder_focused then
-        Text(Window.Status_Bar,"Folder selected",0, Flat);
+        Text (Window.Status_Bar, "Folder selected", 0, Flat);
       elsif sel > 0 then
         Window.Status_Bar.Text (
-          Integer'Wide_Image(Window.Directory_List.Item_Count) &
-            " file(s)," & Integer'Wide_Image(sel) & " selected", 0, Flat
+          Integer'Wide_Image (Window.Directory_List.Item_Count) &
+            " file(s)," & Integer'Wide_Image (sel) & " selected", 0, Flat
          );
       else
         Window.Status_Bar.Text (
-           Integer'Wide_Image(Window.Directory_List.Item_Count) &
+           Integer'Wide_Image (Window.Directory_List.Item_Count) &
             " file(s), none selected", 0, Flat
          );
       end if;
@@ -105,35 +105,35 @@ package body AZip_GWin.MDI_Child is
   end Update_status_bar;
 
   procedure Update_tool_bar_and_menus (Window : in out MDI_Child_Type) is
-    not_empty_archive: constant Boolean:=
-      Is_loaded(Window.zif) and then Entries(Window.zif) > 0;
+    not_empty_archive : constant Boolean :=
+      Is_loaded (Window.zif) and then Entries (Window.zif) > 0;
     is_folder_focused : Boolean;
     is_any_to_delete : Boolean;
-    sel: Natural;
-    bar: MDI_Toolbar_Type renames Window.MDI_Root.Tool_Bar;
+    sel : Natural;
+    bar : MDI_Toolbar_Type renames Window.MDI_Root.Tool_Bar;
     boolean_to_state : constant array (Boolean) of State_Type
       := (True => Enabled, False => Disabled);
   begin
     is_folder_focused := Folder_Focus (Window);
     if not is_folder_focused then
-      sel:= Window.Directory_List.Selected_Item_Count;
+      sel := Window.Directory_List.Selected_Item_Count;
     end if;
     --
-    bar.Enabled(IDM_EXTRACT, not_empty_archive);
+    bar.Enabled (IDM_EXTRACT, not_empty_archive);
     State (Window.Menu.Main,           Command, IDM_EXTRACT, boolean_to_state (not_empty_archive));
     State (Window.context_menu_file,   Command, IDM_EXTRACT, boolean_to_state (not_empty_archive));
     State (Window.context_menu_folder, Command, IDM_EXTRACT, boolean_to_state (not_empty_archive));
     --
     is_any_to_delete := not_empty_archive and then (is_folder_focused or else sel > 0);
-    bar.Enabled(IDM_Delete_selected, is_any_to_delete);
+    bar.Enabled (IDM_Delete_selected, is_any_to_delete);
     State (Window.Menu.Main,           Command, IDM_Delete_selected, boolean_to_state (is_any_to_delete));
     State (Window.context_menu_file,   Command, IDM_Delete_selected, boolean_to_state (is_any_to_delete));
     State (Window.context_menu_folder, Command, IDM_Delete_selected, boolean_to_state (is_any_to_delete));
     --
-    bar.Enabled(IDM_FIND_IN_ARCHIVE,    not_empty_archive);
-    bar.Enabled(IDM_TEST_ARCHIVE,       not_empty_archive);
-    bar.Enabled(IDM_UPDATE_ARCHIVE,     not_empty_archive);
-    bar.Enabled(IDM_RECOMPRESS_ARCHIVE, not_empty_archive);
+    bar.Enabled (IDM_FIND_IN_ARCHIVE,    not_empty_archive);
+    bar.Enabled (IDM_TEST_ARCHIVE,       not_empty_archive);
+    bar.Enabled (IDM_UPDATE_ARCHIVE,     not_empty_archive);
+    bar.Enabled (IDM_RECOMPRESS_ARCHIVE, not_empty_archive);
     --
     State (Window.Menu.Main, Command, IDM_FIND_IN_ARCHIVE,    boolean_to_state (not_empty_archive));
     State (Window.Menu.Main, Command, IDM_TEST_ARCHIVE,       boolean_to_state (not_empty_archive));
@@ -144,23 +144,22 @@ package body AZip_GWin.MDI_Child is
       --  Reactivate buttons that might have been disabled upon
       --  closing of another window. These buttons are valid even
       --  on an undefined (new) or existing, but empty, archive.
-      bar.Enabled(IDM_ADD_FILES, True);
-      bar.Enabled(IDM_Add_Files_Encryption, True);
-      bar.Enabled(IDM_Toggle_Flat_Tree_View, True);
-      bar.Enabled(IDM_Properties, True);
+      bar.Enabled (IDM_ADD_FILES, True);
+      bar.Enabled (IDM_Add_Files_Encryption, True);
+      bar.Enabled (IDM_Toggle_Flat_Tree_View, True);
+      bar.Enabled (IDM_Properties, True);
     end if;
   end Update_tool_bar_and_menus;
 
-  procedure Update_display(
-    Window : in out MDI_Child_Type;
-    need   :        Update_need
-  )
+  procedure Update_display
+    (Window : in out MDI_Child_Type;
+     need   :        Update_need)
   is
 
-    cidx: Column_integer_array renames Window.opt.column_index;
+    cidx : Column_Integer_Array renames Window.opt.column_index;
 
     procedure Clear_List_and_Define_Columns is
-      Lst: Directory_list_type renames Window.Directory_List;
+      Lst : Directory_list_type renames Window.Directory_List;
       --
     begin
       case need is
@@ -174,14 +173,14 @@ package body AZip_GWin.MDI_Child is
         case need is
           when first_display =>
             Lst.Insert_Column (  --  Insert new column
-              Image(topic),
-              cidx(topic) - 1,
+              Image (topic),
+              cidx (topic) - 1,
               Get_column_width_from_options (Window, topic)
             );
           when archive_changed | node_selected =>
             Lst.Set_Column (     --  Change existing column's properties
-              Image(topic),
-              cidx(topic) - 1,
+              Image (topic),
+              cidx (topic) - 1,
               Get_column_width_from_options (Window, topic)
             );
           when results_refresh | status_bar | toolbar_and_menu =>
@@ -192,12 +191,12 @@ package body AZip_GWin.MDI_Child is
 
     --  Window.zif is assumed to be loaded
     --
-    procedure Feed_directory_list(prefix_path: GString) is
-      row, last_row: Integer:= -1;
-      Lst: Directory_list_type renames Window.Directory_List;
-      max_entries : constant Natural := Entries(Window.zif);
+    procedure Feed_directory_list (prefix_path : GString) is
+      row, last_row : Integer := -1;
+      Lst : Directory_list_type renames Window.Directory_List;
+      max_entries : constant Natural := Entries (Window.zif);
       --  This includes potential invisible entries (directory names from Info-Zip, WinZip)
-      result_code : array(0 .. max_entries - 1) of Integer;
+      result_code : array (0 .. max_entries - 1) of Integer;
       --
       procedure Process_Row (
         name_8_bit        : String; -- 'name' is compressed entry's name, with Zip encoding
@@ -214,11 +213,11 @@ package body AZip_GWin.MDI_Child is
       )
       is
         pragma Unreferenced (file_index);
-        name: constant UTF_16_String:= To_UTF_16(name_8_bit, name_encoding);
-        simple_name_idx: Positive:= name'First;
-        previous_idx: Positive:= name'First;
-        extension_idx: Positive:= name'Last + 1;
-        R_mark: constant array (Boolean) of Character:= (' ', 'R');
+        name : constant UTF_16_String := To_UTF_16 (name_8_bit, name_encoding);
+        simple_name_idx : Positive := name'First;
+        previous_idx    : Positive := name'First;
+        extension_idx   : Positive:= name'Last + 1;
+        R_mark : constant array (Boolean) of Character:= (' ', 'R');
         --
         function Encryption_suffix return GString is
         begin
@@ -229,17 +228,17 @@ package body AZip_GWin.MDI_Child is
           end if;
         end Encryption_suffix;
         --
-        w_node, w_parent: Tree_Item_Node;
+        w_node, w_parent : Tree_Item_Node;
         compression_ratio : Long_Float;
         use type Zip_64_Data_Size_Type;
       begin  --  Process_row
-        Scan_for_path:
+        Scan_for_path :
         for i in name'Range loop
-          case name(i) is
+          case name (i) is
             when '/' | '\' =>
               --  Directory separator, ok with Unicode UTF-8 names
-              previous_idx:= simple_name_idx;
-              simple_name_idx:= i + 1;
+              previous_idx := simple_name_idx;
+              simple_name_idx := i + 1;
               --
               --  Feed eventual folder tree
               --
@@ -1770,15 +1769,15 @@ package body AZip_GWin.MDI_Child is
                (Window,
                 "Close file", -- sheet, picture, ...
                 "Do you want to save the changes you made to " &
-                GU2G(Window.Short_Name) & "' ?",
+                GU2G (Window.Short_Name) & "' ?",
                 Yes_No_Cancel_Box,
                 Question_Icon)
         is
-          when Yes    => On_Save(Window);
-                         exit when Is_file_saved(Window);
+          when Yes    => On_Save (Window);
+                         exit when Is_file_saved (Window);
           when No     => exit;
-          when Cancel => Window.MDI_Root.Success_in_enumerated_close:= False;
-                         Can_Close:= False;
+          when Cancel => Window.MDI_Root.Success_in_enumerated_close := False;
+                         Can_Close := False;
                          exit;
           when others => null;
         end case;
@@ -1794,23 +1793,23 @@ package body AZip_GWin.MDI_Child is
           sd                                --  Get direction
         );
         --  We pass the Up/Down direction from the GWindows type to ours.
-        Window.MDI_Root.opt.sort_direction:=
+        Window.MDI_Root.opt.sort_direction :=
           AZip_Common.User_options.Sort_Direction_Type'Value(
-             AZip_LV_Ex.Sort_Direction_Type'Image(sd)
+             AZip_LV_Ex.Sort_Direction_Type'Image (sd)
           );
       end if;
       --  Pass view mode and the tree width portion to parent,
       --  this will memorize choice of last closed window.
-      Window.MDI_Root.opt.view_mode:= Window.opt.view_mode;
-      Memorize_splitter(Window);
-      Window.MDI_Root.opt.tree_portion:= Window.opt.tree_portion;
+      Window.MDI_Root.opt.view_mode := Window.opt.view_mode;
+      Memorize_splitter (Window);
+      Window.MDI_Root.opt.tree_portion := Window.opt.tree_portion;
       --  For the case there is no more child window, disable toolbar items.
       --  This action is reversed as soon as another child window is focused.
-      Window.MDI_Root.Tool_Bar.Enabled(IDM_ADD_FILES, False);
-      Window.MDI_Root.Tool_Bar.Enabled(IDM_Add_Files_Encryption, False);
-      Window.MDI_Root.Tool_Bar.Enabled(IDM_Toggle_Flat_Tree_View, False);
-      Window.MDI_Root.Tool_Bar.Enabled(IDM_Properties, False);
-      Window.is_closing:= True;
+      Window.MDI_Root.Tool_Bar.Enabled (IDM_ADD_FILES, False);
+      Window.MDI_Root.Tool_Bar.Enabled (IDM_Add_Files_Encryption, False);
+      Window.MDI_Root.Tool_Bar.Enabled (IDM_Toggle_Flat_Tree_View, False);
+      Window.MDI_Root.Tool_Bar.Enabled (IDM_Properties, False);
+      Window.is_closing := True;
     end if;
   end On_Close;
 
@@ -1826,7 +1825,7 @@ package body AZip_GWin.MDI_Child is
   begin
     if Window.MDI_Root.dragging.is_dragging then
       declare
-        expl_path: constant GString := Explorer_Path_At_Location (A.X, A.Y);
+        expl_path : constant GString := Explorer_Path_At_Location (A.X, A.Y);
       begin
         if expl_path = "" then
           Set_Cursor (Window.MDI_Root.dragging.cursor_drag_no_way);
@@ -1876,7 +1875,7 @@ package body AZip_GWin.MDI_Child is
     ---------------------------------------------------------------------------
 
     task body Status_display is
-      current_child_window: MDI_Child_Access;
+      current_child_window : MDI_Child_Access;
     begin
       accept Start;
       loop
@@ -1884,10 +1883,10 @@ package body AZip_GWin.MDI_Child is
           accept Stop;
           exit;
         or
-          accept Display(w: MDI_Child_Access) do
-            current_child_window:= w;
+          accept Display (w : MDI_Child_Access) do
+            current_child_window := w;
           end Display;
-          Update_display(current_child_window.all, status_bar);
+          Update_display (current_child_window.all, status_bar);
         or
           delay 0.05; -- relax
         end select;
@@ -1900,7 +1899,7 @@ package body AZip_GWin.MDI_Child is
     -----------------------------------------------------------------
 
     task body Testing_type is
-      current_child_window: MDI_Child_Access;
+      current_child_window : MDI_Child_Access;
       pragma Unreferenced (current_child_window);
     begin
       accept Start;
@@ -1909,8 +1908,8 @@ package body AZip_GWin.MDI_Child is
           accept Stop;
           exit;
         or
-          accept Test(w: MDI_Child_Access) do
-            current_child_window:= w;
+          accept Test (w : MDI_Child_Access) do
+            current_child_window := w;
           end Test;
           --  (perform test)
         or

@@ -15,13 +15,13 @@ with Interfaces;
 
 package body AZip_Common.Operations is
 
-  function Result_Message (op: Archive_Operation; code: Integer) return String
+  function Result_Message (op : Archive_Operation; code : Integer) return String
   is
   begin
     --  Following codes have a single explanation over all operations
     case code is
       when wrong_pwd =>
-        return "Password wrong" & Integer'Image(UnZip.tolerance_wrong_password) & " times";
+        return "Password wrong" & Integer'Image (UnZip.tolerance_wrong_password) & " times";
       when corrupt =>
         return "Compressed data is corrupt";
       when bad_crc =>
@@ -71,12 +71,12 @@ package body AZip_Common.Operations is
             null;
         end case;
       when Search =>
-        return Trim(Integer'Image(code), Left);
+        return Trim (Integer'Image (code), Left);
       when Recompress =>
         if code = nothing then
           return "Cannot recompress more";
         else
-          return "To" & Integer'Image(101 - code) & "% of previous compression";
+          return "To" & Integer'Image (101 - code) & "% of previous compression";
         end if;
     end case;
     --
@@ -86,75 +86,73 @@ package body AZip_Common.Operations is
   max_color : constant Color_Range := Color_Range'Last;
   f_max : constant Float := Float (max_color);
 
-  procedure Result_Color(
-    op        : Archive_Operation;
+  procedure Result_Color
+   (op        : Archive_Operation;
     code      : Integer;
     max_code  : Integer;
     color     : out RGB_Type;
-    intensity : out Float      --  Useful for setting a font black or white given the background
-  )
+    intensity : out Float)      --  Useful for setting a font black or white given the background
   is
-    val: Color_Range;
-    raw_intensity_sq: Natural;
-    max_raw_intensity_sq: constant:= max_color * max_color * 3;
-    code_rel: Float;
+    val : Color_Range;
+    raw_intensity_sq : Natural;
+    max_raw_intensity_sq : constant := max_color * max_color * 3;
+    code_rel : Float;
   begin
     case op is
       when Search =>
         if max_code = 0 or code < 0 then
-          val:= 0;
+          val := 0;
         else
-          code_rel:= Float(code) / Float(max_code);
-          code_rel:= code_rel ** 0.25; -- we skew the value (visual effect)
-          val:= Color_Range (Float'Floor (f_max * code_rel));
+          code_rel := Float (code) / Float (max_code);
+          code_rel := code_rel ** 0.25; -- we skew the value (visual effect)
+          val := Color_Range (Float'Floor (f_max * code_rel));
         end if;
-        color:= (Blue => max_color - val / 4, Red | Green => max_color - val);
+        color := (Blue => max_color - val / 4, Red | Green => max_color - val);
       when Update =>
         case code is
           when updated =>
-            color:= green;
+            color := green;
           when only_archive =>
-            color:= yellow;
+            color := yellow;
           when others =>
-            color:= white;
+            color := white;
         end case;
       when Recompress =>
         if max_code = 0 or code < 0 then
-          color:= white;
+          color := white;
         else
-          code_rel:= Float(code) / Float(max_code);
-          code_rel:= code_rel ** 0.5; -- we skew the value (visual effect)
-          val:= Color_Range (Float'Floor (f_max * code_rel));
-          color:= (Green => max_color - val / 4, Red | Blue => max_color - val);
+          code_rel := Float (code) / Float (max_code);
+          code_rel := code_rel ** 0.5; -- we skew the value (visual effect)
+          val := Color_Range (Float'Floor (f_max * code_rel));
+          color := (Green => max_color - val / 4, Red | Blue => max_color - val);
         end if;
       --  For other operations, we have a simple color code: green or white
       when others =>
         case code is
           when success | appended =>
-            color:= green;
+            color := green;
           when others =>
-            color:= white;
+            color := white;
         end case;
     end case;
     --  Errors are always shown - in red of course!
     case code is
       when wrong_pwd | corrupt | bad_crc | unsupported =>
-        color:= (Red => (max_color * 3) / 4, Green | Blue => 0);
+        color := (Red => (max_color * 3) / 4, Green | Blue => 0);
       when others =>
         null;
     end case;
-    raw_intensity_sq:=
-      Integer(color.Red)   ** 2 +
-      Integer(color.Green) ** 2 +
-      Integer(color.Blue)  ** 2;
-    intensity:= Sqrt(Float(raw_intensity_sq) / Float(max_raw_intensity_sq));
+    raw_intensity_sq :=
+      Integer (color.Red)   ** 2 +
+      Integer (color.Green) ** 2 +
+      Integer (color.Blue)  ** 2;
+    intensity := Sqrt (Float (raw_intensity_sq) / Float (max_raw_intensity_sq));
   end Result_Color;
 
-  function Description(
-    e_op      : Entry_Operation;
-    a_op      : Archive_Operation;
-    skip_hint : Boolean
-  )
+  function Description
+    (e_op      : Entry_Operation;
+     a_op      : Archive_Operation;
+     skip_hint : Boolean)
   return UTF_16_String
   is
   begin
@@ -188,7 +186,7 @@ package body AZip_Common.Operations is
     end case;
   end Description;
 
-  procedure Copy_user_codes (from: Zip.Zip_info; to: in out Zip.Zip_info) is
+  procedure Copy_user_codes (from : Zip.Zip_info; to : in out Zip.Zip_info) is
     procedure Copy_user_code (
       entry_full_name  : String;
       file_index       : Zip_Streams.ZS_Index_Type;
@@ -216,26 +214,26 @@ package body AZip_Common.Operations is
     Do_it (from);
   end Copy_user_codes;
 
-  procedure Set_user_codes (info: in out Zip.Zip_info; code: Integer) is
-    procedure Set_same_user_code (entry_full_name: String) is
+  procedure Set_user_codes (info : in out Zip.Zip_info; code : Integer) is
+    procedure Set_same_user_code (entry_full_name : String) is
     begin
-      Zip.Set_user_code(info, entry_full_name, code);
+      Zip.Set_user_code (info, entry_full_name, code);
     end Set_same_user_code;
     procedure Do_it is new Zip.Traverse (Set_same_user_code);
   begin
     Do_it (info);
   end Set_user_codes;
 
-  function U(Source: Wide_String) return Unbounded_Wide_String
+  function U (Source : Wide_String) return Unbounded_Wide_String
     renames Ada.Strings.Wide_Unbounded.To_Unbounded_Wide_String;
 
-  function Remove_external_path (complete_name: Name_descriptor) return UTF_16_String is
-    s: constant Wide_String:= To_Wide_String(complete_name.str);
+  function Remove_external_path (complete_name : Name_descriptor) return UTF_16_String is
+    s : constant Wide_String := To_Wide_String (complete_name.str);
   begin
     if complete_name.sep = 0 then
-      return Remove_path(s);
+      return Remove_path (s);
     else
-      return s(s'First + complete_name.sep .. s'Last);
+      return s (s'First + complete_name.sep .. s'Last);
     end if;
   end Remove_external_path;
 
@@ -260,9 +258,9 @@ package body AZip_Common.Operations is
     return_code     :    out Operation_return_code
   )
   is
-    new_zip: Zip.Create.Zip_Create_Info;
-    new_fzs: aliased Zip_Streams.File_Zipstream;
-    old_fzs: aliased Zip_Streams.File_Zipstream;
+    new_zip : Zip.Create.Zip_Create_Info;
+    new_fzs : aliased Zip_Streams.File_Zipstream;
+    old_fzs : aliased Zip_Streams.File_Zipstream;
     file_percents_done    : Natural := 0;
     archive_percents_done : Natural := 0;
     processed_entries, total_entries : Natural := 0;
@@ -274,23 +272,23 @@ package body AZip_Common.Operations is
     total_files_with_occurence : Natural := 0;
     --
     procedure Entry_feedback (
-      percents_done:  in Natural;  --  %'s completed
-      entry_skipped:  in Boolean;  --  indicates one can show "skipped", no %'s
-      user_abort   : out Boolean   --  e.g. transmit a "click on Cancel" here
+      percents_done :  in Natural;  --  %'s completed
+      entry_skipped :  in Boolean;  --  indicates one can show "skipped", no %'s
+      user_abort    : out Boolean   --  e.g. transmit a "click on Cancel" here
     )
     is
     begin
       if entry_skipped then
-        file_percents_done:= 0;
+        file_percents_done := 0;
       else
-        file_percents_done:= percents_done;
+        file_percents_done := percents_done;
       end if;
       --  Call the given non-portable feedback box
       --  (Windows GUI, Gtk, Lumen, iOS, console, ...)
       Feedback (
         file_percents_done,
         archive_percents_done + file_percents_done / total_entries,
-        To_Wide_String(current_entry_short_name),
+        To_Wide_String (current_entry_short_name),
         current_operation,
         "", "",
         current_skip_hint,
@@ -298,23 +296,23 @@ package body AZip_Common.Operations is
       );
     end Entry_feedback;
 
-    ignore_case: constant Boolean:= True; -- !! set as an option
+    ignore_case : constant Boolean := True;  --  !! set it as an option
 
     --
     --  Taken from Find_Zip tool in Zip-Ada project.
     --
-    procedure Search_1_file (entry_full_name: String; occ: out Natural) is
-      max: constant:= 2**10;
-      str: String(1..max);  -- str(1..stl) = string to search
-      stl: Natural; -- string length
-      l: Character; -- last character of the search string
+    procedure Search_1_file (entry_full_name : String; occ : out Natural) is
+      max : constant := 2**10;
+      str : String (1 .. max);  -- str(1..stl) = string to search
+      stl : Natural;  --  string length
+      l : Character;  --  last character of the search string
       use UnZip.Streams;
       --  Define a circular buffer
-      siz: constant:= max;
+      siz : constant := max;
       type Buffer_range is mod siz;
-      buf: array(Buffer_range) of Character:= (others => ' ');
-      bup: Buffer_range:= 0;
-      cancelled: Boolean;
+      buf : array (Buffer_range) of Character := (others => ' ');
+      bup : Buffer_range := 0;
+      cancelled : Boolean;
       --  We define a local, ad-hoc stream type.
       --
       type Search_stream is new Ada.Streams.Root_Stream_Type with null record;
@@ -339,42 +337,42 @@ package body AZip_Common.Operations is
          Item         : in     Ada.Streams.Stream_Element_Array)
       is
         pragma Unreferenced (Write_Stream);
-        c: Character;
-        i: Buffer_range:= 0;
-        j: Natural;
+        c : Character;
+        i : Buffer_range := 0;
+        j : Natural;
       begin
         for sei in Item'Range loop
-          c:= Character'Val(Item(sei));
+          c := Character'Val (Item (sei));
           if ignore_case then
-            c:= To_Upper(c);
+            c := To_Upper (c);
           end if;
           if c = l then -- last character do match, search further...
-            i:= bup;
-            j:= stl;
-            match: loop
-              i:= i-1;  --  this loops modulo max: 3, 2, 1, 0, max-1, max-2, ...
-              j:= j-1;
+            i := bup;
+            j := stl;
+            match : loop
+              i := i - 1;  --  this loops modulo max: 3, 2, 1, 0, max-1, max-2, ...
+              j := j - 1;
               if j = 0 then -- we survived the whole search string
-                occ:= occ+1;
+                occ := occ + 1;
                 exit match;
               end if;
-              exit match when str(j) /= buf(i);
+              exit match when str (j) /= buf (i);
             end loop match;
           end if;
-          buf(bup):= c;
-          bup:= bup+1;
+          buf (bup) := c;
+          bup := bup + 1;
         end loop;
       end Write;
 
-      sst: Search_stream;
+      sst : Search_stream;
 
     begin
       --  First we copy the string
       -- !! wide or not : what to do ? --
-      stl:= 0;
+      stl := 0;
       for w in search_pattern'Range loop
-        stl:= stl + 1;
-        str(stl):= To_Character(search_pattern(w)); -- !! lazy conversion
+        stl := stl + 1;
+        str (stl) := To_Character(search_pattern(w)); -- !! lazy conversion
         if ignore_case then
           str(stl):= To_Upper(str(stl));
         end if;
@@ -1162,17 +1160,17 @@ package body AZip_Common.Operations is
       encrypted_2_x);
     begin
       case user_code is
-        when success => count_ok:= count_ok + 1;
-        when nothing => count_nt:= count_nt + 1; -- happens if cancelled
-        when others  => count_ko:= count_ko + 1;
+        when success => count_ok := count_ok + 1;
+        when nothing => count_nt := count_nt + 1; -- happens if cancelled
+        when others  => count_ko := count_ko + 1;
       end case;
     end Action;
     procedure Count_Totals is new Zip.Traverse_verbose (Action);
   begin
-    count_ok:= 0;
-    count_ko:= 0;
-    count_nt:= 0;
-    Count_Totals(archive);
+    count_ok := 0;
+    count_ko := 0;
+    count_nt := 0;
+    Count_Totals (archive);
   end Count_test_totals;
 
 end AZip_Common.Operations;

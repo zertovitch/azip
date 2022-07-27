@@ -20,11 +20,11 @@ if (%1)==() set target=_GPL
 if (%1)==() echo Option for alternative compiler "%1"
 
 del azip.exe
-%builder% -P azip_gwindows -XBuild_Mode=Debug%target%
+%builder% -P azip_gwindows -XAZip_Build_Mode=Debug%target%
 copy azip.exe AZip_Debug%target%.exe
 
 del azip.exe
-%builder% -P azip_gwindows azip -XBuild_Mode=Fast%target%
+%builder% -P azip_gwindows azip -XAZip_Build_Mode=Fast%target%
 ren azip.exe AZip.exe
 copy AZip.exe "AZip (ver) win32%target%.exe"
 rem upx --ultra-brute "AZip (ver) win32.exe"

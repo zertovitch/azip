@@ -10,15 +10,15 @@ package body AZip_GWin.Persistence is
   --  Registry persistence  --
   ----------------------------
 
-  kname: constant GString:= "Software\AZip";
+  kname : constant GString := "Software\AZip";
   use GWindows.Registry;
 
-  function Read_reg_key (topic: Wide_String) return Wide_String is
+  function Read_reg_key (topic : Wide_String) return Wide_String is
   begin
     return Get_Value (kname, topic, HKEY_CURRENT_USER);
   end Read_reg_key;
 
-  procedure Write_reg_key (topic: Wide_String; value: Wide_String) is
+  procedure Write_reg_key (topic : Wide_String; value : Wide_String) is
   begin
     Register (kname, topic, value, HKEY_CURRENT_USER);
   end Write_reg_key;
@@ -31,30 +31,30 @@ package body AZip_GWin.Persistence is
   --------------------------------------
 
   function Config_name return String is
-    full: constant String:= Ada.Command_Line.Command_Name;
-    last: Natural:= full'First-1;
+    full : constant String := Ada.Command_Line.Command_Name;
+    last : Natural := full'First - 1;
   begin
     for i in full'Range loop
-      if full(i)='\' or full(i)='/' then
-        last:= i;
+      if full (i) = '\' or full (i) = '/' then
+        last := i;
       end if;
     end loop;
-    return full(full'First..last) & "azip.cfg";
+    return full (full'First .. last) & "azip.cfg";
   end Config_name;
 
-  azip_section: constant String := "AZip user options";
+  azip_section : constant String := "AZip user options";
 
   procedure Create_new_config;
 
-  function Read_cfg_key (topic: Wide_String) return Wide_String is
-    cfg: Config.Configuration;
+  function Read_cfg_key (topic : Wide_String) return Wide_String is
+    cfg : Config.Configuration;
   begin
     cfg.Init (Config_name);
     return To_GString_From_String (cfg.Value_Of ("*", To_String (topic)));
   end Read_cfg_key;
 
-  procedure Write_cfg_key (topic: Wide_String; value: Wide_String) is
-    cfg: Config.Configuration;
+  procedure Write_cfg_key (topic : Wide_String; value : Wide_String) is
+    cfg : Config.Configuration;
   begin
     cfg.Init (Config_name);
     for attempt in 1 .. 2 loop
@@ -74,7 +74,7 @@ package body AZip_GWin.Persistence is
     AZip_Common.User_options.Persistence (Read_cfg_key, Write_cfg_key);
 
   procedure Create_new_config is
-    nf: File_Type;
+    nf : File_Type;
   begin
     Create (nf, Out_File, Config_name);
     Put_Line(nf, ";  This is the configuration file for AZip, in the ""no trace in registry"" mode.");

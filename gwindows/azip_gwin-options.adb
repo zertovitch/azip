@@ -16,8 +16,8 @@ package body AZip_GWin.Options is
 
   procedure On_General_Options (main : in out MDI_Main_Type) is
     --
-    box: Option_box_Type;
-    candidate: Option_Pack_Type:= main.opt;
+    box : Option_box_Type;
+    candidate : Option_Pack_Type := main.opt;
     --
     procedure Set_Data is
     begin

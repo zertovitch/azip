@@ -118,14 +118,14 @@ package body AZip_GWin.Directory_Lists is
     timing : constant Boolean := False;
     use Ada.Calendar;
     t0, t1 : Ada.Calendar.Time;
-    window : MDI_Child_Type renames MDI_Child_Type(Control.Parent.Parent.Parent.all);
+    window : MDI_Child_Type renames MDI_Child_Type (Control.Parent.Parent.Parent.all);
   begin
     if timing then
       t0 := Clock;
     end if;
     --  Get the inverse of opt.column_index:
     for t in Entry_topic loop
-      Control.curr_col_topic(window.opt.column_index(t)-1) := t;
+      Control.curr_col_topic (window.opt.column_index (t) - 1) := t;
     end loop;
     --  Call parent method, but with the `General` comparison technique,
     --  which avoids strings if possible.
@@ -134,8 +134,8 @@ package body AZip_GWin.Directory_Lists is
     --
     if timing then
       t1 := Clock;
-      MDI_Child_Type(Control.Parent.Parent.Parent.all).Status_Bar.Text (
-        Duration'Wide_Image (t1-t0)
+      MDI_Child_Type (Control.Parent.Parent.Parent.all).Status_Bar.Text (
+        Duration'Wide_Image (t1 - t0)
       );
     end if;
   end Sort;

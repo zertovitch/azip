@@ -33,7 +33,7 @@ package AZip_GWin.MDI_Child is
       ---------------------------------------------------------------------------
       task type Status_display is
          entry Start;
-         entry Display(w: AZip_GWin.MDI_Child.MDI_Child_Access);
+         entry Display (w : AZip_GWin.MDI_Child.MDI_Child_Access);
          entry Stop;
       end Status_display;
 
@@ -43,12 +43,12 @@ package AZip_GWin.MDI_Child is
       -----------------------------------------------------------------
       task type Testing_type is
          entry Start;
-         entry Test(w: AZip_GWin.MDI_Child.MDI_Child_Access);
+         entry Test (w : AZip_GWin.MDI_Child.MDI_Child_Access);
          entry Stop;
       end Testing_type;
    end Daemons;
 
-  type MDI_Child_Status_bar_part is ( directory_info, task_message );
+  type MDI_Child_Status_Bar_Part is (directory_info, task_message);
 
   type MDI_Child_Status_Bar_Type is
     new GWindows.Common_Controls.Status_Bar_Type with null record;
@@ -83,7 +83,7 @@ package AZip_GWin.MDI_Child is
         Short_Name          : GString_Unbounded;
         --  ^ Window title = Short_Name & {""|" *"}
         MDI_Root            : MDI_Main_Access; -- -> access to the containing window
-        Extra_first_doc     : Boolean:= False;
+        Extra_first_doc     : Boolean := False;
         --  ^ new file closed if kept virgin when opening another one (like blank Excel sheet).
         Menu                : Menu_MDI_Child_Type;
         context_menu_file   : Menu_Type := Create_Popup;
@@ -96,7 +96,7 @@ package AZip_GWin.MDI_Child is
         zif                 : Zip.Zip_info;
         path_map            : AZip_Common.Path_Catalogues.Map;
         node_map            : AZip_Common.Node_Catalogues.Map;
-        selected_path       : GString_Unbounded:= Null_GString_Unbounded;
+        selected_path       : GString_Unbounded := Null_GString_Unbounded;
         opt                 : Option_Pack_Type;
         Status_deamon       : Daemons.Status_display;
         Status_Bar          : MDI_Child_Status_Bar_Type;
@@ -104,11 +104,11 @@ package AZip_GWin.MDI_Child is
         content_search      : GString_Unbounded;
         current_password    : GString_Unbounded;
         temp_name_gen       : Ada.Numerics.Float_Random.Generator;
-        last_operation      : Archive_Operation:= Remove;
+        last_operation      : Archive_Operation := Remove;
         last_max_code       : Integer;
         any_path_in_zip     : Boolean;
         extract_dir         : GString_Unbounded;
-        is_closing          : Boolean:= False;
+        is_closing          : Boolean := False;
         last_op_comment_1   : GString_Unbounded;
         last_op_comment_2   : GString_Unbounded;
       end record;
@@ -196,7 +196,7 @@ package AZip_GWin.MDI_Child is
         Y      : in     Integer;
         Keys   : in     Mouse_Key_States);
 
-  procedure Update_Common_Menus(Window : MDI_Child_Type;
-                                top_entry : GString:= "" );
+  procedure Update_Common_Menus (Window    : MDI_Child_Type;
+                                 top_entry : GString := "");
 
 end AZip_GWin.MDI_Child;

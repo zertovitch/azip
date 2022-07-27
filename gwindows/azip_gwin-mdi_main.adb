@@ -29,32 +29,31 @@ package body AZip_GWin.MDI_Main is
 
   use type GString_Unbounded;
 
-  procedure Focus_an_already_opened_window(
-    Window    : MDI_Main_Type;
-    File_Name : GString_Unbounded;
-    is_open   : out Boolean )
+  procedure Focus_an_already_opened_window
+    (Window    : MDI_Main_Type;
+     File_Name : GString_Unbounded;
+     is_open   : out Boolean)
   is
-    procedure Identify (Window : GWindows.Base.Pointer_To_Base_Window_Class)
+    procedure Identify (Child_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
     begin
-      if Window.all in MDI_Child_Type'Class then
+      if Child_Window.all in MDI_Child_Type'Class then
         declare
-          pw: MDI_Child_Type renames MDI_Child_Type(Window.all);
+          pw : MDI_Child_Type renames MDI_Child_Type (Child_Window.all);
         begin
           if pw.File_Name = File_Name then
-            is_open:= True;
-            Focus(pw);
+            is_open := True;
+            Focus (pw);
           end if;
         end;
       end if;
     end Identify;
 
   begin
-    is_open:= False;
-    Enumerate_Children(
-      MDI_Client_Window (Window).all,
-      Identify'Unrestricted_Access
-    );
+    is_open := False;
+    Enumerate_Children
+      (MDI_Client_Window (Window).all,
+       Identify'Unrestricted_Access);
   end Focus_an_already_opened_window;
 
   procedure Redraw_Child (Window : GWindows.Base.Pointer_To_Base_Window_Class)
@@ -66,41 +65,41 @@ package body AZip_GWin.MDI_Main is
     end if;
   end Redraw_Child;
 
-  procedure Redraw_all(Window: in out MDI_Main_Type) is
+  procedure Redraw_all (Window : in out MDI_Main_Type) is
   begin
     Window.Redraw;
     --  Redraw(Window.Tool_bar);
-    Enumerate_Children(MDI_Client_Window (Window).all,Redraw_Child'Access);
+    Enumerate_Children (MDI_Client_Window (Window).all, Redraw_Child'Access);
   end Redraw_all;
 
-  procedure Close_extra_first_child(Window : GWindows.Base.Pointer_To_Base_Window_Class)
+  procedure Close_extra_first_child (Window : GWindows.Base.Pointer_To_Base_Window_Class)
   is
   begin
     if Window.all in MDI_Child_Type'Class then
       declare
-        w: MDI_Child_Type renames MDI_Child_Type(Window.all);
+        w : MDI_Child_Type renames MDI_Child_Type (Window.all);
       begin
-        if w.Extra_first_doc and Is_file_saved(w) then
+        if w.Extra_first_doc and Is_file_saved (w) then
           Window.Close;
         end if;
       end;
     end if;
   end Close_extra_first_child;
 
-  procedure Close_extra_first_child(Window: in out MDI_Main_Type) is
+  procedure Close_extra_first_child (Window : in out MDI_Main_Type) is
   begin
-    Enumerate_Children(MDI_Client_Window (Window).all,Close_extra_first_child'Access);
+    Enumerate_Children (MDI_Client_Window (Window).all, Close_extra_first_child'Access);
   end Close_extra_first_child;
 
-  procedure Finish_subwindow_opening(
-    m : in out MDI_Main_Type;
-    c : in out MDI_Child_Type )
+  procedure Finish_subwindow_opening
+    (m : in out MDI_Main_Type;
+     c : in out MDI_Child_Type)
   is
   begin
-    m.User_maximize_restore:= True;
+    m.User_maximize_restore := True;
     if m.opt.MDI_childen_maximized then
-      Zoom(c);
-      Redraw_all(m);
+      Zoom (c);
+      Redraw_all (m);
     end if;
     --  Show things in the main status bar - effective only after Thaw!
   end Finish_subwindow_opening;
@@ -111,21 +110,21 @@ package body AZip_GWin.MDI_Main is
     File_Title :        GWindows.GString_Unbounded
   )
   is
-    is_open: Boolean;
+    is_open : Boolean;
   begin
-    Focus_an_already_opened_window( Window, File_Name, is_open );
+    Focus_an_already_opened_window (Window, File_Name, is_open);
     if is_open then
-      return;        -- nothing to do, archive already in a window
+      return;        --  nothing to do, archive already in a window
     end if;
-    case Is_valid_Zip_archive(To_UTF_8(GU2G(File_Name))) is
+    case Is_valid_Zip_archive (To_UTF_8 (GU2G (File_Name))) is
       when valid =>
         null;
       when with_case_sensitive_duplicates =>
         --  Added 24-Mar-2016. Some crazenuts use archives with identical entry names...
-        if Message_Box(
+        if Message_Box (
           Window,
           "Zip archive with duplicate full names",
-          "Archive " & GU2G(File_Name) & NL &
+          "Archive " & GU2G (File_Name) & NL &
           "contains at least one case of a pair of identical names; this may cause problems." &
           NL & NL &
           "Continue opening ?",
@@ -136,20 +135,20 @@ package body AZip_GWin.MDI_Main is
           return;
         end if;
       when invalid =>
-        Message_Box(
+        Message_Box (
           Window,
           "Invalid zip archive",
-          "File " & GU2G(File_Name) & NL &
+          "File " & GU2G (File_Name) & NL &
           "is not a valid zip archive. Eventually, it's a ZIP64 archive.",
           OK_Box,
           Error_Icon
         );
         return;
       when file_doesnt_exist =>
-        Message_Box(
+        Message_Box (
           Window,
           "Zip archive issue",
-          "File " & GU2G(File_Name) & NL &
+          "File " & GU2G (File_Name) & NL &
           "doesn't exist, or is locked.",
           OK_Box,
           Error_Icon
@@ -160,27 +159,27 @@ package body AZip_GWin.MDI_Main is
       New_Window : constant MDI_Child_Access := new MDI_Child_Type;
     begin
       --  We do here like Excel or Word: close the unused blank window
-      Close_extra_first_child(Window);
+      Close_extra_first_child (Window);
       --
-      Window.User_maximize_restore:= False;
-      New_Window.File_Name:= File_Name;
+      Window.User_maximize_restore := False;
+      New_Window.File_Name := File_Name;
       if Window.opt.extract_directory = "" then
         --  First suggested extract directory is the archive's directory.
-        New_Window.extract_dir:= G2GU(Give_path(GU2G(File_Name)));
+        New_Window.extract_dir := G2GU (Give_path (GU2G (File_Name)));
       else
         --  A default extract directory is set as option.
-        New_Window.extract_dir:= Window.opt.extract_directory;
+        New_Window.extract_dir := Window.opt.extract_directory;
       end if;
       Create_MDI_Child (New_Window.all,
         Window,
-        GU2G(File_Title),
+        GU2G (File_Title),
         Is_Dynamic => True
       );
-      New_Window.Short_Name:= File_Title;
+      New_Window.Short_Name := File_Title;
       MDI_Active_Window (Window, New_Window.all);
-      Update_Common_Menus(Window, GU2G(New_Window.File_Name));
-      New_Window.Load_archive_catalogue(False);
-      Finish_subwindow_opening(Window, New_Window.all);
+      Update_Common_Menus (Window, GU2G (New_Window.File_Name));
+      New_Window.Load_archive_catalogue (False);
+      Finish_subwindow_opening (Window, New_Window.all);
       New_Window.Focus;
     end;
   exception
@@ -192,34 +191,35 @@ package body AZip_GWin.MDI_Main is
 --        Icon => Exclamation_Icon
 --      );
     when Ada.Text_IO.Name_Error =>
-      Message_Box(Window, "Error", "Archive file not found", Icon => Exclamation_Icon);
+      Message_Box (Window, "Error", "Archive file not found", Icon => Exclamation_Icon);
   end Open_Child_Window_And_Load;
 
   procedure On_Button_Select (
         Control : in out MDI_Toolbar_Type;
-        Item    : in     Integer           ) is
+        Item    : in     Integer)
+  is
     Parent : constant MDI_Main_Access := MDI_Main_Access (Controlling_Parent (Control));
   begin
     On_Menu_Select (Parent.all, Item);
   end On_Button_Select;
 
-  function Shorten_file_name( s: GString ) return GString is
-    max: constant:= 33;
-    beg: constant:= 6;
+  function Shorten_file_name (s : GString) return GString is
+    max : constant := 33;
+    beg : constant := 6;
   begin
     if s'Length < max then
       return s;
     else
       return
-        s(s'First .. s'First + beg-1) &       -- beg
-        "..." &                               -- 3
-        s(s'Last - max + beg + 1 .. s'Last);  -- max - beg - 3
+        s (s'First .. s'First + beg - 1) &       --  beg
+        "..." &                                  --  3
+        s (s'Last - max + beg + 1 .. s'Last);    --  max - beg - 3
     end if;
   end Shorten_file_name;
 
   procedure Open_Child_Window_And_Load (
         Window     : in out MDI_Main_Type;
-        File_Name  :        GWindows.GString_Unbounded ) is
+        File_Name  :        GWindows.GString_Unbounded) is
   begin
     Open_Child_Window_And_Load(
       Window,
@@ -228,7 +228,7 @@ package body AZip_GWin.MDI_Main is
     );
   end Open_Child_Window_And_Load;
 
-  function Valid_Left_Top(Left, Top: Integer)
+  function Valid_Left_Top (Left, Top : Integer)
     return Boolean
   is
   begin
@@ -245,7 +245,7 @@ package body AZip_GWin.MDI_Main is
     --
     --  Replace AZip default values by system-dependent ones (here those of GWindows)
     --
-    procedure Replace_default(x: in out Integer) is
+    procedure Replace_default (x : in out Integer) is
     begin
       if x = AZip_Common.User_options.use_default then
         x:= GWindows.Constants.Use_Default;
@@ -254,20 +254,20 @@ package body AZip_GWin.MDI_Main is
     --
   begin
     AZip_GWin.Persistence.Load (Window.opt);
-    Replace_default(Window.opt.win_left);
-    Replace_default(Window.opt.win_width);
-    Replace_default(Window.opt.win_top);
-    Replace_default(Window.opt.win_height);
+    Replace_default (Window.opt.win_left);
+    Replace_default (Window.opt.win_width);
+    Replace_default (Window.opt.win_top);
+    Replace_default (Window.opt.win_height);
 
     Small_Icon (Window, "AAA_Main_Icon");
     Large_Icon (Window, "AAA_Main_Icon");
 
     --  ** Menus and accelerators:
 
-    AZip_Resource_GUI.Create_Full_Menu(Window.Menu);
+    AZip_Resource_GUI.Create_Full_Menu (Window.Menu);
     MDI_Menu (Window, Window.Menu.Main, Window_Menu => 3);
     Accelerator_Table (Window, "Main_Menu");
-    Window.IDM_MRU:=
+    Window.IDM_MRU :=
       (IDM_MRU_1,       IDM_MRU_2,       IDM_MRU_3,       IDM_MRU_4,
        IDM_MRU_5,       IDM_MRU_6,       IDM_MRU_7,       IDM_MRU_8,
        IDM_MRU_9
@@ -275,22 +275,22 @@ package body AZip_GWin.MDI_Main is
 
     --  ** Main tool bar (add / remove / ...) at top left of the main window:
 
-    AZip_GWin.Toolbars.Init_Main_toolbar(Window.Tool_Bar, Window.Toolbar_Images, Window);
+    AZip_GWin.Toolbars.Init_Main_Toolbar (Window.Tool_Bar, Window.Toolbar_Images, Window);
 
     --  ** Other resources
-    Window.Folders_Images.Create (Num_resource(Folders_BMP), 16);
+    Window.Folders_Images.Create (Num_resource (Folders_BMP), 16);
 
     --  ** Resize according to options:
 
-    if Valid_Left_Top(Window.opt.win_left, Window.opt.win_top) then
-      Left(Window, Window.opt.win_left);
-      Top( Window, Window.opt.win_top);
+    if Valid_Left_Top (Window.opt.win_left, Window.opt.win_top) then
+      Left (Window, Window.opt.win_left);
+      Top  (Window, Window.opt.win_top);
     end if;
-    Size(Window,
+    Size (Window,
       Integer'Max(400, Window.opt.win_width),
       Integer'Max(200, Window.opt.win_height)
     );
-    Zoom(Window,Window.opt.MDI_main_maximized);
+    Zoom (Window, Window.opt.MDI_main_maximized);
 
     Window.Dock_Children;
     Window.Show;
@@ -312,7 +312,7 @@ package body AZip_GWin.MDI_Main is
     end if;
     --  Dropping files on the background will trigger creating an archive:
     Window.Accept_File_Drag_And_Drop;
-    Window.record_dimensions:= True;
+    Window.record_dimensions := True;
     --
     begin
       Window.Task_bar_gadget.Set_Progress_State (Window, No_Progress);
@@ -676,9 +676,9 @@ package body AZip_GWin.MDI_Main is
                                 top_entry : GString:= "" ) is
   begin
     if top_entry /= "" then
-      Add_MRU(Window, top_entry);
+      Add_MRU (Window, top_entry);
     end if;
-    Update_MRU_Menu(Window, Window.Menu.Popup_0001);
+    Update_MRU_Menu (Window, Window.Menu.Popup_0001);
     --  Update_Toolbar_Menu(Window.View_menu, Window.Floating_toolbars);
     GWindows.Base.Enumerate_Children(
       MDI_Client_Window (Window).all,
@@ -686,21 +686,20 @@ package body AZip_GWin.MDI_Main is
     );
   end Update_Common_Menus;
 
-  function All_Zip_files(File_Names: Array_Of_File_Names) return Boolean is
-    all_valid, empty: Boolean:= True;
+  function All_Zip_files (File_Names : Array_Of_File_Names) return Boolean is
+    all_valid, empty : Boolean := True;
   begin
     for i in File_Names'Range loop
-      empty:= False;
-      all_valid:= all_valid and
-        Is_valid_Zip_archive(To_UTF_8(GU2G(File_Names(i)))) = valid;
+      empty := False;
+      all_valid := all_valid and
+        Is_valid_Zip_archive (To_UTF_8 (GU2G (File_Names (i)))) = valid;
     end loop;
     return all_valid and not empty;
   end All_Zip_files;
 
-  function Confirm_archives_if_all_Zip_files(
-    Window : GWindows.Base.Base_Window_Type'Class;
-    File_Names : Array_Of_File_Names
-  )
+  function Confirm_archives_if_all_Zip_files
+    (Window     : GWindows.Base.Base_Window_Type'Class;
+     File_Names : Array_Of_File_Names)
   return Boolean
   is
     answer : Message_Box_Result;

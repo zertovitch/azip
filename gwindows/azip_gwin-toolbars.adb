@@ -91,7 +91,8 @@ package body AZip_GWin.Toolbars is
 
     Create_Full_Menu (Fake_Menu);
     Create_Full_Menu (Super_Fake_Menu);
-    Add_Button_with_Tip (10, IDM_NEW_ARCHIVE);
+    --  "New Archive" is seldom used -> out of the toolbar, stays in the menu.
+    --  Add_Button_with_Tip (10, IDM_NEW_ARCHIVE);
     Add_Button_with_Tip (11, IDM_OPEN_ARCHIVE);
     Add_Button_with_Tip  (2, IDM_EXTRACT);
     Add_Separator (tb, sep_width);

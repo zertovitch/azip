@@ -1,46 +1,50 @@
-with AZip_Common;                       use AZip_Common;
-with AZip_GWin.Columns;                 use AZip_GWin.Columns;
-with AZip_GWin.Dragging;                use AZip_GWin.Dragging;
-with AZip_GWin.Drop_file_dialog;        use AZip_GWin.Drop_file_dialog;
-with AZip_GWin.Installation;
-with AZip_GWin.Password_dialogs;        use AZip_GWin.Password_dialogs;
-with AZip_GWin.Properties;
+with AZip_Common,
+     AZip_GWin.Columns,
+     AZip_GWin.Dragging,
+     AZip_GWin.Drop_file_dialog,
+     AZip_GWin.Installation,
+     AZip_GWin.Password_dialogs,
+     AZip_GWin.Properties;
 
-with Zip_Streams;
-with UnZip;
-with Zip_time_display;
+with UnZip,
+     Zip_Streams;
 
-with GWindows.Application;              use GWindows.Application;
-with GWindows.Base;                     use GWindows.Base;
-with GWindows.Buttons;                  use GWindows.Buttons;
-with GWindows.Colors;
-with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
-with GWindows.Constants;                use GWindows.Constants;
-with GWindows.Cursors;                  use GWindows.Cursors;
-with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
-with GWindows.Static_Controls;
-with GWindows.Taskbar;
+with GWindows.Application,
+     GWindows.Base,
+     GWindows.Buttons,
+     GWindows.Colors,
+     GWindows.Common_Dialogs,
+     GWindows.Constants,
+     GWindows.Cursors,
+     GWindows.Message_Boxes,
+     GWindows.Static_Controls,
+     GWindows.Taskbar;
 
-with Ada.Calendar;
-with Ada.Directories;
-with Ada.Environment_Variables;         use Ada.Environment_Variables;
-with Ada.Exceptions;
-with Ada.IO_Exceptions;
-with Ada.Sequential_IO;
-with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
-with Ada.Strings.Wide_Fixed;
-with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
-with Ada.Unchecked_Conversion;
-with Ada.Unchecked_Deallocation;
+with Ada.Calendar,
+     Ada.Directories,
+     Ada.Environment_Variables,
+     Ada.Exceptions,
+     Ada.IO_Exceptions,
+     Ada.Sequential_IO,
+     Ada.Strings.Fixed,
+     Ada.Strings.Wide_Fixed,
+     Ada.Strings.Wide_Unbounded,
+     Ada.Unchecked_Conversion,
+     Ada.Unchecked_Deallocation;
 
 with Interfaces;
 
 with Set_Modification_Time_GNAT;
+with Zip_time_display;
 
 package body AZip_GWin.MDI_Child is
 
-  use AZip_GWin.Directory_Lists, Zip;
+  use AZip_Common;
+  use AZip_GWin.Columns, AZip_GWin.Directory_Lists,
+      AZip_GWin.Dragging, AZip_GWin.Password_dialogs;
+  use Zip;
+  use GWindows.Application, GWindows.Base, GWindows.Common_Dialogs, GWindows.Message_Boxes;
+  use Ada.Strings, Ada.Strings.Fixed, Ada.Strings.Wide_Unbounded;
 
   function Folder_Focus (Window : in MDI_Child_Type) return Boolean is
   begin
@@ -962,7 +966,8 @@ package body AZip_GWin.MDI_Child is
           Float'Image (Ada.Numerics.Float_Random.Random (Window.temp_name_gen));
         num : constant String := num0 (num0'First + 1 .. num0'Last);
         --  ^ Skip the @#*% leading space
-        test_name : constant String := Value ("TEMP") & "\AZip_Temp_" & num & ".zip";
+        test_name : constant String :=
+          Ada.Environment_Variables.Value ("TEMP") & "\AZip_Temp_" & num & ".zip";
       begin
         if not Ada.Directories.Exists (test_name) then
           return test_name;
@@ -1041,13 +1046,12 @@ package body AZip_GWin.MDI_Child is
         Open_Child_Window_And_Load (parent.all, File_Names (i));
       end loop;
     else
-      Do_drop_file_dialog (
-        Parent         => Window,
-        archive_name   => GU2G (Window.Short_Name) & Eventual_folder,
-        new_archive    => not Is_loaded (Window.zif),
-        encrypt        => encrypt,
-        yes            => is_yes
-      );
+      AZip_GWin.Drop_file_dialog.Do_drop_file_dialog
+        (Parent         => Window,
+         archive_name   => GU2G (Window.Short_Name) & Eventual_folder,
+         new_archive    => not Is_loaded (Window.zif),
+         encrypt        => encrypt,
+         yes            => is_yes);
       if is_yes then
         if not Is_loaded (Window.zif) then
           Window.On_Save_As;
@@ -1230,7 +1234,7 @@ package body AZip_GWin.MDI_Child is
     return_code : Operation_return_code;
   begin
     if not Is_loaded (Window.zif) then
-      return; -- No archive, then nothing to do
+      return;  --  No archive, then nothing to do
     end if;
     if dropped then
       dir := G2GU (Explorer_Path_At_Location (drop_X, drop_Y));
@@ -1247,10 +1251,16 @@ package body AZip_GWin.MDI_Child is
         return;
       end if;
     else
-      dir := G2GU (Get_Directory (
-        Window       => Window,
-        Dialog_Title => Archive_extract_msg & " to...",
-        Initial_Path => GU2G (Window.extract_dir)));
+      declare
+        initial_path : constant GString := GU2G (Window.extract_dir);
+        title        : constant GString := Archive_extract_msg & " to...";
+      begin
+        dir := G2GU
+          (Get_Directory
+            (Window       => Window,
+             Dialog_Title => title,
+             Initial_Path => initial_path));
+      end;
     end if;
     if dir = "" then
       return;
@@ -1433,7 +1443,7 @@ package body AZip_GWin.MDI_Child is
     box.Center;
     box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
     box.Name_to_be_searched.Focus;
-    if Show_Dialog (box, Window) = IDOK then
+    if Show_Dialog (box, Window) = GWindows.Constants.IDOK then
       Process_Archive_GWin (
         Window         => Window,
         operation      => Search,
@@ -1830,10 +1840,10 @@ package body AZip_GWin.MDI_Child is
         expl_path : constant GString := Explorer_Path_At_Location (A.X, A.Y);
       begin
         if expl_path = "" then
-          Set_Cursor (Window.MDI_Root.dragging.cursor_drag_no_way);
+          GWindows.Cursors.Set_Cursor (Window.MDI_Root.dragging.cursor_drag_no_way);
           Window.MDI_Root.dragging.destination := to_nowhere;
         else
-          Set_Cursor (Window.MDI_Root.dragging.cursor_drag_unpack);
+          GWindows.Cursors.Set_Cursor (Window.MDI_Root.dragging.cursor_drag_unpack);
           if Is_Desktop_At_Location (A.X, A.Y) then
             Window.MDI_Root.dragging.destination := to_desktop;
           else
@@ -1857,7 +1867,7 @@ package body AZip_GWin.MDI_Child is
       Point_To_Desktop (Window, (X, Y));
   begin
     if Window.MDI_Root.dragging.is_dragging then
-      Set_Cursor (Window.MDI_Root.dragging.cursor_arrow);
+      GWindows.Cursors.Set_Cursor (Window.MDI_Root.dragging.cursor_arrow);
       Release_Mouse;
       case Window.MDI_Root.dragging.destination is
         when to_desktop | to_explorer =>

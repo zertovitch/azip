@@ -6,6 +6,8 @@ with Zip;
 with Zip_Streams;
 
 with GWindows.Application,
+     GWindows.Base,
+     GWindows.Buttons,
      GWindows.Locales;
 
 with Ada.Strings.Wide_Fixed;
@@ -13,7 +15,7 @@ with Interfaces;
 
 procedure AZip_GWin.Properties (Window : in out MDI_Child.MDI_Child_Type) is
   box : AZip_Resource_GUI.Properties_box_Type;
-  use Interfaces;
+  use GWindows.Buttons, Interfaces;
   total_uncompressed : Zip.Zip_64_Data_Size_Type := 0;
   total_compressed   : Zip.Zip_64_Data_Size_Type := 0;
   --  total_entries: Natural:= 0;
@@ -24,6 +26,50 @@ procedure AZip_GWin.Properties (Window : in out MDI_Child.MDI_Child_Type) is
   sep : constant Wide_Character := sep_str (sep_str'First);
 
   use Ada.Strings, Ada.Strings.Wide_Fixed, AZip_Common, Interfaces, Zip;
+
+  procedure Show_List is
+    row : Integer := -1;
+  begin
+    box.Stats_list.Clear;
+    for m in files_per_method'Range loop
+      if (m /= unknown and m /= tokenize)
+        --  ^ NB: Tokenize was never implemented: "5.4.1 This method is not used by PKZIP."
+        and then (files_per_method (m) > 0 or else box.Show_all_Formats.State = Checked)
+      then
+        row := row + 1;
+        --  Format (""method"")"
+        box.Stats_list.Insert_Item (S2G (Zip.Image (m)), row);
+        --  Entries
+        box.Stats_list.Set_Sub_Item (Integer'Wide_Image (files_per_method (m)), row, 1);
+        if uncompressed_per_method (m) > 0 then
+          --  % of data
+          box.Stats_list.Set_Sub_Item (
+            Ratio_pct_Image (uncompressed_per_method (m), total_uncompressed),
+            row, 2
+          );
+          --  Ratio
+          box.Stats_list.Set_Sub_Item (
+            Ratio_pct_Image (Unsigned_64 (compressed_per_method (m)), uncompressed_per_method (m)),
+            row, 3
+          );
+        end if;
+        --  Matches statement in UnZip.Decompress, line ~2035:
+        case m is
+          when store | shrink | Reduce_Format | implode |
+               deflate | deflate_e |
+               bzip2 | lzma_meth =>
+            null;
+          when others =>
+            box.Stats_list.Set_Sub_Item ("unsupported", row, 4);
+        end case;
+      end if;
+    end loop;
+  end Show_List;
+
+  procedure Box_Show_all_Formats_clicked (dummy : in out GWindows.Base.Base_Window_Type'Class) is
+  begin
+    Show_List;
+  end Box_Show_all_Formats_clicked;
 
   procedure Action (
       name             : String; -- 'name' is compressed entry's name
@@ -50,17 +96,20 @@ procedure AZip_GWin.Properties (Window : in out MDI_Child.MDI_Child_Type) is
   --
   procedure Gather_stats is new Traverse_verbose (Action);
   --
-  row : Integer := -1;
 begin
   box.Create_Full_Dialog (Window);
   box.Center;
-  box.Stats_list.Insert_Column ("Format (""method"")", 0, 100);
-  box.Stats_list.Insert_Column ("Entries", 1, 50);
+  box.Stats_list.Insert_Column ("Compression format (""method"")", 0, 180);
+  box.Stats_list.Insert_Column ("Entries", 1, 60);
   box.Stats_list.Insert_Column ("% of data", 2, 60);
   box.Stats_list.Insert_Column ("Ratio", 3, 50);
+  box.Stats_list.Insert_Column ("Note", 4, 80);
   box.Uncomp_size.Text ("0 byte");
   box.Comp_size.Text   ("0 byte");
   box.Comp_ratio.Text ("");
+  box.Show_all_Formats.State (Unchecked);
+  box.Show_all_Formats.On_Click_Handler (Box_Show_all_Formats_clicked'Unrestricted_Access);
+  --
   if Is_loaded (Window.zif) then
     Gather_stats (Window.zif);
     box.Numb_entries.Text (Trim (Natural'Wide_Image (Entries (Window.zif)), Left));
@@ -72,29 +121,7 @@ begin
         Ratio_pct_Image (Unsigned_64 (total_compressed), total_uncompressed)
       );
     end if;
-    for m in files_per_method'Range loop
-      if files_per_method (m) > 0 then
-        row := row + 1;
-        --  Format (""method"")"
-        box.Stats_list.Insert_Item (S2G (Zip.Image (m)), row);
-        --  Entries
-        box.Stats_list.Set_Sub_Item (Integer'Wide_Image (files_per_method (m)), row, 1);
-        if uncompressed_per_method (m) > 0 then
-          --  % of data
-          box.Stats_list.Set_Sub_Item (
-            Ratio_pct_Image (uncompressed_per_method (m), total_uncompressed),
-            row, 2
-          );
-          --  Ratio
-          box.Stats_list.Set_Sub_Item (
-            Ratio_pct_Image (Unsigned_64 (compressed_per_method (m)), uncompressed_per_method (m)),
-            row, 3
-          );
-        end if;
-      end if;
-    end loop;
-  else
-    box.Numb_entries.Text ("0 (empty)");
+    Show_List;
   end if;
   case GWindows.Application.Show_Dialog (box, Window) is
     when AZip_Resource_GUI.ID_Button_About_Azip =>

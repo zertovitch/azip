@@ -27,7 +27,6 @@ gw - "copy" saves directory list or tree into text clipboard
 gw - disable sorting on large lists
 gw - copy/paste entre fenêtres
   
-gw - list of supported formats in "about" box
 gw - !! sélection: somme des tailles compressées et non compressées en #octets
 copy_file et rename qui marchent avec utf-8 (virer Ada.Directories)
 

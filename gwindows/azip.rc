@@ -203,7 +203,7 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "(ver)", Version_label, 157, 81, 118, 8, SS_LEFT, WS_EX_LEFT
     GROUPBOX        "AZip is made with the following free, open source components:", IDC_STATIC, 5, 105, 278, 102, 0, WS_EX_LEFT
     LTEXT           "GNAT -  free Ada compiler", GNAT_URL, 23, 120, 88, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT           "GNAT_Version", GNAT_Version, 115, 120, 139, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT           "GNAT_Version", GNAT_Version, 115, 120, 164, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "GNAVI / GWindows", GNAVI_URL, 23, 135, 72, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "ResEdit", ResEdit_URL, 23, 150, 27, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "(freeware, not open-source)", IDC_STATIC, 55, 150, 103, 8, SS_LEFT, WS_EX_LEFT
@@ -600,8 +600,8 @@ Plus_icon          ICON           "ico_bmp/plus.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     2,4,1,0
-    PRODUCTVERSION  2,4,1,0
+    FILEVERSION     2,5,0,0
+    PRODUCTVERSION  2,5,0,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -614,7 +614,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
-            VALUE "FileVersion", "2.41"
+            VALUE "FileVersion", "2.5"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2022"
             VALUE "ProductName", "AZip"
         }

@@ -36,11 +36,7 @@ package body AZip_GWin.Modal_Dialogs is
       package CVer is new GNAT.Compiler_Version;
       v : constant String := CVer.Version;
     begin
-      if v (v'First .. v'First + 2) = "GPL" then
-        return v;
-      else
-        return "GMGPL " & v & " (TDM-GCC / MinGW)";
-      end if;
+      return v;
     end GNAT_Version_string;
     --
   begin

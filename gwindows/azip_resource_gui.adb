@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2022/08/20  09:00:18
+--  Transcription time: 2022/08/28  08:58:46
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -250,7 +250,7 @@ package body AZip_Resource_GUI is
     Create (Window.Static_0006, Window, "AZip is made with the following free, open source components:", x, y, w, h);
     Dlg_to_Scn (23, 120, 88, 8, x, y, w, h);
     Create (Window.GNAT_URL, Window, "GNAT -  free Ada compiler", x, y, w, h, GWindows.Static_Controls.Left, None, ID => GNAT_URL);
-    Dlg_to_Scn (115, 120, 139, 8, x, y, w, h);
+    Dlg_to_Scn (115, 120, 164, 8, x, y, w, h);
     Create (Window.GNAT_Version, Window, "GNAT_Version", x, y, w, h, GWindows.Static_Controls.Left, None, ID => GNAT_Version);
     Dlg_to_Scn (23, 135, 72, 8, x, y, w, h);
     Create (Window.GNAVI_URL, Window, "GNAVI / GWindows", x, y, w, h, GWindows.Static_Controls.Left, None, ID => GNAVI_URL);

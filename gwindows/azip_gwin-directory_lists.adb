@@ -1,18 +1,19 @@
-with AZip_Common.Operations;            use AZip_Common, AZip_Common.Operations;
+with AZip_Common;
 
-with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
-with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
+with AZip_GWin.MDI_Child,
+     AZip_GWin.MDI_Main;
 
-with GWindows.Base;                     use GWindows.Base;
-with GWindows.Menus;                    use GWindows.Menus;
---  with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Menus;
+--  with GWindows.Message_Boxes;
 
-with Ada.Calendar;
-with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
-with Ada.Unchecked_Conversion;
-with Ada.Unchecked_Deallocation;
+with Ada.Calendar,
+     Ada.Unchecked_Conversion,
+     Ada.Unchecked_Deallocation;
 
 package body AZip_GWin.Directory_Lists is
+
+  use AZip_Common;
+  use AZip_GWin.MDI_Child, AZip_GWin.MDI_Main;
 
   procedure On_Item_Changed (Control : in out Directory_list_type) is
   begin
@@ -194,7 +195,7 @@ package body AZip_GWin.Directory_Lists is
     Child_Window : MDI_Child_Type renames
       MDI_Child_Type (Control.Parent.Parent.Parent.all);
   begin
-    Immediate_Popup_Menu (Child_Window.context_menu_file, Child_Window);
+    GWindows.Menus.Immediate_Popup_Menu (Child_Window.context_menu_file, Child_Window);
   end On_Right_Click;
 
 end AZip_GWin.Directory_Lists;

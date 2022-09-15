@@ -804,7 +804,7 @@ package body AZip_Common.Operations is
             begin
               Extract (
                 from                 => zif,
-                what                 => entry_full_name,
+                what                 => Cleanup_File_Name (entry_full_name),
                 feedback             => Entry_feedback'Unrestricted_Access,
                 help_the_file_exists => Name_conflict,
                 tell_data            => null,
@@ -1134,6 +1134,23 @@ package body AZip_Common.Operations is
         );
     end if;
   end Expand_Folders;
+
+  function Cleanup_File_Name (file_name : String) return String is
+    nn : String := file_name;
+  begin
+    --  Remove illegal characters (NTFS perspective).
+    for c of nn loop
+      if c in ':' | '*' | '?' | '"' | '<' | '>' | '|' then
+        c := '_';
+      end if;
+    end loop;
+    --  Avoid absolute paths.
+    if nn (nn'First) in '\' | '/' then
+      nn (nn'First) := '_';
+    end if;
+    --
+    return nn;
+  end Cleanup_File_Name;
 
   procedure Count_test_totals (
     archive : Zip.Zip_info;

@@ -111,6 +111,8 @@ package AZip_Common.Operations is
   --
   function Expand_Folders (l : Name_List) return Name_List;
 
+  function Cleanup_File_Name (file_name : String) return String;
+
   type Operation_return_code is (
     ok,
     aborted,

@@ -251,13 +251,12 @@ package body AZip_GWin.MDI_Child is
                   --  If name is "zip-ada/zip_lib/zip.ads" and i = 16, the partial_path
                   --  will be "zip-ada/zip_lib".
                   partial_path : UTF_16_String renames name (name'First .. i - 1);
-                  partial_path_u : constant GString_Unbounded := G2GU (partial_path);
                 begin
-                  if not Window.path_map.Contains (partial_path_u) then
+                  if not Window.path_map.Contains (partial_path) then
                     if previous_idx = name'First then
                       w_parent := Tree_Item_Node (Window.path_map.Element (root_key));
                     else
-                      w_parent := Tree_Item_Node (Window.path_map.Element (G2GU (partial_path (name'First .. previous_idx - 2))));
+                      w_parent := Tree_Item_Node (Window.path_map.Element (partial_path (name'First .. previous_idx - 2)));
                     end if;
                     declare
                       --  From the above example, folder_name will be "zip_lib".
@@ -268,8 +267,8 @@ package body AZip_GWin.MDI_Child is
                       Window.Folder_Tree.Insert_Item (folder_name, w_parent, w_node);
                     end;
                     Window.Folder_Tree.Set_Image (w_node, 2, 3);
-                    Window.path_map.Insert (partial_path_u, Integer (w_node));
-                    Window.node_map.Insert (Integer (w_node), partial_path_u);
+                    Window.path_map.Insert (partial_path, Integer (w_node));
+                    Window.node_map.Insert (Integer (w_node), partial_path);
                   end if;
                 end;
               end if;
@@ -353,7 +352,9 @@ package body AZip_GWin.MDI_Child is
       intensity : Float;
       font_color : Color_Type;
       unsorted_index : Integer;
-    begin -- Feed_directory_list
+      da : AZip_LV_Ex.Data_Access;
+      use type AZip_LV_Ex.Data_Access;
+    begin  --  Feed_directory_list
       if need > results_refresh then
         return;
       end if;
@@ -373,16 +374,20 @@ package body AZip_GWin.MDI_Child is
       --
       last_row := row;
       for sorted_index in 0 .. last_row loop
-        unsorted_index := Lst.Item_Data (sorted_index).index_before_sorting;
+        da := Lst.Item_Data (sorted_index);
+        --  if da = null then
+        --    Ada.Text_IO.Put_Line ("NULL!!");
+        --  else
+        unsorted_index := da.index_before_sorting;
         --  Ada.Text_IO.put_line (G2S(Lst.Text(sorted_index,0)) &
-        --    Lst.Item_Data (sorted_index).uncompressed_size'image);
+        --    da.uncompressed_size'image);
         Lst.Set_Sub_Item
           (S2G (Result_Message
             (Window.last_operation, result_code (unsorted_index))),
             sorted_index, cidx (Result) - 1);
         Result_Color
           (Window.last_operation, result_code (unsorted_index), Window.last_max_code, az_color, intensity);
-        Lst.Item_Data (sorted_index).result_code := result_code (unsorted_index);
+        da.result_code := result_code (unsorted_index);
         if need = results_refresh or az_color /= AZip_Common.Operations.white then
           --  Ensure user can read the text, given the background color.
           if intensity > 0.58 then
@@ -403,6 +408,7 @@ package body AZip_GWin.MDI_Child is
         if sorted_index mod 2048 = 0 then
           Message_Check;
         end if;
+        --  end if;
       end loop;
       Window.Directory_List.Color_Mode (AZip_LV_Ex.Subitem);
       Window.Directory_List.refreshing := False;
@@ -493,7 +499,7 @@ package body AZip_GWin.MDI_Child is
             --  something else, may occur. The workaround is to use a cursor and
             --  the Find function. For details, see:
             --  https://groups.google.com/forum/#!original/comp.lang.ada/HZsG7Czymto/kY4BjoD0BAAJ
-            curs := Window.path_map.Find (Window.selected_path);
+            curs := Window.path_map.Find (GU2G (Window.selected_path));
             if
                 --  The selected path doesn't exist anymore. We'll try again by going one
                 --  folder up. This is done by truncating the last folder name from the right.

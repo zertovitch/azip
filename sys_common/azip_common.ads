@@ -4,11 +4,11 @@
 --
 with Zip;                               use Zip;
 
-with Ada.Containers.Hashed_Maps;
-with Ada.Containers.Ordered_Maps;
+with Ada.Containers.Indefinite_Hashed_Maps;
+with Ada.Containers.Indefinite_Ordered_Maps;
 with Ada.Strings.UTF_Encoding;
 with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
-with Ada.Strings.Wide_Unbounded.Wide_Hash;
+with Ada.Strings.Wide_Hash;
 
 with Interfaces;
 
@@ -55,20 +55,20 @@ package AZip_Common is
 
   --  Find quickly a node number given a path name.
 
-  package Path_Catalogues is new Ada.Containers.Hashed_Maps
-    (Key_Type        => UTF_16_Unbounded_String,
+  package Path_Catalogues is new Ada.Containers.Indefinite_Hashed_Maps
+    (Key_Type        => UTF_16_String,
      Element_Type    => Integer,                  -- an Item ID in any GUI system
-     Hash            => Ada.Strings.Wide_Unbounded.Wide_Hash,
-     Equivalent_Keys => Ada.Strings.Wide_Unbounded."="
+     Hash            => Ada.Strings.Wide_Hash,
+     Equivalent_Keys => "="
     );
 
-  root_key : constant UTF_16_Unbounded_String := Null_Unbounded_Wide_String;
+  root_key : constant UTF_16_String := "";
 
   --  Find quickly a path name given a node number.
 
-  package Node_Catalogues is new Ada.Containers.Ordered_Maps
+  package Node_Catalogues is new Ada.Containers.Indefinite_Ordered_Maps
     (Key_Type        => Integer,
-     Element_Type    => UTF_16_Unbounded_String
+     Element_Type    => UTF_16_String
     );
 
   --------------------------

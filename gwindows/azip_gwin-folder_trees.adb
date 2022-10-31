@@ -26,7 +26,7 @@ package body AZip_GWin.Folder_Trees is
     if curs = No_Element then
       null;  --  Tree node not registered by us. We let new_path empty.
     else
-      new_path := Element (curs);
+      new_path := G2GU (Element (curs));
     end if;
     if new_path = parent_window.selected_path then
       parent_window.Update_status_bar;

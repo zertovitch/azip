@@ -86,8 +86,6 @@ package body AZip_GWin.Directory_Lists is
           return greater;
         elsif i1 = i2 then
           return equal;
-        elsif i1 > i2 then
-          return greater;
         else
           return less;
         end if;
@@ -116,7 +114,6 @@ package body AZip_GWin.Directory_Lists is
     Show_Icon  : in Boolean := True;
     Technique  : in AZip_LV_Ex.Comparison_Technique_Type := AZip_LV_Ex.As_Strings)
   is
-    timing : constant Boolean := False;
     use Ada.Calendar;
     t0, t1 : Ada.Calendar.Time;
     window : MDI_Child_Type renames MDI_Child_Type (Control.Parent.Parent.Parent.all);
@@ -135,9 +132,8 @@ package body AZip_GWin.Directory_Lists is
     --
     if timing then
       t1 := Clock;
-      MDI_Child_Type (Control.Parent.Parent.Parent.all).Status_Bar.Text (
-        Duration'Wide_Image (t1 - t0)
-      );
+      MDI_Child_Type (Control.Parent.Parent.Parent.all).Status_Bar.Text
+        ("Sorting time:" & Duration'Wide_Image (t1 - t0));
     end if;
   end Sort;
 

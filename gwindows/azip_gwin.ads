@@ -19,4 +19,8 @@ package AZip_GWin is
   azip_web_page      : constant String := "http://azip.sf.net/";
   azip_news_web_page : constant String := "http://sourceforge.net/p/azip/news/";
 
+private
+
+  timing : constant Boolean := False;
+
 end AZip_GWin;

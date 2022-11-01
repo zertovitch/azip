@@ -346,14 +346,58 @@ package body AZip_GWin.MDI_Child is
 
       procedure Traverse is new Zip.Traverse_verbose (Process_Row);
 
-      az_color : AZip_Common.Operations.RGB_Type;
-      gw_color : GWindows.Colors.RGB_Type;
-      use GWindows.Colors;
-      intensity : Float;
-      font_color : Color_Type;
-      unsorted_index : Integer;
-      da : AZip_LV_Ex.Data_Access;
-      use type AZip_LV_Ex.Data_Access;
+      procedure Update_Results_Column is
+        az_color : AZip_Common.Operations.RGB_Type;
+        gw_color : GWindows.Colors.RGB_Type;
+        intensity : Float;
+        use GWindows.Colors;
+        font_color : Color_Type;
+        unsorted_index : Integer;
+        da : AZip_LV_Ex.Data_Access;
+        use type AZip_LV_Ex.Data_Access;
+      begin
+        last_row := row;
+        for sorted_index in 0 .. last_row loop
+          da := Lst.Item_Data (sorted_index);
+          --  if da = null then
+          --    Ada.Text_IO.Put_Line ("NULL!!");
+          --  else
+          unsorted_index := da.index_before_sorting;
+          --  Ada.Text_IO.put_line (G2S(Lst.Text(sorted_index,0)) &
+          --    da.uncompressed_size'image);
+          Lst.Set_Sub_Item
+            (S2G (Result_Message
+             (Window.last_operation, result_code (unsorted_index))),
+             sorted_index, cidx (Result) - 1);
+          Result_Color
+            (Window.last_operation, result_code (unsorted_index), Window.last_max_code, az_color, intensity);
+          da.result_code := result_code (unsorted_index);
+          if need = results_refresh or az_color /= AZip_Common.Operations.white then
+            --  Ensure user can read the text, given the background color.
+            if intensity > 0.58 then
+              font_color := Black;
+            else
+              font_color := GWindows.Colors.White;
+            end if;
+            gw_color :=
+              (Red    => GWindows.Colors.Color_Range (az_color.Red),
+               Green  => GWindows.Colors.Color_Range (az_color.Green),
+               Blue   => GWindows.Colors.Color_Range (az_color.Blue),
+               Unused => 0
+              );
+            Lst.Subitem_Color (font_color, To_Color (gw_color), sorted_index, cidx (Result) - 1);
+          end if;
+          --  Show some response if the zip directory is very large
+          --
+          if sorted_index mod 2048 = 0 then
+            Message_Check;
+          end if;
+          --  end if;
+        end loop;
+      end Update_Results_Column;
+
+      use Ada.Calendar;
+      t0, t1, t2 : Ada.Calendar.Time;
     begin  --  Feed_directory_list
       if need > results_refresh then
         return;
@@ -365,51 +409,23 @@ package body AZip_GWin.MDI_Child is
       end if;
       --  Performance is meant to be better with the All_Items mode.
       Window.Directory_List.Color_Mode (AZip_LV_Ex.All_Items);
+      if timing then
+        t0 := Clock;
+      end if;
       --
-      --  List is entirely filled on next instruction:
+      --  List is entirely filled on next statement:
       --
       Traverse (Window.zif);
-      --
-      --  Finishing touch: the messages and colours in the "Results" column.
-      --
-      last_row := row;
-      for sorted_index in 0 .. last_row loop
-        da := Lst.Item_Data (sorted_index);
-        --  if da = null then
-        --    Ada.Text_IO.Put_Line ("NULL!!");
-        --  else
-        unsorted_index := da.index_before_sorting;
-        --  Ada.Text_IO.put_line (G2S(Lst.Text(sorted_index,0)) &
-        --    da.uncompressed_size'image);
-        Lst.Set_Sub_Item
-          (S2G (Result_Message
-            (Window.last_operation, result_code (unsorted_index))),
-            sorted_index, cidx (Result) - 1);
-        Result_Color
-          (Window.last_operation, result_code (unsorted_index), Window.last_max_code, az_color, intensity);
-        da.result_code := result_code (unsorted_index);
-        if need = results_refresh or az_color /= AZip_Common.Operations.white then
-          --  Ensure user can read the text, given the background color.
-          if intensity > 0.58 then
-            font_color := Black;
-          else
-            font_color := GWindows.Colors.White;
-          end if;
-          gw_color :=
-            (Red    => GWindows.Colors.Color_Range (az_color.Red),
-             Green  => GWindows.Colors.Color_Range (az_color.Green),
-             Blue   => GWindows.Colors.Color_Range (az_color.Blue),
-             Unused => 0
-            );
-          Lst.Subitem_Color (font_color, To_Color (gw_color), sorted_index, cidx (Result) - 1);
-        end if;
-        --  Show some response if the zip directory is very large
-        --
-        if sorted_index mod 2048 = 0 then
-          Message_Check;
-        end if;
-        --  end if;
-      end loop;
+      if timing then
+        t1 := Clock;
+      end if;
+      Update_Results_Column;
+      if timing then
+        t2 := Clock;
+        Window.Status_Bar.Text
+          ("List filling:" & Duration'Wide_Image (t1 - t0) &
+           "; Results column:" & Duration'Wide_Image (t2 - t1));
+      end if;
       Window.Directory_List.Color_Mode (AZip_LV_Ex.Subitem);
       Window.Directory_List.refreshing := False;
     end Feed_directory_list;
@@ -458,7 +474,9 @@ package body AZip_GWin.MDI_Child is
         )
       );
     end if;
-    Window.Update_status_bar;
+    if not timing then
+      Window.Update_status_bar;
+    end if;
     Window.Update_tool_bar_and_menus;
   end Update_Display;
 

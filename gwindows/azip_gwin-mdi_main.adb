@@ -610,6 +610,12 @@ package body AZip_GWin.MDI_Main is
     x : Integer := Window.opt.mru'First - 1;
     up_name : GString := name;
   begin
+    if AZip_GWin.Persistence.Cfg_file_available then
+      null;  --  Stealth mode -> leave no trace in registry!
+    else
+      Add_To_Recent_Documents (name);
+    end if;
+
     To_Upper (up_name);
 
     --  Search for name in the list

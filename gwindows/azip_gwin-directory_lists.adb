@@ -90,7 +90,9 @@ package body AZip_GWin.Directory_Lists is
           return less;
         end if;
       when others =>
-        --  The sort column has the default behaviour with text comparison.
+        --  The sort column has the default behaviour, with text comparison.
+        --  This part is never executed if the sorting is done with
+        --  Comparison_Technique_Type = As_Strings.
         declare
           Value_1 : constant GString := Control.Text (Index_1, Column);
           Value_2 : constant GString := Control.Text (Index_2, Column);
@@ -109,26 +111,32 @@ package body AZip_GWin.Directory_Lists is
 
   procedure Sort (
     Control    : in out Directory_list_type;
-    Column     : in Natural;
-    Direction  : in AZip_LV_Ex.Sort_Direction_Type;
-    Show_Icon  : in Boolean := True;
-    Technique  : in AZip_LV_Ex.Comparison_Technique_Type := AZip_LV_Ex.As_Strings)
+    Column     : in     Natural;
+    Direction  : in     AZip_LV_Ex.Sort_Direction_Type;
+    Show_Icon  : in     Boolean := True;
+    Technique  : in     AZip_LV_Ex.Comparison_Technique_Type := AZip_LV_Ex.As_Strings)
   is
     use Ada.Calendar;
     t0, t1 : Ada.Calendar.Time;
     window : MDI_Child_Type renames MDI_Child_Type (Control.Parent.Parent.Parent.all);
+    use AZip_LV_Ex;
+    imposed_technique : Comparison_Technique_Type;
   begin
     if timing then
       t0 := Clock;
     end if;
-    --  Get the inverse of opt.column_index:
+    --  Get the inverse function of opt.column_index:
     for t in Entry_topic loop
       Control.curr_col_topic (window.opt.column_index (t) - 1) := t;
     end loop;
+    if Control.curr_col_topic (Column) in Size | Packed | Ratio | Result then
+      imposed_technique := General;
+    else
+      imposed_technique := As_Strings;
+    end if;
     --  Call parent method, but with the `General` comparison technique,
     --  which avoids strings if possible.
-    AZip_LV_Ex.Ex_List_View_Control_Type (Control).Sort
-      (Column, Direction, Show_Icon, AZip_LV_Ex.General);
+    Ex_List_View_Control_Type (Control).Sort (Column, Direction, Show_Icon, imposed_technique);
     --
     if timing then
       t1 := Clock;

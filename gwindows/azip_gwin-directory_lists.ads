@@ -48,10 +48,10 @@ package AZip_GWin.Directory_Lists is
 
   overriding procedure Sort (
     Control    : in out Directory_list_type;
-    Column     : in Natural;
-    Direction  : in AZip_LV_Ex.Sort_Direction_Type;
-    Show_Icon  : in Boolean := True;
-    Technique  : in AZip_LV_Ex.Comparison_Technique_Type := AZip_LV_Ex.As_Strings);
+    Column     : in     Natural;
+    Direction  : in     AZip_LV_Ex.Sort_Direction_Type;
+    Show_Icon  : in     Boolean := True;
+    Technique  : in     AZip_LV_Ex.Comparison_Technique_Type := AZip_LV_Ex.As_Strings);
 
   overriding procedure On_Focus (Control : in out Directory_list_type);
 

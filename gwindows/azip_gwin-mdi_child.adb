@@ -179,13 +179,13 @@ package body AZip_GWin.MDI_Child is
             Lst.Insert_Column (  --  Insert new column
               Image (topic),
               cidx (topic) - 1,
-              Get_column_width_from_options (Window, topic)
+              Get_column_width_from_main_options (Window, topic)
             );
           when archive_changed | node_selected =>
             Lst.Set_Column (     --  Change existing column's properties
               Image (topic),
               cidx (topic) - 1,
-              Get_column_width_from_options (Window, topic)
+              Get_column_width_from_main_options (Window, topic)
             );
           when results_refresh | status_bar | toolbar_and_menu =>
             null;
@@ -1759,7 +1759,7 @@ package body AZip_GWin.MDI_Child is
         Window.MDI_Root.remember_sorting := False;
       when IDM_Select_columns =>
         --  Propagate current child window settings to main options.
-        Set_all_column_widths_to_options (Window);
+        Set_all_column_widths_to_main_options (Window);
         Window.MDI_Root.opt.view_mode := Window.opt.view_mode;
         --  Start dialog.
         Select_columns_dialog (Window.MDI_Root.all);
@@ -1821,13 +1821,18 @@ package body AZip_GWin.MDI_Child is
     end if;
     if Can_Close then
       --  Memorize column widths
-      Set_all_column_widths_to_options (Window);
+      Set_all_column_widths_to_main_options (Window);
       --
       if Window.MDI_Root.remember_sorting then
         Window.Directory_List.Sort_Info (
-          Window.MDI_Root.opt.sort_column,  --  Get column
-          sd                                --  Get direction
+          Window.MDI_Root.opt.sort_column,  --  Get sorting column
+          sd                                --  Get sorting direction
         );
+        --  Forget the sorting column if it is the Result column.
+        --  Reason: there is no result on reopening a new archive.
+        if Window.MDI_Root.opt.sort_column = Window.opt.column_index (Result) - 1 then
+          Window.MDI_Root.opt.sort_column := AZip_Common.User_options.no_sorting;
+        end if;
         --  We pass the Up/Down direction from the GWindows type to ours.
         Window.MDI_Root.opt.sort_direction :=
           AZip_Common.User_options.Sort_Direction_Type'Value (

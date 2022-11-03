@@ -13,7 +13,7 @@ package body AZip_GWin.Columns is
   --
   threshold : constant := 20;
 
-  function Get_column_width_from_options (Window : MDI_Child_Type; topic : Entry_topic) return Natural
+  function Get_column_width_from_main_options (Window : MDI_Child_Type; topic : Entry_topic) return Natural
   is
   begin
     if topic = Path and Window.opt.view_mode = Tree then
@@ -23,9 +23,9 @@ package body AZip_GWin.Columns is
     else
       return 0;
     end if;
-  end Get_column_width_from_options;
+  end Get_column_width_from_main_options;
 
-  procedure Set_column_width_to_options (Window : in out MDI_Child_Type; topic : Entry_topic; new_width : Natural) is
+  procedure Set_column_width_to_main_options (Window : in out MDI_Child_Type; topic : Entry_topic; new_width : Natural) is
   begin
     if topic = Path and Window.opt.view_mode = Tree then
       null;  --  Do nothing (esp. do not erase width for the Flat view)!
@@ -36,17 +36,17 @@ package body AZip_GWin.Columns is
       Window.MDI_Root.opt.visible_column (topic) := False;
       --  Don't touch the width: it will be useful when the column is shown again.
     end if;
-  end Set_column_width_to_options;
+  end Set_column_width_to_main_options;
 
-  procedure Get_all_column_widths_from_options (Window : in out MDI_Child_Type) is
+  procedure Get_all_column_widths_from_main_options (Window : in out MDI_Child_Type) is
   begin
     for t in Entry_topic'Range loop
       Window.Directory_List.Set_Column_Width (
         Window.opt.column_index (t) - 1,
-        Get_column_width_from_options (Window, t)
+        Get_column_width_from_main_options (Window, t)
       );
     end loop;
-  end Get_all_column_widths_from_options;
+  end Get_all_column_widths_from_main_options;
 
   procedure Get_all_column_widths_from_options (Window : MDI_Main_Type) is
     --
@@ -54,7 +54,7 @@ package body AZip_GWin.Columns is
     is
     begin
       if Child_Window.all in MDI_Child_Type'Class then
-        Get_all_column_widths_from_options (MDI_Child_Type (Child_Window.all));
+        Get_all_column_widths_from_main_options (MDI_Child_Type (Child_Window.all));
       end if;
     end Do_child_window;
     --
@@ -64,12 +64,12 @@ package body AZip_GWin.Columns is
        Do_child_window'Unrestricted_Access);
   end Get_all_column_widths_from_options;
 
-  procedure Set_all_column_widths_to_options (Window : in out MDI_Child_Type) is
+  procedure Set_all_column_widths_to_main_options (Window : in out MDI_Child_Type) is
   begin
     for t in Entry_topic'Range loop
-      Set_column_width_to_options (Window, t, Window.Directory_List.Column_Width (Entry_topic'Pos (t)));
+      Set_column_width_to_main_options (Window, t, Window.Directory_List.Column_Width (Entry_topic'Pos (t)));
     end loop;
-  end Set_all_column_widths_to_options;
+  end Set_all_column_widths_to_main_options;
 
   procedure Select_columns_dialog (Window : in out MDI_Main_Type) is
     box : Select_column_box_Type;

@@ -613,7 +613,7 @@ package body AZip_GWin.MDI_Main is
     if AZip_GWin.Persistence.Cfg_file_available then
       null;  --  Stealth mode -> leave no trace in registry!
     else
-      --  Add name to the list in task bar or elsewhere
+      --  Add name to the list in task bar or
       --  elsewhere in Windows Explorer or Desktop.
       GWindows.Application.Add_To_Recent_Documents (name);
     end if;

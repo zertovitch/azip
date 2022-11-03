@@ -132,7 +132,7 @@ package body AZip_GWin.Directory_Lists is
     if Control.curr_col_topic (Column) in Size | Packed | Ratio | Result then
       imposed_technique := General;
     else
-      imposed_technique := As_Strings;
+      imposed_technique := As_Strings_Default;
     end if;
     --  Call parent method, but with the `General` comparison technique,
     --  which avoids strings if possible.

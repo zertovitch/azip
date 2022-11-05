@@ -1,3 +1,5 @@
+- Recompression: recompress small files using a memory stream instead of a temp file.
+
 - Console mode through command lines options:
     -a : Add
     -d : Delete

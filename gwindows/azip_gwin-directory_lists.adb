@@ -92,7 +92,7 @@ package body AZip_GWin.Directory_Lists is
       when others =>
         --  The sort column has the default behaviour, with text comparison.
         --  This part is never executed if the sorting is done with
-        --  Comparison_Technique_Type = As_Strings.
+        --  Comparison_Technique_Type = As_Strings or As_Strings_Default.
         declare
           Value_1 : constant GString := Control.Text (Index_1, Column);
           Value_2 : constant GString := Control.Text (Index_2, Column);

@@ -1,21 +1,21 @@
-with AZip_Common.User_options;          use AZip_Common.User_options;
-with AZip_Common.Operations;            use AZip_Common.Operations;
-with AZip_GWin.Folder_Trees;
-with AZip_GWin.Directory_Lists;
-with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
-with AZip_Resource_GUI;                 use AZip_Resource_GUI;
+with AZip_Common.User_options,
+     AZip_Common.Operations,
+     AZip_GWin.Folder_Trees,
+     AZip_GWin.Directory_Lists,
+     AZip_GWin.MDI_Main;
+
+with AZip_Resource_GUI;
 
 with Zip;
 
-with GWindows.Common_Controls;          use GWindows.Common_Controls;
-with GWindows.Drawing;
-with GWindows.GControls.GSize_Bars;
-with GWindows.Menus;                    use GWindows.Menus;
-with GWindows.Packing_Boxes;
-with GWindows.Panels;
-with GWindows.Types;
-with GWindows.Windows.MDI;
-with GWindows.Windows;                  use GWindows.Windows;
+with GWindows.Common_Controls,
+     GWindows.Drawing,
+     GWindows.GControls.GSize_Bars,
+     GWindows.Menus,
+     GWindows.Packing_Boxes,
+     GWindows.Panels,
+     GWindows.Types,
+     GWindows.Windows.MDI;
 
 with GWin_Util;
 
@@ -33,7 +33,7 @@ package AZip_GWin.MDI_Child is
       ---------------------------------------------------------------------------
       task type Status_display is
          entry Start;
-         entry Display (w : AZip_GWin.MDI_Child.MDI_Child_Access);
+         entry Display (w : MDI_Child.MDI_Child_Access);
          entry Stop;
       end Status_display;
 
@@ -43,7 +43,7 @@ package AZip_GWin.MDI_Child is
       -----------------------------------------------------------------
       task type Testing_type is
          entry Start;
-         entry Test (w : AZip_GWin.MDI_Child.MDI_Child_Access);
+         entry Test (w : MDI_Child.MDI_Child_Access);
          entry Stop;
       end Testing_type;
    end Daemons;
@@ -82,29 +82,30 @@ package AZip_GWin.MDI_Child is
         File_Name           : GString_Unbounded;
         Short_Name          : GString_Unbounded;
         --  ^ Window title = Short_Name & {""|" *"}
-        MDI_Root            : MDI_Main_Access; -- -> access to the containing window
+        MDI_Root            : MDI_Main.MDI_Main_Access; -- -> access to the containing window
         Extra_first_doc     : Boolean := False;
         --  ^ new file closed if kept virgin when opening another one (like blank Excel sheet).
-        Menu                : Menu_MDI_Child_Type;
-        context_menu_file   : Menu_Type := Create_Popup;
-        context_menu_folder : Menu_Type := Create_Popup;
+        Menu                : AZip_Resource_GUI.Menu_MDI_Child_Type;
+        context_menu_file   : GWindows.Menus.Menu_Type := GWindows.Menus.Create_Popup;
+        context_menu_folder : GWindows.Menus.Menu_Type := GWindows.Menus.Create_Popup;
         Tree_Bar_and_List   : MDI_Child_Packing_Box_Type;
         Bar_and_List        : MDI_Child_Panel_Type;
-        Directory_List      : AZip_GWin.Directory_Lists.Directory_list_type;
+        Directory_List      : Directory_Lists.Directory_list_type;
         Splitter            : GWin_Util.Splitter_with_dashes;
-        Folder_Tree         : AZip_GWin.Folder_Trees.Folder_tree_type;
+        Folder_Tree         : Folder_Trees.Folder_tree_type;
         zif                 : Zip.Zip_info;
         path_map            : AZip_Common.Path_Catalogues.Map;
         node_map            : AZip_Common.Node_Catalogues.Map;
         selected_path       : GString_Unbounded := Null_GString_Unbounded;
-        opt                 : Option_Pack_Type;
+        opt                 : AZip_Common.User_options.Option_Pack_Type;
         Status_deamon       : Daemons.Status_display;
         Status_Bar          : MDI_Child_Status_Bar_Type;
         name_search         : GString_Unbounded;
         content_search      : GString_Unbounded;
         current_password    : GString_Unbounded;
         temp_name_gen       : Ada.Numerics.Float_Random.Generator;
-        last_operation      : Archive_Operation := Remove;
+        last_operation      : AZip_Common.Operations.Archive_Operation :=
+                                AZip_Common.Operations.Remove;
         last_max_code       : Integer;
         any_path_in_zip     : Boolean;
         extract_dir         : GString_Unbounded;
@@ -129,13 +130,13 @@ package AZip_GWin.MDI_Child is
   --  Add files (past all dialogs)
   procedure Go_for_adding (
     Window     : in out MDI_Child_Type;
-    File_Names : in     Array_Of_File_Names;
+    File_Names : in     GWindows.Windows.Array_Of_File_Names;
     Encrypt    : in     Boolean
   );
 
   overriding procedure On_File_Drop (
     Window     : in out MDI_Child_Type;
-    File_Names : in     Array_Of_File_Names
+    File_Names : in    GWindows.Windows. Array_Of_File_Names
   );
 
   type Update_need is
@@ -188,13 +189,13 @@ package AZip_GWin.MDI_Child is
         Window : in out MDI_Child_Type;
         X      : in     Integer;
         Y      : in     Integer;
-        Keys   : in     Mouse_Key_States);
+        Keys   : in     GWindows.Windows.Mouse_Key_States);
 
   overriding procedure On_Left_Mouse_Button_Up (
         Window : in out MDI_Child_Type;
         X      : in     Integer;
         Y      : in     Integer;
-        Keys   : in     Mouse_Key_States);
+        Keys   : in     GWindows.Windows.Mouse_Key_States);
 
   procedure Update_Common_Menus (Window    : MDI_Child_Type;
                                  top_entry : GString := "");

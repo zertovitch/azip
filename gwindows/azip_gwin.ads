@@ -1,8 +1,10 @@
-with GWindows;                          use GWindows;
-with GWindows.Common_Dialogs;
-with GWindows.GStrings;                 use GWindows.GStrings;
+with GWindows,
+     GWindows.Common_Dialogs,
+     GWindows.GStrings;
 
 package AZip_GWin is
+
+  use GWindows, GWindows.GStrings;
 
   function S2G (Value : String) return GString renames To_GString_From_String;
   function G2S (Value : GString) return String renames To_String;

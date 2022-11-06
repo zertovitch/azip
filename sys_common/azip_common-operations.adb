@@ -1,19 +1,29 @@
-with Zip.Compress, Zip.Create, UnZip.Streams, Zip_Streams;
+with Zip.Compress,
+     Zip.Create,
+     UnZip.Streams,
+     Zip_Streams;
 
-with Ada.Characters.Handling;           use Ada.Characters.Handling;
-with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
-with Ada.Directories;                   use Ada.Directories;
-with Ada.Exceptions;
-with Ada.IO_Exceptions;
-with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
-with Ada.Streams;
-with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
-with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
-with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
+with Ada.Characters.Handling,
+     Ada.Directories,
+     Ada.Exceptions,
+     Ada.IO_Exceptions,
+     Ada.Numerics.Elementary_Functions,
+     Ada.Streams,
+     Ada.Strings.Fixed,
+     Ada.Strings.Wide_Fixed,
+     Ada.Strings.Unbounded,
+     Ada.Wide_Characters.Handling;
 
 with Interfaces;
 
 package body AZip_Common.Operations is
+
+  use Ada.Characters.Handling,
+      Ada.Directories,
+      Ada.Strings,
+      Ada.Strings.Fixed,
+      Ada.Strings.Unbounded,
+      Ada.Wide_Characters.Handling;
 
   function Result_Message (op : Archive_Operation; code : Integer) return String
   is
@@ -97,6 +107,7 @@ package body AZip_Common.Operations is
     raw_intensity_sq : Natural;
     max_raw_intensity_sq : constant := max_color * max_color * 3;
     code_rel : Float;
+    use Ada.Numerics.Elementary_Functions;
   begin
     case op is
       when Search =>
@@ -205,7 +216,7 @@ package body AZip_Common.Operations is
     begin
       Zip.Set_user_code (to, entry_full_name, user_code_from);
     exception
-      when Entry_name_not_found =>
+      when Zip.Entry_name_not_found =>
         null;  --  Nothing bad: 'name' is a directory name that was skipped on recompression.
     end Copy_user_code;
     --
@@ -404,7 +415,7 @@ package body AZip_Common.Operations is
 
     function Add_extract_directory (
       File_Name      : String;
-      Name_Encoding  : Zip_name_encoding
+      Name_Encoding  : Zip.Zip_name_encoding
     )
     return UTF_8_String
     is
@@ -443,6 +454,7 @@ package body AZip_Common.Operations is
       end if;
     end Encryption_password;
     --
+    use Zip, Zip.Create, UnZip;
     Extract_FS_routines : constant UnZip.FS_routines_type :=
        (Create_Path         => Ada.Directories.Create_Path'Access,
         Set_Time_Stamp      => Set_Time_Stamp,
@@ -450,7 +462,6 @@ package body AZip_Common.Operations is
         others              => null
     );
     --
-    use Zip.Create, UnZip;
     none_updated      : Boolean := True;
     none_recompressed : Boolean := True;
     quick_method : constant Zip.Compress.Compression_Method := Zip.Compress.Deflate_1;
@@ -695,7 +706,7 @@ package body AZip_Common.Operations is
                 up_name := To_Upper (up_name);
               end if;
               if pattern = ""  --  Always match
-                or else Index (up_name, pattern) > 0
+                or else Ada.Strings.Wide_Fixed.Index (up_name, pattern) > 0
               then
                 match := True;
                 exit;

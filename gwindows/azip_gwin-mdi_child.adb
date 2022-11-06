@@ -1,7 +1,7 @@
 with AZip_Common,
      AZip_GWin.Columns,
      AZip_GWin.Dragging,
-     AZip_GWin.Drop_file_dialog,
+     AZip_GWin.Drop_File_Dialog,
      AZip_GWin.Installation,
      AZip_GWin.Password_dialogs,
      AZip_GWin.Properties;
@@ -39,11 +39,19 @@ with Zip_time_display;
 
 package body AZip_GWin.MDI_Child is
 
-  use AZip_Common;
+  use AZip_Common, AZip_Common.Operations, AZip_Common.User_options;
+
   use AZip_GWin.Columns, AZip_GWin.Directory_Lists,
-      AZip_GWin.Dragging, AZip_GWin.Password_dialogs;
+      AZip_GWin.Dragging, AZip_GWin.MDI_Main, AZip_GWin.Password_dialogs;
+
+  use AZip_Resource_GUI;
+
   use Zip;
-  use GWindows.Application, GWindows.Base, GWindows.Common_Dialogs, GWindows.Message_Boxes;
+
+  use GWindows.Application, GWindows.Base, GWindows.Common_Controls,
+      GWindows.Common_Dialogs, GWindows.Menus, GWindows.Message_Boxes,
+      GWindows.Windows;
+
   use Ada.Strings, Ada.Strings.Fixed, Ada.Strings.Wide_Unbounded;
 
   function Folder_Focus (Window : in MDI_Child_Type) return Boolean is
@@ -1070,7 +1078,7 @@ package body AZip_GWin.MDI_Child is
         Open_Child_Window_And_Load (parent.all, File_Names (i));
       end loop;
     else
-      AZip_GWin.Drop_file_dialog.Do_drop_file_dialog
+      AZip_GWin.Drop_File_Dialog.Do_Drop_File_Dialog
         (Parent         => Window,
          archive_name   => GU2G (Window.Short_Name) & Eventual_folder,
          new_archive    => not Is_loaded (Window.zif),

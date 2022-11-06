@@ -4,9 +4,9 @@ with GWindows.Application;              use GWindows.Application;
 with GWindows.Buttons;                  use GWindows.Buttons;
 with GWindows.Constants;                use GWindows.Constants;
 
-package body AZip_GWin.Drop_file_dialog is
+package body AZip_GWin.Drop_File_Dialog is
 
-  procedure Do_drop_file_dialog
+  procedure Do_Drop_File_Dialog
     (Parent         : in out GWindows.Base.Base_Window_Type'Class;
      archive_name   : in     GString;
      new_archive    : in     Boolean;
@@ -33,6 +33,6 @@ package body AZip_GWin.Drop_file_dialog is
       when others =>
         yes := False;
     end case;
-  end Do_drop_file_dialog;
+  end Do_Drop_File_Dialog;
 
-end AZip_GWin.Drop_file_dialog;
+end AZip_GWin.Drop_File_Dialog;

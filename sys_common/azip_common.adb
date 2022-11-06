@@ -272,8 +272,9 @@ package body AZip_Common is
     Character'Val (16#ff#) => Wide_Character'Val (16#00a0#)   --  NO-BREAK SPACE
   );
 
-  function To_UTF_16 (s : String; name_encoding : Zip_name_encoding) return Wide_String
+  function To_UTF_16 (s : String; name_encoding : Zip.Zip_name_encoding) return Wide_String
   is
+    use Zip;
   begin
     case name_encoding is
       when IBM_437 =>
@@ -295,7 +296,8 @@ package body AZip_Common is
     return Ada.Strings.UTF_Encoding.Conversions.Convert (s);
   end To_UTF_8;
 
-  function To_UTF_8 (s : String; encoding : Zip_name_encoding) return UTF_8_String is
+  function To_UTF_8 (s : String; encoding : Zip.Zip_name_encoding) return UTF_8_String is
+    use Zip;
   begin
     case encoding is
       when UTF_8 =>
@@ -519,38 +521,37 @@ package body AZip_Common is
     return s (i .. s'Last);
   end Remove_path;
 
-  procedure Load_insensitive_if_possible (info : out Zip_info; from : String) is
+  procedure Load_insensitive_if_possible (info : out Zip.Zip_info; from : String) is
+    use Zip;
   begin
     --  Whenever possible, we try to load the directory as case insensitive
-    Zip.Load (
-      info           => info,
-      from           => from,
-      case_sensitive => False
-    );
+    Load
+      (info           => info,
+       from           => from,
+       case_sensitive => False);
   exception
     when Duplicate_name =>
-      Zip.Load (
-        info            => info,
-        from            => from,
-        case_sensitive  => True,  --  Perhaps a .jar with a.txt and A.txt
-        duplicate_names => admit_duplicates  --  twice a.txt (check with Is_valid_Zip_archive)
-      );
+      Load
+        (info            => info,
+         from            => from,
+         case_sensitive  => True,               --  Perhaps a .jar with a.txt and A.txt
+         duplicate_names => admit_duplicates);  --  Twice a.txt (check with Is_valid_Zip_archive)
       --  If Duplicate_name is raised again, well, it is really invalid!
   end Load_insensitive_if_possible;
 
   function Is_valid_Zip_archive (file_name : String) return Archive_validity is
-    info : Zip.Zip_info;
+    use Zip;
+    info : Zip_info;
   begin
-    Zip.Load (
-      info           => info,
-      from           => file_name,
-      case_sensitive => True
-    );
+    Load
+      (info           => info,
+       from           => file_name,
+       case_sensitive => True);
     return valid;
   exception
     when Duplicate_name =>
       begin
-        Zip.Load
+        Load
           (info            => info,
            from            => file_name,
            case_sensitive  => True,
@@ -568,7 +569,8 @@ package body AZip_Common is
       return invalid;
   end Is_valid_Zip_archive;
 
-  function Has_Zip_archive_encrypted_entries (info : Zip_info) return Boolean is
+  function Has_Zip_archive_encrypted_entries (info : Zip.Zip_info) return Boolean is
+    use Zip;
     encrypted : Boolean := False;
     procedure Detect_Encryption (
       name             : String;  --  'name' is compressed entry's name

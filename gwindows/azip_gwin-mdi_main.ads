@@ -1,17 +1,18 @@
 --  To do: make a generic "Office Classic" application framework
 
 with AZip_GWin.Dragging;
-with AZip_Common.User_options;
-with AZip_Resource_GUI;                 use AZip_Resource_GUI;
 
-with GWindows.Base;
-with GWindows.Common_Controls;
-with GWindows.Image_Lists;
-with GWindows.Windows.MDI;
-with GWindows.Windows;                  use GWindows.Windows;
-with GWindows.Drawing;
-with GWindows.Taskbar;                  use GWindows.Taskbar;
-with GWindows.Types;
+with AZip_Common.User_options;
+
+with AZip_Resource_GUI;
+
+with GWindows.Base,
+     GWindows.Common_Controls,
+     GWindows.Drawing,
+     GWindows.Image_Lists,
+     GWindows.Windows.MDI,
+     GWindows.Taskbar,
+     GWindows.Types;
 
 package AZip_GWin.MDI_Main is
 
@@ -34,7 +35,7 @@ package AZip_GWin.MDI_Main is
         Tool_Bar               : MDI_Toolbar_Type;
         Toolbar_Images         : GWindows.Image_Lists.Image_List_Type;
         Folders_Images         : GWindows.Image_Lists.Image_List_Type;
-        Menu                   : Menu_MDI_Main_Type;
+        Menu                   : AZip_Resource_GUI.Menu_MDI_Main_Type;
         --  record_dimensions      : Boolean:= False; -- in On_Move, On_Size
         User_maximize_restore  : Boolean := True;
         --  ^ Detect user-triggered max/restore commands
@@ -44,7 +45,7 @@ package AZip_GWin.MDI_Main is
         remember_sorting       : Boolean := True;
         --
         Task_bar_gadget_ok     : Boolean := False;  --  Coloring of taskbar icon (Windows 7+)
-        Task_bar_gadget        : Taskbar_List;
+        Task_bar_gadget        : GWindows.Taskbar.Taskbar_List;
         --
         dragging               : AZip_GWin.Dragging.Dragging_info;
       end record;
@@ -66,7 +67,7 @@ package AZip_GWin.MDI_Main is
                                 Height : in     Integer);
 
   overriding procedure On_File_Drop (Window     : in out MDI_Main_Type;
-                                     File_Names : in     Array_Of_File_Names);
+                                     File_Names : in     GWindows.Windows.Array_Of_File_Names);
 
   overriding procedure On_Erase_Background
      (Window : in out MDI_Main_Type;
@@ -93,11 +94,11 @@ package AZip_GWin.MDI_Main is
   procedure Update_Common_Menus (Window    : in out MDI_Main_Type;
                                  top_entry :        GString := "");
 
-  function All_Zip_files (File_Names : Array_Of_File_Names) return Boolean;
+  function All_Zip_files (File_Names : GWindows.Windows.Array_Of_File_Names) return Boolean;
 
   function Confirm_archives_if_all_Zip_files
     (Window     : GWindows.Base.Base_Window_Type'Class;
-     File_Names : Array_Of_File_Names)
+     File_Names : GWindows.Windows.Array_Of_File_Names)
   return Boolean;
 
 end AZip_GWin.MDI_Main;

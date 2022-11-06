@@ -2,13 +2,13 @@
 --  need to be visible to the compiler.
 --  See installation instructions in the header part of the azip_gwindows.gpr file.
 --
-with Zip;                               use Zip;
+with Zip;
 
-with Ada.Containers.Indefinite_Hashed_Maps;
-with Ada.Containers.Indefinite_Ordered_Maps;
-with Ada.Strings.UTF_Encoding;
-with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
-with Ada.Strings.Wide_Hash;
+with Ada.Containers.Indefinite_Hashed_Maps,
+     Ada.Containers.Indefinite_Ordered_Maps,
+     Ada.Strings.UTF_Encoding,
+     Ada.Strings.Wide_Unbounded,
+     Ada.Strings.Wide_Hash;
 
 with Interfaces;
 
@@ -31,6 +31,8 @@ package AZip_Common is
   -- Strings --
   -------------
 
+  use Ada.Strings.Wide_Unbounded;
+
   --  Internal format for AZip: UTF-16
   --  Format for file names on Open / Create operations: UTF-8
   --  In zip archives, names can be either UTF-8 or IBM 437.
@@ -40,11 +42,11 @@ package AZip_Common is
   subtype UTF_16_String is Ada.Strings.UTF_Encoding.UTF_16_Wide_String;
   subtype UTF_16_Unbounded_String is Unbounded_Wide_String;
 
-  function To_UTF_16 (s : String; name_encoding : Zip_name_encoding) return UTF_16_String;
+  function To_UTF_16 (s : String; name_encoding : Zip.Zip_name_encoding) return UTF_16_String;
 
   function To_UTF_8 (s : UTF_16_String) return UTF_8_String;
 
-  function To_UTF_8 (s : String; encoding : Zip_name_encoding) return UTF_8_String;
+  function To_UTF_8 (s : String; encoding : Zip.Zip_name_encoding) return UTF_8_String;
 
   function To_IBM_437 (s : UTF_16_String) return String;
   Cannot_encode_to_IBM_437 : exception;
@@ -100,7 +102,7 @@ package AZip_Common is
   function Give_path (s : UTF_16_String) return UTF_16_String;
   --  s is always equal to: Give_path & Remove_path
 
-  procedure Load_insensitive_if_possible (info : out Zip_info; from : String);
+  procedure Load_insensitive_if_possible (info : out Zip.Zip_info; from : String);
 
   --  This function will tell if a file is actually a Zip file.
   --  It is useful for instance when files are dropped onto AZip,
@@ -115,6 +117,6 @@ package AZip_Common is
      );
   function Is_valid_Zip_archive (file_name : String) return Archive_validity;
 
-  function Has_Zip_archive_encrypted_entries (info : Zip_info) return Boolean;
+  function Has_Zip_archive_encrypted_entries (info : Zip.Zip_info) return Boolean;
 
 end AZip_Common;

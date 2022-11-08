@@ -380,18 +380,19 @@ FONT 8, "Ms Shell Dlg"
 
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-Progress_box DIALOG 0, 0, 242, 116
+Progress_box DIALOG 0, 0, 242, 121
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "AZip is busy."
 FONT 8, "Ms Shell Dlg"
 {
-    LTEXT           "Adding...", Entry_operation_name, 7, 6, 218, 10, SS_LEFT, WS_EX_LEFT
-    LTEXT           "Some file", Entry_name, 7, 19, 228, 10, SS_LEFT, WS_EX_LEFT
-    CONTROL         "", File_Progress, PROGRESS_CLASS, 0, 7, 57, 227, 9, WS_EX_LEFT
-    CONTROL         "", Archive_Progress, PROGRESS_CLASS, 0, 7, 74, 227, 17, WS_EX_LEFT
-    PUSHBUTTON      "Cancel", Cancel_button, 96, 94, 50, 19, 0, WS_EX_LEFT
-    LTEXT           "Comment 1", Comment_1, 7, 32, 228, 10, SS_LEFT, WS_EX_LEFT
-    LTEXT           "Comment 2", Comment_2, 7, 45, 228, 10, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Adding...", Entry_operation_name,        7,  6, 228, 10, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Some file", Entry_name,                  7, 19, 228, 10, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Comment 1", Comment_1,                   7, 32, 228, 10, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Comment 2", Comment_2,                   7, 45, 228, 10, SS_LEFT, WS_EX_LEFT
+    CONTROL         "", File_Progress, PROGRESS_CLASS,    0,  7, 57, 228,  9, WS_EX_LEFT
+    CONTROL         "", Archive_Progress, PROGRESS_CLASS, 0, 46, 74, 150, 12, WS_EX_LEFT
+    LTEXT           "100%", Percent_Progress,               203, 76,  31, 10, SS_LEFT, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", Cancel_button,                 93, 94,  56, 19, 0, WS_EX_LEFT
 }
 
 

@@ -154,3 +154,4 @@
 #define Label_Stealth                           40151
 #define IDM_Invert_Selection                    40152
 #define Show_all_Formats                        40153
+#define Percent_Progress                        40154

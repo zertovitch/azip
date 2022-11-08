@@ -3,7 +3,6 @@ with Zip_Streams;
 with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
 with Ada.Strings;                       use Ada.Strings;
 with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
-with Ada.Wide_Text_IO;
 
 with Ada.Strings.UTF_Encoding.Conversions;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
@@ -343,14 +342,21 @@ package body AZip_Common is
     end case;
   end Image;
 
-  function Hexadecimal (x : Interfaces.Unsigned_32) return UTF_16_String
+  hexa_digit : constant
+    array (Interfaces.Unsigned_32 range 0 .. 15) of Wide_Character := "0123456789ABCDEF";
+
+  function Hexadecimal_32 (x : Interfaces.Unsigned_32) return UTF_16_String
   is
-    package MIO is new Ada.Wide_Text_IO.Modular_IO (Interfaces.Unsigned_32);
-    str : UTF_16_String (1 .. 12);
+    str : UTF_16_String (1 .. 8);
+    use Interfaces;
+    y : Unsigned_32 := x;
   begin
-    MIO.Put (str, x, 16);
-    return str (Index (str, "#") + 1 .. 11);
-  end Hexadecimal;
+    for i in reverse 1 .. 8 loop
+      str (i) := hexa_digit (y and 15);
+      y := Shift_Right (y, 4);
+    end loop;
+    return str;
+  end Hexadecimal_32;
 
   generic
     type Size_Type is mod <>;

@@ -78,7 +78,7 @@ package AZip_Common is
   --------------------------
 
   function Image (topic : Entry_topic) return UTF_16_String;
-  function Hexadecimal (x : Interfaces.Unsigned_32) return UTF_16_String;
+  function Hexadecimal_32 (x : Interfaces.Unsigned_32) return UTF_16_String with Inline;
   --  File sizes (in GB, MB, KB or bytes)
   function File_Size_Image (x : Zip.Zip_64_Data_Size_Type) return UTF_16_String;
   --  Image with thousands separator

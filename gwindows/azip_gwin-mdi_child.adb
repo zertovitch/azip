@@ -216,7 +216,7 @@ package body AZip_GWin.MDI_Child is
         entry_comp_size   : Zip_64_Data_Size_Type;
         entry_uncomp_size : Zip_64_Data_Size_Type;
         crc_32            : Interfaces.Unsigned_32;
-        entry_date_time   : Time;
+        entry_date_time   : Zip_Streams.Time;
         method            : PKZip_method;
         name_encoding     : Zip_name_encoding;
         read_only         : Boolean;
@@ -303,45 +303,59 @@ package body AZip_GWin.MDI_Child is
         end if;
         row := row + 1;
         if need in first_display .. node_selected then
-          Lst.Insert_Item (name (simple_name_idx .. name'Last) & Encryption_suffix, row);
-          if entry_uncomp_size > 0 then
-            compression_ratio := Long_Float (entry_comp_size) / Long_Float (entry_uncomp_size);
-          else
-            compression_ratio := 0.0;
-          end if;
-          --
-          --  Payload
-          --
-          Lst.Item_Data (
-            row,
-            new LV_Payload'(
-              index_before_sorting => row,
-              uncompressed_size    => Interfaces.Integer_64 (entry_uncomp_size),
-              compressed_size      => Interfaces.Integer_64 (entry_comp_size),
-              ratio                => compression_ratio,
-              result_code          => entry_user_code  --  Updated elsewhere if need = results_refresh
-            )
-          );
-          --
-          Lst.Set_Sub_Item (name (extension_idx .. name'Last), row, cidx (FType) - 1);
+          declare
+            the_simple_name : UTF_16_String renames name (simple_name_idx .. name'Last);
+            the_ext         : UTF_16_String renames name (extension_idx .. name'Last);
+            the_path        : UTF_16_String renames name (name'First .. simple_name_idx - 1);
           begin
-            Lst.Set_Sub_Item (S2G (Zip_time_display (entry_date_time)), row, cidx (Modified) - 1);
-          exception
-            when Zip_Streams.Calendar.Time_Error =>
-              Lst.Set_Sub_Item ("(invalid)", row, cidx (Modified) - 1);
+            Lst.Insert_Item (the_simple_name & Encryption_suffix, row);
+            if entry_uncomp_size > 0 then
+              compression_ratio := Long_Float (entry_comp_size) / Long_Float (entry_uncomp_size);
+            else
+              compression_ratio := 0.0;
+            end if;
+            --
+            --  Payload
+            --
+            Lst.Item_Data (
+              row,
+              new LV_Payload'(
+                index_before_sorting => row,
+                name                 => To_Unbounded_Wide_String (the_simple_name),
+                extension            => To_Unbounded_Wide_String (the_ext),
+                path                 => To_Unbounded_Wide_String (the_path),
+                uncompressed_size    => Interfaces.Integer_64 (entry_uncomp_size),
+                compressed_size      => Interfaces.Integer_64 (entry_comp_size),
+                crc_32               => crc_32,
+                date_time            => entry_date_time,
+                format               => method,
+                name_encoding        => name_encoding,
+                read_only            => read_only,
+                ratio                => compression_ratio,
+                result_code          => entry_user_code  --  Updated elsewhere if need = results_refresh
+              )
+            );
+            --
+            Lst.Set_Sub_Item (the_ext, row, cidx (FType) - 1);
+            begin
+              Lst.Set_Sub_Item (S2G (Zip_time_display (entry_date_time)), row, cidx (Modified) - 1);
+            exception
+              when Zip_Streams.Calendar.Time_Error =>
+                Lst.Set_Sub_Item ("(invalid)", row, cidx (Modified) - 1);
+            end;
+            if read_only then  --  Any attribute
+              Lst.Set_Sub_Item (S2G ((1 => R_mark (read_only))), row, cidx (Attributes) - 1);
+            end if;
+            Lst.Set_Sub_Item (File_Size_Image (entry_uncomp_size), row, cidx (Size) - 1);
+            Lst.Set_Sub_Item (File_Size_Image (entry_comp_size), row, cidx (Packed) - 1);
+            Lst.Set_Sub_Item (Ratio_pct_Image (entry_comp_size, entry_uncomp_size), row, cidx (Ratio) - 1);
+            Lst.Set_Sub_Item (S2G (Zip.Image (method)), row, cidx (Format) - 1);
+            Lst.Set_Sub_Item (Hexadecimal_32 (crc_32), row, cidx (CRC32) - 1);
+            if simple_name_idx > name'First then
+              Lst.Set_Sub_Item (the_path, row, cidx (Path) - 1);
+            end if;
+            Lst.Set_Sub_Item (Zip_name_encoding'Wide_Image (name_encoding), row, cidx (Encoding) - 1);
           end;
-          if read_only then -- any attribute
-            Lst.Set_Sub_Item (S2G ((1 => R_mark (read_only))), row, cidx (Attributes) - 1);
-          end if;
-          Lst.Set_Sub_Item (File_Size_Image (entry_uncomp_size), row, cidx (Size) - 1);
-          Lst.Set_Sub_Item (File_Size_Image (entry_comp_size), row, cidx (Packed) - 1);
-          Lst.Set_Sub_Item (Ratio_pct_Image (entry_comp_size, entry_uncomp_size), row, cidx (Ratio) - 1);
-          Lst.Set_Sub_Item (S2G (Zip.Image (method)), row, cidx (Format) - 1);
-          Lst.Set_Sub_Item (Hexadecimal (crc_32), row, cidx (CRC32) - 1);
-          if simple_name_idx > name'First then
-            Lst.Set_Sub_Item (name (name'First .. simple_name_idx - 1), row, cidx (Path) - 1);
-          end if;
-          Lst.Set_Sub_Item (Zip_name_encoding'Wide_Image (name_encoding), row, cidx (Encoding) - 1);
           --
           --  Show some response if the zip directory is very large
           --
@@ -802,17 +816,21 @@ package body AZip_GWin.MDI_Child is
       if now - tick >= 0.04 or else archive_percents_done = 100 then
         progress.File_Progress.Position (file_percents_done);
         progress.Archive_Progress.Position (archive_percents_done);
-        Window.MDI_Root.Text (
-          Trim (Integer'Wide_Image (archive_percents_done), Left) &
-          "% done - " & S2G (AZip_GWin.Installation.AZip_Title)
-        );
-        if Window.MDI_Root.Task_bar_gadget_ok then
-          Window.MDI_Root.Task_bar_gadget.Set_Progress_Value (Window.MDI_Root.all, archive_percents_done, 100);
-        end if;
-        progress.Entry_name.Text (entry_being_processed);
-        progress.Entry_operation_name.Text (
-          Description (e_operation, operation, skip_hint)
-        );
+        declare
+          percents_done : constant GString :=
+            Trim (Integer'Wide_Image (archive_percents_done), Left) & '%';
+        begin
+          Window.MDI_Root.Text
+            (percents_done & " done - " & S2G (AZip_GWin.Installation.AZip_Title));
+          if Window.MDI_Root.Task_bar_gadget_ok then
+            Window.MDI_Root.Task_bar_gadget.Set_Progress_Value
+              (Window.MDI_Root.all, archive_percents_done, 100);
+          end if;
+          progress.Percent_Progress.Text (percents_done);
+          progress.Entry_name.Text (entry_being_processed);
+          progress.Entry_operation_name.Text
+            (Description (e_operation, operation, skip_hint));
+        end;
         progress.Comment_1.Text (S2G (for_comment_1));
         progress.Comment_2.Text (S2G (for_comment_2));
         if archive_percents_done = 100 and then for_comment_1 /= "" then

@@ -29,98 +29,77 @@ package body AZip_GWin.Directory_Lists is
     end if;
   end On_Item_Changed;
 
-  function On_Compare (
-               Control : in Directory_list_type;
-               Column  : in Natural;
-               Index_1 : in Natural;
-               Index_2 : in Natural
-  )
-  return Integer
+  function On_Compare
+    (Control   : in Directory_list_type;
+     Column    : in Natural;
+     Payload_1 : in LV_Payload;
+     Payload_2 : in LV_Payload) return Integer
   is
     use Interfaces;
-    i1, i2  : Integer;
-    s1, s2  : Integer_64;
-    r1, r2  : Long_Float;
+    n1 : AZip_Common.UTF_16_Unbounded_String renames Payload_1.name;
+    n2 : AZip_Common.UTF_16_Unbounded_String renames Payload_2.name;
+    x1 : AZip_Common.UTF_16_Unbounded_String renames Payload_1.extension;
+    x2 : AZip_Common.UTF_16_Unbounded_String renames Payload_2.extension;
+    p1 : AZip_Common.UTF_16_Unbounded_String renames Payload_1.path;
+    p2 : AZip_Common.UTF_16_Unbounded_String renames Payload_2.path;
+    a1 : Boolean renames Payload_1.read_only;
+    a2 : Boolean renames Payload_2.read_only;
+    e1 : Zip.Zip_name_encoding renames Payload_1.name_encoding;
+    e2 : Zip.Zip_name_encoding renames Payload_2.name_encoding;
+    f1 : Zip.PKZip_method renames Payload_1.format;
+    f2 : Zip.PKZip_method renames Payload_2.format;
+    t1 : Integer renames Payload_1.result_code;
+    t2 : Integer renames Payload_2.result_code;
+    s1 : Integer_64 renames Payload_1.uncompressed_size;
+    s2 : Integer_64 renames Payload_2.uncompressed_size;
+    k1 : Integer_64 renames Payload_1.compressed_size;
+    k2 : Integer_64 renames Payload_2.compressed_size;
+    u1 : Unsigned_32 renames Payload_1.crc_32;
+    u2 : Unsigned_32 renames Payload_2.crc_32;
+    r1 : Long_Float renames Payload_1.ratio;
+    r2 : Long_Float renames Payload_2.ratio;
+    d1 : Zip_Streams.Time renames Payload_1.date_time;
+    d2 : Zip_Streams.Time renames Payload_2.date_time;
+    --
+    use type AZip_Common.UTF_16_Unbounded_String;
+    use Zip_Streams, Zip_Streams.Calendar;
+    use Zip;
+    --
     less    : constant := -1;
     greater : constant := +1;
     equal   : constant :=  0;
   begin
-    --  Comparison strategy: for topics where identical values are likely
-    --  to be rare, such as file sizes, we start with an inequality test.
     case Control.curr_col_topic (Column) is
-      when Size =>
-        s1 := Control.Item_Data (Index_1).uncompressed_size;
-        s2 := Control.Item_Data (Index_2).uncompressed_size;
-        if s1 > s2 then
-          return greater;
-        elsif s1 = s2 then
-          return equal;
-        else
-          return less;
-        end if;
-      when Packed =>
-        s1 := Control.Item_Data (Index_1).compressed_size;
-        s2 := Control.Item_Data (Index_2).compressed_size;
-        if s1 > s2 then
-          return greater;
-        elsif s1 = s2 then
-          return equal;
-        else
-          return less;
-        end if;
-      when Ratio =>
-        r1 := Control.Item_Data (Index_1).ratio;
-        r2 := Control.Item_Data (Index_2).ratio;
-        if r1 > r2 then
-          return greater;
-        elsif r1 < r2 then
-          return less;
-        else
-          --  Equality test on floats is a BAD thing, we avoid it.
-          return equal;
-        end if;
-      when Result =>
-        i1 := Control.Item_Data (Index_1).result_code;
-        i2 := Control.Item_Data (Index_2).result_code;
-        if i1 > i2 then
-          return greater;
-        elsif i1 = i2 then
-          return equal;
-        else
-          return less;
-        end if;
-      when others =>
-        --  The sort column has the default behaviour, with text comparison.
-        --  This part is never executed if the sorting is done with
-        --  Comparison_Technique_Type = As_Strings or As_Strings_Default.
-        declare
-          Value_1 : constant GString := Control.Text (Index_1, Column);
-          Value_2 : constant GString := Control.Text (Index_2, Column);
-        begin
-          --  Default behaviour: lexicographic.
-          if Value_1 = Value_2 then
-            return equal;
-          elsif Value_1 > Value_2 then
-            return greater;
-          else
-            return less;
-          end if;
-        end;
+      --  Comparison strategy: for topics, such as file names or sizes, where identical values for
+      --  pairs of items are likely to be rare, we start with an inequality test:
+      when Name       => if n1 > n2 then return greater; elsif n1 = n2 then return equal; else return less; end if;
+      when Size       => if s1 > s2 then return greater; elsif s1 = s2 then return equal; else return less; end if;
+      when Packed     => if k1 > k2 then return greater; elsif k1 = k2 then return equal; else return less; end if;
+      when Modified   => if d1 > d2 then return greater; elsif d1 = d2 then return equal; else return less; end if;
+      when CRC32      => if u1 > u2 then return greater; elsif u1 = u2 then return equal; else return less; end if;
+      when Format     => if f1 > f2 then return greater; elsif f1 = f2 then return equal; else return less; end if;
+      when Encoding   => if e1 > e2 then return greater; elsif e1 = e2 then return equal; else return less; end if;
+      when Result     => if t1 > t2 then return greater; elsif t1 = t2 then return equal; else return less; end if;
+      --  For the following items, we make an equality test first, since it is the most likely case:
+      when FType      => if x1 = x2 then return equal; elsif x1 > x2 then return greater; else return less; end if;
+      when Path       => if p1 = p2 then return equal; elsif p1 > p2 then return greater; else return less; end if;
+      when Attributes => if a1 = a2 then return equal; elsif a1 > a2 then return greater; else return less; end if;
+      --  Equality test on floats is a BAD thing; we avoid it:
+      when Ratio      => if r1 > r2 then return greater; elsif r1 < r2 then return less; else return equal; end if;
     end case;
   end On_Compare;
 
-  procedure Sort (
-    Control    : in out Directory_list_type;
-    Column     : in     Natural;
-    Direction  : in     AZip_LV_Ex.Sort_Direction_Type;
-    Show_Icon  : in     Boolean := True;
-    Technique  : in     AZip_LV_Ex.Comparison_Technique_Type := AZip_LV_Ex.As_Strings)
+  procedure Sort
+    (Control    : in out Directory_list_type;
+     Column     : in     Natural;
+     Direction  : in     AZip_LV_Ex.Sort_Direction_Type;
+     Show_Icon  : in     Boolean := True;
+     Technique  : in     AZip_LV_Ex.Comparison_Technique_Type := AZip_LV_Ex.As_Strings)
   is
     use Ada.Calendar;
     t0, t1 : Ada.Calendar.Time;
     window : MDI_Child_Type renames MDI_Child_Type (Control.Parent.Parent.Parent.all);
     use AZip_LV_Ex;
-    imposed_technique : Comparison_Technique_Type;
   begin
     if timing then
       t0 := Clock;
@@ -129,14 +108,9 @@ package body AZip_GWin.Directory_Lists is
     for t in Entry_topic loop
       Control.curr_col_topic (window.opt.column_index (t) - 1) := t;
     end loop;
-    if Control.curr_col_topic (Column) in Size | Packed | Ratio | Result then
-      imposed_technique := General;
-    else
-      imposed_technique := As_Strings_Default;
-    end if;
-    --  Call parent method, but with the `General` comparison technique,
-    --  which avoids strings if possible.
-    Ex_List_View_Control_Type (Control).Sort (Column, Direction, Show_Icon, imposed_technique);
+    --  Call parent method, but with the `Using_Payloads` comparison technique,
+    --  which bypasses any API call. Parameter `Technique` is ignored.
+    Ex_List_View_Control_Type (Control).Sort (Column, Direction, Show_Icon, Using_Payloads);
     --
     if timing then
       t1 := Clock;
@@ -153,12 +127,11 @@ package body AZip_GWin.Directory_Lists is
     Child_Window.Update_tool_bar_and_menus;
   end On_Focus;
 
-  overriding procedure On_Notify (
-      Window       : in out Directory_list_type;
-      Message      : in     GWindows.Base.Pointer_To_Notification;
-      Control      : in     GWindows.Base.Pointer_To_Base_Window_Class;
-      Return_Value : in out GWindows.Types.Lresult
-  )
+  overriding procedure On_Notify
+    (Window       : in out Directory_list_type;
+     Message      : in     GWindows.Base.Pointer_To_Notification;
+     Control      : in     GWindows.Base.Pointer_To_Base_Window_Class;
+     Return_Value : in out GWindows.Types.Lresult)
   is
     LVN_FIRST      : constant := -100;
     LVN_BEGINDRAG  : constant := LVN_FIRST - 9;
@@ -185,10 +158,9 @@ package body AZip_GWin.Directory_Lists is
     end case;
   end On_Notify;
 
-  overriding procedure On_Free_Payload (
-    Control : in out Directory_list_type;
-    Payload :    out AZip_LV_Ex.Data_Access
-  )
+  overriding procedure On_Free_Payload
+    (Control : in out Directory_list_type;
+     Payload :    out AZip_LV_Ex.Data_Access)
   is
     procedure Dispose is new Ada.Unchecked_Deallocation (LV_Payload, AZip_LV_Ex.Data_Access);
   begin

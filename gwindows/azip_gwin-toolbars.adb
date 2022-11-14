@@ -1,7 +1,9 @@
-with AZip_Resource_GUI;                 use AZip_Resource_GUI;
+with AZip_Resource_GUI;
 
-with GWindows.Base;
-with GWindows.Menus;                    use GWindows.Menus;
+with GWindows.Base,
+     GWindows.Menus;
+
+with GWin_Util;
 
 with Interfaces.C;
 
@@ -9,49 +11,23 @@ package body AZip_GWin.Toolbars is
 
   use GWindows.Image_Lists, Interfaces.C;
 
-  --  Filter & and \t
-  --  Not having TTS_NO_PREFIX in tool_tip creation would do it as well.
-  function Filter (s : GString) return GString is
-    use type GString_Unbounded;
-    u : GString_Unbounded;
-  begin
-    for i in s'Range loop
-      case s (i) is
-        when '&' | GCharacter'Val (0) =>
-          null;
-        when GCharacter'Val (9) => -- Tab
-          exit;
-        when '\' =>
-          exit when i < s'Last and then s (i + 1) = 't';
-        when others =>
-          u := u & GString'(1 => s (i));
-      end case;
-    end loop;
-    return To_GString_From_Unbounded (u);
-  end Filter;
-
   --  How to Display Tooltips for Buttons (Windows)
   --  http://msdn.microsoft.com/en-us/library/windows/desktop/hh298386(v=vs.85).aspx
 
-  TBSTYLE_TOOLTIPS : constant := 16#100#;
-  TBSTYLE_FLAT     : constant := 16#800#;
-  TBSTYLE_LIST     : constant := 16#00001000#;
+  TBSTYLE_TOOLTIPS : constant := 16#0100#;
+  TBSTYLE_FLAT     : constant := 16#0800#;
+  TBSTYLE_LIST     : constant := 16#1000#;
 
-  TBSTYLE_EX_MIXEDBUTTONS     : constant := 16#00000008#;
+  TBSTYLE_EX_MIXEDBUTTONS : constant := 8;
 
   sep_width : constant := 8;
-
-  function Num_resource (id : Natural) return GString is
-    img : constant String := Integer'Image (id);
-  begin
-    return To_GString_From_String ('#' & img (img'First + 1 .. img'Last));
-  end Num_resource;
 
   procedure Init_Main_Toolbar
     (tb     : in out GWindows.Common_Controls.Toolbar_Control_Type'Class;
      il     : in out GWindows.Image_Lists.Image_List_Type;
      parent : in out AZip_GWin.MDI_Main.MDI_Main_Type)
   is
+    use AZip_Resource_GUI;
     string_count : Natural := 0;
     Fake_Menu : Menu_MDI_Child_Type;
     Super_Fake_Menu : Fake_menu_for_commands_in_no_real_menu_Type;
@@ -60,7 +36,7 @@ package body AZip_GWin.Toolbars is
       (Image_Index : in     Natural;
        Command_ID  : in     Integer)
     is
-      use GWindows.Common_Controls;
+      use GWin_Util, GWindows.Common_Controls, GWindows.Menus;
     begin
       --  The tool tip is the menu text.
       declare
@@ -68,9 +44,9 @@ package body AZip_GWin.Toolbars is
         tip2 : constant GString := Text (Super_Fake_Menu.Main, Command, Command_ID);
       begin
         if tip1 = "" then
-          tb.Add_String (Filter (tip2));
+          tb.Add_String (Menu_Entry_Title_to_Toolbar_Label (tip2));
         else
-          tb.Add_String (Filter (tip1));
+          tb.Add_String (Menu_Entry_Title_to_Toolbar_Label (tip1));
         end if;
       end;
       tb.Add_Button (Image_Index, Command_ID, string_count);

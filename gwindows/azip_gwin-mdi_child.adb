@@ -686,11 +686,11 @@ package body AZip_GWin.MDI_Child is
     null; -- nothing to be saved in this application
   end On_Save;
 
-  function Is_file_saved (Window : in MDI_Child_Type) return Boolean is
+  function Is_Document_Modified (Window : in MDI_Child_Type) return Boolean is
     pragma Unreferenced (Window);
   begin
-    return True;
-  end Is_file_saved;
+    return False;
+  end Is_Document_Modified;
 
   ----------------
   -- On_Save_As --
@@ -1822,10 +1822,8 @@ package body AZip_GWin.MDI_Child is
     sd : AZip_LV_Ex.Sort_Direction_Type;
   begin
     Can_Close := True;
-    if Is_file_saved (Window) then
-      Update_Common_Menus (Window, GU2G (Window.File_Name));
-      Window.Status_deamon.Stop;
-    else -- This happens only for documents that may stay in an unsaved state.
+    if Is_Document_Modified (Window) then
+      --  This happens only for documents that may stay in an unsaved state.
       loop
         case Message_Box
                (Window,
@@ -1835,15 +1833,22 @@ package body AZip_GWin.MDI_Child is
                 Yes_No_Cancel_Box,
                 Question_Icon)
         is
-          when Yes    => On_Save (Window);
-                         exit when Is_file_saved (Window);
-          when No     => exit;
-          when Cancel => Window.MDI_Root.Success_in_enumerated_close := False;
-                         Can_Close := False;
-                         exit;
-          when others => null;
+          when Yes =>
+            On_Save (Window);
+            exit when not Is_Document_Modified (Window);
+          when No =>
+            exit;
+          when Cancel =>
+            Window.MDI_Root.Success_in_enumerated_close := False;
+            Can_Close := False;
+            exit;
+          when others =>
+            null;
         end case;
       end loop;
+    else
+      Update_Common_Menus (Window, GU2G (Window.File_Name));
+      Window.Status_deamon.Stop;
     end if;
     if Can_Close then
       --  Memorize column widths

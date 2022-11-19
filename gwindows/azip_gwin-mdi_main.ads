@@ -6,6 +6,8 @@ with AZip_Common.User_options;
 
 with AZip_Resource_GUI;
 
+with Office_Applications;
+
 with GWindows.Base,
      GWindows.Common_Controls,
      GWindows.Drawing,
@@ -26,7 +28,7 @@ package AZip_GWin.MDI_Main is
   type IDM_MRU_List is array (AZip_Common.User_options.MRU_List'Range) of Natural;
 
   type MDI_Main_Type is
-    new GWindows.Windows.MDI.MDI_Main_Window_Type with
+    new Office_Applications.Classic_Main_Window_Type with
       record
         Success_in_enumerated_close : Boolean;
         --  MRU (Most recently used) files names:

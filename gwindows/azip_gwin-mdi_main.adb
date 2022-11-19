@@ -76,27 +76,6 @@ package body AZip_GWin.MDI_Main is
       (MDI_Client_Window (Window).all, Redraw_Child'Access);
   end Redraw_all;
 
-  procedure Close_extra_first_child (Window : GWindows.Base.Pointer_To_Base_Window_Class)
-  is
-    use MDI_Child;
-  begin
-    if Window.all in MDI_Child_Type'Class then
-      declare
-        w : MDI_Child_Type renames MDI_Child_Type (Window.all);
-      begin
-        if w.Extra_first_doc and Is_file_saved (w) then
-          Window.Close;
-        end if;
-      end;
-    end if;
-  end Close_extra_first_child;
-
-  procedure Close_extra_first_child (Window : in out MDI_Main_Type) is
-  begin
-    GWindows.Base.Enumerate_Children
-      (MDI_Client_Window (Window).all, Close_extra_first_child'Access);
-  end Close_extra_first_child;
-
   procedure Finish_subwindow_opening
     (m : in out MDI_Main_Type;
      c : in out MDI_Child.MDI_Child_Type)
@@ -166,7 +145,7 @@ package body AZip_GWin.MDI_Main is
         new MDI_Child.MDI_Child_Type;
     begin
       --  We do here like Excel or Word: close the unused blank window
-      Close_extra_first_child (Window);
+      Window.Close_Initial_Document;
       --
       Window.User_maximize_restore := False;
       New_Window.File_Name := File_Name;
@@ -400,7 +379,7 @@ package body AZip_GWin.MDI_Main is
     File_Title : constant GString := "New Archive" & Suffix;
 
   begin
-    New_Window.Extra_first_doc := extra_first_doc;
+    New_Window.Extra_First_Doc := extra_first_doc;
     Window.User_maximize_restore := False;
     New_Window.Create_MDI_Child (Window, File_Title, Is_Dynamic => True);
     New_Window.Short_Name := G2GU (File_Title);

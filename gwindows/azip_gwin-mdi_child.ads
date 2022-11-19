@@ -8,6 +8,8 @@ with AZip_Resource_GUI;
 
 with Zip;
 
+with Office_Applications;
+
 with GWindows.Common_Controls,
      GWindows.Drawing,
      GWindows.GControls.GSize_Bars,
@@ -77,14 +79,12 @@ package AZip_GWin.MDI_Child is
   overriding procedure On_Bar_Moved (Window : in out MDI_Child_GSize_Bar_Type);
 
   type MDI_Child_Type is
-    new GWindows.Windows.MDI.MDI_Child_Window_Type with
+    new Office_Applications.Classic_Document_Window_Type with
       record
         File_Name           : GString_Unbounded;
         Short_Name          : GString_Unbounded;
         --  ^ Window title = Short_Name & {""|" *"}
         MDI_Root            : MDI_Main.MDI_Main_Access; -- -> access to the containing window
-        Extra_first_doc     : Boolean := False;
-        --  ^ new file closed if kept virgin when opening another one (like blank Excel sheet).
         Menu                : AZip_Resource_GUI.Menu_MDI_Child_Type;
         context_menu_file   : GWindows.Menus.Menu_Type := GWindows.Menus.Create_Popup;
         context_menu_folder : GWindows.Menus.Menu_Type := GWindows.Menus.Create_Popup;
@@ -120,10 +120,8 @@ package AZip_GWin.MDI_Child is
   overriding procedure On_Create (Window : in out MDI_Child_Type);
 
   procedure On_Save (Window : in out MDI_Child_Type);
-  --  This would be abstract in a 'generic' Office framework.
 
-  function Is_file_saved (Window : in MDI_Child_Type) return Boolean;
-  --  This would be abstract in a 'generic' Office framework.
+  overriding function Is_Document_Modified (Window : in MDI_Child_Type) return Boolean;
 
   procedure On_Save_As (Window : in out MDI_Child_Type);
 

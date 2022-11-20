@@ -213,22 +213,13 @@ package body AZip_GWin.MDI_Main is
     );
   end Open_Child_Window_And_Load;
 
-  function Valid_Left_Top (Left, Top : Integer)
-    return Boolean
-  is
-    use GWindows.Application;
-  begin
-    return Left in -320 .. Desktop_Width  - 30 and
-           Top  in -320 .. Desktop_Height - 80;
-  end Valid_Left_Top;
-
   ---------------
   -- On_Create --
   ---------------
 
   procedure On_Create (Window : in out MDI_Main_Type) is
     use Ada.Command_Line, AZip_Resource_GUI,
-        GWindows.Cursors, GWindows.Taskbar, GWindows.Windows;
+        GWindows.Application, GWindows.Cursors, GWindows.Taskbar, GWindows.Windows;
     --
     --  Replace AZip default values by system-dependent ones (here those of GWindows)
     --
@@ -269,7 +260,7 @@ package body AZip_GWin.MDI_Main is
 
     --  ** Resize according to options:
 
-    if Valid_Left_Top (Window.opt.win_left, Window.opt.win_top) then
+    if Screen_Visibility ((Window.opt.win_left, Window.opt.win_top)) = Good then
       Left (Window, Window.opt.win_left);
       Top  (Window, Window.opt.win_top);
     end if;

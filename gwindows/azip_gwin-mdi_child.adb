@@ -122,7 +122,7 @@ package body AZip_GWin.MDI_Child is
     is_folder_focused : Boolean;
     is_any_to_delete : Boolean;
     sel : Natural;
-    bar : MDI_Toolbar_Type renames Window.MDI_Root.Tool_Bar;
+    bar : Office_Applications.Classic_Main_Tool_Bar_Type renames Window.MDI_Root.Tool_Bar;
     boolean_to_state : constant array (Boolean) of State_Type
       := (True => Enabled, False => Disabled);
   begin

@@ -179,15 +179,6 @@ package body AZip_GWin.MDI_Main is
       Message_Box (Window, "Error", "Archive file not found", Icon => Exclamation_Icon);
   end Open_Child_Window_And_Load;
 
-  procedure On_Button_Select (
-        Control : in out MDI_Toolbar_Type;
-        Item    : in     Integer)
-  is
-    Parent : constant MDI_Main_Access := MDI_Main_Access (Controlling_Parent (Control));
-  begin
-    On_Menu_Select (Parent.all, Item);
-  end On_Button_Select;
-
   function Shorten_file_name (s : GString) return GString is
     max : constant := 33;
     beg : constant := 6;
@@ -253,7 +244,7 @@ package body AZip_GWin.MDI_Main is
 
     --  ** Main tool bar (add / remove / ...) at top left of the main window:
 
-    Toolbars.Init_Main_Toolbar (Window.Tool_Bar, Window.Toolbar_Images, Window);
+    Toolbars.Init_Main_Tool_Bar (Window.Tool_Bar, Window);
 
     --  ** Other resources
     Window.Folders_Images.Create (Num_resource (Folders_BMP), 16);

@@ -18,13 +18,6 @@ with GWindows.Base,
 
 package AZip_GWin.MDI_Main is
 
-  type MDI_Toolbar_Type is
-    new GWindows.Common_Controls.Toolbar_Control_Type with null record;
-
-  procedure On_Button_Select (Control : in out MDI_Toolbar_Type;
-                              Item    : in     Integer);
-  --  Handle click on toolbar
-
   type IDM_MRU_List is array (AZip_Common.User_options.MRU_List'Range) of Natural;
 
   type MDI_Main_Type is
@@ -34,8 +27,6 @@ package AZip_GWin.MDI_Main is
         --  MRU (Most recently used) files names:
         --  Menu ID's stored into a handy array
         IDM_MRU                : IDM_MRU_List;
-        Tool_Bar               : MDI_Toolbar_Type;
-        Toolbar_Images         : GWindows.Image_Lists.Image_List_Type;
         Folders_Images         : GWindows.Image_Lists.Image_List_Type;
         Menu                   : AZip_Resource_GUI.Menu_MDI_Main_Type;
         --  record_dimensions      : Boolean:= False; -- in On_Move, On_Size

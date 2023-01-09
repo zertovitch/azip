@@ -18,13 +18,13 @@ package body AZip_GWin.Directory_Lists is
   procedure On_Item_Changed (Control : in out Directory_list_type) is
   begin
     if Control.refreshing then
-      --  Avoid call to Update_display, item by item, during a full refresh...
+      --  Avoid call to Update_Information, item by item, during a full refresh...
       null;
     else
       declare
         PW : MDI_Child_Type renames MDI_Child_Type (Control.Parent.Parent.Parent.all);
       begin
-        PW.Update_Display (status_bar);
+        PW.Update_Information (status_bar);
       end;
     end if;
   end On_Item_Changed;

@@ -163,7 +163,7 @@ package body AZip_GWin.MDI_Child is
     end if;
   end Update_tool_bar_and_menus;
 
-  procedure Update_Display
+  procedure Update_Information
     (Window : in out MDI_Child_Type;
      need   :        Update_need)
   is
@@ -500,7 +500,7 @@ package body AZip_GWin.MDI_Child is
       Window.Update_status_bar;
     end if;
     Window.Update_tool_bar_and_menus;
-  end Update_Display;
+  end Update_Information;
 
   procedure Memorize_splitter (Window : in out MDI_Child_Type) is
   begin
@@ -567,7 +567,7 @@ package body AZip_GWin.MDI_Child is
             end if;
           end loop;
           Window.Folder_Tree.Select_Item (sel_node);
-          Update_Display (Window, node_selected);
+          Update_Information (Window, node_selected);
           Window.Folder_Tree.Expand (sel_node);
           Window.Folder_Tree.Focus;
         end if;
@@ -599,7 +599,7 @@ package body AZip_GWin.MDI_Child is
         Window.Folder_Tree.Show;
     end case;
     Window.On_Size (Window.Width, Window.Height);
-    Update_Display (Window, archive_changed);
+    Update_Information (Window, archive_changed);
     Window.selected_path := mem_sel_path;
     Check_path (Window, go_up => False);
   end Change_View;
@@ -676,7 +676,7 @@ package body AZip_GWin.MDI_Child is
       end if;
     end;
     Window.Status_deamon.Start;
-    Window.Update_Display (first_display);
+    Window.Update_Information (first_display);
     Window.Accept_File_Drag_And_Drop;
     Ada.Numerics.Float_Random.Reset (Window.temp_name_gen);
   end On_Create;
@@ -957,7 +957,7 @@ package body AZip_GWin.MDI_Child is
           if operation in Modifying_Operation then
             Window.Load_Archive_Catalogue (copy_codes => operation /= Remove);
           else
-            Update_Display (Window, results_refresh);
+            Update_Information (Window, results_refresh);
           end if;
         when archive_too_large =>
           Message_Box (Window,
@@ -1144,8 +1144,8 @@ package body AZip_GWin.MDI_Child is
     end if;
     Window.zif := new_zif;
     Change_View (Window, Window.opt.view_mode, force => True);
-    --  Update_display(Window, archive_changed); -- included in Change_View
-    --  Window.Status_deamon.Display(Window'Unchecked_Access);
+    --  Update_Information (Window, archive_changed); -- included in Change_View
+    --  Window.Status_deamon.Display (Window'Unchecked_Access);
   end Load_Archive_Catalogue;
 
   procedure On_Size (Window : in out MDI_Child_Type;
@@ -1813,7 +1813,7 @@ package body AZip_GWin.MDI_Child is
 
   overriding procedure On_Focus (Window : in out MDI_Child_Type) is
   begin
-    Update_Display (Window, toolbar_and_menu);
+    Update_Information (Window, toolbar_and_menu);
   end On_Focus;
 
   overriding procedure On_Close (Window    : in out MDI_Child_Type;
@@ -1958,7 +1958,7 @@ package body AZip_GWin.MDI_Child is
           accept Display (w : MDI_Child_Access) do
             current_child_window := w;
           end Display;
-          Update_Display (current_child_window.all, status_bar);
+          Update_Information (current_child_window.all, status_bar);
         or
           delay 0.05; -- relax
         end select;

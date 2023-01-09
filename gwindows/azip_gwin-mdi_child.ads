@@ -146,10 +146,9 @@ package AZip_GWin.MDI_Child is
      toolbar_and_menu -- update enable/disable of toolbar items and menu items
     );
 
-  procedure Update_Display (
-    Window : in out MDI_Child_Type;
-    need   :        Update_need
-  );
+  procedure Update_Information
+    (Window : in out MDI_Child_Type;
+     need   :        Update_need);
 
   procedure Load_Archive_Catalogue (
     Window     : in out MDI_Child_Type;

@@ -18,15 +18,10 @@ with GWindows.Base,
 
 package AZip_GWin.MDI_Main is
 
-  type IDM_MRU_List is array (AZip_Common.User_options.MRU_List'Range) of Natural;
-
   type MDI_Main_Type is
     new Office_Applications.Classic_Main_Window_Type with
       record
         Success_in_enumerated_close : Boolean;
-        --  MRU (Most recently used) files names:
-        --  Menu ID's stored into a handy array
-        IDM_MRU                : IDM_MRU_List;
         Folders_Images         : GWindows.Image_Lists.Image_List_Type;
         Menu                   : AZip_Resource_GUI.Menu_MDI_Main_Type;
         --  record_dimensions      : Boolean:= False; -- in On_Move, On_Size

@@ -33,7 +33,7 @@ package body AZip_GWin.Folder_Trees is
       return; -- the same node as before has been selected, no further refresh needed.
     end if;
     parent_window.selected_path := new_path;
-    parent_window.Update_Display (node_selected);
+    parent_window.Update_Information (node_selected);
   end On_Selection_Change;
 
   overriding procedure On_Focus (Control : in out Folder_tree_type) is

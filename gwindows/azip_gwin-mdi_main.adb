@@ -587,7 +587,10 @@ package body AZip_GWin.MDI_Main is
     use Office_Applications;
   begin
     if top_entry /= "" then
-      Add_MRU (Window.MRU, top_entry);
+      Add_MRU
+        (Window.MRU,
+         top_entry,
+         Add_To_Desktop => not AZip_GWin.Persistence.Cfg_file_available);
     end if;
     Update_MRU_Menu (Window.MRU, Window.Menu.Popup_0001);
     --  Update_Toolbar_Menu(Window.View_menu, Window.Floating_toolbars);

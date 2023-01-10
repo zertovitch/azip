@@ -1,5 +1,3 @@
---  To do: make a generic "Office Classic" application framework
-
 with AZip_GWin.Dragging;
 
 with AZip_Common.User_options;
@@ -66,10 +64,9 @@ package AZip_GWin.MDI_Main is
       Canvas : in out GWindows.Drawing.Canvas_Type;
       Area   : in     GWindows.Types.Rectangle_Type) is null;
 
-  procedure Open_Child_Window_And_Load (
-    Window     : in out MDI_Main_Type;
-    File_Name  :        GWindows.GString_Unbounded
-  );
+  procedure Open_Child_Window_And_Load
+    (Window     : in out MDI_Main_Type;
+     File_Name  :        GWindows.GString_Unbounded);
 
   overriding procedure On_Menu_Select (
         Window : in out MDI_Main_Type;

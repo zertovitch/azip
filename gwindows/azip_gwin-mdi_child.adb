@@ -1087,9 +1087,9 @@ package body AZip_GWin.MDI_Child is
     if Confirm_archives_if_all_Zip_files (Window, File_Names) then
       --  All files are Zip archives (even those without .zip extension).
       --
-      --  We save the parent access since Window may have been closed
-      --  since the second iteration if Window was a temporary MS-Office-like
-      --  blank window - See procedure Close_extra_first_child.
+      --  We save the parent access because this Window may be already closed
+      --  since the second iteration of the loop below if Window is was a temporary
+      --  MS-Office-like blank window - See procedure Close_extra_first_child.
       parent := Window.MDI_Root;
       --
       for i in File_Names'Range loop

@@ -179,28 +179,16 @@ package body AZip_GWin.MDI_Main is
       Message_Box (Window, "Error", "Archive file not found", Icon => Exclamation_Icon);
   end Open_Child_Window_And_Load;
 
-  function Shorten_file_name (s : GString) return GString is
-    max : constant := 33;
-    beg : constant := 6;
-  begin
-    if s'Length < max then
-      return s;
-    else
-      return
-        s (s'First .. s'First + beg - 1) &       --  beg
-        "..." &                                  --  3
-        s (s'Last - max + beg + 1 .. s'Last);    --  max - beg - 3
-    end if;
-  end Shorten_file_name;
-
-  procedure Open_Child_Window_And_Load (
-        Window     : in out MDI_Main_Type;
-        File_Name  :        GWindows.GString_Unbounded) is
+  procedure Open_Child_Window_And_Load
+    (Window     : in out MDI_Main_Type;
+     File_Name  :        GWindows.GString_Unbounded)
+  is
+    use Office_Applications;
   begin
     Open_Child_Window_And_Load (
       Window,
       File_Name,
-      G2GU (Shorten_file_name (GU2G (File_Name)))
+      G2GU (Shorten_File_Name (GU2G (File_Name), 50))
     );
   end Open_Child_Window_And_Load;
 
@@ -223,6 +211,11 @@ package body AZip_GWin.MDI_Main is
     --
   begin
     AZip_GWin.Persistence.Load (Window.opt);
+    for m in Window.MRU.Item'Range loop
+      Window.MRU.Item (m) :=
+        (Name => Window.opt.mru (m),
+         Line => 0);
+    end loop;
     Replace_default (Window.opt.win_left);
     Replace_default (Window.opt.win_width);
     Replace_default (Window.opt.win_top);
@@ -236,7 +229,7 @@ package body AZip_GWin.MDI_Main is
     Window.Menu.Create_Full_Menu;
     MDI_Menu (Window, Window.Menu.Main, Window_Menu => 3);
     Accelerator_Table (Window, "Main_Menu");
-    Window.IDM_MRU :=
+    Window.MRU.ID_Menu :=
       (IDM_MRU_1,       IDM_MRU_2,       IDM_MRU_3,       IDM_MRU_4,
        IDM_MRU_5,       IDM_MRU_6,       IDM_MRU_7,       IDM_MRU_8,
        IDM_MRU_9
@@ -530,11 +523,11 @@ package body AZip_GWin.MDI_Main is
       when IDM_General_options =>
         Options.On_General_Options (Window);
       when others =>
-        for i_mru in Window.IDM_MRU'Range loop
-          if Item = Window.IDM_MRU (i_mru) then
+        for i_mru in Window.MRU.ID_Menu'Range loop
+          if Item = Window.MRU.ID_Menu (i_mru) then
             Open_Child_Window_And_Load (
               Window,
-              Window.opt.mru (i_mru)
+              Window.MRU.Item (i_mru).Name
             );
             exit;
           end if;
@@ -558,14 +551,15 @@ package body AZip_GWin.MDI_Main is
       Window.opt.win_height := Height (Window);
     end if;
 
-    --  TC.GWin.Options.Save;
-
     My_MDI_Close_All (Window);
     --  ^ Don't forget to save unsaved files !
     --  Operation can be cancelled by user for one unsaved picture.
     Can_Close := Window.Success_in_enumerated_close;
     --
     if Can_Close then
+      for m in Window.MRU.Item'Range loop
+        Window.opt.mru (m) := Window.MRU.Item (m).Name;
+      end loop;
       AZip_GWin.Persistence.Save (Window.opt);
       GWindows.Base.On_Exception_Handler (Handler => null);
       --  !! Trick to remove a strange crash on Destroy_Children
@@ -573,91 +567,29 @@ package body AZip_GWin.MDI_Main is
     end if;
   end On_Close;
 
-  -------------
-  -- Add_MRU --
-  -------------
-
-  procedure Add_MRU (Window : in out MDI_Main_Type; name : GString) is
-    x : Integer := Window.opt.mru'First - 1;
-    up_name : GString := name;
-  begin
-    if AZip_GWin.Persistence.Cfg_file_available then
-      null;  --  Stealth mode -> leave no trace in registry!
-    else
-      --  Add name to the list in task bar or
-      --  elsewhere in Windows Explorer or Desktop.
-      GWindows.Application.Add_To_Recent_Documents (name);
-    end if;
-
-    To_Upper (up_name);
-
-    --  Search for name in the list
-    for m in Window.opt.mru'Range loop
-      declare
-        up_mru_m : GString := GU2G (Window.opt.mru (m));
-      begin
-        To_Upper (up_mru_m);
-        if up_mru_m = up_name then -- case insensitive comparison (Jan-2007)
-          x := m;
-          exit;
-        end if;
-      end;
-    end loop;
-
-    --  name exists in list ?
-    if x /= 0 then
-      --  roll up entries after it, erasing it
-      for i in x .. Window.opt.mru'Last - 1 loop
-        Window.opt.mru (i) := Window.opt.mru (i + 1);
-      end loop;
-      Window.opt.mru (Window.opt.mru'Last) := Null_GString_Unbounded;
-    end if;
-
-    --  roll down the full list
-    for i in reverse Window.opt.mru'First .. Window.opt.mru'Last - 1 loop
-      Window.opt.mru (i + 1) := Window.opt.mru (i);
-    end loop;
-
-    --  name exists in list
-    Window.opt.mru (Window.opt.mru'First) := G2GU (name);
-
-  end Add_MRU;
-
-  procedure Update_MRU_Menu (Window : in out MDI_Main_Type; m : in GWindows.Menus.Menu_Type) is
-    use GWindows.Menus;
-  begin
-    for i in reverse Window.opt.mru'Range loop
-      Text (
-        m, Command, Window.IDM_MRU (i),
-         '&' &
-         S2G (Ada.Strings.Fixed.Trim (Integer'Image (i), Ada.Strings.Left)) &
-         ' ' &
-         Shorten_file_name (GU2G (Window.opt.mru (i)))
-      );
-    end loop;
-  end Update_MRU_Menu;
-
   procedure Update_Common_Menus_Child (Window : GWindows.Base.Pointer_To_Base_Window_Class)
   is
-    use MDI_Child;
+    use MDI_Child, Office_Applications;
   begin
     if Window.all in MDI_Child_Type'Class then
       declare
         cw : MDI_Child_Type renames MDI_Child_Type (Window.all);
       begin
-        Update_MRU_Menu (cw.MDI_Root.all, cw.Menu.Popup_0001);
+        Update_MRU_Menu (cw.MDI_Root.MRU, cw.Menu.Popup_0001);
         --  Update_Toolbar_Menu(cw.View_menu, cw.parent.Floating_toolbars);
       end;
     end if;
   end Update_Common_Menus_Child;
 
   procedure Update_Common_Menus (Window    : in out MDI_Main_Type;
-                                 top_entry :        GString := "") is
+                                 top_entry :        GString := "")
+  is
+    use Office_Applications;
   begin
     if top_entry /= "" then
-      Add_MRU (Window, top_entry);
+      Add_MRU (Window.MRU, top_entry);
     end if;
-    Update_MRU_Menu (Window, Window.Menu.Popup_0001);
+    Update_MRU_Menu (Window.MRU, Window.Menu.Popup_0001);
     --  Update_Toolbar_Menu(Window.View_menu, Window.Floating_toolbars);
     GWindows.Base.Enumerate_Children (
       MDI_Client_Window (Window).all,

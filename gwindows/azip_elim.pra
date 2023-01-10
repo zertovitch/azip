@@ -1065,7 +1065,6 @@ pragma Eliminate (GWindows.Errors, GetLastError, Source_Location => "gwindows-er
 pragma Eliminate (GWindows.Errors, To_String, Source_Location => "gwindows-errors.ads:53");
 pragma Eliminate (GWindows.GStrings, To_GString_C, Source_Location => "gwindows-gstrings.ads:52");
 pragma Eliminate (GWindows.GStrings, To_GString_From_Wide_String, Source_Location => "gwindows-gstrings.ads:70");
-pragma Eliminate (GWindows.GStrings, Image, Source_Location => "gwindows-gstrings.ads:73");
 pragma Eliminate (GWindows.GStrings, To_GString_From_BSTR, Source_Location => "gwindows-gstrings.ads:81");
 pragma Eliminate (GWindows.GStrings, To_BSTR_From_GString, Source_Location => "gwindows-gstrings.ads:85");
 pragma Eliminate (GWindows.GStrings, To_GString_From_VARIANT, Source_Location => "gwindows-gstrings.ads:88");

@@ -11,6 +11,21 @@
 
 - Search also in Unicode modes.
 
+Actions to be implemented:
+
+  * Test recursive: test entries which are Zip files, and so on.
+      See AZip_Common.Is_valid_Zip_archive for detecting Zip archives (could be .xlsx, .jar or other files...)
+  * Touch (change time stamp to now or a certain date) entries for selected names
+  * Set selected names to lower case
+  * Encrypt entire archive
+
+  * (2 or more archives) :
+    * Compare
+    * Merge
+
+GWindows layer
+==============
+
 gw - drop to empty main window (0 archive) should trigger "New archive" command
 
 gw - drag & drop from list to another folder in a tree (same archive child window)
@@ -34,13 +49,3 @@ copy_file et rename qui marchent avec utf-8 (virer Ada.Directories)
 
 gw - "[Rename]" dans les conflits de nom
 
-Actions to be implemented:
-
-  * Test recursive: test entries which are Zip files, and so on.
-      See AZip_Common.Is_valid_Zip_archive for detecting Zip archives (could be .xlsx, .jar or other files...)
-  * Touch (change time stamp to now or a certain date)
-  * Encrypt entire archive
-
-  * (2 or more archives) :
-    * Compare
-    * Merge

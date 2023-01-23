@@ -7,10 +7,9 @@ with AZip_Resource_GUI;
 with Office_Applications;
 
 with GWindows.Base,
-     GWindows.Common_Controls,
      GWindows.Drawing,
      GWindows.Image_Lists,
-     GWindows.Windows.MDI,
+     GWindows.Windows,
      GWindows.Taskbar,
      GWindows.Types;
 

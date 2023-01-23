@@ -16,13 +16,11 @@ with GWindows.Application,
      GWindows.Common_Dialogs,
      GWindows.Constants,
      GWindows.Cursors,
-     GWindows.Menus,
      GWindows.Message_Boxes;
 
 with GWin_Util;
 
 with Ada.Command_Line,
-     Ada.Strings.Fixed,
      Ada.Text_IO;
 
 package body AZip_GWin.MDI_Main is

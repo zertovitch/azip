@@ -275,8 +275,8 @@ package body AZip_GWin.MDI_Child is
                       Window.Folder_Tree.Insert_Item (folder_name, w_parent, w_node);
                     end;
                     Window.Folder_Tree.Set_Image (w_node, 2, 3);
-                    Window.path_map.Insert (partial_path, Integer (w_node));
-                    Window.node_map.Insert (Integer (w_node), partial_path);
+                    Window.path_map.Insert (partial_path, AZip_Common.Node_ID_Type (w_node));
+                    Window.node_map.Insert (AZip_Common.Node_ID_Type (w_node), partial_path);
                   end if;
                 end;
               end if;
@@ -474,8 +474,8 @@ package body AZip_GWin.MDI_Child is
             Window.Folder_Tree.Delete_Item (Window.Folder_Tree.Get_Root_Item);
             Window.Folder_Tree.Insert_Item (GU2G (Window.Short_Name), 0, w_root, As_A_Root);
             Window.Folder_Tree.Set_Image (w_root, 0, 1);
-            Window.path_map.Insert (root_key, Integer (w_root));
-            Window.node_map.Insert (Integer (w_root), root_key);
+            Window.path_map.Insert (root_key, AZip_Common.Node_ID_Type (w_root));
+            Window.node_map.Insert (AZip_Common.Node_ID_Type (w_root), root_key);
             Window.selected_path := Null_GString_Unbounded;
           end if;
           Feed_directory_list (GU2G (Window.selected_path));

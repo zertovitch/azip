@@ -21,7 +21,7 @@ package body AZip_GWin.Folder_Trees is
     new_path : GString_Unbounded;
     use AZip_Common.Node_Catalogues;
     curs : constant Cursor :=
-      parent_window.node_map.Find (Integer (w_node));
+      parent_window.node_map.Find (AZip_Common.Node_ID_Type (w_node));
   begin
     if curs = No_Element then
       null;  --  Tree node not registered by us. We let new_path empty.
@@ -110,7 +110,7 @@ package body AZip_GWin.Folder_Trees is
         Control.Point_To_Client (Get_Cursor_Position)
       );
     curs : constant Cursor :=
-      MDI_Child.node_map.Find (Integer (clicked_node));
+      MDI_Child.node_map.Find (AZip_Common.Node_ID_Type (clicked_node));
     success   : Boolean;
   begin
     --  Windows forgets to actually select the folder, despite

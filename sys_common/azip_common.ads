@@ -1,6 +1,12 @@
+---------------------------------------------------------------------
+--  This package contains elements for AZip applications that are  --
+--  common to all GUI systems / toolkits.                          --
+---------------------------------------------------------------------
+
 --  The Zip* and UnZip* packages from the Zip-Ada open-source project
 --  need to be visible to the compiler.
---  See installation instructions in the header part of the azip_gwindows.gpr file.
+--  See for instance installation instructions in the header
+--  part of the azip_gwindows.gpr file.
 --
 with Zip;
 
@@ -11,10 +17,6 @@ with Ada.Containers.Indefinite_Hashed_Maps,
      Ada.Strings.Wide_Hash;
 
 with Interfaces;
-
-------------------------------------------------------------------
--- AZip elements that are common to all GUI systems / toolkits. --
-------------------------------------------------------------------
 
 package AZip_Common is
 
@@ -57,9 +59,11 @@ package AZip_Common is
 
   --  Find quickly a node number given a path name.
 
+  type Node_ID_Type is mod 2 ** Standard'Address_Size;  --  a Node ID in any GUI system.
+
   package Path_Catalogues is new Ada.Containers.Indefinite_Hashed_Maps
     (Key_Type        => UTF_16_String,
-     Element_Type    => Integer,                  -- an Item ID in any GUI system
+     Element_Type    => Node_ID_Type,
      Hash            => Ada.Strings.Wide_Hash,
      Equivalent_Keys => "="
     );
@@ -69,7 +73,7 @@ package AZip_Common is
   --  Find quickly a path name given a node number.
 
   package Node_Catalogues is new Ada.Containers.Indefinite_Ordered_Maps
-    (Key_Type        => Integer,
+    (Key_Type        => Node_ID_Type,
      Element_Type    => UTF_16_String
     );
 

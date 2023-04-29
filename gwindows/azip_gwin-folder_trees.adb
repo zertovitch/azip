@@ -1,13 +1,13 @@
-with AZip_Common;                       use AZip_Common;
-with AZip_GWin.MDI_Child;               use AZip_GWin.MDI_Child;
-with AZip_GWin.MDI_Main;                use AZip_GWin.MDI_Main;
+with AZip_Common;
 
-with GWindows.Base;                     use GWindows.Base;
-with GWindows.Cursors;                  use GWindows.Cursors;
-with GWindows.Menus;                    use GWindows.Menus;
+with AZip_GWin.MDI_Child,
+     AZip_GWin.MDI_Main;
 
-with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
-with Ada.Unchecked_Conversion;
+with GWindows.Cursors,
+     GWindows.Menus;
+
+with Ada.Strings.Wide_Unbounded,
+     Ada.Unchecked_Conversion;
 
 with Interfaces.C;
 
@@ -17,9 +17,9 @@ package body AZip_GWin.Folder_Trees is
 
   overriding procedure On_Selection_Change (Control : in out Folder_tree_type) is
     w_node : constant Tree_Item_Node := Control.Selected_Item;
+    use Ada.Strings.Wide_Unbounded, AZip_Common.Node_Catalogues, MDI_Child;
     parent_window : MDI_Child_Type renames MDI_Child_Type (Control.Parent.Parent.all);
     new_path : GString_Unbounded;
-    use AZip_Common.Node_Catalogues;
     curs : constant Cursor :=
       parent_window.node_map.Find (AZip_Common.Node_ID_Type (w_node));
   begin
@@ -37,11 +37,11 @@ package body AZip_GWin.Folder_Trees is
   end On_Selection_Change;
 
   overriding procedure On_Focus (Control : in out Folder_tree_type) is
-    MDI_Child : MDI_Child_Type renames
-      MDI_Child_Type (Control.Parent.Parent.all);
+    cw : MDI_Child.MDI_Child_Type renames
+      MDI_Child.MDI_Child_Type (Control.Parent.Parent.all);
   begin
-    MDI_Child.Update_status_bar;
-    MDI_Child.Update_tool_bar_and_menus;
+    cw.Update_status_bar;
+    cw.Update_tool_bar_and_menus;
   end On_Focus;
 
   overriding procedure On_Notify (
@@ -57,7 +57,7 @@ package body AZip_GWin.Folder_Trees is
     --  \/ \/ \/ \/ Code from Ex_TV's body:
     type NMTREEVIEW is
       record
-         Hdr     : Notification;
+         Hdr     : GWindows.Base.Notification;
          Action  : Interfaces.C.unsigned;
          ItemOld : TVITEM;
          ItemNew : TVITEM;
@@ -77,8 +77,8 @@ package body AZip_GWin.Folder_Trees is
     case Message.Code is
       when TVN_BEGINDRAGA | TVN_BEGINDRAGW =>
         declare
-          MDI_Child : MDI_Child_Type renames MDI_Child_Type (Window.Parent.Parent.all);
-          MDI_Main  : MDI_Main_Type  renames MDI_Child.MDI_Root.all;
+          cw : MDI_Child.MDI_Child_Type renames MDI_Child.MDI_Child_Type (Window.Parent.Parent.all);
+          mw : MDI_Main.MDI_Main_Type  renames cw.MDI_Root.all;
           Nmtv_Ptr  : constant Pointer_To_NMTREEVIEW_Type :=
                  Message_To_NmTreeView_Pointer (Message);
           success   : Boolean;
@@ -90,8 +90,8 @@ package body AZip_GWin.Folder_Trees is
           --  So, we need to select programmatically the dragged item right now.
           success := Window.Select_Item (Nmtv_Ptr.ItemNew.HItem);
           if success then
-            Capture_Mouse (MDI_Child);
-            MDI_Main.dragging.is_dragging := True;
+            cw.Capture_Mouse;
+            mw.dragging.is_dragging := True;
             --  The rest of the dragging operation is handled by the parent window, of
             --  type MDI_Child_Type: see On_Mouse_Move, On_Left_Mouse_Button_Up.
           end if;
@@ -102,15 +102,15 @@ package body AZip_GWin.Folder_Trees is
   end On_Notify;
 
   overriding procedure On_Right_Click (Control : in out Folder_tree_type) is
-    MDI_Child : MDI_Child_Type renames
-      MDI_Child_Type (Control.Parent.Parent.all);
+    cw : MDI_Child.MDI_Child_Type renames
+      MDI_Child.MDI_Child_Type (Control.Parent.Parent.all);
     use AZip_Common.Node_Catalogues;
     clicked_node : constant Tree_Item_Node :=
       Control.Item_At_Position (
-        Control.Point_To_Client (Get_Cursor_Position)
+        Control.Point_To_Client (GWindows.Cursors.Get_Cursor_Position)
       );
     curs : constant Cursor :=
-      MDI_Child.node_map.Find (AZip_Common.Node_ID_Type (clicked_node));
+      cw.node_map.Find (AZip_Common.Node_ID_Type (clicked_node));
     success   : Boolean;
   begin
     --  Windows forgets to actually select the folder, despite
@@ -125,7 +125,7 @@ package body AZip_GWin.Folder_Trees is
       --  The node is known to us, we select it.
       success := Control.Select_Item (clicked_node);
       if success then
-        Immediate_Popup_Menu (MDI_Child.context_menu_folder, MDI_Child);
+        GWindows.Menus.Immediate_Popup_Menu (cw.context_menu_folder, cw);
       end if;
     end if;
   end On_Right_Click;

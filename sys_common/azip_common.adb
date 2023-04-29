@@ -1,13 +1,13 @@
 with Zip_Streams;
 
-with Ada.Wide_Characters.Handling;      use Ada.Wide_Characters.Handling;
-with Ada.Strings;                       use Ada.Strings;
-with Ada.Strings.Wide_Fixed;            use Ada.Strings.Wide_Fixed;
-
-with Ada.Strings.UTF_Encoding.Conversions;
-with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
+with Ada.Wide_Characters.Handling,
+     Ada.Strings.UTF_Encoding.Conversions,
+     Ada.Strings.Unbounded,
+     Ada.Strings.Wide_Fixed;
 
 package body AZip_Common is
+
+  use Ada.Strings, Ada.Wide_Characters.Handling, Ada.Strings.Unbounded, Ada.Strings.Wide_Fixed;
 
   --  http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/PC/CP437.TXT
 

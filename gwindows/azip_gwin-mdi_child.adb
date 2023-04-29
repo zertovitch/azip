@@ -3,7 +3,7 @@ with AZip_Common,
      AZip_GWin.Dragging,
      AZip_GWin.Drop_File_Dialog,
      AZip_GWin.Installation,
-     AZip_GWin.Password_dialogs,
+     AZip_GWin.Password_Dialogs,
      AZip_GWin.Properties;
 
 with UnZip,
@@ -42,7 +42,7 @@ package body AZip_GWin.MDI_Child is
   use AZip_Common, AZip_Common.Operations, AZip_Common.User_options;
 
   use AZip_GWin.Columns, AZip_GWin.Directory_Lists,
-      AZip_GWin.Dragging, AZip_GWin.MDI_Main, AZip_GWin.Password_dialogs;
+      AZip_GWin.Dragging, AZip_GWin.MDI_Main, AZip_GWin.Password_Dialogs;
 
   use AZip_Resource_GUI;
 

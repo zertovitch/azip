@@ -1,28 +1,31 @@
-with AZip_Resource_GUI;                 use AZip_Resource_GUI;
+with AZip_Resource_GUI;
 
-with GWindows.Application;              use GWindows.Application;
-with GWindows.Buttons;                  use GWindows.Buttons;
-with GWindows.Constants;                use GWindows.Constants;
-with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Application,
+     GWindows.Buttons,
+     GWindows.Constants,
+     GWindows.Edit_Boxes,
+     GWindows.Message_Boxes;
 
-with Ada.Strings.Wide_Unbounded;        use Ada.Strings.Wide_Unbounded;
+with Ada.Strings.Wide_Unbounded;
 
-package body AZip_GWin.Password_dialogs is
+package body AZip_GWin.Password_Dialogs is
+
+  use GWindows.Buttons, GWindows.Edit_Boxes;
+  use Ada.Strings.Wide_Unbounded;
 
   -----------------------------------------
   --  Dialog: password for *decryption*  --
   -----------------------------------------
 
   procedure Get_password_for_decryption
-    (Window     : in     MDI_Child_Type;
+    (Window     : in     MDI_Child.MDI_Child_Type;
      Parent     : in out GWindows.Base.Base_Window_Type'Class;
                   --  Immediate UI parent
      entry_name : in     GString;
      password   : in out GString_Unbounded;
      cancelled  :    out Boolean)
   is
-    box : Password_decryption_box_Type;
+    box : AZip_Resource_GUI.Password_decryption_box_Type;
     pwd_candidate : GString_Unbounded := Window.current_password;
     --
     procedure Get_Data (dummy : in out GWindows.Base.Base_Window_Type'Class) is
@@ -41,6 +44,7 @@ package body AZip_GWin.Password_dialogs is
       box.Password_edit.Redraw;
       box.Password_edit.Focus;
     end Show_or_Hide_Password;
+
   begin
     box.Create_Full_Dialog (Parent);
     box.Encrypted_entry.Text (entry_name);
@@ -55,12 +59,12 @@ package body AZip_GWin.Password_dialogs is
     box.Show_password_box.On_Click_Handler (Show_or_Hide_Password'Unrestricted_Access);
     Show_or_Hide_Password (box);
     box.Password_edit.Set_Selection (0, Length (password));
-    case Show_Dialog (box, Parent) is
-      when IDOK =>
+    case GWindows.Application.Show_Dialog (box, Parent) is
+      when GWindows.Constants.IDOK =>
         password := pwd_candidate;
         cancelled := False;
       when others =>
-        cancelled := True; -- abandon pwd change and cancel current operation
+        cancelled := True;  --  abandon pwd change and cancel current operation
     end case;
   end Get_password_for_decryption;
 
@@ -69,11 +73,11 @@ package body AZip_GWin.Password_dialogs is
   -----------------------------------------
 
   procedure Get_password_for_encryption (
-    Window     : in out MDI_Child_Type;
+    Window     : in out MDI_Child.MDI_Child_Type;
     cancelled  :    out Boolean
   )
   is
-    box : Password_encryption_box_Type;
+    box : AZip_Resource_GUI.Password_encryption_box_Type;
     pwd_candidate : GString_Unbounded := Window.current_password;
     pwd_confirm_candidate : GString_Unbounded;
     confirm_ok : Boolean;
@@ -103,6 +107,8 @@ package body AZip_GWin.Password_dialogs is
       box.Password_edit.Redraw;
       box.Password_edit.Focus;
     end Show_or_Hide_Password;
+
+    use GWindows.Message_Boxes;
   begin
     loop
       box.Create_Full_Dialog (Window);
@@ -118,8 +124,8 @@ package body AZip_GWin.Password_dialogs is
       Show_or_Hide_Password (box);
       box.Password_confirm_edit.Password ('=');
       box.Password_edit.Set_Selection (0, Length (Window.current_password));
-      case Show_Dialog (box, Window) is
-        when IDOK =>
+      case GWindows.Application.Show_Dialog (box, Window) is
+        when GWindows.Constants.IDOK =>
           Window.current_password := pwd_candidate;
           cancelled := False;
           if Window.MDI_Root.opt.show_passwords then
@@ -128,10 +134,9 @@ package body AZip_GWin.Password_dialogs is
             confirm_ok := pwd_confirm_candidate = pwd_candidate;
           end if;
           if not confirm_ok then
-            Message_Box (
-              Window, "Password mismatch", "Passwords do not match, please retry",
-              OK_Box, Exclamation_Icon
-            );
+            Message_Box
+              (Window, "Password mismatch", "Passwords do not match, please retry",
+               OK_Box, Exclamation_Icon);
           end if;
         when others =>
           confirm_ok := False;
@@ -141,4 +146,4 @@ package body AZip_GWin.Password_dialogs is
     end loop;
   end Get_password_for_encryption;
 
-end AZip_GWin.Password_dialogs;
+end AZip_GWin.Password_Dialogs;

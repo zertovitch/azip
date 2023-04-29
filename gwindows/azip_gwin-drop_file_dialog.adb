@@ -1,8 +1,8 @@
-with AZip_Resource_GUI;                 use AZip_Resource_GUI;
+with AZip_Resource_GUI;
 
-with GWindows.Application;              use GWindows.Application;
-with GWindows.Buttons;                  use GWindows.Buttons;
-with GWindows.Constants;                use GWindows.Constants;
+with GWindows.Application,
+     GWindows.Buttons,
+     GWindows.Constants;
 
 package body AZip_GWin.Drop_File_Dialog is
 
@@ -13,8 +13,9 @@ package body AZip_GWin.Drop_File_Dialog is
      encrypt        : in out Boolean;
      yes            :    out Boolean)
   is
-    box : Drop_files_box_Type;
+    box : AZip_Resource_GUI.Drop_files_box_Type;
     procedure Get_Data (dummy : in out GWindows.Base.Base_Window_Type'Class) is
+      use GWindows.Buttons;
     begin
       encrypt := box.Encrypt_check_box.State = Checked;
     end Get_Data;
@@ -27,8 +28,8 @@ package body AZip_GWin.Drop_File_Dialog is
       box.New_archive_msg.Show;
     end if;
     box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
-    case Show_Dialog (box, Parent) is
-      when IDOK =>
+    case GWindows.Application.Show_Dialog (box, Parent) is
+      when GWindows.Constants.IDOK =>
         yes := True;
       when others =>
         yes := False;

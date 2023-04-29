@@ -1,6 +1,7 @@
 --  Small modal dialogs
 
 with AZip_GWin.MDI_Main;
+
 with GWindows.Base;
 
 package AZip_GWin.Modal_Dialogs is

@@ -1,7 +1,8 @@
-with AZip_Resource_GUI;                 use AZip_Resource_GUI;
-with GWindows.Application;              use GWindows.Application;
-with GWindows.Base;                     use GWindows.Base;
-with GWindows.Buttons;                  use GWindows.Buttons;
+with AZip_Resource_GUI;
+
+with GWindows.Application,
+     GWindows.Base,
+     GWindows.Buttons;
 
 --------------------------------
 --  Hiding & showing columns  --
@@ -9,11 +10,15 @@ with GWindows.Buttons;                  use GWindows.Buttons;
 
 package body AZip_GWin.Columns is
 
+  use AZip_Common;
+
   --  Number of pixels under which we consider the column as hidden.
   --
   threshold : constant := 20;
 
-  function Get_column_width_from_main_options (Window : MDI_Child_Type; topic : Entry_topic) return Natural
+  function Get_column_width_from_main_options
+    (Window : MDI_Child.MDI_Child_Type;
+     topic  : AZip_Common.Entry_topic) return Natural
   is
   begin
     if topic = Path and Window.opt.view_mode = Tree then
@@ -25,7 +30,11 @@ package body AZip_GWin.Columns is
     end if;
   end Get_column_width_from_main_options;
 
-  procedure Set_column_width_to_main_options (Window : in out MDI_Child_Type; topic : Entry_topic; new_width : Natural) is
+  procedure Set_column_width_to_main_options
+    (Window    : in out MDI_Child.MDI_Child_Type;
+     topic     :        AZip_Common.Entry_topic;
+     new_width :        Natural)
+  is
   begin
     if topic = Path and Window.opt.view_mode = Tree then
       null;  --  Do nothing (esp. do not erase width for the Flat view)!
@@ -38,7 +47,9 @@ package body AZip_GWin.Columns is
     end if;
   end Set_column_width_to_main_options;
 
-  procedure Get_all_column_widths_from_main_options (Window : in out MDI_Child_Type) is
+  procedure Get_all_column_widths_from_main_options
+    (Window : in out MDI_Child.MDI_Child_Type)
+  is
   begin
     for t in Entry_topic'Range loop
       Window.Directory_List.Set_Column_Width (
@@ -48,32 +59,34 @@ package body AZip_GWin.Columns is
     end loop;
   end Get_all_column_widths_from_main_options;
 
-  procedure Get_all_column_widths_from_options (Window : MDI_Main_Type) is
+  procedure Get_all_column_widths_from_options (Window : MDI_Main.MDI_Main_Type) is
     --
     procedure Do_child_window (Child_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
     begin
-      if Child_Window.all in MDI_Child_Type'Class then
-        Get_all_column_widths_from_main_options (MDI_Child_Type (Child_Window.all));
+      if Child_Window.all in MDI_Child.MDI_Child_Type'Class then
+        Get_all_column_widths_from_main_options (MDI_Child.MDI_Child_Type (Child_Window.all));
       end if;
     end Do_child_window;
     --
   begin
-    Enumerate_Children
-      (MDI_Client_Window (Window).all,
+    GWindows.Base.Enumerate_Children
+      (Window.MDI_Client_Window.all,
        Do_child_window'Unrestricted_Access);
   end Get_all_column_widths_from_options;
 
-  procedure Set_all_column_widths_to_main_options (Window : in out MDI_Child_Type) is
+  procedure Set_all_column_widths_to_main_options (Window : in out MDI_Child.MDI_Child_Type) is
   begin
     for t in Entry_topic'Range loop
-      Set_column_width_to_main_options (Window, t, Window.Directory_List.Column_Width (Entry_topic'Pos (t)));
+      Set_column_width_to_main_options
+        (Window, t, Window.Directory_List.Column_Width (Entry_topic'Pos (t)));
     end loop;
   end Set_all_column_widths_to_main_options;
 
-  procedure Select_columns_dialog (Window : in out MDI_Main_Type) is
-    box : Select_column_box_Type;
+  procedure Select_columns_dialog (Window : in out MDI_Main.MDI_Main_Type) is
+    box : AZip_Resource_GUI.Select_column_box_Type;
     x, y, dy, w, h : Integer;
+    use GWindows.Buttons;
     check_box_topic : array (Entry_topic) of Check_Box_Type;
     --
     procedure Get_Data (dummy : in out GWindows.Base.Base_Window_Type'Class) is
@@ -129,7 +142,7 @@ package body AZip_GWin.Columns is
     end loop;
     --
     box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
-    Show_Dialog (box, Window);
+    GWindows.Application.Show_Dialog (box, Window);
   end Select_columns_dialog;
 
 end AZip_GWin.Columns;

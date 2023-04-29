@@ -6,7 +6,7 @@ with AZip_GWin.Drop_File_Dialog,
      AZip_GWin.MDI_Child,
      AZip_GWin.Modal_Dialogs,
      AZip_GWin.Options,
-     AZip_GWin.Password_dialogs,
+     AZip_GWin.Password_Dialogs,
      AZip_GWin.Persistence,
      AZip_GWin.Toolbars;
 
@@ -403,7 +403,7 @@ package body AZip_GWin.MDI_Main is
     encrypt    : Boolean := False;
     yes        : Boolean;
     cancelled  : Boolean;
-    use AZip_GWin.Password_dialogs, MDI_Child, Zip;
+    use AZip_GWin.Password_Dialogs, MDI_Child, Zip;
   begin
     Window.Focus;
     if Window.Count_MDI_Children > 0 and then Window.opt.MDI_childen_maximized then

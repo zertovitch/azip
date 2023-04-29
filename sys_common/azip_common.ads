@@ -22,18 +22,15 @@ package AZip_Common is
 
   type View_Mode_Type is (Flat, Tree);
 
-  type Entry_topic is (
-    Name, FType, Modified, Attributes,
-    Size, Packed, Ratio, Format, CRC32,
-    Path, Encoding,
-    Result
-  );
+  type Entry_topic is
+    (Name, FType, Modified, Attributes,
+     Size, Packed, Ratio, Format, CRC32,
+     Path, Encoding,
+     Result);
 
   -------------
   -- Strings --
   -------------
-
-  use Ada.Strings.Wide_Unbounded;
 
   --  Internal format for AZip: UTF-16
   --  Format for file names on Open / Create operations: UTF-8
@@ -42,7 +39,9 @@ package AZip_Common is
   subtype UTF_8_String is Ada.Strings.UTF_Encoding.UTF_8_String;
 
   subtype UTF_16_String is Ada.Strings.UTF_Encoding.UTF_16_Wide_String;
-  subtype UTF_16_Unbounded_String is Unbounded_Wide_String;
+  subtype UTF_16_Unbounded_String is Ada.Strings.Wide_Unbounded.Unbounded_Wide_String;
+  Null_UTF_16_Unbounded_String : UTF_16_Unbounded_String renames
+    Ada.Strings.Wide_Unbounded.Null_Unbounded_Wide_String;
 
   function To_UTF_16 (s : String; name_encoding : Zip.Zip_name_encoding) return UTF_16_String;
 

@@ -43,12 +43,12 @@ package AZip_Common.User_options is
     win_height            : Integer                 := use_default;
     MDI_childen_maximized : Boolean                 := True;
     MDI_main_maximized    : Boolean                 := False;
-    mru                   : MRU_List                := (others => Null_Unbounded_Wide_String);
+    mru                   : MRU_List                := (others => Null_UTF_16_Unbounded_String);
     show_passwords        : Boolean                 := False;
     sort_column           : Integer                 := no_sorting;
     sort_direction        : Sort_Direction_Type     := Up;
     ignore_extract_path   : Boolean                 := False;
-    extract_directory     : UTF_16_Unbounded_String := Null_Unbounded_Wide_String;
+    extract_directory     : UTF_16_Unbounded_String := Null_UTF_16_Unbounded_String;
     first_visit           : Boolean                 := True;
   end record;
 

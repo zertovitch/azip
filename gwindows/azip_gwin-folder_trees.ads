@@ -1,6 +1,6 @@
-with GWindows.Base;
-with GWindows.Common_Controls;
-with GWindows.Types;
+with GWindows.Base,
+     GWindows.Common_Controls,
+     GWindows.Types;
 
 package AZip_GWin.Folder_Trees is
 

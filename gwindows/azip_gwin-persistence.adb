@@ -1,8 +1,8 @@
 with Config, GWindows.Registry, Zip;
 
-with Ada.Command_Line;
-with Ada.Text_IO; use Ada.Text_IO;
-with Ada.IO_Exceptions;
+with Ada.Command_Line,
+     Ada.Text_IO,
+     Ada.IO_Exceptions;
 
 package body AZip_GWin.Persistence is
 
@@ -74,6 +74,7 @@ package body AZip_GWin.Persistence is
     AZip_Common.User_options.Persistence (Read_cfg_key, Write_cfg_key);
 
   procedure Create_new_config is
+    use Ada.Text_IO;
     nf : File_Type;
   begin
     Create (nf, Out_File, Config_name);

@@ -235,16 +235,19 @@ package body AZip_Common.Operations is
     Do_it (info);
   end Set_user_codes;
 
-  function U (Source : Wide_String) return Unbounded_Wide_String
+  function U16 (Source : UTF_16_String) return UTF_16_Unbounded_String
     renames Ada.Strings.Wide_Unbounded.To_Unbounded_Wide_String;
 
+  function S16 (Source : UTF_16_Unbounded_String) return UTF_16_String
+    renames Ada.Strings.Wide_Unbounded.To_Wide_String;
+
   function Remove_external_path (complete_name : Name_descriptor) return UTF_16_String is
-    s : constant Wide_String := To_Wide_String (complete_name.str);
+    str : constant UTF_16_String := S16 (complete_name.str);
   begin
     if complete_name.sep = 0 then
-      return Remove_path (s);
+      return Remove_path (str);
     else
-      return s (s'First + complete_name.sep .. s'Last);
+      return str (str'First + complete_name.sep .. str'Last);
     end if;
   end Remove_external_path;
 
@@ -262,7 +265,7 @@ package body AZip_Common.Operations is
     Set_Time_Stamp  :        UnZip.Set_Time_Stamp_proc;
     new_temp_name   :        String;
     Name_conflict   :        UnZip.Resolve_conflict_proc;
-    password        : in out Unbounded_Wide_String;
+    password        : in out UTF_16_Unbounded_String;
     ignore_path     :        Boolean; -- ignore directories upon extraction
     encrypt         :        Boolean;
     max_code        :    out Integer;
@@ -299,7 +302,7 @@ package body AZip_Common.Operations is
       Feedback (
         file_percents_done,
         archive_percents_done + file_percents_done / total_entries,
-        To_Wide_String (current_entry_short_name),
+        S16 (current_entry_short_name),
         current_operation,
         "", "",
         current_skip_hint,
@@ -397,7 +400,7 @@ package body AZip_Common.Operations is
             Archive_Info     => zif,
             Entry_Name       => entry_full_name,
             Ignore_Directory => False,
-            Password         => To_String (To_Wide_String (password))
+            Password         => To_String (S16 (password))
           );
           exit;
         exception
@@ -405,7 +408,7 @@ package body AZip_Common.Operations is
             if attempt = UnZip.tolerance_wrong_password then
               raise;
             end if;
-            Change_Password (To_Wide_String (current_entry_short_name), password, cancelled);
+            Change_Password (S16 (current_entry_short_name), password, cancelled);
             if cancelled then
               raise UnZip.User_abort;
             end if;
@@ -437,18 +440,18 @@ package body AZip_Common.Operations is
     procedure Get_password_internal (pwd : out Unbounded_String) is
       cancelled : Boolean;
     begin
-      Change_Password (To_Wide_String (current_entry_short_name), password, cancelled);
+      Change_Password (S16 (current_entry_short_name), password, cancelled);
       if cancelled then
         raise UnZip.User_abort;
       end if;
       --  persistence over entries + wide strings...
-      pwd :=  To_Unbounded_String (To_String (To_Wide_String (password)));
+      pwd :=  To_Unbounded_String (To_String (S16 (password)));
     end Get_password_internal;
     --
     function Encryption_password return String is
     begin
       if encrypt then
-        return To_String (To_Wide_String (password));
+        return To_String (S16 (password));
       else
         return "";
       end if;
@@ -496,7 +499,7 @@ package body AZip_Common.Operations is
       procedure Preserve_entry is
       begin
         current_operation := Copy;
-        current_entry_short_name := U (short_name_utf_16);
+        current_entry_short_name := U16 (short_name_utf_16);
         Zip_Streams.Set_Index (old_fzs, file_index);
         Zip.Create.Add_Compressed_Stream (
           Info     => new_zip,
@@ -574,7 +577,7 @@ package body AZip_Common.Operations is
           return;
         end if;
         current_operation := Replace;
-        current_entry_short_name := U (short_name_utf_16);
+        current_entry_short_name := U16 (short_name_utf_16);
         --  We write first a one-file zip file with the new data
         Tentative_compress (stamp, quick_method, name_utf_8_with_extra_folder);
         --  We load the one-file zip file's information
@@ -619,7 +622,7 @@ package body AZip_Common.Operations is
         );
         Zip_Streams.Open (old_fzs, Zip_Streams.In_File);  --  Reopen the old_fzs stream
         current_operation := Recompress;
-        current_entry_short_name := U (short_name_utf_16);
+        current_entry_short_name := U16 (short_name_utf_16);
         Tentative_compress (
           date_time,
           --  We try the very best compression available in our toolbox.
@@ -684,7 +687,7 @@ package body AZip_Common.Operations is
             match := True; -- empty name list -> we process the whole archive
           else
             for i in entry_name'Range loop
-              if To_Wide_String (entry_name (i).str) = name_utf_16 then
+              if S16 (entry_name (i).str) = name_utf_16 then
                 match := True;
                 exit;
               end if;
@@ -698,7 +701,7 @@ package body AZip_Common.Operations is
           end if;
           for i in entry_name'Range loop
             declare
-              pattern : UTF_16_String := To_Wide_String (entry_name (i).str);
+              pattern : UTF_16_String := S16 (entry_name (i).str);
               up_name : UTF_16_String := short_name_utf_16;
             begin
               if ignore_case then
@@ -719,11 +722,11 @@ package body AZip_Common.Operations is
         case operation is
           when Add =>
             current_operation := Replace;
-            current_entry_short_name := U (short_name_utf_16);
+            current_entry_short_name := U16 (short_name_utf_16);
             --  Here we compress new contents for replacing an existing entry
             declare
               external_file_name : constant UTF_8_String :=
-                To_UTF_8 (To_Wide_String (entry_name (add_file_idx).str));
+                To_UTF_8 (S16 (entry_name (add_file_idx).str));
             begin
               Add_File (
                 Info               => new_zip,
@@ -771,7 +774,7 @@ package body AZip_Common.Operations is
             );
           when Test =>
             current_operation := Test;
-            current_entry_short_name := U (short_name_utf_16);
+            current_entry_short_name := U16 (short_name_utf_16);
             Entry_feedback (1, False, dummy_user_abort);
             --  ^ Just have the right title if password is asked for
             begin
@@ -783,7 +786,7 @@ package body AZip_Common.Operations is
                 tell_data            => null,
                 get_pwd              => Get_password_internal'Unrestricted_Access,
                 options              => (test_only => True, others => False),
-                password             => To_String (To_Wide_String (password))
+                password             => To_String (S16 (password))
               );
               entry_user_code := success;
             exception
@@ -801,7 +804,7 @@ package body AZip_Common.Operations is
             end;
           when Extract =>
             current_operation := Extract;
-            current_entry_short_name := U (short_name_utf_16);
+            current_entry_short_name := U16 (short_name_utf_16);
             Entry_feedback (1, False, dummy_user_abort);
             --  ^ Just have the right title if password is asked for
             if current_user_attitude = none then
@@ -821,7 +824,7 @@ package body AZip_Common.Operations is
                 tell_data            => null,
                 get_pwd              => Get_password_internal'Unrestricted_Access,
                 options              => (junk_directories => ignore_path, others => False),
-                password             => To_String (To_Wide_String (password)),
+                password             => To_String (S16 (password)),
                 file_system_routines => Extract_FS_routines
               );
               case current_user_attitude is
@@ -944,7 +947,7 @@ package body AZip_Common.Operations is
         for i in entry_name'Range loop
           archive_percents_done := (100 * processed_entries) / total_entries;
           declare
-            wide_name  : constant UTF_16_String := To_Wide_String (entry_name (i).str);
+            wide_name  : constant UTF_16_String := S16 (entry_name (i).str);
             short_name : constant UTF_16_String :=
               base_folder & Remove_external_path (entry_name (i));
             ex : Boolean;
@@ -958,7 +961,7 @@ package body AZip_Common.Operations is
             ex := ex or Zip.Exists (zif, To_UTF_8 (short_name));
             if not ex then
               current_operation := Append;
-              current_entry_short_name := U (short_name);
+              current_entry_short_name := U16 (short_name);
               declare
                 procedure Add_with_encoding (
                   encoded_name  : String;
@@ -1085,7 +1088,7 @@ package body AZip_Common.Operations is
             if Simple_Name (Item) /= "." and then Simple_Name (Item) /= ".." then
               files := files + 1;
               if not Count_only then
-                New_list (files) := (U ((To_Wide_String (Full_Name (Item)))), sep);
+                New_list (files) := (U16 ((To_Wide_String (Full_Name (Item)))), sep);
               end if;
             end if;
           end Print;
@@ -1109,7 +1112,7 @@ package body AZip_Common.Operations is
         Walk (Name);
       end Full_Walk;
 
-      Dir : constant Wide_String := To_Wide_String (Name.str);
+      Dir : constant Wide_String := S16 (Name.str);
       fake_list : Name_List (1 .. 0);
       --
     begin

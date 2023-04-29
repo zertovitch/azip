@@ -2,6 +2,8 @@ package body AZip_Common.User_options is
 
   package body Persistence is
 
+    use Ada.Strings.Wide_Unbounded;
+
     procedure Load (opt : out Option_Pack_Type) is
       defaults : Option_Pack_Type;
     begin

@@ -132,7 +132,7 @@ package AZip_Common.Operations is
     );
     with procedure Change_Password (
       entry_name : in     UTF_16_String;
-      password   : in out Unbounded_Wide_String;
+      password   : in out UTF_16_Unbounded_String;
       cancelled  :    out Boolean
     );
   procedure Process_Archive (
@@ -145,7 +145,7 @@ package AZip_Common.Operations is
     Set_Time_Stamp  :        UnZip.Set_Time_Stamp_proc;
     new_temp_name   :        String;
     Name_conflict   :        UnZip.Resolve_conflict_proc;
-    password        : in out Unbounded_Wide_String;
+    password        : in out UTF_16_Unbounded_String;
     ignore_path     :        Boolean; -- ignore directories upon extraction
     encrypt         :        Boolean;
     max_code        :    out Integer;

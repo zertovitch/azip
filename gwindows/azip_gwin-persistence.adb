@@ -1,14 +1,14 @@
 with Config, GWindows.Registry, Zip;
 
 with Ada.Command_Line,
-     Ada.Text_IO,
-     Ada.IO_Exceptions;
+     Ada.IO_Exceptions,
+     Ada.Text_IO;
 
 package body AZip_GWin.Persistence is
 
-  ----------------------------
-  --  Registry persistence  --
-  ----------------------------
+  ----------------------------------------------
+  --  Persistence using the Windows Registry  --
+  ----------------------------------------------
 
   kname : constant GString := "Software\AZip";
   use GWindows.Registry;
@@ -26,9 +26,9 @@ package body AZip_GWin.Persistence is
   package Registry_persistence is new
     AZip_Common.User_options.Persistence (Read_reg_key, Write_reg_key);
 
-  --------------------------------------
-  --  Configuration file persistence  --
-  --------------------------------------
+  ----------------------------------------------
+  --  Persistence using a configuration file  --
+  ----------------------------------------------
 
   function Config_name return String is
     full : constant String := Ada.Command_Line.Command_Name;
@@ -42,7 +42,7 @@ package body AZip_GWin.Persistence is
     return full (full'First .. last) & "azip.cfg";
   end Config_name;
 
-  azip_section : constant String := "AZip user options";
+  app_section : constant String := "AZip user options";
 
   procedure Create_new_config;
 
@@ -59,7 +59,7 @@ package body AZip_GWin.Persistence is
     cfg.Init (Config_name);
     for attempt in 1 .. 2 loop
       begin
-        cfg.Replace_Value (azip_section, To_String (topic), To_String (value));
+        cfg.Replace_Value (app_section, To_String (topic), To_String (value));
       exception
         when Config.Location_Not_Found =>
           Create_new_config;
@@ -76,6 +76,11 @@ package body AZip_GWin.Persistence is
   procedure Create_new_config is
     use Ada.Text_IO;
     nf : File_Type;
+    procedure Config_Output (key_name : String) is
+    begin
+      Put_Line (nf, key_name & '=');
+    end Config_Output;
+    procedure Output_Empty_Keys is new AZip_Common.User_options.Show_Persistence_Keys (Config_Output);
   begin
     Create (nf, Out_File, Config_name);
     Put_Line (nf, ";  This is the configuration file for AZip, in the ""no trace in registry"" mode.");
@@ -83,10 +88,8 @@ package body AZip_GWin.Persistence is
     Put_Line (nf, ";  NB: the settings are the same for all users.");
     Put_Line (nf, ";  AZip Web site: https://azip.sourceforge.io/");
     Put_Line (nf, ";");
-    Put_Line (nf, '[' & azip_section & ']');
-    for k in Configuration_persistence.Key loop
-      Put_Line (nf, Configuration_persistence.Key'Image (k) & '=');
-    end loop;
+    Put_Line (nf, '[' & app_section & ']');
+    Output_Empty_Keys;
     Close (nf);
   end Create_new_config;
 

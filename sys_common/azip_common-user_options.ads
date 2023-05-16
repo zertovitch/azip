@@ -60,30 +60,15 @@ package AZip_Common.User_options is
   --  On Linux or GTK (any platform) it is done usually in a config file.
 
   generic
-    with function Read_key (topic : Wide_String) return Wide_String;
-    with procedure Write_key (topic : Wide_String; value : Wide_String);
+    with function Read_Key (topic : Wide_String) return Wide_String;
+    with procedure Write_Key (topic : Wide_String; value : Wide_String);
   package Persistence is
     procedure Load (opt : out Option_Pack_Type);
     procedure Save (opt : in  Option_Pack_Type);
-    --
-    --  This is not really needed in the specification for loading & saving,
-    --  but useful for creating a fresh configuration file.
-    --
-    type Key is
-       (view_mode,
-        col_width,
-        col_visible,
-        sort_column,
-        sort_direction,
-        win_left, win_top, win_width, win_height,
-        maximized, children_maximized,
-        tree_portion,
-        mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
-        show_passwords,
-        ignore_extract_path,
-        extract_directory,
-        first_visit
-      );
   end Persistence;
+
+  generic
+    with procedure String_Output (key_name : String);
+  procedure Show_Persistence_Keys;
 
 end AZip_Common.User_options;

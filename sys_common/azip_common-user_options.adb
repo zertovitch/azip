@@ -1,17 +1,32 @@
 package body AZip_Common.User_options is
 
-  package body Persistence is
+  use Ada.Strings.Wide_Unbounded;
 
-    use Ada.Strings.Wide_Unbounded;
+  type Persistence_Key is
+    (view_mode,
+     col_width,
+     col_visible,
+     sort_column,
+     sort_direction,
+     win_left, win_top, win_width, win_height,
+     maximized, children_maximized,
+     tree_portion,
+     mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
+     show_passwords,
+     ignore_extract_path,
+     extract_directory,
+     first_visit);
+
+  package body Persistence is
 
     procedure Load (opt : out Option_Pack_Type) is
       defaults : Option_Pack_Type;
     begin
-      for k in Key loop
+      for k in Persistence_Key loop
         begin
           declare
-            ks : constant Wide_String := Key'Wide_Image (k);
-            s  : constant Wide_String := Read_key (ks);
+            ks : constant Wide_String := Persistence_Key'Wide_Image (k);
+            s  : constant Wide_String := Read_Key (ks);
           begin
             case k is
               when view_mode =>
@@ -19,7 +34,7 @@ package body AZip_Common.User_options is
               when col_width =>
                 for t in Entry_topic loop
                   opt.column_width (t) := Integer'Wide_Value (
-                    Read_key (ks & "_" & Entry_topic'Wide_Image (t))
+                    Read_Key (ks & "_" & Entry_topic'Wide_Image (t))
                   );
                   if opt.column_width (t) = 0 then
                     opt.column_width (t) := defaults.column_width (t);
@@ -28,7 +43,7 @@ package body AZip_Common.User_options is
               when col_visible =>
                 for t in Entry_topic loop
                   opt.visible_column (t) := Boolean'Wide_Value (
-                    Read_key (ks & "_" & Entry_topic'Wide_Image (t))
+                    Read_Key (ks & "_" & Entry_topic'Wide_Image (t))
                   );
                 end loop;
               when sort_column =>
@@ -50,7 +65,7 @@ package body AZip_Common.User_options is
               when tree_portion =>
                 opt.tree_portion := Float'Wide_Value (s);
               when mru1 .. mru9 =>
-                opt.mru (Key'Pos (k) - Key'Pos (mru1) + 1) :=
+                opt.mru (Persistence_Key'Pos (k) - Persistence_Key'Pos (mru1) + 1) :=
                   To_Unbounded_Wide_String (s);
               when show_passwords =>
                 opt.show_passwords := Boolean'Wide_Value (s);
@@ -74,32 +89,30 @@ package body AZip_Common.User_options is
 
     procedure Save (opt : in Option_Pack_Type) is
     begin
-      for k in Key loop
+      for k in Persistence_Key loop
         declare
-          ks : constant Wide_String := Key'Wide_Image (k);
+          ks : constant Wide_String := Persistence_Key'Wide_Image (k);
           procedure R (v : Wide_String) is
           begin
-            Write_key (ks, v);
+            Write_Key (ks, v);
           end R;
         begin
           case k is
             when view_mode =>
               R (View_Mode_Type'Wide_Image (opt.view_mode));
             when col_width =>
-              R ("(root key - dummy value)"); -- dummy for having reading going well
+              R ("(root key - dummy value)");  --  dummy for having reading going well
               for t in Entry_topic loop
-                Write_key (
-                  ks & "_" & Entry_topic'Wide_Image (t),
-                  Integer'Wide_Image (opt.column_width (t))
-                );
+                Write_Key
+                  (ks & "_" & Entry_topic'Wide_Image (t),
+                   Integer'Wide_Image (opt.column_width (t)));
               end loop;
             when col_visible =>
-              R ("(root key - dummy value)"); -- dummy for having reading going well
+              R ("(root key - dummy value)");  --  dummy for having reading going well
               for t in Entry_topic loop
-                Write_key (
-                  ks & "_" & Entry_topic'Wide_Image (t),
-                  Boolean'Wide_Image (opt.visible_column (t))
-                );
+                Write_Key
+                  (ks & "_" & Entry_topic'Wide_Image (t),
+                   Boolean'Wide_Image (opt.visible_column (t)));
               end loop;
             when sort_column =>
               R (Integer'Wide_Image (opt.sort_column));
@@ -120,7 +133,7 @@ package body AZip_Common.User_options is
             when tree_portion =>
               R (Float'Wide_Image (opt.tree_portion));
             when mru1 .. mru9 =>
-              R (To_Wide_String (opt.mru (Key'Pos (k) - Key'Pos (mru1) + 1)));
+              R (To_Wide_String (opt.mru (Persistence_Key'Pos (k) - Persistence_Key'Pos (mru1) + 1)));
             when show_passwords =>
               R (Boolean'Wide_Image (opt.show_passwords));
             when ignore_extract_path =>
@@ -135,5 +148,12 @@ package body AZip_Common.User_options is
     end Save;
 
   end Persistence;
+
+  procedure Show_Persistence_Keys is
+  begin
+    for k in Persistence_Key loop
+      String_Output (k'Image);
+    end loop;
+  end Show_Persistence_Keys;
 
 end AZip_Common.User_options;

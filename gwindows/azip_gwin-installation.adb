@@ -17,13 +17,16 @@ with Ada.Command_Line,
 
 package body AZip_GWin.Installation is
 
-  Program_Files_Folder : constant String := "ProgramFiles";
+  use Ada.Environment_Variables;
+
+  App_Data_Folder      : constant String := Value ("APPDATA");       --  Programs for current user
+  Program_Files_Folder : constant String := Value ("ProgramFiles");  --  Programs for all users
 
   function Executable_Location return Executable_Location_Choice is
     Current_Exe : constant String := Ada.Command_Line.Command_Name;
-    use Ada.Environment_Variables, Ada.Strings.Fixed;
+    use Ada.Strings.Fixed;
     Admin_Path   : constant String := Program_Files_Folder;
-    Appdata_Path : constant String := Value ("APPDATA");
+    Appdata_Path : constant String := App_Data_Folder;
   begin
     if Head (Current_Exe, Admin_Path'Length) = Admin_Path then
       return All_Users;
@@ -253,9 +256,9 @@ package body AZip_GWin.Installation is
     --  Here the really serious stuff: AZip installs itself to a permanent location.
     --
     procedure Do_Install (Mode : Installation_Mode) is
-      use Ada.Directories, Ada.Environment_Variables, GWin_Util;
+      use Ada.Directories, GWin_Util;
       App_Folder : constant String :=
-        (if Mode = All_Users then Program_Files_Folder else Value ("APPDATA")) & "\AZip";
+        (if Mode = All_Users then Program_Files_Folder else App_Data_Folder) & "\AZip";
       New_Exe : constant String := App_Folder & "\AZip.exe";
       Success : Boolean;
       procedure Complaint is

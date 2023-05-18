@@ -56,12 +56,55 @@ package AZip_Common.User_options is
   --  Persistence  --
   -------------------
 
+  type Persistence_Key is
+    (view_mode,
+     --
+     col_width_name,
+     col_width_ftype,
+     col_width_modified,
+     col_width_attributes,
+     col_width_size,
+     col_width_packed,
+     col_width_ratio,
+     col_width_format,
+     col_width_crc32,
+     col_width_path,
+     col_width_encoding,
+     col_width_result,
+     --
+     col_visible_name,
+     col_visible_ftype,
+     col_visible_modified,
+     col_visible_attributes,
+     col_visible_size,
+     col_visible_packed,
+     col_visible_ratio,
+     col_visible_format,
+     col_visible_crc32,
+     col_visible_path,
+     col_visible_encoding,
+     col_visible_result,
+     --
+     sort_column,
+     sort_direction,
+     win_left, win_top, win_width, win_height,
+     maximized, children_maximized,
+     tree_portion,
+     mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9,
+     show_passwords,
+     ignore_extract_path,
+     extract_directory,
+     first_visit);
+
+  subtype Col_Width_Key   is Persistence_Key range col_width_name .. col_width_result;
+  subtype Col_Visible_Key is Persistence_Key range col_visible_name .. col_visible_result;
+
   --  On Windows "vanilla", persistence is done through the registry.
   --  On Linux or GTK (any platform) it is done usually in a config file.
 
   generic
-    with function Read_Key (topic : Wide_String) return Wide_String;
-    with procedure Write_Key (topic : Wide_String; value : Wide_String);
+    with function Read_Key (key : Persistence_Key) return Wide_String;
+    with procedure Write_Key (key : Persistence_Key; value : Wide_String);
   package Persistence is
     procedure Load (opt : out Option_Pack_Type);
     procedure Save (opt : in  Option_Pack_Type);

@@ -316,7 +316,7 @@ package body AZip_GWin.Installation is
         box.Label_NOT_Installed.Enable;
     end case;
     --
-    if AZip_GWin.Persistence.Cfg_file_available then
+    if AZip_GWin.Persistence.Key_IO.Is_Config_File_Available then
       box.Radio_button_stealth.State (Checked);
       box.Label_Stealth.Enable;
     else

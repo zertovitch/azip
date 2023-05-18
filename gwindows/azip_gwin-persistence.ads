@@ -4,13 +4,20 @@
 
 with AZip_Common.User_options;
 
+with Windows_Persistence_IO;
+
 package AZip_GWin.Persistence is
 
-  function Cfg_file_available return Boolean;
-  --  ^ When True, we are in Stealth Mode and don't want to
-  --    leave any trace in the registry!
+  package Key_IO is
+    new Windows_Persistence_IO
+      (app_display_name => "AZip",
+       app_file_name    => "azip",
+       app_url          => AZip_Common.azip_web_page,
+       Persistence_Key  => AZip_Common.User_options.Persistence_Key);
 
-  procedure Load (opt : out AZip_Common.User_options.Option_Pack_Type);
-  procedure Save (opt : in  AZip_Common.User_options.Option_Pack_Type);
+  package Blockwise_IO is
+    new AZip_Common.User_options.Persistence
+      (Read_Key  => Key_IO.Read_Key,
+       Write_Key => Key_IO.Write_Key);
 
 end AZip_GWin.Persistence;

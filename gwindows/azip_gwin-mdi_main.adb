@@ -208,7 +208,7 @@ package body AZip_GWin.MDI_Main is
     end Replace_default;
     --
   begin
-    AZip_GWin.Persistence.Load (Window.opt);
+    AZip_GWin.Persistence.Blockwise_IO.Load (Window.opt);
     for m in Window.MRU.Item'Range loop
       Window.MRU.Item (m) :=
         (Name => Window.opt.mru (m),
@@ -558,7 +558,7 @@ package body AZip_GWin.MDI_Main is
       for m in Window.MRU.Item'Range loop
         Window.opt.mru (m) := Window.MRU.Item (m).Name;
       end loop;
-      AZip_GWin.Persistence.Save (Window.opt);
+      AZip_GWin.Persistence.Blockwise_IO.Save (Window.opt);
       GWindows.Base.On_Exception_Handler (Handler => null);
       --  !! Trick to remove a strange crash on Destroy_Children
       --  !! on certain Windows platforms - 29-Jun-2012
@@ -588,7 +588,7 @@ package body AZip_GWin.MDI_Main is
       Add_MRU
         (Window.MRU,
          top_entry,
-         Add_To_Desktop => not AZip_GWin.Persistence.Cfg_file_available);
+         Add_To_Desktop => not AZip_GWin.Persistence.Key_IO.Is_Config_File_Available);
     end if;
     Update_MRU_Menu (Window.MRU, Window.Menu.Popup_0001);
     --  Update_Toolbar_Menu(Window.View_menu, Window.Floating_toolbars);

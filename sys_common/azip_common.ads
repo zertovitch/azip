@@ -122,4 +122,7 @@ package AZip_Common is
 
   function Has_Zip_archive_encrypted_entries (info : Zip.Zip_info) return Boolean;
 
+  azip_web_page      : constant String := "http://azip.sf.net/";
+  azip_news_web_page : constant String := "http://sourceforge.net/p/azip/news/";
+
 end AZip_Common;

@@ -1,3 +1,5 @@
+with AZip_Common;
+
 with AZip_Resource_GUI;
 
 with Zip;
@@ -47,7 +49,7 @@ package body AZip_GWin.Modal_Dialogs is
       GWindows.GStrings.To_GString_From_String (Integer'Image (GWindows.Types.Wparam'Size)) &
       " bit app."
       );
-    Create_and_Swap (url_azip, box.AZip_URL, box, S2G (azip_web_page));
+    Create_and_Swap (url_azip, box.AZip_URL, box, S2G (AZip_Common.azip_web_page));
     Create_and_Swap (url_gnat, box.GNAT_URL, box, "https://www.adacore.com/community");
     box.GNAT_Version.Text (S2G ("version " & GNAT_Version_string));
     Create_and_Swap (url_gnavi,   box.GNAVI_URL,     box, "http://sf.net/projects/gnavi");

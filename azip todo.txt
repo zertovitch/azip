@@ -26,7 +26,9 @@ Actions to be implemented:
 GWindows layer
 ==============
 
-gw - drop to empty main window (0 archive) should trigger "New archive" command
+gw - Explorer context menu: extract Zip to (.../[archive name]/here)
+       See: https://github.com/zertovitch/azip/issues/2     
+gw - Explorer context menu: Add folder to [folder name].zip
 
 gw - drag & drop from list to another folder in a tree (same archive child window)
 gw - drag & drop a folder to another folder (same archive child window)

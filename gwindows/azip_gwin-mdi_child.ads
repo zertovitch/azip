@@ -75,8 +75,15 @@ package AZip_GWin.MDI_Child is
       Canvas : in out GWindows.Drawing.Canvas_Type;
       Area   : in     GWindows.Types.Rectangle_Type) is null;
 
-  type MDI_Child_GSize_Bar_Type is new GWindows.GControls.GSize_Bars.GSize_Bar_Type with null record;
+  type MDI_Child_GSize_Bar_Type is new GWin_Util.Splitter_with_dashes with null record;
+
   overriding procedure On_Bar_Moved (Window : in out MDI_Child_GSize_Bar_Type);
+
+  overriding procedure On_Left_Mouse_Button_Double_Click
+     (Window : in out MDI_Child_GSize_Bar_Type;
+      X      : in     Integer;
+      Y      : in     Integer;
+      Keys   : in     GWindows.Windows.Mouse_Key_States);
 
   type MDI_Child_Type is
     new Office_Applications.Classic_Document_Window_Type with
@@ -91,7 +98,7 @@ package AZip_GWin.MDI_Child is
         Tree_Bar_and_List   : MDI_Child_Packing_Box_Type;
         Bar_and_List        : MDI_Child_Panel_Type;
         Directory_List      : Directory_Lists.Directory_list_type;
-        Splitter            : GWin_Util.Splitter_with_dashes;
+        Splitter            : MDI_Child_GSize_Bar_Type;
         Folder_Tree         : Folder_Trees.Folder_tree_type;
         zif                 : Zip.Zip_info;
         path_map            : AZip_Common.Path_Catalogues.Map;

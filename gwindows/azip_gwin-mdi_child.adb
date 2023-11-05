@@ -36,6 +36,7 @@ with Interfaces;
 
 with Set_Modification_Time_GNAT;
 with Zip_time_display;
+with Ada.Text_IO;
 
 package body AZip_GWin.MDI_Child is
 
@@ -502,7 +503,7 @@ package body AZip_GWin.MDI_Child is
     Window.Update_tool_bar_and_menus;
   end Update_Information;
 
-  procedure Memorize_splitter (Window : in out MDI_Child_Type) is
+  procedure Memorize_Splitter (Window : in out MDI_Child_Type) is
   begin
     case Window.opt.view_mode is
       when Flat =>
@@ -511,15 +512,9 @@ package body AZip_GWin.MDI_Child is
         Window.opt.tree_portion :=
           Float (Window.Folder_Tree.Width) / Float (Window.Client_Area_Width);
     end case;
-  end Memorize_splitter;
+  end Memorize_Splitter;
 
-  overriding procedure On_Bar_Moved (Window : in out MDI_Child_GSize_Bar_Type) is
-  begin
-    Memorize_splitter (MDI_Child_Type (Window.Parent.Parent.Parent.all));
-    GWindows.GControls.GSize_Bars.GSize_Bar_Type (Window).On_Bar_Moved;
-  end On_Bar_Moved;
-
-  procedure Check_path (Window : in out MDI_Child_Type; go_up : Boolean) is
+  procedure Check_Path (Window : in out MDI_Child_Type; go_up : Boolean) is
     use AZip_Common.Path_Catalogues;
     go_up_done : Boolean := False;
     sel_node   : Tree_Item_Node;
@@ -572,13 +567,12 @@ package body AZip_GWin.MDI_Child is
           Window.Folder_Tree.Focus;
         end if;
     end case;
-  end Check_path;
+  end Check_Path;
 
-  procedure Change_View (
-        Window   : in out MDI_Child_Type;
-        new_view :        View_Mode_Type;
-        force    :        Boolean
-  )
+  procedure Change_View
+    (Window   : in out MDI_Child_Type;
+     new_view :        View_Mode_Type;
+     force    :        Boolean)
   is
     mem_sel_path : constant GString_Unbounded := Window.selected_path;
   begin
@@ -589,8 +583,9 @@ package body AZip_GWin.MDI_Child is
     case new_view is
       when Flat =>
         if not force then
-          Memorize_splitter (Window);
-          --  Remember tree portion for user persistence or for next time we toggle back to tree view.
+          Memorize_Splitter (Window);
+          --  Remember tree portion for user persistence or
+          --  for next time we toggle back to tree view.
         end if;
         Window.Splitter.Hide;
         Window.Folder_Tree.Hide;
@@ -601,8 +596,42 @@ package body AZip_GWin.MDI_Child is
     Window.On_Size (Window.Width, Window.Height);
     Update_Information (Window, archive_changed);
     Window.selected_path := mem_sel_path;
-    Check_path (Window, go_up => False);
+    Check_Path (Window, go_up => False);
   end Change_View;
+
+  overriding procedure On_Bar_Moved (Window : in out MDI_Child_GSize_Bar_Type) is
+    ch_w : MDI_Child_Type
+      renames MDI_Child_Type (Window.Parent.Parent.Parent.all);
+    threshold_small : constant := 10;
+    threshold_large : constant := 50;
+  begin
+    pragma Assert (threshold_small < threshold_large);
+    if ch_w.Folder_Tree.Width < threshold_small then
+      --  User seems to want to hide the tree - we do it right.
+      Change_View (ch_w, Flat, force => True);
+    elsif ch_w.Folder_Tree.Width < threshold_large then
+      --  Don't memorize. Absent this case, the tree will be hidden again
+      --  each time we try to enlarge its width with the size bar.
+      null;
+    else
+      Memorize_Splitter (ch_w);
+    end if;
+    --  Call parent method:
+    GWindows.GControls.GSize_Bars.GSize_Bar_Type (Window).On_Bar_Moved;
+  end On_Bar_Moved;
+
+  overriding procedure On_Left_Mouse_Button_Double_Click
+     (Window : in out MDI_Child_GSize_Bar_Type;
+      X      : in     Integer;
+      Y      : in     Integer;
+      Keys   : in     GWindows.Windows.Mouse_Key_States)
+  is
+    ch_w : MDI_Child_Type
+      renames MDI_Child_Type (Window.Parent.Parent.Parent.all);
+  begin
+    --  User wants to hide the tree.
+    Change_View (ch_w, Flat, force => True);
+  end On_Left_Mouse_Button_Double_Click;
 
   ---------------
   -- On_Create --
@@ -1790,7 +1819,7 @@ package body AZip_GWin.MDI_Child is
         --  Start dialog.
         Select_columns_dialog (Window.MDI_Root.all);
       when IDM_Up_one_level =>
-        Check_path (Window, go_up => True);
+        Check_Path (Window, go_up => True);
       when IDM_Context_menu_key =>
         --  We capture the "context menu key", which has the code VK_APPS (and *not*
         --  VK_MENU, VK_LMENU, VK_RMENU, VK_CONTEXTMENU) through an accelerator which
@@ -1873,7 +1902,7 @@ package body AZip_GWin.MDI_Child is
       --  Pass view mode and the tree width portion to parent,
       --  this will memorize choice of last closed window.
       Window.MDI_Root.opt.view_mode := Window.opt.view_mode;
-      Memorize_splitter (Window);
+      Memorize_Splitter (Window);
       Window.MDI_Root.opt.tree_portion := Window.opt.tree_portion;
       --  For the case there is no more child window, disable toolbar items.
       --  This action is reversed as soon as another child window is focused.

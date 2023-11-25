@@ -30,6 +30,7 @@ project AZip_GWindows is
        "Debug_MinGW",
        "Fast_GPL",
        "Fast_MinGW",
+       "Small",
        "Profiling");
 
    AZip_Build_Mode : AZip_Build_Mode_Type := external ("AZip_Build_Mode", "Debug_GPL");
@@ -46,6 +47,7 @@ project AZip_GWindows is
       when "Debug_MinGW" => for Object_Dir use "../obj/debug_ming";
       when "Fast_GPL"    => for Object_Dir use "../obj/fast";
       when "Fast_MinGW"  => for Object_Dir use "../obj/fast_ming";
+      when "Small"       => for Object_Dir use "../obj/small";
       when "Profiling"   => for Object_Dir use "../obj/profiling";
    end case;
 
@@ -77,20 +79,23 @@ project AZip_GWindows is
        );
 
    Fast_Compiler_Options_Inlining_Neutral :=
-     Common_Compiler_Options & (
-       "-O2",
+     Common_Compiler_Options &
+      ("-O2",
        "-gnatp",
        "-funroll-loops", "-fpeel-loops", "-funswitch-loops",
        "-ftracer", "-fweb", "-frename-registers", 
        "-fpredictive-commoning", "-fgcse-after-reload",
        "-ftree-vectorize", "-fipa-cp-clone",
-       "-ffunction-sections"
-     );
+       "-ffunction-sections");
 
    Fast_Compiler_Options :=
-     Fast_Compiler_Options_Inlining_Neutral & (
-       "-gnatn"  --  Cross-unit inlining
-     );
+     Fast_Compiler_Options_Inlining_Neutral &
+      ("-gnatn");  --  Cross-unit inlining
+
+   Small_Compiler_Options :=
+     Common_Compiler_Options &
+      ("-Os",
+       "-gnatp");
 
    package Compiler is
       case AZip_Build_Mode is
@@ -100,6 +105,9 @@ project AZip_GWindows is
          when "Fast_GPL" | "Fast_MinGW" =>
             for Local_Configuration_Pragmas use project'Project_Dir & "azip_elim.pra";
             for Default_Switches ("ada") use Fast_Compiler_Options & ("-mfpmath=sse", "-msse3");
+         when "Small" =>
+            for Local_Configuration_Pragmas use project'Project_Dir & "azip_elim.pra";
+            for Default_Switches ("ada") use Small_Compiler_Options;
          when "Profiling" =>
             for Local_Configuration_Pragmas use project'Project_Dir & "azip_elim.pra";
             for Default_Switches ("ada") use Fast_Compiler_Options_Inlining_Neutral & ("-fno-inline", "-pg");
@@ -113,6 +121,7 @@ project AZip_GWindows is
       case AZip_Build_Mode is
          when "Debug_GPL" | "Debug_MinGW" => for Default_Switches ("ada") use ("-Es") & Common_Binder_Options;
          when "Fast_GPL"  | "Fast_MinGW"  => for Default_Switches ("ada") use           Common_Binder_Options;
+         when "Small"                     => for Default_Switches ("ada") use           Common_Binder_Options;
          when "Profiling"                 => for Default_Switches ("ada") use           Common_Binder_Options;
       end case;
    end Binder;
@@ -123,6 +132,7 @@ project AZip_GWindows is
       case AZip_Build_Mode is
          when "Debug_GPL" | "Debug_MinGW" => for Default_Switches ("ada") use ("-g")                                   & Common_Linker_Options;
          when "Fast_GPL"  | "Fast_MinGW"  => for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections") & Common_Linker_Options;
+         when "Small"                     => for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections") & Common_Linker_Options;
          when "Profiling"                 => for Default_Switches ("ada") use ("-mwindows", "-pg")                     & Common_Linker_Options;
       end case;
    end Linker;

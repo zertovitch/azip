@@ -6,7 +6,18 @@
 pragma Eliminate (GWindows.Drawing, Paint_Transparent_Bitmap);
 pragma Eliminate (GWindows.Drawing, AlphaBlend);
 
---  Others, can be obtained with: gnatelim -P azip_gwindows -XBuild_Mode=Fast_GPL -main=azip.adb >elim.txt
+--  Others, obtained with the command
+--    gnatelim -P azip_gwindows -XBuild_Mode=Small -main=azip.adb >elim.txt
+--
+--  NB: gnatelim is supported only till GNAT version CE 2019
+--
+--  The gnatelim output looks like:
+--
+--  pragma Eliminate (GWindows.Application, GetCurrentThreadId, Source_Location => "gwindows-application.adb:83");
+--  pragma Eliminate (GWindows.Application, Set_hInstance, Source_Location => "gwindows-application.ads:49");
+--  pragma Eliminate (GWindows.Application, Load_String, Source_Location => "gwindows-application.ads:54");
+--  pragma Eliminate (GWindows.Application, LoadString, Source_Location => "gwindows-application.adb:130");
+--
 
 ---------------------------------------------------------
 --  List of unused entities to be placed in gnat.adc.  --
@@ -827,18 +838,12 @@ pragma Eliminate (GWindows.Cursors, End_Wait_Cursor, Source_Location => "gwindow
 pragma Eliminate (GWindows.Drawing.Capabilities, Get_Capability, Source_Location => "gwindows-drawing-capabilities.ads:39");
 pragma Eliminate (GWindows.Drawing.Capabilities, GetDeviceCaps, Source_Location => "gwindows-drawing-capabilities.adb:51");
 pragma Eliminate (GWindows.Drawing, GetTextColor, Source_Location => "gwindows-drawing.adb:102");
-pragma Eliminate (GWindows.Drawing, SetTextAlign, Source_Location => "gwindows-drawing.adb:107");
-pragma Eliminate (GWindows.Drawing, GetTextAlign, Source_Location => "gwindows-drawing.adb:112");
 pragma Eliminate (GWindows.Drawing, SetBkColor, Source_Location => "gwindows-drawing.adb:117");
 pragma Eliminate (GWindows.Drawing, GetBkColor, Source_Location => "gwindows-drawing.adb:127");
 pragma Eliminate (GWindows.Drawing, GetBkMode, Source_Location => "gwindows-drawing.adb:132");
-pragma Eliminate (GWindows.Drawing, Put, Source_Location => "gwindows-drawing.ads:179");
-pragma Eliminate (GWindows.Drawing, ExtTextOut, Source_Location => "gwindows-drawing.adb:250");
 pragma Eliminate (GWindows.Drawing, Put, Source_Location => "gwindows-drawing.ads:185");
 pragma Eliminate (GWindows.Drawing, Put, Source_Location => "gwindows-drawing.ads:189");
-pragma Eliminate (GWindows.Drawing, Vertical_Text_Alignment, Source_Location => "gwindows-drawing.ads:243");
 pragma Eliminate (GWindows.Drawing, Vertical_Text_Alignment, Source_Location => "gwindows-drawing.ads:247");
-pragma Eliminate (GWindows.Drawing, Horizontal_Text_Alignment, Source_Location => "gwindows-drawing.ads:252");
 pragma Eliminate (GWindows.Drawing, Horizontal_Text_Alignment, Source_Location => "gwindows-drawing.ads:256");
 pragma Eliminate (GWindows.Drawing, Text_Color, Source_Location => "gwindows-drawing.ads:262");
 pragma Eliminate (GWindows.Drawing, Background_Color, Source_Location => "gwindows-drawing.ads:302");

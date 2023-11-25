@@ -75,7 +75,9 @@ package AZip_GWin.MDI_Child is
       Canvas : in out GWindows.Drawing.Canvas_Type;
       Area   : in     GWindows.Types.Rectangle_Type) is null;
 
-  type MDI_Child_GSize_Bar_Type is new GWin_Util.Splitter_with_dashes with null record;
+  type MDI_Child_GSize_Bar_Type is new GWindows.GControls.GSize_Bars.GSize_Bar_Type with null record;
+
+  overriding procedure On_Create (Window : in out MDI_Child_GSize_Bar_Type);
 
   overriding procedure On_Bar_Moved (Window : in out MDI_Child_GSize_Bar_Type);
 

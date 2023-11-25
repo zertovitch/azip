@@ -599,6 +599,17 @@ package body AZip_GWin.MDI_Child is
     Check_Path (Window, go_up => False);
   end Change_View;
 
+  overriding procedure On_Create (Window : in out MDI_Child_GSize_Bar_Type) is
+  begin
+    Set_Dashes (Window             => Window,
+                Dash_Height        => 2,
+                Dash_Width         => 2,
+                Spacing_Height     => 14,
+                Spacing_Width      => 0,
+                Number_Of_Dashes_V => 1000,
+                Number_Of_Dashes_H => 1);
+  end On_Create;
+
   overriding procedure On_Bar_Moved (Window : in out MDI_Child_GSize_Bar_Type) is
     ch_w : MDI_Child_Type
       renames MDI_Child_Type (Window.Parent.Parent.Parent.all);

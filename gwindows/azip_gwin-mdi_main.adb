@@ -21,7 +21,8 @@ with GWindows.Application,
 with GWin_Util;
 
 with Ada.Command_Line,
-     Ada.Text_IO;
+     Ada.Text_IO,
+     Ada.Unchecked_Deallocation;
 
 package body AZip_GWin.MDI_Main is
 
@@ -190,6 +191,29 @@ package body AZip_GWin.MDI_Main is
     );
   end Open_Child_Window_And_Load;
 
+  procedure Process_Argument
+    (Window   : in out MDI_Main_Type;
+     Position : in     Positive;
+     Total    : in     Positive;
+     Arg      : in     String)
+  is
+    use GWindows.Windows;
+    procedure Dispose is new Ada.Unchecked_Deallocation
+      (Array_Of_File_Names, Array_Of_File_Names_Access);
+  begin
+    if Position = 1 then
+      Window.bulk_files_list :=
+        new Array_Of_File_Names (1 .. Total);
+    end if;
+    Window.bulk_files_list (Position) :=
+      G2GU (AZip_Common.To_UTF_16 (Arg, Zip.UTF_8));
+    if Position = Total then
+      --  We simulate a file dropping onto the MDI main window.
+      Window.On_File_Drop (Window.bulk_files_list.all);
+      Dispose (Window.bulk_files_list);
+    end if;
+  end Process_Argument;
+
   ---------------
   -- On_Create --
   ---------------
@@ -259,16 +283,10 @@ package body AZip_GWin.MDI_Main is
       On_File_New (Window, extra_first_doc => True);
       --  ^ The MS Office-like first, empty document
     else
-      declare
-        args : Array_Of_File_Names (1 .. Argument_Count);
-      begin
-        for I in 1 .. Argument_Count loop
-          args (I) := G2GU (To_UTF_16 (Argument (I), Zip.UTF_8));
-        end loop;
-        --  We simulate a file dropping onto the MDI main window.
-        Window.On_File_Drop (args);
-        Update_Common_Menus (Window);
-      end;
+      for i in 1 .. Argument_Count loop
+        Window.Process_Argument (i, Argument_Count, Argument (i));
+      end loop;
+      Window.Update_Common_Menus;
     end if;
     --  Dropping files on the background will trigger creating an archive:
     Window.Accept_File_Drag_And_Drop;

@@ -9,7 +9,8 @@ with AZip_GWin.Installation,
 with GWindows.Application,
      GWindows.Base,
      GWindows.GStrings,
-     GWindows.Message_Boxes;
+     GWindows.Message_Boxes,
+     GWindows.Single_Instance;
 
 with Ada.Exceptions;
 with GNAT.Traceback.Symbolic;
@@ -19,6 +20,14 @@ procedure AZip is
   use GWindows.GStrings;
 
   Top : AZip_GWin.MDI_Main.MDI_Main_Type;
+
+  procedure AZip_Process_Argument (Position, Total : Positive; Arg : String) is
+  begin
+    Top.Process_Argument (Position, Total, Arg);
+  end AZip_Process_Argument;
+
+  package AZip_Single_Instance is
+    new GWindows.Single_Instance (AZip_Process_Argument);
 
   procedure Interactive_Crash (
     Window : in out GWindows.Base.Base_Window_Type'Class;
@@ -41,8 +50,21 @@ procedure AZip is
       );
   end Interactive_Crash;
 
+  Exit_Requested     : Boolean;
+  AZip_Class_Name    : constant GWindows.GString := "AZip_Class_Name";
+  AZip_Instance_Name : constant GWindows.GString := "AZip_Instance";
+
 begin
   GWindows.Base.On_Exception_Handler (Handler => Interactive_Crash'Unrestricted_Access);
-  Top.Create_MDI_Top (To_GString_From_String (AZip_GWin.Installation.AZip_Title));
-  GWindows.Application.Message_Loop;
+  AZip_Single_Instance.Manage_Single_Instance
+    (Application_Class_Name    => AZip_Class_Name,
+     Application_Instance_Name => AZip_Instance_Name,
+     Exit_Requested            => Exit_Requested);
+
+  if not Exit_Requested then
+    Top.Create_MDI_Top
+      (To_GString_From_String (AZip_GWin.Installation.AZip_Title),
+      CClass => AZip_Class_Name);
+    GWindows.Application.Message_Loop;
+  end if;
 end AZip;

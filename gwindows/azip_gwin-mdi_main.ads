@@ -33,6 +33,8 @@ package AZip_GWin.MDI_Main is
         Task_bar_gadget        : GWindows.Taskbar.Taskbar_List;
         --
         dragging               : AZip_GWin.Dragging.Dragging_info;
+        --
+        bulk_files_list        : GWindows.Windows.Array_Of_File_Names_Access := null;
       end record;
 
   type MDI_Main_Access is access all MDI_Main_Type;
@@ -66,6 +68,12 @@ package AZip_GWin.MDI_Main is
   procedure Open_Child_Window_And_Load
     (Window     : in out MDI_Main_Type;
      File_Name  :        GWindows.GString_Unbounded);
+
+  procedure Process_Argument
+    (Window   : in out MDI_Main_Type;
+     Position : in     Positive;
+     Total    : in     Positive;
+     Arg      : in     String);
 
   overriding procedure On_Menu_Select (
         Window : in out MDI_Main_Type;

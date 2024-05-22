@@ -1,6 +1,14 @@
--- This is a GNAT, GCC or GNAT Studio project file
--- for the AZip project ( http://azip.sf.net/ ), version using GWindows.
--- Build me with "gnatmake -P azip_gwindows", or open me with GNAT Studio
+--  This is a GNAT, GCC or GNAT Studio project file
+--  for the AZip project, version using GWindows.
+--
+--      home page:     http://azip.sf.net/
+--      project page:  http://sf.net/projects/azip/
+--      mirror:        https://github.com/zertovitch/azip
+--
+--  Build me with "gnatmake -P azip_gwindows", or open me with GNAT Studio
+--
+--  This variant is a "flat" project, which does not refer to other projects.
+--  See "azip_gw_project_tree.gpr" for the other variant.
 
 --  *** External libraries ***
 --  * 
@@ -21,7 +29,12 @@
 --  *       [zip-ada]\zip_lib
 --  *       Project URL: http://unzip-ada.sf.net
 --  * 
---  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework;C:\Ada\za\zip_lib;C:\Ada\ini
+--  *  Example: GNAT_SOURCE_PATH=
+--  *             C:\Ada\gnavi\gwindows\framework;
+--  *             C:\Ada\gnavi\gwindows\contrib;
+--  *             C:\Ada\gnavi\gnatcom\framework;
+--  *             C:\Ada\za\zip_lib;
+--  *             C:\Ada\ini
 
 project AZip_GWindows is
 

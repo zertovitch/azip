@@ -18,7 +18,7 @@ package body AZip_GWin.Modal_Dialogs is
   procedure Show_About_Box (Window : in out MDI_Main.MDI_Main_Type) is
     use GWindows.Application, GWindows.Constants, GWindows.Static_Controls.Web;
     box : AZip_Resource_GUI.About_box_Type;
-    url_azip, url_gnat, url_gnavi, url_ini, url_resedit, url_zipada : URL_Type;
+    url_azip, url_gnat, url_gnavi, url_ini, url_zipada : URL_Type;
     --
     procedure Credits_clicked (dummy : in out GWindows.Base.Base_Window_Type'Class) is
       credits_box : AZip_Resource_GUI.Credits_box_Type;

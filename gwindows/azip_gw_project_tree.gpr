@@ -1,0 +1,126 @@
+--  This is a GNAT, GCC or GNAT Studio project file
+--  for the AZip project, version using GWindows.
+--
+--      home page:     http://azip.sf.net/
+--      project page:  http://sf.net/projects/azip/
+--      mirror:        https://github.com/zertovitch/azip
+--
+--  Build me with "gprbuild -P azip_gw_project_tree", or open me with GNAT Studio
+--
+--  This variant is a hierarchical project, which refers to other projects.
+--  See "azip_gwindows.gpr" for the other variant.
+--
+--  *** External projects ***
+--  * 
+--  *   You need to make the following projects files visible to this project,
+--  *   for instance through the ADA_PROJECT_PATH environment variable:
+--  *   
+--  *   * GWindows and contributions:
+--  *       [gnavi]\gwindows\gwindows_contrib.gpr
+--  *       Project URL: http://sf.net/projects/gnavi/
+--  *       Mirror URL: https://github.com/zertovitch/gwindows
+--  *       NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
+--  *   
+--  *   * Ini file manager:
+--  *       [ini]\ini_files.gpr
+--  *       Project URL: http://ini-files.sourceforge.net/
+--  *       Mirror URL: https://github.com/zertovitch/ini-files
+--  *   
+--  *   * Zip-Ada:
+--  *       [zip-ada]\zipada.gpr
+--  *       Project URL: http://unzip-ada.sf.net
+--  *       Mirror URL: https://github.com/zertovitch/zip-ada
+--  * 
+--  *  Example: ADA_PROJECT_PATH=
+--  *  =======    C:\Ada\gnavi\gwindows;
+--  *             C:\Ada\ini;
+--  *             C:\Ada\zip-ada
+
+with "Ini_Files";
+with "ZipAda_Lib";
+
+project AZip_GW_Project_Tree extends "GWindows_Contrib" is
+
+   --  The `extends "GWindows_Contrib"` instead of `with "GWindows_Contrib"`
+   --  is a trick to handle the dependency of GWindows.Persistence_IO on the
+   --  package Config (which is in project Ini_Files).
+
+   type AZip_Build_Mode_Type is
+      ("Debug",
+       "Fast",
+       "Small");
+
+   AZip_Build_Mode : AZip_Build_Mode_Type := external ("AZip_Build_Mode", "Fast");
+
+   for Main use ("azip.adb");
+   for Source_Dirs use ("..\sys_common", ".", "..\testing");
+   for Exec_Dir use ".";
+   for Create_Missing_Dirs use "True";  --  Flips by default the "-p" switch
+
+   case AZip_Build_Mode is
+      when "Debug" => for Object_Dir use "../obj/debug";
+      when "Fast"  => for Object_Dir use "../obj/fast";
+      when "Small" => for Object_Dir use "../obj/small";
+   end case;
+
+   Common_Compiler_Options :=
+     ("-gnatwa",                        --  Warnings switches (a:turn on all info/warnings marked with +)
+      --  "-gnatwh",                        --  Warnings switches (h:turn on warnings for hiding declarations)
+      "-gnatwcijkmopruvz.c.p.t.w.x",    --  Warnings switches (run "gnatmake" for full list)
+      "-gnatf",  --  Full errors. Verbose details, all undefined references
+      "-gnatq",  --  Don't quit, try semantics, even if parse errors
+      "-gnatQ",  --  Don't quit, write ali/tree file even if compile errors
+      --
+      "-gnatyaknpr",   --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
+      "-gnatybfhiu",   --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
+      "-gnatyx",       --  Style: check x:no extra parens
+      "-gnatye",       --  Style: check e:end/exit labels present
+      "-gnatyc",       --  Style: check c:comment format (two spaces)
+      "-gnatyt");      --  Style: check t:token separation rules
+   
+   Compiler_Debug_Options :=
+     ("-gnata",        --  Assertions enabled
+      "-gnato",        --  Enable overflow checking in STRICT mode
+      "-gnatVa",       --  Enable all validity checking options
+      "-fstack-check",
+      "-fno-inline",
+      --
+      "-g");           --  Generate debugging information
+
+   Compiler_Fast_Options :=
+     ("-Ofast",
+      "-gnatn", 
+      "-g");           --  Generate debugging information
+
+   package Compiler is
+      case AZip_Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use Common_Compiler_Options & Compiler_Debug_Options;
+            for Local_Configuration_Pragmas use project'Project_Dir & "../obj/debug/debug.pra";
+         when "Fast" =>
+            for Default_Switches ("ada") use Common_Compiler_Options & Compiler_Fast_Options;
+            for Local_Configuration_Pragmas use project'Project_Dir & "azip_elim.pra";
+         when "Small" =>
+            for Default_Switches ("ada") use Common_Compiler_Options & "-Os";
+            for Local_Configuration_Pragmas use project'Project_Dir & "azip_elim.pra";
+      end case;
+   end Compiler;
+
+   Common_Linker_Options := ("azip.rbj", "-Xlinker", "--stack=0x2000000,0x20000");
+
+   package Linker is
+      case AZip_Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-g"                                  )  & Common_Linker_Options;
+         when "Fast" | "Small" =>
+            for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections")  & Common_Linker_Options;
+       end case;
+   end Linker;
+
+   package Builder is
+      --   "If -j0 is used, then the maximum number of simultaneous compilation
+      --    jobs is the number of core processors on the platform."
+      for Default_Switches ("ada") use ("-j0");
+   end Builder;
+
+end AZip_GW_Project_Tree;

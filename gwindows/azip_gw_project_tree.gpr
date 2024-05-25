@@ -37,7 +37,7 @@
 --  *             C:\Ada\zip-ada
 
 with "Ini_Files";
-with "ZipAda_Lib";
+with "ZipAda";
 
 project AZip_GW_Project_Tree extends "GWindows_Contrib" is
 

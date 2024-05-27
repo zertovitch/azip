@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2023/05/29  18:32:10
+--  Transcription time: 2024/05/27  19:52:57
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -100,7 +100,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out About_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -184,7 +184,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Drop_files_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -235,7 +235,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out File_exists_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -280,7 +280,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Find_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -344,7 +344,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Install_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -426,7 +426,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Password_decryption_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -472,7 +472,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Password_encryption_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -516,7 +516,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Progress_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -564,7 +564,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Properties_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -601,7 +601,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Quick_help_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -641,7 +641,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Quick_help_tab_command_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -682,7 +682,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Quick_help_tab_gui_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -721,7 +721,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Quick_help_tab_install_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -760,7 +760,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Select_column_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -803,7 +803,7 @@ package AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Sponsoring_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned);
+                           dwExStyle : in out Interfaces.C.unsigned);
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -861,8 +861,8 @@ package AZip_Resource_GUI is
   package Version_info is
     Authors : constant String := "Gautier de Montmollin";
     FileDescription : constant String := "AZip - A portable Zip Archive Manager - Free, MIT license";
-    FileVersion : constant String := "2.6.1";
-    LegalCopyright : constant String := "Copyright © Gautier de Montmollin 2012 .. 2023";
+    FileVersion : constant String := "2.6.2";
+    LegalCopyright : constant String := "Copyright © Gautier de Montmollin 2012 .. 2024";
     ProductName : constant String := "AZip";
     Translation : constant := 1033;
   end Version_info;

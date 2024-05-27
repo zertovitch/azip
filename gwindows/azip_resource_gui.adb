@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2023/05/29  18:32:10
+--  Transcription time: 2024/05/27  19:52:57
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -167,7 +167,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out About_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -393,7 +393,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Drop_files_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -500,7 +500,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out File_exists_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -646,7 +646,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Find_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -752,7 +752,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Install_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -1034,7 +1034,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Password_decryption_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -1142,7 +1142,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Password_encryption_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -1250,7 +1250,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Progress_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -1347,7 +1347,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Properties_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -1461,7 +1461,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Quick_help_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -1544,7 +1544,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Quick_help_tab_command_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -1626,7 +1626,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Quick_help_tab_gui_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -1710,7 +1710,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Quick_help_tab_install_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -1790,7 +1790,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Select_column_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);
@@ -1877,7 +1877,7 @@ package body AZip_Resource_GUI is
   --
   procedure On_Pre_Create (Window    : in out Sponsoring_box_Type;
                            dwStyle   : in out Interfaces.C.unsigned;
-                            dwExStyle : in out Interfaces.C.unsigned)
+                           dwExStyle : in out Interfaces.C.unsigned)
   is
     pragma Unmodified (Window);
     pragma Unmodified (dwExStyle);

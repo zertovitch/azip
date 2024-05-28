@@ -271,7 +271,7 @@ package body AZip_Common is
     Character'Val (16#ff#) => Wide_Character'Val (16#00a0#)   --  NO-BREAK SPACE
   );
 
-  function To_UTF_16 (s : String; name_encoding : Zip.Zip_name_encoding) return Wide_String
+  function To_UTF_16 (s : String; name_encoding : Zip.Zip_Name_Encoding) return Wide_String
   is
     use Zip;
   begin
@@ -295,7 +295,7 @@ package body AZip_Common is
     return Ada.Strings.UTF_Encoding.Conversions.Convert (s);
   end To_UTF_8;
 
-  function To_UTF_8 (s : String; encoding : Zip.Zip_name_encoding) return UTF_8_String is
+  function To_UTF_8 (s : String; encoding : Zip.Zip_Name_Encoding) return UTF_8_String is
     use Zip;
   begin
     case encoding is
@@ -527,7 +527,7 @@ package body AZip_Common is
     return s (i .. s'Last);
   end Remove_path;
 
-  procedure Load_insensitive_if_possible (info : out Zip.Zip_info; from : String) is
+  procedure Load_insensitive_if_possible (info : out Zip.Zip_Info; from : String) is
     use Zip;
   begin
     --  Whenever possible, we try to load the directory as case insensitive
@@ -547,7 +547,7 @@ package body AZip_Common is
 
   function Is_valid_Zip_archive (file_name : String) return Archive_validity is
     use Zip;
-    info : Zip_info;
+    info : Zip_Info;
   begin
     Load
       (info           => info,
@@ -575,7 +575,7 @@ package body AZip_Common is
       return invalid;
   end Is_valid_Zip_archive;
 
-  function Has_Zip_archive_encrypted_entries (info : Zip.Zip_info) return Boolean is
+  function Has_Zip_archive_encrypted_entries (info : Zip.Zip_Info) return Boolean is
     use Zip;
     encrypted : Boolean := False;
     procedure Detect_Encryption (
@@ -586,7 +586,7 @@ package body AZip_Common is
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Time;
       method           : PKZip_method;
-      name_encoding    : Zip_name_encoding;
+      name_encoding    : Zip_Name_Encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
       user_code        : in out Integer

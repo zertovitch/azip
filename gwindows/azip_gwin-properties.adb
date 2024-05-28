@@ -79,7 +79,7 @@ procedure AZip_GWin.Properties (Window : in out MDI_Child.MDI_Child_Type) is
       crc_32           : Unsigned_32;
       date_time        : Time;
       method           : PKZip_method;
-      name_encoding    : Zip_name_encoding;
+      name_encoding    : Zip_Name_Encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
       user_code        : in out Integer

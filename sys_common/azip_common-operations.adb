@@ -197,7 +197,7 @@ package body AZip_Common.Operations is
     end case;
   end Description;
 
-  procedure Copy_user_codes (from : Zip.Zip_info; to : in out Zip.Zip_info) is
+  procedure Copy_user_codes (from : Zip.Zip_Info; to : in out Zip.Zip_Info) is
     procedure Copy_user_code (
       entry_full_name  : String;
       file_index       : Zip_Streams.ZS_Index_Type;
@@ -206,7 +206,7 @@ package body AZip_Common.Operations is
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
       method           : Zip.PKZip_method;
-      name_encoding    : Zip.Zip_name_encoding;
+      name_encoding    : Zip.Zip_Name_Encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
       user_code_from   : in out Integer
@@ -214,7 +214,7 @@ package body AZip_Common.Operations is
     is
     pragma Unreferenced (file_index, comp_size, uncomp_size, crc_32, date_time, method, name_encoding, read_only, encrypted_2_x);
     begin
-      Zip.Set_user_code (to, entry_full_name, user_code_from);
+      Zip.Set_User_Code (to, entry_full_name, user_code_from);
     exception
       when Zip.Entry_name_not_found =>
         null;  --  Nothing bad: 'name' is a directory name that was skipped on recompression.
@@ -225,10 +225,10 @@ package body AZip_Common.Operations is
     Do_it (from);
   end Copy_user_codes;
 
-  procedure Set_user_codes (info : in out Zip.Zip_info; code : Integer) is
+  procedure Set_user_codes (info : in out Zip.Zip_Info; code : Integer) is
     procedure Set_same_user_code (entry_full_name : String) is
     begin
-      Zip.Set_user_code (info, entry_full_name, code);
+      Zip.Set_User_Code (info, entry_full_name, code);
     end Set_same_user_code;
     procedure Do_it is new Zip.Traverse (Set_same_user_code);
   begin
@@ -256,15 +256,15 @@ package body AZip_Common.Operations is
   ------------------------------------------------
 
   procedure Process_Archive (
-    zif             :        Zip.Zip_info; -- preserved, even after modifying operation
+    zif             :        Zip.Zip_Info; -- preserved, even after modifying operation
     operation       :        Archive_Operation;
     entry_name      :        Name_List;
     base_folder     :        UTF_16_String;
     search_pattern  :        UTF_16_String;
     output_folder   :        UTF_16_String;
-    Set_Time_Stamp  :        UnZip.Set_Time_Stamp_proc;
+    Set_Time_Stamp  :        UnZip.Set_Time_Stamp_Proc;
     new_temp_name   :        String;
-    Name_conflict   :        UnZip.Resolve_conflict_proc;
+    Name_conflict   :        UnZip.Resolve_Conflict_Proc;
     password        : in out UTF_16_Unbounded_String;
     ignore_path     :        Boolean; -- ignore directories upon extraction
     encrypt         :        Boolean;
@@ -418,7 +418,7 @@ package body AZip_Common.Operations is
 
     function Add_extract_directory (
       File_Name      : String;
-      Name_Encoding  : Zip.Zip_name_encoding
+      Name_Encoding  : Zip.Zip_Name_Encoding
     )
     return UTF_8_String
     is
@@ -458,7 +458,7 @@ package body AZip_Common.Operations is
     end Encryption_password;
     --
     use Zip, Zip.Create, UnZip;
-    Extract_FS_routines : constant UnZip.FS_routines_type :=
+    Extract_FS_routines : constant UnZip.FS_Routines_Type :=
        (Create_Path         => Ada.Directories.Create_Path'Access,
         Set_Time_Stamp      => Set_Time_Stamp,
         Compose_File_Name   => Add_extract_directory'Unrestricted_Access,
@@ -481,7 +481,7 @@ package body AZip_Common.Operations is
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
       method           : Zip.PKZip_method;
-      name_encoding    : Zip.Zip_name_encoding;
+      name_encoding    : Zip.Zip_Name_Encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
       entry_user_code  : in out Integer
@@ -563,8 +563,8 @@ package body AZip_Common.Operations is
         stamp : constant Time := Zip.Convert (Modification_Time (name_utf_8_with_extra_folder));
         --  Ada.Directories not utf-8 compatible !!
         use Zip_Streams.Calendar;
-        temp_single_entry_zip_zif : Zip.Zip_info;
-        dummy_name_encoding       : Zip_name_encoding;
+        temp_single_entry_zip_zif : Zip.Zip_Info;
+        dummy_name_encoding       : Zip_Name_Encoding;
         single_file_index         : Zip_Streams.ZS_Index_Type;
         dummy_comp_size           : Zip.Zip_64_Data_Size_Type;
         dummy_uncomp_size         : Zip.Zip_64_Data_Size_Type;
@@ -582,7 +582,7 @@ package body AZip_Common.Operations is
         Tentative_compress (stamp, quick_method, name_utf_8_with_extra_folder);
         --  We load the one-file zip file's information
         Load (temp_single_entry_zip_zif, temp_single_entry_zip_name);
-        Find_offset (
+        Find_Offset (
           info          => temp_single_entry_zip_zif,
           name          => name_utf_8_as_in_archive,
           name_encoding => dummy_name_encoding,
@@ -606,8 +606,8 @@ package body AZip_Common.Operations is
       end Update_entry;
       --
       procedure Recompress_entry is
-        temp_single_entry_zip_zif : Zip.Zip_info;
-        dummy_name_encoding       : Zip_name_encoding;
+        temp_single_entry_zip_zif : Zip.Zip_Info;
+        dummy_name_encoding       : Zip_Name_Encoding;
         single_file_index         : Zip_Streams.ZS_Index_Type;
         new_comp_size             : Zip.Zip_64_Data_Size_Type;
         dummy_uncomp_size         : Zip.Zip_64_Data_Size_Type;
@@ -631,7 +631,7 @@ package body AZip_Common.Operations is
         );
         --  We load the one-file zip file's information
         Load (temp_single_entry_zip_zif, temp_single_entry_zip_name);
-        Find_offset (
+        Find_Offset (
           info          => temp_single_entry_zip_zif,
           name          => name_utf_8_as_in_archive,
           name_encoding => dummy_name_encoding,
@@ -919,7 +919,7 @@ package body AZip_Common.Operations is
     end case;
     case operation is
       when Modifying_Operation =>
-        Zip_Streams.Set_Name (old_fzs, Zip.Zip_name (zif));
+        Zip_Streams.Set_Name (old_fzs, Zip.Zip_Name (zif));
         Zip_Streams.Open (old_fzs, Zip_Streams.In_File);
         Zip.Create.Create_Archive (
           new_zip,
@@ -965,7 +965,7 @@ package body AZip_Common.Operations is
               declare
                 procedure Add_with_encoding (
                   encoded_name  : String;
-                  name_encoding : Zip.Zip_name_encoding
+                  name_encoding : Zip.Zip_Name_Encoding
                 )
                 is
                 begin
@@ -1044,8 +1044,8 @@ package body AZip_Common.Operations is
           Delete_File (new_temp_name);
         else
           --  We move the new archive to the previous one's place.
-          Delete_File (Zip.Zip_name (zif));
-          Rename (new_temp_name, Zip.Zip_name (zif));
+          Delete_File (Zip.Zip_Name (zif));
+          Rename (new_temp_name, Zip.Zip_Name (zif));
         end if;
         if operation in Update .. Recompress then
           --  Update or Recompress have created a single
@@ -1167,7 +1167,7 @@ package body AZip_Common.Operations is
   end Cleanup_File_Name;
 
   procedure Count_test_totals (
-    archive : Zip.Zip_info;
+    archive : Zip.Zip_Info;
     count_ok, count_ko, count_nt : out Natural
   )
   is
@@ -1179,7 +1179,7 @@ package body AZip_Common.Operations is
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
       method           : Zip.PKZip_method;
-      name_encoding    : Zip.Zip_name_encoding;
+      name_encoding    : Zip.Zip_Name_Encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
       user_code        : in out Integer

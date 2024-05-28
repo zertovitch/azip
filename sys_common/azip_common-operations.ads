@@ -136,15 +136,15 @@ package AZip_Common.Operations is
       cancelled  :    out Boolean
     );
   procedure Process_Archive (
-    zif             :        Zip.Zip_info; -- preserved, even after modifying operation
+    zif             :        Zip.Zip_Info; -- preserved, even after modifying operation
     operation       :        Archive_Operation;
     entry_name      :        Name_List;
     base_folder     :        UTF_16_String;
     search_pattern  :        UTF_16_String;
     output_folder   :        UTF_16_String;
-    Set_Time_Stamp  :        UnZip.Set_Time_Stamp_proc;
+    Set_Time_Stamp  :        UnZip.Set_Time_Stamp_Proc;
     new_temp_name   :        String;
-    Name_conflict   :        UnZip.Resolve_conflict_proc;
+    Name_conflict   :        UnZip.Resolve_Conflict_Proc;
     password        : in out UTF_16_Unbounded_String;
     ignore_path     :        Boolean; -- ignore directories upon extraction
     encrypt         :        Boolean;
@@ -156,12 +156,12 @@ package AZip_Common.Operations is
   -- Some goodies --
   ------------------
 
-  procedure Copy_user_codes (from : Zip.Zip_info; to : in out Zip.Zip_info);
+  procedure Copy_user_codes (from : Zip.Zip_Info; to : in out Zip.Zip_Info);
 
-  procedure Set_user_codes (info : in out Zip.Zip_info; code : Integer);
+  procedure Set_user_codes (info : in out Zip.Zip_Info; code : Integer);
 
   procedure Count_test_totals (
-    archive : Zip.Zip_info;
+    archive : Zip.Zip_Info;
     count_ok, count_ko, count_nt : out Natural
   );
 

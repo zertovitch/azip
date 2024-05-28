@@ -219,7 +219,7 @@ package body AZip_GWin.MDI_Child is
         crc_32            : Interfaces.Unsigned_32;
         entry_date_time   : Zip_Streams.Time;
         method            : PKZip_method;
-        name_encoding     : Zip_name_encoding;
+        name_encoding     : Zip_Name_Encoding;
         read_only         : Boolean;
         encrypted_2_x     : Boolean; -- PKZip 2.x encryption
         entry_user_code   : in out Integer
@@ -355,7 +355,7 @@ package body AZip_GWin.MDI_Child is
             if simple_name_idx > name'First then
               Lst.Set_Sub_Item (the_path, row, cidx (Path) - 1);
             end if;
-            Lst.Set_Sub_Item (Zip_name_encoding'Wide_Image (name_encoding), row, cidx (Encoding) - 1);
+            Lst.Set_Sub_Item (Zip_Name_Encoding'Wide_Image (name_encoding), row, cidx (Encoding) - 1);
           end;
           --
           --  Show some response if the zip directory is very large
@@ -885,8 +885,8 @@ package body AZip_GWin.MDI_Child is
     --
     procedure Name_conflict_resolution (
       name            :  in String;
-      name_encoding   :  in Zip_name_encoding;
-      action          : out UnZip.Name_conflict_intervention;
+      name_encoding   :  in Zip_Name_Encoding;
+      action          : out UnZip.Name_Conflict_Intervention;
       new_name        : out String;
       new_name_length : out Natural
     )
@@ -1173,7 +1173,7 @@ package body AZip_GWin.MDI_Child is
     copy_codes :        Boolean
   )
   is
-    new_zif : Zip_info;
+    new_zif : Zip_Info;
   begin
     Load_insensitive_if_possible (new_zif, To_UTF_8 (GU2G (Window.File_Name)));
     if Zip.Is_loaded (Window.zif) then
@@ -1248,7 +1248,7 @@ package body AZip_GWin.MDI_Child is
     --
     procedure Process_entry (
       name_8_bit       : String; -- 'name' is compressed entry's name, with Zip encoding
-      name_encoding    : Zip_name_encoding
+      name_encoding    : Zip_Name_Encoding
     )
     is
       name : constant UTF_16_String := To_UTF_16 (name_8_bit, name_encoding);

@@ -102,7 +102,7 @@ package AZip_GWin.MDI_Child is
         Directory_List      : Directory_Lists.Directory_list_type;
         Splitter            : MDI_Child_GSize_Bar_Type;
         Folder_Tree         : Folder_Trees.Folder_tree_type;
-        zif                 : Zip.Zip_info;
+        zif                 : Zip.Zip_Info;
         path_map            : AZip_Common.Path_Catalogues.Map;
         node_map            : AZip_Common.Node_Catalogues.Map;
         selected_path       : GString_Unbounded := Null_GString_Unbounded;

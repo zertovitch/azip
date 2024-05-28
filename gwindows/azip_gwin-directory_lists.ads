@@ -21,7 +21,7 @@ package AZip_GWin.Directory_Lists is
     crc_32               : Interfaces.Unsigned_32;
     date_time            : Zip_Streams.Time;
     format               : Zip.PKZip_method;
-    name_encoding        : Zip.Zip_name_encoding;
+    name_encoding        : Zip.Zip_Name_Encoding;
     read_only            : Boolean;
     ratio                : Long_Float;  --  Compressed / Uncompressed ratio
     result_code          : Integer;

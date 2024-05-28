@@ -43,11 +43,11 @@ package AZip_Common is
   Null_UTF_16_Unbounded_String : UTF_16_Unbounded_String renames
     Ada.Strings.Wide_Unbounded.Null_Unbounded_Wide_String;
 
-  function To_UTF_16 (s : String; name_encoding : Zip.Zip_name_encoding) return UTF_16_String;
+  function To_UTF_16 (s : String; name_encoding : Zip.Zip_Name_Encoding) return UTF_16_String;
 
   function To_UTF_8 (s : UTF_16_String) return UTF_8_String;
 
-  function To_UTF_8 (s : String; encoding : Zip.Zip_name_encoding) return UTF_8_String;
+  function To_UTF_8 (s : String; encoding : Zip.Zip_Name_Encoding) return UTF_8_String;
 
   function To_IBM_437 (s : UTF_16_String) return String;
   Cannot_encode_to_IBM_437 : exception;
@@ -105,7 +105,7 @@ package AZip_Common is
   function Give_path (s : UTF_16_String) return UTF_16_String;
   --  s is always equal to: Give_path & Remove_path
 
-  procedure Load_insensitive_if_possible (info : out Zip.Zip_info; from : String);
+  procedure Load_insensitive_if_possible (info : out Zip.Zip_Info; from : String);
 
   --  This function will tell if a file is actually a Zip file.
   --  It is useful for instance when files are dropped onto AZip,
@@ -120,7 +120,7 @@ package AZip_Common is
      );
   function Is_valid_Zip_archive (file_name : String) return Archive_validity;
 
-  function Has_Zip_archive_encrypted_entries (info : Zip.Zip_info) return Boolean;
+  function Has_Zip_archive_encrypted_entries (info : Zip.Zip_Info) return Boolean;
 
   azip_web_page      : constant String := "http://azip.sf.net/";
   azip_news_web_page : constant String := "http://sourceforge.net/p/azip/news/";

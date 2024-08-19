@@ -43,11 +43,10 @@ gw - "view" function on text: show in a Scintilla window
 gw - "view" function on picture: show in a bitmap, using GID
 gw - "copy" saves directory list or tree into text clipboard
 
-gw - disable sorting on large lists
 gw - copy/paste entre fenêtres
   
 gw - !! sélection: somme des tailles compressées et non compressées en #octets
-copy_file et rename qui marchent avec utf-8 (virer Ada.Directories)
 
 gw - "[Rename]" dans les conflits de nom
 
+gw - Copy_File & Rename that work with utf-8 (don't use Ada.Directories)

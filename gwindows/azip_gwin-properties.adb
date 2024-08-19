@@ -98,6 +98,7 @@ procedure AZip_GWin.Properties (Window : in out MDI_Child.MDI_Child_Type) is
   --
 begin
   box.Create_Full_Dialog (Window);
+  box.Text ("Properties for archive: " & Simple_Name (GU2G (Window.ID.short_name)));
   box.Center;
   box.Stats_list.Insert_Column ("Compression format (""method"")", 0, 180);
   box.Stats_list.Insert_Column ("Entries", 1, 60);
@@ -125,7 +126,7 @@ begin
   end if;
   case GWindows.Application.Show_Dialog (box, Window) is
     when AZip_Resource_GUI.ID_Button_About_Azip =>
-           AZip_GWin.Modal_Dialogs.Show_About_Box (Window.MDI_Root.all);
+           AZip_GWin.Modal_Dialogs.Show_About_Box (Window.mdi_root.all);
     when others => null;
   end case;
 end AZip_GWin.Properties;

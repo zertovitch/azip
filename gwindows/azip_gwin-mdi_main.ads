@@ -1,4 +1,5 @@
-with AZip_GWin.Dragging;
+with AZip_GWin.Dragging,
+     AZip_GWin.Tabs;
 
 with AZip_Common.User_options;
 
@@ -7,6 +8,7 @@ with AZip_Resource_GUI;
 with Office_Applications;
 
 with GWindows.Base,
+     GWindows.Common_Controls,
      GWindows.Drawing,
      GWindows.Image_Lists,
      GWindows.Windows,
@@ -21,6 +23,7 @@ package AZip_GWin.MDI_Main is
         Success_in_enumerated_close : Boolean;
         Folders_Images         : GWindows.Image_Lists.Image_List_Type;
         Menu                   : AZip_Resource_GUI.Menu_MDI_Main_Type;
+        tab_bar                : Tabs.AZip_Tab_Bar_Type;
         --  record_dimensions      : Boolean:= False; -- in On_Move, On_Size
         User_maximize_restore  : Boolean := True;
         --  ^ Detect user-triggered max/restore commands
@@ -53,8 +56,13 @@ package AZip_GWin.MDI_Main is
                                 Width  : in     Integer;
                                 Height : in     Integer);
 
-  overriding procedure On_File_Drop (Window     : in out MDI_Main_Type;
-                                     File_Names : in     GWindows.Windows.Array_Of_File_Names);
+  overriding procedure On_File_Drop
+    (Window     : in out MDI_Main_Type;
+     File_Names : in     GWindows.Windows.Array_Of_File_Names);
+
+  procedure On_File_Drop_No_Delegate
+    (Window     : in out MDI_Main_Type;
+     File_Names : in     GWindows.Windows.Array_Of_File_Names);
 
   overriding procedure On_Erase_Background
      (Window : in out MDI_Main_Type;

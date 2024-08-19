@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2024/05/27  19:52:57
+--  Transcription time: 2024/08/19  21:43:32
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -44,13 +44,8 @@ package body AZip_Resource_GUI is
     Append_Menu (New_Menu.Main, "&File", New_Menu.Popup_0001);
     Append_Item (New_Menu.Popup_0001, "&New archive" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+N", IDM_NEW_ARCHIVE);
     Append_Item (New_Menu.Popup_0001, "&Open archive..." & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+O", IDM_OPEN_ARCHIVE);
-    Append_Item (New_Menu.Popup_0001, "&Save archive as..." & To_GString_From_String ((1 => ASCII.HT)) & "F12", IDM_SAVE_ARCHIVE_AS);
-    Append_Item (New_Menu.Popup_0001, "&Close archive" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+W / Ctrl+F4", IDM_CLOSE_ARCHIVE);
-    Append_Separator (New_Menu.Popup_0001);
-    Append_Item (New_Menu.Popup_0001, "&Properties" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+D", IDM_Properties);
-    Append_Separator (New_Menu.Popup_0001);
     New_Menu.Popup_0002 := Create_Popup;
-    Append_Menu (New_Menu.Popup_0001, "&Recent", New_Menu.Popup_0002);
+    Append_Menu (New_Menu.Popup_0001, "Open &recent", New_Menu.Popup_0002);
     Append_Item (New_Menu.Popup_0002, "mru_1", IDM_MRU_1);
     Append_Item (New_Menu.Popup_0002, "mru_2", IDM_MRU_2);
     Append_Item (New_Menu.Popup_0002, "mru_3", IDM_MRU_3);
@@ -60,6 +55,11 @@ package body AZip_Resource_GUI is
     Append_Item (New_Menu.Popup_0002, "mru_7", IDM_MRU_7);
     Append_Item (New_Menu.Popup_0002, "mru_8", IDM_MRU_8);
     Append_Item (New_Menu.Popup_0002, "mru_9", IDM_MRU_9);
+    Append_Item (New_Menu.Popup_0001, "Open containing &folder", IDM_Open_Containing_Folder);
+    Append_Item (New_Menu.Popup_0001, "&Save archive as..." & To_GString_From_String ((1 => ASCII.HT)) & "F12", IDM_SAVE_ARCHIVE_AS);
+    Append_Item (New_Menu.Popup_0001, "&Close archive" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+W / Ctrl+F4", IDM_CLOSE_ARCHIVE);
+    Append_Separator (New_Menu.Popup_0001);
+    Append_Item (New_Menu.Popup_0001, "&Properties" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+D", IDM_Properties);
     Append_Separator (New_Menu.Popup_0001);
     Append_Item (New_Menu.Popup_0001, "&Quit" & To_GString_From_String ((1 => ASCII.HT)) & "Alt+F4", IDM_QUIT);
     New_Menu.Popup_0003 := Create_Popup;
@@ -126,9 +126,8 @@ package body AZip_Resource_GUI is
     Append_Menu (New_Menu.Main, "&File", New_Menu.Popup_0001);
     Append_Item (New_Menu.Popup_0001, "&New archive" & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+N", IDM_NEW_ARCHIVE);
     Append_Item (New_Menu.Popup_0001, "&Open archive..." & To_GString_From_String ((1 => ASCII.HT)) & "Ctrl+O", IDM_OPEN_ARCHIVE);
-    Append_Separator (New_Menu.Popup_0001);
     New_Menu.Popup_0002 := Create_Popup;
-    Append_Menu (New_Menu.Popup_0001, "&Recent", New_Menu.Popup_0002);
+    Append_Menu (New_Menu.Popup_0001, "Open &recent", New_Menu.Popup_0002);
     Append_Item (New_Menu.Popup_0002, "mru_1", IDM_MRU_1);
     Append_Item (New_Menu.Popup_0002, "mru_2", IDM_MRU_2);
     Append_Item (New_Menu.Popup_0002, "mru_3", IDM_MRU_3);
@@ -160,7 +159,7 @@ package body AZip_Resource_GUI is
     Append_Item (New_Menu.Popup_0005, "&About AZip", IDM_ABOUT);
   end Create_Full_Menu;  --  For type: Menu_MDI_Main_Type
 
-  --  Dialog at resource line 194
+  --  Dialog at resource line 193
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -299,7 +298,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  About_box_Type
 
-  --  Dialog at resource line 224
+  --  Dialog at resource line 223
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -386,7 +385,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Credits_box_Type
 
-  --  Dialog at resource line 244
+  --  Dialog at resource line 243
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -493,7 +492,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Drop_files_box_Type
 
-  --  Dialog at resource line 262
+  --  Dialog at resource line 261
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -639,7 +638,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  File_exists_box_Type
 
-  --  Dialog at resource line 282
+  --  Dialog at resource line 281
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -745,7 +744,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Find_box_Type
 
-  --  Dialog at resource line 300
+  --  Dialog at resource line 299
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -932,7 +931,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Install_box_Type
 
-  --  Dialog at resource line 333
+  --  Dialog at resource line 332
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -1027,7 +1026,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 348
+  --  Dialog at resource line 347
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1135,7 +1134,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Password_decryption_box_Type
 
-  --  Dialog at resource line 367
+  --  Dialog at resource line 366
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1243,7 +1242,7 @@ package body AZip_Resource_GUI is
     Create (Window.Show_password_box, Window, "Show password", x, y, w, h, ID => Show_password_box);
   end Create_Contents;  --  Password_encryption_box_Type
 
-  --  Dialog at resource line 386
+  --  Dialog at resource line 385
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1340,7 +1339,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Progress_box_Type
 
-  --  Dialog at resource line 404
+  --  Dialog at resource line 403
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1454,7 +1453,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Properties_box_Type
 
-  --  Dialog at resource line 425
+  --  Dialog at resource line 424
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1537,7 +1536,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Quick_help_box_Type
 
-  --  Dialog at resource line 435
+  --  Dialog at resource line 434
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1619,7 +1618,7 @@ package body AZip_Resource_GUI is
     Create_Label (Window, "Pure command-line tools corresponding to AZip are located in the Zip-Ada project (zipada, unzipada, rezip, find_zip, comp_zip). Follow hyperlink in the About box for download.", x, y, w, h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_command_Type
 
-  --  Dialog at resource line 449
+  --  Dialog at resource line 448
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1703,7 +1702,7 @@ package body AZip_Resource_GUI is
     Create_Label (Window, "You can extract selected files, the selected folder, or the entire archive via the Extract command (Ctrl+E) or a button. BUT: you can also extract files via Drag && Drop to a Windows Explorer window or to the Desktop.", x, y, w, h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_gui_Type
 
-  --  Dialog at resource line 464
+  --  Dialog at resource line 463
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1783,7 +1782,7 @@ package body AZip_Resource_GUI is
     Create_Label (Window, "For convenience, by default, AZip writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", x, y, w, h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_install_Type
 
-  --  Dialog at resource line 478
+  --  Dialog at resource line 477
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1870,7 +1869,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Select_column_box_Type
 
-  --  Dialog at resource line 491
+  --  Dialog at resource line 490
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1965,7 +1964,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Sponsoring_box_Type
 
-  --  Dialog at resource line 508
+  --  Dialog at resource line 507
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -2136,6 +2135,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  --  Last line of resource script file: 628
+  --  Last line of resource script file: 627
 
 end AZip_Resource_GUI;

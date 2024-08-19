@@ -78,7 +78,7 @@ package body AZip_GWin.Folder_Trees is
       when TVN_BEGINDRAGA | TVN_BEGINDRAGW =>
         declare
           cw : MDI_Child.MDI_Child_Type renames MDI_Child.MDI_Child_Type (Window.Parent.Parent.all);
-          mw : MDI_Main.MDI_Main_Type  renames cw.MDI_Root.all;
+          mw : MDI_Main.MDI_Main_Type  renames cw.mdi_root.all;
           Nmtv_Ptr  : constant Pointer_To_NMTREEVIEW_Type :=
                  Message_To_NmTreeView_Pointer (Message);
           success   : Boolean;

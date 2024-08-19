@@ -23,8 +23,8 @@ package body AZip_GWin.Columns is
   begin
     if topic = Path and Window.opt.view_mode = Tree then
       return 0;
-    elsif Window.MDI_Root.opt.visible_column (topic) then
-      return Integer'Max (threshold, Window.MDI_Root.opt.column_width (topic));
+    elsif Window.mdi_root.opt.visible_column (topic) then
+      return Integer'Max (threshold, Window.mdi_root.opt.column_width (topic));
     else
       return 0;
     end if;
@@ -39,10 +39,10 @@ package body AZip_GWin.Columns is
     if topic = Path and Window.opt.view_mode = Tree then
       null;  --  Do nothing (esp. do not erase width for the Flat view)!
     elsif new_width >= threshold then
-      Window.MDI_Root.opt.visible_column (topic) := True;
-      Window.MDI_Root.opt.column_width (topic)   := new_width;
+      Window.mdi_root.opt.visible_column (topic) := True;
+      Window.mdi_root.opt.column_width (topic)   := new_width;
     else
-      Window.MDI_Root.opt.visible_column (topic) := False;
+      Window.mdi_root.opt.visible_column (topic) := False;
       --  Don't touch the width: it will be useful when the column is shown again.
     end if;
   end Set_column_width_to_main_options;

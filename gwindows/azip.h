@@ -155,3 +155,4 @@
 #define IDM_Invert_Selection                    40152
 #define Show_all_Formats                        40153
 #define Percent_Progress                        40154
+#define IDM_Open_Containing_Folder              40155

@@ -90,10 +90,9 @@ package AZip_GWin.MDI_Child is
   type MDI_Child_Type is
     new Office_Applications.Classic_Document_Window_Type with
       record
-        File_Name           : GString_Unbounded;
-        Short_Name          : GString_Unbounded;
-        --  ^ Window title = Short_Name & {""|" *"}
-        MDI_Root            : MDI_Main.MDI_Main_Access; -- -> access to the containing window
+        ID                  : ID_Type;
+        --  ^ Window title = ID.short_name & {""|" *"}
+        mdi_root            : MDI_Main.MDI_Main_Access; -- -> access to the containing window
         Menu                : AZip_Resource_GUI.Menu_MDI_Child_Type;
         context_menu_file   : GWindows.Menus.Menu_Type := GWindows.Menus.Create_Popup;
         context_menu_folder : GWindows.Menus.Menu_Type := GWindows.Menus.Create_Popup;
@@ -127,6 +126,11 @@ package AZip_GWin.MDI_Child is
   procedure Update_tool_bar_and_menus (Window : in out MDI_Child_Type);
 
   overriding procedure On_Create (Window : in out MDI_Child_Type);
+
+  procedure Create_AZip_MDI_Child
+    (Window : in out MDI_Child_Type;
+     Parent : in out MDI_Main.MDI_Main_Type;
+     ID     : in     ID_Type);
 
   procedure On_Save (Window : in out MDI_Child_Type);
 

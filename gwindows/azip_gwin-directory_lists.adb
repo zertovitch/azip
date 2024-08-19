@@ -137,7 +137,7 @@ package body AZip_GWin.Directory_Lists is
     LVN_BEGINDRAG  : constant := LVN_FIRST - 9;
     --  WM_CONTEXTMENU : constant := 16#7B#;
     Child_Window : MDI_Child_Type renames MDI_Child_Type (Window.Parent.Parent.Parent.all);
-    Main_Window  : MDI_Main_Type  renames Child_Window.MDI_Root.all;
+    Main_Window  : MDI_Main_Type  renames Child_Window.mdi_root.all;
   begin
     --  Call parent method
     AZip_LV_Ex.Ex_List_View_Control_Type (Window).On_Notify

@@ -57,12 +57,7 @@ Menu_MDI_Child MENU
     {
         MENUITEM "&New archive\tCtrl+N", IDM__NEW_ARCHIVE
         MENUITEM "&Open archive...\tCtrl+O", IDM__OPEN_ARCHIVE
-        MENUITEM "&Save archive as...\tF12", IDM_SAVE_ARCHIVE_AS
-        MENUITEM "&Close archive\tCtrl+W / Ctrl+F4", IDM__CLOSE_ARCHIVE
-        MENUITEM SEPARATOR
-        MENUITEM "&Properties\tCtrl+D", IDM_Properties
-        MENUITEM SEPARATOR
-        POPUP "&Recent"
+        POPUP "Open &recent"
         {
             MENUITEM "mru_1", IDM_MRU_1
             MENUITEM "mru_2", IDM_MRU_2
@@ -74,6 +69,11 @@ Menu_MDI_Child MENU
             MENUITEM "mru_8", IDM_MRU_8
             MENUITEM "mru_9", IDM_MRU_9
         }
+        MENUITEM "Open containing &folder", IDM_Open_Containing_Folder
+        MENUITEM "&Save archive as...\tF12", IDM_SAVE_ARCHIVE_AS
+        MENUITEM "&Close archive\tCtrl+W / Ctrl+F4", IDM__CLOSE_ARCHIVE
+        MENUITEM SEPARATOR
+        MENUITEM "&Properties\tCtrl+D", IDM_Properties
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tAlt+F4", IDM__QUIT
     }
@@ -143,8 +143,7 @@ Menu_MDI_Main MENU
     {
         MENUITEM "&New archive\tCtrl+N", IDM__NEW_ARCHIVE
         MENUITEM "&Open archive...\tCtrl+O", IDM__OPEN_ARCHIVE
-        MENUITEM SEPARATOR
-        POPUP "&Recent"
+        POPUP "Open &recent"
         {
             MENUITEM "mru_1", IDM_MRU_1
             MENUITEM "mru_2", IDM_MRU_2

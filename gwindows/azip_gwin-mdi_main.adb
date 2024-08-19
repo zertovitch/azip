@@ -43,7 +43,7 @@ package body AZip_GWin.MDI_Main is
         declare
           pw : MDI_Child_Type renames MDI_Child_Type (Child_Window.all);
         begin
-          if pw.File_Name = File_Name then
+          if pw.ID.file_name = File_Name then
             is_open := True;
             Focus (pw);
           end if;
@@ -147,7 +147,7 @@ package body AZip_GWin.MDI_Main is
       Window.Close_Initial_Document;
       --
       Window.User_maximize_restore := False;
-      New_Window.File_Name := File_Name;
+      New_Window.ID.file_name := File_Name;
       if Window.opt.extract_directory = "" then
         --  First suggested extract directory is the archive's directory.
         New_Window.extract_dir := G2GU (Give_path (GU2G (File_Name)));
@@ -155,13 +155,9 @@ package body AZip_GWin.MDI_Main is
         --  A default extract directory is set as option.
         New_Window.extract_dir := Window.opt.extract_directory;
       end if;
-      New_Window.Create_MDI_Child
-        (Window,
-         GU2G (File_Title),
-         Is_Dynamic => True);
-      New_Window.Short_Name := File_Title;
-      MDI_Active_Window (Window, New_Window.all);
-      Update_Common_Menus (Window, GU2G (New_Window.File_Name));
+      New_Window.Create_AZip_MDI_Child
+        (Window, (file_name => File_Name, short_name => File_Title));
+      Update_Common_Menus (Window, GU2G (New_Window.ID.file_name));
       New_Window.Load_Archive_Catalogue (False);
       Finish_subwindow_opening (Window, New_Window.all);
       New_Window.Focus;
@@ -209,7 +205,7 @@ package body AZip_GWin.MDI_Main is
       G2GU (AZip_Common.To_UTF_16 (Arg, Zip.UTF_8));
     if Position = Total then
       --  We simulate a file dropping onto the MDI main window.
-      Window.On_File_Drop (Window.bulk_files_list.all);
+      Window.On_File_Drop_No_Delegate (Window.bulk_files_list.all);
       Dispose (Window.bulk_files_list);
     end if;
   end Process_Argument;
@@ -258,8 +254,21 @@ package body AZip_GWin.MDI_Main is
       );
 
     --  ** Main tool bar (add / remove / ...) at top left of the main window:
-
     Toolbars.Init_Main_Tool_Bar (Window.Tool_Bar, Window);
+
+    --  ** Main's tab bar:
+    Window.tab_bar.MDI_Parent := Window'Unrestricted_Access;
+    Window.tab_bar.Create (Window, 0, 30, 10, 25);
+    Window.tab_bar.Dock (GWindows.Base.At_Top);
+    GWin_Util.Use_GUI_Font (Window.tab_bar);
+    --  Tool Tips for the Tab bar:
+    Window.tab_bar.tips.Create (Window);
+    Window.tab_bar.Set_Tool_Tips (Window.tab_bar.tips);
+    GWin_Util.Use_GUI_Font (Window.tab_bar.tips);
+    Window.tab_bar.tips.Set_Durations
+      (Initial  => 0.2,
+       Reshow   => 0.1,
+       Til_Hide => 5.0);
 
     --  ** Other resources
     Window.Folders_Images.Create (Num_resource (Folders_BMP), 16);
@@ -351,11 +360,10 @@ package body AZip_GWin.MDI_Main is
 
   Current_MDI_Window : Natural := 0;
 
-  procedure On_File_New (
-    Window          : in out MDI_Main_Type;
-    extra_first_doc :        Boolean;
-    New_Window      : in     MDI_Child.MDI_Child_Access
-  )
+  procedure On_File_New
+    (Window          : in out MDI_Main_Type;
+     extra_first_doc :        Boolean;
+     New_Window      : in     MDI_Child.MDI_Child_Access)
   is
 
     function Suffix return GWindows.GString is
@@ -372,9 +380,8 @@ package body AZip_GWin.MDI_Main is
   begin
     New_Window.Extra_First_Doc := extra_first_doc;
     Window.User_maximize_restore := False;
-    New_Window.Create_MDI_Child (Window, File_Title, Is_Dynamic => True);
-    New_Window.Short_Name := G2GU (File_Title);
-    MDI_Active_Window (Window, New_Window.all);
+    New_Window.Create_AZip_MDI_Child
+      (Window, (file_name => Null_GString_Unbounded, short_name => G2GU (File_Title)));
 
     --  Transfer user-defined default options:
     --  New_Window.xxx.Opt:= Gen_Opt.Options_For_New;
@@ -415,13 +422,11 @@ package body AZip_GWin.MDI_Main is
     end if;
   end On_File_Open;
 
-  procedure On_File_Drop (Window     : in out MDI_Main_Type;
-                          File_Names : in     GWindows.Windows.Array_Of_File_Names) is
-    New_Window : MDI_Child.MDI_Child_Access;
-    encrypt    : Boolean := False;
-    yes        : Boolean;
-    cancelled  : Boolean;
-    use AZip_GWin.Password_Dialogs, MDI_Child, Zip;
+  procedure On_File_Drop
+    (Window     : in out MDI_Main_Type;
+     File_Names : in     GWindows.Windows.Array_Of_File_Names)
+  is
+    use MDI_Child;
   begin
     Window.Focus;
     if Window.Count_MDI_Children > 0 and then Window.opt.MDI_childen_maximized then
@@ -437,40 +442,53 @@ package body AZip_GWin.MDI_Main is
         end if;
       end;
     else
-      --  Files are dropped onto the background
-      --  area of the MDI main window.
-      --
-      if All_Zip_files (File_Names) then
-        --  All files are Zip archives (even those without .zip extension).
-        for i in File_Names'Range loop
-          Open_Child_Window_And_Load (Window, File_Names (i));
-        end loop;
-      else
-        Drop_File_Dialog.Do_Drop_File_Dialog
-          (Parent         => Window,
-           archive_name   => "(A new Zip archive)",
-           new_archive    => True,
-           encrypt        => encrypt,
-           yes            => yes);
-        if yes then
-          New_Window := new MDI_Child_Type;
-          On_File_New (Window, extra_first_doc => False, New_Window => New_Window);
-          New_Window.On_Save_As;
-          --
-          if Is_loaded (New_Window.zif) then
-            if encrypt then
-              Get_password_for_encryption (New_Window.all, cancelled);
-            else
-              cancelled := False;
-            end if;
-            if not cancelled then
-              New_Window.Go_for_adding (File_Names, Encrypt => encrypt);
-            end if;
+      Window.On_File_Drop_No_Delegate (File_Names);
+    end if;
+  end On_File_Drop;
+
+  procedure On_File_Drop_No_Delegate
+    (Window     : in out MDI_Main_Type;
+     File_Names : in     GWindows.Windows.Array_Of_File_Names)
+  is
+    New_Window : MDI_Child.MDI_Child_Access;
+    encrypt    : Boolean := False;
+    yes        : Boolean;
+    cancelled  : Boolean;
+    use AZip_GWin.Password_Dialogs, MDI_Child, Zip;
+  begin
+    --  Files are dropped onto the background
+    --  area of the MDI main window.
+    --
+    if All_Zip_files (File_Names) then
+      --  All files are Zip archives (even those without .zip extension).
+      for i in File_Names'Range loop
+        Open_Child_Window_And_Load (Window, File_Names (i));
+      end loop;
+    else
+      Drop_File_Dialog.Do_Drop_File_Dialog
+        (Parent         => Window,
+         archive_name   => "(A new Zip archive)",
+         new_archive    => True,
+         encrypt        => encrypt,
+         yes            => yes);
+      if yes then
+        New_Window := new MDI_Child_Type;
+        On_File_New (Window, extra_first_doc => False, New_Window => New_Window);
+        New_Window.On_Save_As;
+        --
+        if Is_loaded (New_Window.zif) then
+          if encrypt then
+            Get_password_for_encryption (New_Window.all, cancelled);
+          else
+            cancelled := False;
+          end if;
+          if not cancelled then
+            New_Window.Go_for_adding (File_Names, Encrypt => encrypt);
           end if;
         end if;
       end if;
     end if;
-  end On_File_Drop;
+  end On_File_Drop_No_Delegate;
 
   ----------------------
   -- My_MDI_Close_All --
@@ -591,7 +609,7 @@ package body AZip_GWin.MDI_Main is
       declare
         cw : MDI_Child_Type renames MDI_Child_Type (Window.all);
       begin
-        Update_MRU_Menu (cw.MDI_Root.MRU, cw.Menu.Popup_0001);
+        Update_MRU_Menu (cw.mdi_root.MRU, cw.Menu.Popup_0001);
         --  Update_Toolbar_Menu(cw.View_menu, cw.parent.Floating_toolbars);
       end;
     end if;

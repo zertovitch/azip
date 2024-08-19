@@ -1,6 +1,7 @@
 with GWindows,
      GWindows.Common_Dialogs,
-     GWindows.GStrings;
+     GWindows.GStrings,
+     GWindows.Menus;
 
 package AZip_GWin is
 
@@ -17,6 +18,18 @@ package AZip_GWin is
     ((G2GU ("Zip archives (*.zip)"),        G2GU ("*.zip")),
      (G2GU ("JAR (Java archives) (*.jar)"), G2GU ("*.jar")),
      (G2GU ("All files (*.*)"),             G2GU ("*.*")));
+
+  type ID_Type is record
+    file_name  : GString_Unbounded;
+    short_name : GString_Unbounded;
+  end record;
+
+  function Equivalent (Id_1, Id_2 : ID_Type) return Boolean;
+
+  bool_to_state : constant array (Boolean) of GWindows.Menus.State_Type :=
+    (GWindows.Menus.Disabled, GWindows.Menus.Enabled);
+
+  function Simple_Name (path : GString) return GString;
 
 private
 

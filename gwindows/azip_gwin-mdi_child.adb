@@ -164,6 +164,32 @@ package body AZip_GWin.MDI_Child is
     end if;
   end Update_tool_bar_and_menus;
 
+  procedure Sort_Again (Window : in out MDI_Child_Type) is
+  begin
+    Window.Directory_List.Sort
+      (Window.mdi_root.opt.sort_column,
+       AZip_LV_Ex.Sort_Direction_Type'Value
+         (Window.mdi_root.opt.sort_direction'Image));
+  end Sort_Again;
+
+  procedure Attempt_Remember_Sorting (Window : in out MDI_Child_Type) is
+    sd : AZip_LV_Ex.Sort_Direction_Type;
+  begin
+    if Window.mdi_root.remember_sorting then
+      Window.Directory_List.Sort_Info
+        (Window.mdi_root.opt.sort_column,  --  Get sorting column
+         sd);                              --  Get sorting direction
+      --  Forget the sorting column if it is the Result column.
+      --  Reason: there is no result on reopening a new archive.
+      if Window.mdi_root.opt.sort_column = Window.opt.column_index (Result) - 1 then
+        Window.mdi_root.opt.sort_column := AZip_Common.User_options.no_sorting;
+      end if;
+      --  We pass the Up/Down direction from the GWindows type to ours.
+      Window.mdi_root.opt.sort_direction :=
+        AZip_Common.User_options.Sort_Direction_Type'Value (sd'Image);
+    end if;
+  end Attempt_Remember_Sorting;
+
   procedure Update_Information
     (Window : in out MDI_Child_Type;
      need   :        Update_need)
@@ -487,14 +513,7 @@ package body AZip_GWin.MDI_Child is
       Window.mdi_root.opt.sort_column >= 0
     then
       --  Peform an initial sorting according to current options.
-      Window.Directory_List.Sort (
-        Window.mdi_root.opt.sort_column,
-        AZip_LV_Ex.Sort_Direction_Type'Value (
-          AZip_Common.User_options.Sort_Direction_Type'Image (
-            Window.mdi_root.opt.sort_direction
-          )
-        )
-      );
+      Sort_Again (Window);
     end if;
     if not timing then
       Window.Update_status_bar;
@@ -1463,18 +1482,18 @@ package body AZip_GWin.MDI_Child is
       return; -- no item, no folder -> do nothing (different from On_Extract's behaviour)
     end if;
     if Message_Box (Window, "Delete", Delete_msg, Yes_No_Box, Question_Icon) = Yes then
-      Process_Archive_GWin (
-        Window         => Window,
-        operation      => Remove,
-        file_names     => Smart_list,
-        base_folder    => "",
-        search_pattern => "",
-        output_folder  => "",
-        ignore_path    => False,
-        encrypt        => False,
-        new_temp_name  => Temp_AZip_Name (Window),
-        return_code    => return_code
-      );
+      Attempt_Remember_Sorting (Window);
+      Process_Archive_GWin
+        (Window         => Window,
+         operation      => Remove,
+         file_names     => Smart_list,
+         base_folder    => "",
+         search_pattern => "",
+         output_folder  => "",
+         ignore_path    => False,
+         encrypt        => False,
+         new_temp_name  => Temp_AZip_Name (Window),
+         return_code    => return_code);
     end if;
   end On_Delete;
 
@@ -1907,7 +1926,6 @@ package body AZip_GWin.MDI_Child is
     bar : Office_Applications.Classic_Main_Tool_Bar_Type
       renames Window.mdi_root.Tool_Bar;
     tab_bar : Tabs.AZip_Tab_Bar_Type renames Window.mdi_root.tab_bar;
-    sd : AZip_LV_Ex.Sort_Direction_Type;
   begin
     Can_Close := True;
     if Is_Document_Modified (Window) then
@@ -1941,23 +1959,7 @@ package body AZip_GWin.MDI_Child is
     if Can_Close then
       --  Memorize column widths
       Set_all_column_widths_to_main_options (Window);
-      --
-      if Window.mdi_root.remember_sorting then
-        Window.Directory_List.Sort_Info (
-          Window.mdi_root.opt.sort_column,  --  Get sorting column
-          sd                                --  Get sorting direction
-        );
-        --  Forget the sorting column if it is the Result column.
-        --  Reason: there is no result on reopening a new archive.
-        if Window.mdi_root.opt.sort_column = Window.opt.column_index (Result) - 1 then
-          Window.mdi_root.opt.sort_column := AZip_Common.User_options.no_sorting;
-        end if;
-        --  We pass the Up/Down direction from the GWindows type to ours.
-        Window.mdi_root.opt.sort_direction :=
-          AZip_Common.User_options.Sort_Direction_Type'Value (
-             AZip_LV_Ex.Sort_Direction_Type'Image (sd)
-          );
-      end if;
+      Attempt_Remember_Sorting (Window);
       --  Pass view mode and the tree width portion to parent,
       --  this will memorize choice of last closed window.
       Window.mdi_root.opt.view_mode := Window.opt.view_mode;

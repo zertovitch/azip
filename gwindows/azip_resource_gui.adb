@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2024/08/19  21:43:32
+--  Transcription time: 2024/08/24  09:40:28
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -938,7 +938,7 @@ package body AZip_Resource_GUI is
   procedure Create_Full_Dialog
      (Window      : in out Option_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "Options";
+      Title       : in     GString := "General Options";
       Left        : in     Integer := Use_Default;  --  Default = as designed
       Top         : in     Integer := Use_Default;  --  Default = as designed
       Width       : in     Integer := Use_Default;  --  Default = as designed
@@ -988,20 +988,35 @@ package body AZip_Resource_GUI is
     end if;
     Use_GUI_Font (Window);
     Dlg_to_Scn (7, 7, 240, 33, x, y, w, h);
-    Create (Window.RC_item_0, Window, "Directory suggested for archive extraction ( if empty: archive's location )", x, y, w, h);
+    Create (Window.Extract_Directory_Group_Box, Window, "Directory suggested for archive extraction ( if empty: archive's location )", x, y, w, h);
     Dlg_to_Scn (12, 21, 188, 13, x, y, w, h);
-    Create (Window.Extract_directory_edit_box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Extract_directory_edit_box);
+    Create (Window.Extract_Directory_Edit_Box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Extract_Directory_Edit_Box);
     Dlg_to_Scn (205, 20, 35, 15, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.
-    Create (Window.Choose_extract_directory_button, Window, "Choose", x, y, w, h, ID => Choose_extract_directory_button);
-    Create (Window.Choose_extract_directory_button_permanent, Window, "Choose", x, y, w, h, ID => Choose_extract_directory_button);
+    Create (Window.Choose_Extract_Directory_Button, Window, "Choose", x, y, w, h, ID => Choose_Extract_Directory_Button);
+    Create (Window.Choose_Extract_Directory_Button_permanent, Window, "Choose", x, y, w, h, ID => Choose_Extract_Directory_Button);
     if for_dialog then  --  Hide the non-closing button
-      Hide (Window.Choose_extract_directory_button_permanent);
+      Hide (Window.Choose_Extract_Directory_Button_permanent);
     else  --  Hide the closing button
-      Hide (Window.Choose_extract_directory_button);
+      Hide (Window.Choose_Extract_Directory_Button);
     end if;
+    Dlg_to_Scn (7, 47, 240, 33, x, y, w, h);
+    Create (Window.Temp_Directory_Group_Box, Window, "Temporary Directory, e.g. a RAM Disk ( if empty: value of %temp% )", x, y, w, h);
+    Dlg_to_Scn (205, 60, 35, 15, x, y, w, h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.Choose_Temp_Directory_Button, Window, "Choose", x, y, w, h, ID => Choose_Temp_Directory_Button);
+    Create (Window.Choose_Temp_Directory_Button_permanent, Window, "Choose", x, y, w, h, ID => Choose_Temp_Directory_Button);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.Choose_Temp_Directory_Button_permanent);
+    else  --  Hide the closing button
+      Hide (Window.Choose_Temp_Directory_Button);
+    end if;
+    Dlg_to_Scn (12, 61, 188, 13, x, y, w, h);
+    Create (Window.Temp_Directory_Edit_Box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Temp_Directory_Edit_Box);
     Dlg_to_Scn (191, 98, 50, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
@@ -1026,7 +1041,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Option_box_Type
 
-  --  Dialog at resource line 347
+  --  Dialog at resource line 350
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1134,7 +1149,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Password_decryption_box_Type
 
-  --  Dialog at resource line 366
+  --  Dialog at resource line 369
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1242,7 +1257,7 @@ package body AZip_Resource_GUI is
     Create (Window.Show_password_box, Window, "Show password", x, y, w, h, ID => Show_password_box);
   end Create_Contents;  --  Password_encryption_box_Type
 
-  --  Dialog at resource line 385
+  --  Dialog at resource line 388
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1339,7 +1354,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Progress_box_Type
 
-  --  Dialog at resource line 403
+  --  Dialog at resource line 406
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1453,7 +1468,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Properties_box_Type
 
-  --  Dialog at resource line 424
+  --  Dialog at resource line 427
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1536,7 +1551,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Quick_help_box_Type
 
-  --  Dialog at resource line 434
+  --  Dialog at resource line 437
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1618,7 +1633,7 @@ package body AZip_Resource_GUI is
     Create_Label (Window, "Pure command-line tools corresponding to AZip are located in the Zip-Ada project (zipada, unzipada, rezip, find_zip, comp_zip). Follow hyperlink in the About box for download.", x, y, w, h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_command_Type
 
-  --  Dialog at resource line 448
+  --  Dialog at resource line 451
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1702,7 +1717,7 @@ package body AZip_Resource_GUI is
     Create_Label (Window, "You can extract selected files, the selected folder, or the entire archive via the Extract command (Ctrl+E) or a button. BUT: you can also extract files via Drag && Drop to a Windows Explorer window or to the Desktop.", x, y, w, h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_gui_Type
 
-  --  Dialog at resource line 463
+  --  Dialog at resource line 466
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1782,7 +1797,7 @@ package body AZip_Resource_GUI is
     Create_Label (Window, "For convenience, by default, AZip writes user settings in the registry, as standard Windows software does. If you want the registry NOT being written to, you can add a file, azip.cfg (can be empty), in the same directory as azip*.exe. User settings will be recorded there. If the file is read-only, it simply won't be changed, and settings won't be saved.", x, y, w, h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Quick_help_tab_install_Type
 
-  --  Dialog at resource line 477
+  --  Dialog at resource line 480
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1869,7 +1884,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Select_column_box_Type
 
-  --  Dialog at resource line 490
+  --  Dialog at resource line 493
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -1964,7 +1979,7 @@ package body AZip_Resource_GUI is
     end if;
   end Create_Contents;  --  Sponsoring_box_Type
 
-  --  Dialog at resource line 507
+  --  Dialog at resource line 510
 
   --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -2135,6 +2150,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  --  Last line of resource script file: 627
+  --  Last line of resource script file: 630
 
 end AZip_Resource_GUI;

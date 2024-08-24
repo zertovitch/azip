@@ -1,8 +1,29 @@
+with Ada.Directories;
 with Ada.Strings.Fixed;
+with Ada.Text_IO;
 
 package body AZip_Common.User_options is
 
   use Ada.Strings.Fixed, Ada.Strings.Wide_Unbounded;
+
+  function Is_Temp_Directory_Valid (opt : Option_Pack_Type) return Boolean is
+    procedure Do_Test is
+      use Ada.Directories, Ada.Text_IO;
+      test : File_Type;
+      file_name : constant String :=
+        Compose (To_UTF_8 (To_Wide_String (opt.temp_directory)), "$_test_file_$", "tmp");
+    begin
+      Create (test, Out_File, file_name);
+      Close (test);
+      Delete_File (file_name);
+    end Do_Test;
+  begin
+    Do_Test;
+    return True;
+  exception
+    when others =>
+      return False;
+  end Is_Temp_Directory_Valid;
 
   package body Persistence is
 
@@ -58,7 +79,9 @@ package body AZip_Common.User_options is
               when ignore_extract_path =>
                 opt.ignore_extract_path := Boolean'Wide_Value (s);
               when extract_directory =>
-                opt.extract_directory := To_Unbounded_Wide_String (s);
+                opt.suggested_extract_directory := To_Unbounded_Wide_String (s);
+              when temp_directory =>
+                opt.temp_directory := To_Unbounded_Wide_String (s);
               when first_visit =>
                 opt.first_visit := Boolean'Wide_Value (s);
             end case;
@@ -122,7 +145,9 @@ package body AZip_Common.User_options is
             when ignore_extract_path =>
               R (Boolean'Wide_Image (opt.ignore_extract_path));
             when extract_directory =>
-              R (To_Wide_String (opt.extract_directory));
+              R (To_Wide_String (opt.suggested_extract_directory));
+            when temp_directory =>
+              R (To_Wide_String (opt.temp_directory));
             when first_visit =>
               R (Boolean'Wide_Image (opt.first_visit));
           end case;

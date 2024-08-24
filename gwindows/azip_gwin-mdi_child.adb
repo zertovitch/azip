@@ -1077,6 +1077,13 @@ package body AZip_GWin.MDI_Child is
   end Process_Archive_GWin;
 
   function Temp_AZip_Name (Window : MDI_Child_Type) return String is
+    temp_dir : constant String :=
+      (if Window.mdi_root.opt.temp_directory /= ""
+         and then Is_Temp_Directory_Valid (Window.mdi_root.opt)
+       then
+         To_UTF_8 (To_Wide_String (Window.mdi_root.opt.temp_directory))
+       else
+         Ada.Environment_Variables.Value ("TEMP"));
   begin
     loop
       declare
@@ -1085,7 +1092,7 @@ package body AZip_GWin.MDI_Child is
         num : constant String := num0 (num0'First + 1 .. num0'Last);
         --  ^ Skip the @#*% leading space
         test_name : constant String :=
-          Ada.Environment_Variables.Value ("TEMP") & "\AZip_Temp_" & num & ".zip";
+          Ada.Directories.Compose (temp_dir, "AZip_Temp_" & num, "zip");
       begin
         if not Ada.Directories.Exists (test_name) then
           return test_name;

@@ -148,12 +148,12 @@ package body AZip_GWin.MDI_Main is
       --
       Window.User_maximize_restore := False;
       New_Window.ID.file_name := File_Name;
-      if Window.opt.extract_directory = "" then
+      if Window.opt.suggested_extract_directory = "" then
         --  First suggested extract directory is the archive's directory.
         New_Window.extract_dir := G2GU (Give_path (GU2G (File_Name)));
       else
         --  A default extract directory is set as option.
-        New_Window.extract_dir := Window.opt.extract_directory;
+        New_Window.extract_dir := Window.opt.suggested_extract_directory;
       end if;
       New_Window.Create_AZip_MDI_Child
         (Window, (file_name => File_Name, short_name => File_Title));

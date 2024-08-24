@@ -115,10 +115,10 @@
 #define Dummy_check_box_2                       40110
 #define IDM_General_options                     40111
 #define Option_box                              40112
-#define Extract_directory_edit_box              40113
+#define Extract_Directory_Edit_Box              40113
 #define IDM_Up_one_level                        40114
 #define IDM_Context_menu_key                    40115
-#define Choose_extract_directory_button         40116
+#define Choose_Extract_Directory_Button         40116
 #define Quick_help_tab_gui                      40117
 #define Quick_help_tab_install                  40118
 #define Quick_help_tab_command                  40119
@@ -156,3 +156,7 @@
 #define Show_all_Formats                        40153
 #define Percent_Progress                        40154
 #define IDM_Open_Containing_Folder              40155
+#define Temp_Directory_Edit_Box                 40156
+#define Choose_Temp_Directory_Button            40157
+#define Extract_Directory_Group_Box             40158
+#define Temp_Directory_Group_Box                40159

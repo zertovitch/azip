@@ -328,12 +328,15 @@ FONT 8, "Ms Shell Dlg"
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 Option_box DIALOG 0, 0, 255, 121
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
-CAPTION "Options"
+CAPTION "General Options"
 FONT 8, "Ms Shell Dlg"
 {
-    GROUPBOX        "Directory suggested for archive extraction ( if empty: archive's location )", 0, 7, 7, 240, 33, 0, WS_EX_LEFT
-    EDITTEXT        Extract_directory_edit_box, 12, 21, 188, 13, ES_AUTOHSCROLL, WS_EX_LEFT
-    PUSHBUTTON      "Choose", Choose_extract_directory_button, 205, 20, 35, 15, 0, WS_EX_LEFT
+    GROUPBOX        "Directory suggested for archive extraction ( if empty: archive's location )", Extract_Directory_Group_Box, 7, 7, 240, 33, 0, WS_EX_LEFT
+    EDITTEXT        Extract_Directory_Edit_Box, 12, 21, 188, 13, ES_AUTOHSCROLL, WS_EX_LEFT
+    PUSHBUTTON      "Choose", Choose_Extract_Directory_Button, 205, 20, 35, 15, 0, WS_EX_LEFT
+    GROUPBOX        "Temporary Directory, e.g. a RAM Disk ( if empty: value of %temp% )", Temp_Directory_Group_Box, 7, 47, 240, 33, 0, WS_EX_LEFT
+    PUSHBUTTON      "Choose", Choose_Temp_Directory_Button, 205, 60, 35, 15, 0, WS_EX_LEFT
+    EDITTEXT        Temp_Directory_Edit_Box, 12, 61, 188, 13, ES_AUTOHSCROLL, WS_EX_LEFT
     PUSHBUTTON      "Cancel", IDCANCEL, 191, 98, 50, 19, 0, WS_EX_LEFT
     DEFPUSHBUTTON   "OK", IDOK, 136, 98, 50, 19, 0, WS_EX_LEFT
 }
@@ -384,14 +387,14 @@ STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VIS
 CAPTION "AZip is busy."
 FONT 8, "Ms Shell Dlg"
 {
-    LTEXT           "Adding...", Entry_operation_name,        7,  6, 228, 10, SS_LEFT, WS_EX_LEFT
-    LTEXT           "Some file", Entry_name,                  7, 19, 228, 10, SS_LEFT, WS_EX_LEFT
-    LTEXT           "Comment 1", Comment_1,                   7, 32, 228, 10, SS_LEFT, WS_EX_LEFT
-    LTEXT           "Comment 2", Comment_2,                   7, 45, 228, 10, SS_LEFT, WS_EX_LEFT
-    CONTROL         "", File_Progress, PROGRESS_CLASS,    0,  7, 57, 228,  9, WS_EX_LEFT
+    LTEXT           "Adding...", Entry_operation_name, 7, 6, 228, 10, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Some file", Entry_name, 7, 19, 228, 10, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Comment 1", Comment_1, 7, 32, 228, 10, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Comment 2", Comment_2, 7, 45, 228, 10, SS_LEFT, WS_EX_LEFT
+    CONTROL         "", File_Progress, PROGRESS_CLASS, 0, 7, 57, 228, 9, WS_EX_LEFT
     CONTROL         "", Archive_Progress, PROGRESS_CLASS, 0, 46, 74, 150, 12, WS_EX_LEFT
-    LTEXT           "100%", Percent_Progress,               203, 76,  31, 10, SS_LEFT, WS_EX_LEFT
-    PUSHBUTTON      "Cancel", Cancel_button,                 93, 94,  56, 19, 0, WS_EX_LEFT
+    LTEXT           "100%", Percent_Progress, 203, 76, 31, 10, SS_LEFT, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", Cancel_button, 93, 94, 56, 19, 0, WS_EX_LEFT
 }
 
 
@@ -600,8 +603,8 @@ Plus_icon          ICON           "ico_bmp/plus.ico"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 1 VERSIONINFO
-    FILEVERSION     2,6,2,0
-    PRODUCTVERSION  2,6,2,0
+    FILEVERSION     2,7,0,0
+    PRODUCTVERSION  2,7,0,0
     FILEOS          VOS_UNKNOWN
     FILETYPE        VFT_UNKNOWN
     FILESUBTYPE     VFT2_UNKNOWN
@@ -614,7 +617,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
         {
             VALUE "Authors", "Gautier de Montmollin"
             VALUE "FileDescription", "AZip - A portable Zip Archive Manager - Free, MIT license"
-            VALUE "FileVersion", "2.6.2"
+            VALUE "FileVersion", "2.7.0"
             VALUE "LegalCopyright", "Copyright © Gautier de Montmollin 2012 .. 2024"
             VALUE "ProductName", "AZip"
         }

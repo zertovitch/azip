@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2024/08/24  09:40:28
+--  Transcription time: 2024/08/25  12:00:51
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -371,7 +371,7 @@ package body AZip_Resource_GUI is
     Dlg_to_Scn (11, 121, 283, 52, x, y, w, h);
     Create (Window.Static_0008, Window, "Miscellaneous comments - contributions - ideas", x, y, w, h);
     Dlg_to_Scn (21, 134, 268, 32, x, y, w, h);
-    Create_Label (Window, "Asen Anastassov, Nicolas F. Mirkov", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Create_Label (Window, "Asen Anastassov, Nicolas F. Mirkov, Nicolas Pinault (DrPi)", x, y, w, h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn (107, 177, 88, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice

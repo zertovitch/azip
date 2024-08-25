@@ -230,7 +230,7 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "André van Splunter", IDC_STATIC, 25, 83, 260, 8, SS_LEFT, WS_EX_LEFT
     LTEXT           "Frank Piron, Falk Maier at KonAd GmbH: authors of GWindows Extended", IDC_STATIC, 25, 97, 260, 8, SS_LEFT, WS_EX_LEFT
     GROUPBOX        "Miscellaneous comments - contributions - ideas", IDC_STATIC, 11, 121, 283, 52, 0, WS_EX_LEFT
-    LTEXT           "Asen Anastassov, Nicolas F. Mirkov", 0, 21, 134, 268, 32, SS_LEFT, WS_EX_LEFT
+    LTEXT           "Asen Anastassov, Nicolas F. Mirkov, Nicolas Pinault (DrPi)", 0, 21, 134, 268, 32, SS_LEFT, WS_EX_LEFT
     DEFPUSHBUTTON   "Close", IDOK, 107, 177, 88, 19, 0, WS_EX_LEFT
 }
 

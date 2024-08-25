@@ -30,3 +30,4 @@ copy AZip.exe "AZip (ver) win32%target%.exe"
 rem upx --ultra-brute "AZip (ver) win32.exe"
 copy "AZip (ver) win32%target%.exe" AZip.exe
 
+pause

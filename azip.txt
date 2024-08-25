@@ -51,10 +51,14 @@ Platforms supported
 How to build & modify AZip
 ==========================
 
-  * You need the GNAT compiler: http://libre.adacore.com
+  * Go to Alire ( https://alire.ada.dev/ ) and get the AZip crate.
+  
+Alternatively, "by hand":
 
-  * For the GWindows toolkit: read the comments in the gwindows/azip_gwindows.gpr
-       project file (just open as text file) for further instructions.
+  * Download the GNAT compiler: https://www.adacore.com/download
+  * For the GWindows toolkit and other dependencies: read the comments in
+       the gwindows/azip_gwindows.gpr project file (just open it as text
+       file) for further instructions.
 
 Thanks to...
 ============
@@ -72,3 +76,5 @@ Asen Anastassov, for the idea of a "stealth mode" (no trace in registry).
 
 Nicolas F. Mirkov, for the ideas of an option for a default extract
   directory and of context menus within AZip.
+
+Nicolas Pinault (DrPi), for the Single Instance feature in GWindows.

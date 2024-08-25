@@ -1042,6 +1042,7 @@ package body AZip_GWin.MDI_Child is
       case return_code is
         when ok =>
           if operation in Modifying_Operation then
+            Attempt_Remember_Sorting (Window);
             Window.Load_Archive_Catalogue (copy_codes => operation /= Remove);
           else
             Update_Information (Window, results_refresh);
@@ -1222,10 +1223,9 @@ package body AZip_GWin.MDI_Child is
     Update_Common_Menus (Window.mdi_root.all, top_entry);
   end Update_Common_Menus;
 
-  procedure Load_Archive_Catalogue (
-    Window     : in out MDI_Child_Type;
-    copy_codes :        Boolean
-  )
+  procedure Load_Archive_Catalogue
+    (Window     : in out MDI_Child_Type;
+     copy_codes : in     Boolean)
   is
     new_zif : Zip_Info;
   begin
@@ -1482,7 +1482,6 @@ package body AZip_GWin.MDI_Child is
       return; -- no item, no folder -> do nothing (different from On_Extract's behaviour)
     end if;
     if Message_Box (Window, "Delete", Delete_msg, Yes_No_Box, Question_Icon) = Yes then
-      Attempt_Remember_Sorting (Window);
       Process_Archive_GWin
         (Window         => Window,
          operation      => Remove,

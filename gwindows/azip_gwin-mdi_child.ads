@@ -161,18 +161,16 @@ package AZip_GWin.MDI_Child is
 
   procedure Update_Information
     (Window : in out MDI_Child_Type;
-     need   :        Update_need);
+     need   : in     Update_need);
 
-  procedure Load_Archive_Catalogue (
-    Window     : in out MDI_Child_Type;
-    copy_codes :        Boolean
-  );
+  procedure Load_Archive_Catalogue
+    (Window     : in out MDI_Child_Type;
+     copy_codes : in     Boolean);
 
-  overriding procedure On_Size (
-    Window : in out MDI_Child_Type;
-    Width  : in     Integer;
-    Height : in     Integer
-  );
+  overriding procedure On_Size
+    (Window : in out MDI_Child_Type;
+     Width  : in     Integer;
+     Height : in     Integer);
 
   overriding procedure On_Erase_Background
      (Window : in out MDI_Child_Type;

@@ -604,7 +604,6 @@ pragma Eliminate (GWindows.Buttons, On_Released_Handler, Source_Location => "gwi
 pragma Eliminate (GWindows.Buttons.Owner_Drawn, On_Paint_Handler, Source_Location => "gwindows-buttons-owner_drawn.ads:34");
 pragma Eliminate (GWindows.Buttons, "not", Source_Location => "gwindows-buttons.ads:231");
 pragma Eliminate (GWindows.Colors, To_RGB, Source_Location => "gwindows-colors.ads:63");
-pragma Eliminate (GWindows.Colors, To_RGB_Type, Source_Location => "gwindows-colors.adb:68");
 pragma Eliminate (GWindows.Combo_Boxes, Create, Source_Location => "gwindows-combo_boxes.ads:55");
 pragma Eliminate (GWindows.Combo_Boxes, Create, Source_Location => "gwindows-combo_boxes.ads:309");
 pragma Eliminate (GWindows.Combo_Boxes, Create, Source_Location => "gwindows-combo_boxes.ads:335");

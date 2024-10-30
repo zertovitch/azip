@@ -282,8 +282,8 @@ package body AZip_Common.Operations is
     current_operation : Entry_Operation;
     current_skip_hint : Boolean;
     dummy_user_abort  : Boolean;
-    total_occurences : Natural := 0;
-    total_files_with_occurence : Natural := 0;
+    total_occurrences : Natural := 0;
+    total_files_with_occurrence : Natural := 0;
     --
     procedure Entry_feedback (
       percents_done :  in Natural;  --  %'s completed
@@ -857,14 +857,14 @@ package body AZip_Common.Operations is
               --  No feedback, it would be too time-consuming
               --  for just 2 instructions !
               entry_user_code := 1;
-              total_files_with_occurence := total_files_with_occurence + 1;
+              total_files_with_occurrence := total_files_with_occurrence + 1;
             else
               begin
                 --  We need to search the pattern string in the compressed entry...
                 Search_1_file (entry_full_name => entry_full_name, occ  => entry_user_code);
                 if entry_user_code > 0 then
-                  total_files_with_occurence := total_files_with_occurence + 1;
-                  total_occurences := total_occurences + entry_user_code;
+                  total_files_with_occurrence := total_files_with_occurrence + 1;
+                  total_occurrences := total_occurrences + entry_user_code;
                 end if;
               exception
                 when UnZip.User_abort =>
@@ -884,8 +884,8 @@ package body AZip_Common.Operations is
                 archive_percents_done,
                 short_name_utf_16,
                 Search,
-                "Occurences found so far:" & Integer'Image (total_occurences),
-                "Entries with occurences:" & Integer'Image (total_files_with_occurence),
+                "Occurrences found so far:" & Integer'Image (total_occurrences),
+                "Entries with occurrences:" & Integer'Image (total_files_with_occurrence),
                 False,
                 dummy_user_abort
               );
@@ -1012,12 +1012,12 @@ package body AZip_Common.Operations is
         --  message after a search with an empty pattern, or with 0
         --  occurrence found. In both cases, a call to Feedback during
         --  the search never happens and the message is wrong.
-        Feedback (100, 100, "", Search,
-          "Occurences found:" & Integer'Image (total_occurences),
-          "Total entries:" & Integer'Image (total_files_with_occurence),
-          False,
-          dummy_user_abort
-        );
+        Feedback
+          (100, 100, "", Search,
+           "Occurrences found:" & total_occurrences'Image,
+           "Total entries:" & total_files_with_occurrence'Image,
+           False,
+           dummy_user_abort);
     end case;
     case operation is
       when Modifying_Operation =>

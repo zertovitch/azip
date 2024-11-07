@@ -57,7 +57,7 @@ procedure AZip_GWin.Properties (Window : in out MDI_Child.MDI_Child_Type) is
         case m is
           when store | shrink | Reduce_Format | implode |
                deflate | deflate_e |
-               bzip2 | lzma_meth =>
+               bzip2_meth | lzma_meth =>
             null;
           when others =>
             box.Stats_list.Set_Sub_Item ("unsupported", row, 4);

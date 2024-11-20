@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2024/08/25  12:00:51
+--  Transcription time: 2024/11/20  19:47:45
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -331,10 +331,10 @@ package AZip_Resource_GUI is
     Label_Install_note_first_visit : Label_Type;
     IDOK : Default_Dialog_Button_Type;    --  Closes parent window after click
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
-    ID_Install_all_users : Default_Dialog_Button_Type;    --  Closes parent window after click
-    ID_Install_all_users_permanent : Default_Button_Type;  --  Doesn't close parent window after click
-    ID_Install_current_user : Default_Dialog_Button_Type;    --  Closes parent window after click
-    ID_Install_current_user_permanent : Default_Button_Type;  --  Doesn't close parent window after click
+    ID_Install_all_users : Dialog_Button_Type;    --  Closes parent window after click
+    ID_Install_all_users_permanent : Button_Type;  --  Doesn't close parent window after click
+    ID_Install_current_user : Dialog_Button_Type;    --  Closes parent window after click
+    ID_Install_current_user_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- Install_box_Type
 
   --  Dialog at resource line 323
@@ -557,8 +557,8 @@ package AZip_Resource_GUI is
     Show_all_Formats : Check_Box_Type;
     IDOK : Default_Dialog_Button_Type;    --  Closes parent window after click
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
-    ID_Button_About_Azip : Default_Dialog_Button_Type;    --  Closes parent window after click
-    ID_Button_About_Azip_permanent : Default_Button_Type;  --  Doesn't close parent window after click
+    ID_Button_About_Azip : Dialog_Button_Type;    --  Closes parent window after click
+    ID_Button_About_Azip_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- Properties_box_Type
 
   --  Dialog at resource line 418
@@ -862,6 +862,51 @@ package AZip_Resource_GUI is
        resize      : in     Boolean := False  --  optionally resize Window as designed
      );
 
+  type Recompress_Box_Type is new Window_Type with record
+
+    --  Label: IDC_STATIC
+    --  Label: IDC_STATIC
+    --  Label: IDC_STATIC
+    --  Label: IDC_STATIC
+    ID_Recomp_Single_Pass : Default_Dialog_Button_Type;    --  Closes parent window after click
+    ID_Recomp_Single_Pass_permanent : Default_Button_Type;  --  Doesn't close parent window after click
+    ID_Recomp_Brute_Force : Dialog_Button_Type;    --  Closes parent window after click
+    ID_Recomp_Brute_Force_permanent : Button_Type;  --  Doesn't close parent window after click
+    IDCANCEL : Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
+  end record; -- Recompress_Box_Type
+
+  --  Dialog at resource line 528
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out Recompress_Box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Recompress_Box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Archive Recompression";
+      Left        : in     Integer := Use_Default;  --  Default = as designed
+      Top         : in     Integer := Use_Default;  --  Default = as designed
+      Width       : in     Integer := Use_Default;  --  Default = as designed
+      Height      : in     Integer := Use_Default;  --  Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+      (Window      : in out Recompress_Box_Type;
+       for_dialog  : in     Boolean;          --  True: buttons do close the window
+       resize      : in     Boolean := False  --  optionally resize Window as designed
+     );
+
   package Version_info is
     Authors : constant String := "Gautier de Montmollin";
     FileDescription : constant String := "AZip - A portable Zip Archive Manager - Free, MIT license";
@@ -1037,6 +1082,8 @@ package AZip_Resource_GUI is
   Choose_Temp_Directory_Button           : constant :=  40157;
   Extract_Directory_Group_Box            : constant :=  40158;
   Temp_Directory_Group_Box               : constant :=  40159;
+  ID_Recomp_Single_Pass                  : constant :=  40160;
+  ID_Recomp_Brute_Force                  : constant :=  40161;
 
   --  ** Some helper utilities (spec).
 
@@ -1048,6 +1095,6 @@ package AZip_Resource_GUI is
 
   function Num_resource (id : Natural) return GString;  --  Just turn 123 into "#123".
 
-  --  Last line of resource script file: 630
+  --  Last line of resource script file: 644
 
 end AZip_Resource_GUI;

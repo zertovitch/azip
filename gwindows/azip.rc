@@ -319,8 +319,8 @@ FONT 8, "Ms Shell Dlg"
     PUSHBUTTON      "Choose", Button_extension_choose, 280, 132, 38, 15, 0, WS_EX_LEFT
     LTEXT           "Note on first visit", Label_Install_note_first_visit, 15, 165, 312, 11, SS_LEFT, WS_EX_LEFT
     DEFPUSHBUTTON   "Close", IDOK, 27, 185, 89, 17, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Install for all users", ID_Install_all_users, 127, 185, 89, 17, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Install for current user", ID_Install_current_user, 227, 185, 89, 17, 0, WS_EX_LEFT
+    PUSHBUTTON      "Install for all users", ID_Install_all_users, 127, 185, 89, 17, 0, WS_EX_LEFT
+    PUSHBUTTON      "Install for current user", ID_Install_current_user, 227, 185, 89, 17, 0, WS_EX_LEFT
 }
 
 
@@ -415,7 +415,7 @@ FONT 8, "Ms Shell Dlg"
     CONTROL         "", Stats_list, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 14, 56, 305, 115, WS_EX_LEFT
     AUTOCHECKBOX    "Show all known formats", Show_all_Formats, 15, 176, 99, 19, 0, WS_EX_LEFT
     DEFPUSHBUTTON   "OK", IDOK, 140, 176, 64, 19, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "About AZip", ID_Button_About_Azip, 255, 176, 64, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "About AZip", ID_Button_About_Azip, 255, 176, 64, 19, 0, WS_EX_LEFT
 }
 
 
@@ -513,6 +513,20 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "Please wait for filling the List View", IDC_STATIC, 17, 37, 156, 8, SS_LEFT, WS_EX_LEFT
 }
 
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Recompress_Box DIALOG 0, 0, 260, 90
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+CAPTION "Archive Recompression"
+FONT 8, "Ms Shell Dlg"
+{
+    LTEXT         "You are about to recompress this archive. Contents will remain identical,", IDC_STATIC, 18,  12, 240, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT         "but data compression may be better. This operation can take a long time",   IDC_STATIC, 18,  22, 240, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT         "depending on data size, content, and the recompression strength.",          IDC_STATIC, 18,  32, 240, 8, SS_LEFT, WS_EX_LEFT
+    LTEXT         "Proceed?",                                                                  IDC_STATIC, 18,  52, 240, 8, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON "Yes - single pass", ID_Recomp_Single_Pass,  18, 70, 80, 14, 0, WS_EX_LEFT
+    PUSHBUTTON    "Yes - brute force", ID_Recomp_Brute_Force, 105, 70, 80, 14, 0, WS_EX_LEFT
+    PUSHBUTTON    "No",                IDCANCEL,              192, 70, 50, 14, 0, WS_EX_LEFT
+}
 
 
 //

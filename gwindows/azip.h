@@ -160,3 +160,5 @@
 #define Choose_Temp_Directory_Button            40157
 #define Extract_Directory_Group_Box             40158
 #define Temp_Directory_Group_Box                40159
+#define ID_Recomp_Single_Pass                   40160
+#define ID_Recomp_Brute_Force                   40161

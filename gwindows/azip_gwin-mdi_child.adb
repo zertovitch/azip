@@ -3,6 +3,7 @@ with AZip_Common,
      AZip_GWin.Dragging,
      AZip_GWin.Drop_File_Dialog,
      AZip_GWin.Installation,
+     AZip_GWin.Modal_Dialogs,
      AZip_GWin.Password_Dialogs,
      AZip_GWin.Properties,
      AZip_GWin.Tabs;
@@ -1770,6 +1771,7 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_Recompress (Window : in out MDI_Child_Type) is
     return_code : Operation_return_code;
+    answer : Integer;
   begin
     if not Is_loaded (Window.zif) then
       return;
@@ -1778,17 +1780,10 @@ package body AZip_GWin.MDI_Child is
       Stop_msg_on_encrypted_archive (Window, "Archive recompression");
       return;
     end if;
-    if Message_Box (
-      Window,
-      "Archive recompression",
-      "You are about to recompress this archive." & NL & NL &
-      "Contents will remain identical, but data compression may be better." & NL &
-      "This operation can take a long time depending on data size and content." & NL & NL &
-      "Proceed ?",
-      Yes_No_Box,
-      Question_Icon
-    ) = Yes
-    then
+
+    Modal_Dialogs.Show_Recompress_Box (Window, answer);
+
+    if answer = ID_Recomp_Single_Pass then
       Process_Archive_GWin (
         Window         => Window,
         operation      => Recompress,
@@ -1799,8 +1794,8 @@ package body AZip_GWin.MDI_Child is
         ignore_path    => False,
         encrypt        => False,
         new_temp_name  => Temp_AZip_Name (Window),
-        return_code    => return_code
-      );
+        return_code    => return_code);
+
       if return_code = aborted then
         null;
       elsif Window.last_max_code = nothing then

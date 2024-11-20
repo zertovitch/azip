@@ -47,8 +47,7 @@ package body AZip_GWin.Modal_Dialogs is
     box.Version_label.Text
       (S2G (AZip_Resource_GUI.Version_info.FileVersion) & ", built as" &
       GWindows.GStrings.To_GString_From_String (Integer'Image (GWindows.Types.Wparam'Size)) &
-      " bit app."
-      );
+      " bit app.");
     Create_and_Swap (url_azip, box.AZip_URL, box, S2G (AZip_Common.azip_web_page));
     Create_and_Swap (url_gnat, box.GNAT_URL, box, "https://www.adacore.com/community");
     box.GNAT_Version.Text (S2G ("version " & GNAT_Version_string));
@@ -68,10 +67,21 @@ package body AZip_GWin.Modal_Dialogs is
     end if;
   end Show_About_Box;
 
+  procedure Show_Recompress_Box
+    (Window : in out GWindows.Base.Base_Window_Type'Class;
+     Answer :    out Integer)
+  is
+    use GWindows.Application, GWindows.Constants, GWindows.Static_Controls.Web;
+    box : AZip_Resource_GUI.Recompress_Box_Type;  --  Possible addition: check box for backup.
+  begin
+    box.Create_Full_Dialog (Window);
+    box.Center;
+    Answer := Show_Dialog (box, Window);
+  end Show_Recompress_Box;
+
   procedure Show_Sponsoring_Box
     (Window      : in out GWindows.Base.Base_Window_Type'Class;
-     First_Visit : in     Boolean
-    )
+     First_Visit : in     Boolean)
   is
     use GWindows.Application, GWindows.Constants, GWindows.Static_Controls.Web;
     box : AZip_Resource_GUI.Sponsoring_box_Type;

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2024/08/25  12:00:51
+--  Transcription time: 2024/11/20  19:47:45
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -2041,6 +2041,119 @@ package body AZip_Resource_GUI is
     Create_Label (Window, "Please wait for filling the List View", x, y, w, h, GWindows.Static_Controls.Left, None);
   end Create_Contents;  --  Wait_refresh_box_Type
 
+  --  Dialog at resource line 520
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out Recompress_Box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Unmodified (Window);
+    pragma Unmodified (dwExStyle);
+    WS_SYSMENU : constant := 16#0008_0000#;
+  begin
+    dwStyle := dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Recompress_Box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Archive Recompression";
+      Left        : in     Integer := Use_Default;  --  Default = as designed
+      Top         : in     Integer := Use_Default;  --  Default = as designed
+      Width       : in     Integer := Use_Default;  --  Default = as designed
+      Height      : in     Integer := Use_Default;  --  Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x, y, w, h : Integer;
+  begin
+    Dlg_to_Scn (0, 0, 260, 90, x, y, w, h);
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
+    Create_As_Dialog
+     (Window => Window_Type (Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then  Client_Area_Width (Window, w); end if;
+    if Height = Use_Default then Client_Area_Height (Window, h); end if;
+    Use_GUI_Font (Window);
+    Create_Contents (Window, True);
+  end Create_Full_Dialog;  --  Recompress_Box_Type
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+      (Window      : in out Recompress_Box_Type;
+       for_dialog  : in     Boolean;          --  True: buttons do close the window
+       resize      : in     Boolean := False  --  optionally resize Window as designed
+     )
+  is
+    x, y, w, h : Integer;
+  begin
+    if resize then
+    Dlg_to_Scn (0, 0, 260, 90, x, y, w, h);
+      Move (Window, x, y);
+      Client_Area_Size (Window, w, h);
+    end if;
+    Use_GUI_Font (Window);
+    Dlg_to_Scn (18, 12, 240, 8, x, y, w, h);
+    Create_Label (Window, "You are about to recompress this archive. Contents will remain identical,", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn (18, 22, 240, 8, x, y, w, h);
+    Create_Label (Window, "but data compression may be better. This operation can take a long time", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn (18, 32, 240, 8, x, y, w, h);
+    Create_Label (Window, "depending on data size, content, and the recompression strength.", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn (18, 52, 240, 8, x, y, w, h);
+    Create_Label (Window, "Proceed?", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn (18, 70, 80, 14, x, y, w, h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.ID_Recomp_Single_Pass, Window, "Yes - single pass", x, y, w, h, ID => ID_Recomp_Single_Pass);
+    Create (Window.ID_Recomp_Single_Pass_permanent, Window, "Yes - single pass", x, y, w, h, ID => ID_Recomp_Single_Pass);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.ID_Recomp_Single_Pass_permanent);
+    else  --  Hide the closing button
+      Hide (Window.ID_Recomp_Single_Pass);
+    end if;
+    Dlg_to_Scn (105, 70, 80, 14, x, y, w, h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.ID_Recomp_Brute_Force, Window, "Yes - brute force", x, y, w, h, ID => ID_Recomp_Brute_Force);
+    Create (Window.ID_Recomp_Brute_Force_permanent, Window, "Yes - brute force", x, y, w, h, ID => ID_Recomp_Brute_Force);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.ID_Recomp_Brute_Force_permanent);
+    else  --  Hide the closing button
+      Hide (Window.ID_Recomp_Brute_Force);
+    end if;
+    Dlg_to_Scn (192, 70, 50, 14, x, y, w, h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDCANCEL, Window, "No", x, y, w, h, ID => IDCANCEL);
+    Create (Window.IDCANCEL_permanent, Window, "No", x, y, w, h, ID => IDCANCEL);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDCANCEL_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDCANCEL);
+    end if;
+  end Create_Contents;  --  Recompress_Box_Type
+
   --  ** Generated code ends here /\ /\ /\.
 
   --  ** Some helper utilities (body).
@@ -2150,6 +2263,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  --  Last line of resource script file: 630
+  --  Last line of resource script file: 644
 
 end AZip_Resource_GUI;

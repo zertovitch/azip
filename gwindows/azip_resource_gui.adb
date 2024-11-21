@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2024/11/20  19:47:45
+--  Transcription time: 2024/11/21  20:49:43
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -468,17 +468,6 @@ package body AZip_Resource_GUI is
     Dlg_to_Scn (45, 65, 272, 21, x, y, w, h);
     Create (Window.New_archive_msg, Window, "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", x, y, w, h, GWindows.Static_Controls.Left, Half_Sunken, ID => New_archive_msg);
     Hide (Window.New_archive_msg);
-    Dlg_to_Scn (87, 95, 63, 19, x, y, w, h);
-    --  Both versions of the button are created.
-    --  The more meaningful one is made visible, but this choice
-    --  can be reversed, for instance on a "Browse" button.
-    Create (Window.IDCANCEL, Window, "No", x, y, w, h, ID => IDCANCEL);
-    Create (Window.IDCANCEL_permanent, Window, "No", x, y, w, h, ID => IDCANCEL);
-    if for_dialog then  --  Hide the non-closing button
-      Hide (Window.IDCANCEL_permanent);
-    else  --  Hide the closing button
-      Hide (Window.IDCANCEL);
-    end if;
     Dlg_to_Scn (10, 95, 63, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
@@ -489,6 +478,17 @@ package body AZip_Resource_GUI is
       Hide (Window.IDOK_permanent);
     else  --  Hide the closing button
       Hide (Window.IDOK);
+    end if;
+    Dlg_to_Scn (87, 95, 63, 19, x, y, w, h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDCANCEL, Window, "No", x, y, w, h, ID => IDCANCEL);
+    Create (Window.IDCANCEL_permanent, Window, "No", x, y, w, h, ID => IDCANCEL);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDCANCEL_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDCANCEL);
     end if;
   end Create_Contents;  --  Drop_files_box_Type
 
@@ -1017,17 +1017,6 @@ package body AZip_Resource_GUI is
     end if;
     Dlg_to_Scn (12, 61, 188, 13, x, y, w, h);
     Create (Window.Temp_Directory_Edit_Box, Window, "", x, y, w, h, Horizontal_Scroll => True, Read_Only => False, ID => Temp_Directory_Edit_Box);
-    Dlg_to_Scn (191, 98, 50, 19, x, y, w, h);
-    --  Both versions of the button are created.
-    --  The more meaningful one is made visible, but this choice
-    --  can be reversed, for instance on a "Browse" button.
-    Create (Window.IDCANCEL, Window, "Cancel", x, y, w, h, ID => IDCANCEL);
-    Create (Window.IDCANCEL_permanent, Window, "Cancel", x, y, w, h, ID => IDCANCEL);
-    if for_dialog then  --  Hide the non-closing button
-      Hide (Window.IDCANCEL_permanent);
-    else  --  Hide the closing button
-      Hide (Window.IDCANCEL);
-    end if;
     Dlg_to_Scn (136, 98, 50, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
@@ -1038,6 +1027,17 @@ package body AZip_Resource_GUI is
       Hide (Window.IDOK_permanent);
     else  --  Hide the closing button
       Hide (Window.IDOK);
+    end if;
+    Dlg_to_Scn (191, 98, 50, 19, x, y, w, h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDCANCEL, Window, "Cancel", x, y, w, h, ID => IDCANCEL);
+    Create (Window.IDCANCEL_permanent, Window, "Cancel", x, y, w, h, ID => IDCANCEL);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDCANCEL_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDCANCEL);
     end if;
   end Create_Contents;  --  Option_box_Type
 
@@ -2119,7 +2119,7 @@ package body AZip_Resource_GUI is
     Create_Label (Window, "depending on data size, content, and the recompression strength.", x, y, w, h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn (18, 52, 240, 8, x, y, w, h);
     Create_Label (Window, "Proceed?", x, y, w, h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn (18, 70, 80, 14, x, y, w, h);
+    Dlg_to_Scn (18, 70, 80, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.
@@ -2130,7 +2130,7 @@ package body AZip_Resource_GUI is
     else  --  Hide the closing button
       Hide (Window.ID_Recomp_Single_Pass);
     end if;
-    Dlg_to_Scn (105, 70, 80, 14, x, y, w, h);
+    Dlg_to_Scn (105, 70, 80, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.
@@ -2141,7 +2141,7 @@ package body AZip_Resource_GUI is
     else  --  Hide the closing button
       Hide (Window.ID_Recomp_Brute_Force);
     end if;
-    Dlg_to_Scn (192, 70, 50, 14, x, y, w, h);
+    Dlg_to_Scn (192, 70, 50, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.

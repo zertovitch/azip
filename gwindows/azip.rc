@@ -248,8 +248,8 @@ FONT 8, "Ms Shell Dlg"
     ICON            Key_Icon, IDC_STATIC, 178, 98, 21, 20, SS_ICON, WS_EX_LEFT
     LTEXT           "(Archive name here)", Drop_archive_name, 39, 26, 285, 32, SS_LEFT, WS_EX_LEFT
     LTEXT           "NB: This is a new archive: Zip file not yet created. You'll be asked first under which name the archive will be created.", New_archive_msg, 45, 65, 272, 21, NOT WS_VISIBLE | SS_LEFT, WS_EX_STATICEDGE
-    PUSHBUTTON      "No", IDCANCEL, 87, 95, 63, 19, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "Yes", IDOK, 10, 95, 63, 19, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "Yes", IDOK,     10, 95, 63, 19, 0, WS_EX_LEFT
+    PUSHBUTTON      "No",  IDCANCEL, 87, 95, 63, 19, 0, WS_EX_LEFT
 }
 
 
@@ -337,8 +337,8 @@ FONT 8, "Ms Shell Dlg"
     GROUPBOX        "Temporary Directory, e.g. a RAM Disk ( if empty: value of %temp% )", Temp_Directory_Group_Box, 7, 47, 240, 33, 0, WS_EX_LEFT
     PUSHBUTTON      "Choose", Choose_Temp_Directory_Button, 205, 60, 35, 15, 0, WS_EX_LEFT
     EDITTEXT        Temp_Directory_Edit_Box, 12, 61, 188, 13, ES_AUTOHSCROLL, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK",     IDOK,     136, 98, 50, 19, 0, WS_EX_LEFT
     PUSHBUTTON      "Cancel", IDCANCEL, 191, 98, 50, 19, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "OK", IDOK, 136, 98, 50, 19, 0, WS_EX_LEFT
 }
 
 
@@ -523,9 +523,9 @@ FONT 8, "Ms Shell Dlg"
     LTEXT         "but data compression may be better. This operation can take a long time",   IDC_STATIC, 18,  22, 240, 8, SS_LEFT, WS_EX_LEFT
     LTEXT         "depending on data size, content, and the recompression strength.",          IDC_STATIC, 18,  32, 240, 8, SS_LEFT, WS_EX_LEFT
     LTEXT         "Proceed?",                                                                  IDC_STATIC, 18,  52, 240, 8, SS_LEFT, WS_EX_LEFT
-    DEFPUSHBUTTON "Yes - single pass", ID_Recomp_Single_Pass,  18, 70, 80, 14, 0, WS_EX_LEFT
-    PUSHBUTTON    "Yes - brute force", ID_Recomp_Brute_Force, 105, 70, 80, 14, 0, WS_EX_LEFT
-    PUSHBUTTON    "No",                IDCANCEL,              192, 70, 50, 14, 0, WS_EX_LEFT
+    DEFPUSHBUTTON "Yes - single pass", ID_Recomp_Single_Pass,  18, 70, 80, 19, 0, WS_EX_LEFT
+    PUSHBUTTON    "Yes - brute force", ID_Recomp_Brute_Force, 105, 70, 80, 19, 0, WS_EX_LEFT
+    PUSHBUTTON    "No",                IDCANCEL,              192, 70, 50, 19, 0, WS_EX_LEFT
 }
 
 

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2024/11/20  19:47:45
+--  Transcription time: 2024/11/21  20:49:43
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -171,10 +171,10 @@ package AZip_Resource_GUI is
     Static_0002 : Icon_Type;
     Drop_archive_name : Label_Type;
     New_archive_msg : Label_Type;
-    IDCANCEL : Dialog_Button_Type;    --  Closes parent window after click
-    IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
     IDOK : Default_Dialog_Button_Type;    --  Closes parent window after click
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
+    IDCANCEL : Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- Drop_files_box_Type
 
   --  Dialog at resource line 252
@@ -378,10 +378,10 @@ package AZip_Resource_GUI is
     Choose_Temp_Directory_Button : Dialog_Button_Type;    --  Closes parent window after click
     Choose_Temp_Directory_Button_permanent : Button_Type;  --  Doesn't close parent window after click
     Temp_Directory_Edit_Box : Edit_Box_Type;
-    IDCANCEL : Dialog_Button_Type;    --  Closes parent window after click
-    IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
     IDOK : Default_Dialog_Button_Type;    --  Closes parent window after click
     IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
+    IDCANCEL : Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- Option_box_Type
 
   --  Dialog at resource line 341

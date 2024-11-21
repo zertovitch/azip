@@ -22,7 +22,7 @@ package body AZip_GWin.Drop_File_Dialog is
   begin
     Parent.Focus;
     box.Create_Full_Dialog (Parent);
-    box.Center;
+    box.Center (Parent);
     box.Drop_archive_name.Text (archive_name);
     if new_archive then
       box.New_archive_msg.Show;

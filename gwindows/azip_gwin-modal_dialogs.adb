@@ -25,7 +25,7 @@ package body AZip_GWin.Modal_Dialogs is
     begin
       credits_box.Create_Full_Dialog (box);
       credits_box.Small_Icon ("AZip_Doc_Icon_Name");
-      credits_box.Center;
+      credits_box.Center (Window);
       Show_Dialog (credits_box, box);
     end Credits_clicked;
     --
@@ -61,7 +61,7 @@ package body AZip_GWin.Modal_Dialogs is
     box.Sponsoring_button_permanent.Show;
     box.Sponsoring_button.Hide;
     box.Sponsoring_button_permanent.On_Click_Handler (Sponsoring_clicked'Unrestricted_Access);
-    box.Center;
+    box.Center (Window);
     if Show_Dialog (box, Window) = IDOK then
       null;
     end if;
@@ -75,7 +75,7 @@ package body AZip_GWin.Modal_Dialogs is
     box : AZip_Resource_GUI.Recompress_Box_Type;  --  Possible addition: check box for backup.
   begin
     box.Create_Full_Dialog (Window);
-    box.Center;
+    box.Center (Window);
     Answer := Show_Dialog (box, Window);
   end Show_Recompress_Box;
 
@@ -115,7 +115,7 @@ package body AZip_GWin.Modal_Dialogs is
     Create_and_Swap (url_payal, box.Label_Paypal, box, S2G (url));
     box.Currency_box.On_Update_Handler (CCY_Changed'Unrestricted_Access);
     box.Currency_box.Text ("CHF");
-    box.Center;
+    box.Center (Window);
     if Show_Dialog (box, Window) = IDOK then
       null;
     end if;

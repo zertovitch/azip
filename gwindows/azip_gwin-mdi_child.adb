@@ -861,18 +861,17 @@ package body AZip_GWin.MDI_Child is
       null; -- !! utf-8 or ascii names with characters > pos 127 fail
   end Set_Modification_Time_B;
 
-  procedure Process_Archive_GWin (
-    Window         : in out MDI_Child_Type;
-    operation      : Archive_Operation;
-    file_names     : Array_Of_File_Names;
-    base_folder    : GString;
-    search_pattern : GString;
-    output_folder  : Wide_String;
-    ignore_path    : Boolean; -- ignore directories upon extraction
-    encrypt        : Boolean;
-    new_temp_name  : String;
-    return_code    : out Operation_return_code
-  )
+  procedure Process_Archive_GWin
+    (Window         : in out MDI_Child_Type;
+     operation      :        Archive_Operation;
+     file_names     :        Array_Of_File_Names;
+     base_folder    :        GString;
+     search_pattern :        GString;
+     output_folder  :        Wide_String;
+     ignore_path    :        Boolean;  --  ignore directories upon extraction
+     encrypt        :        Boolean;
+     new_temp_name  :        String;
+     return_code    :    out Operation_return_code)
   is
     is_aborted : Boolean := False;
     --
@@ -884,15 +883,14 @@ package body AZip_GWin.MDI_Child is
     tick : Ada.Calendar.Time;
     progress : Progress_box_Type;
     --
-    procedure Boxed_Feedback (
-      file_percents_done           : Natural;
-      archive_percents_done        : Natural;
-      entry_being_processed        : GString;
-      e_operation                  : Entry_Operation;
-      for_comment_1, for_comment_2 : String;  --  e.g. #found so far, time elpased,...
-      skip_hint                    : Boolean;
-      user_abort                   : out Boolean
-    )
+    procedure Boxed_Feedback
+      (file_percents_done           :     Natural;
+       archive_percents_done        :     Natural;
+       entry_being_processed        :     GString;
+       e_operation                  :     Entry_Operation;
+       for_comment_1, for_comment_2 :     String;  --  e.g. #found so far, time elpased,...
+       skip_hint                    :     Boolean;
+       user_abort                   : out Boolean)
     is
       use Ada.Calendar, Ada.Strings.Wide_Fixed;
       now : constant Ada.Calendar.Time := Clock;
@@ -931,13 +929,12 @@ package body AZip_GWin.MDI_Child is
       user_abort := is_aborted;
     end Boxed_Feedback;
     --
-    procedure Name_conflict_resolution (
-      name            :  in String;
-      name_encoding   :  in Zip_Name_Encoding;
-      action          : out UnZip.Name_Conflict_Intervention;
-      new_name        : out String;
-      new_name_length : out Natural
-    )
+    procedure Name_conflict_resolution
+      (name            :  in String;
+       name_encoding   :  in Zip_Name_Encoding;
+       action          : out UnZip.Name_Conflict_Intervention;
+       new_name        : out String;
+       new_name_length : out Natural)
     is
     pragma Unreferenced (new_name, new_name_length);
       box : File_exists_box_Type;
@@ -948,7 +945,7 @@ package body AZip_GWin.MDI_Child is
       box.Conflict_location.Text (output_folder);
       box.Overwrite_Rename.Disable;
       --  !! ^ Needs some effort to make an idiot-proof name query ;-)
-      box.Center;
+      box.Center (Window);
       case Show_Dialog (box, progress) is
         when Overwrite_Yes    =>  action := yes;
         when Overwrite_No     =>  action := no;
@@ -959,29 +956,26 @@ package body AZip_GWin.MDI_Child is
       end case;
     end Name_conflict_resolution;
     --
-    procedure Get_password_decrypt_for_Common (
-      encrypted_entry_name : in     GString;
-      password             : in out GString_Unbounded;
-      cancelled            :    out Boolean
-    )
+    procedure Get_password_decrypt_for_Common
+      (encrypted_entry_name : in     GString;
+       password             : in out GString_Unbounded;
+       cancelled            :    out Boolean)
     is
     begin
-      Get_password_for_decryption (
-        Window     => Window,
-        Parent     => progress,
-        entry_name => encrypted_entry_name,
-        password   => password,
-        cancelled  => cancelled
-      );
+      Get_password_for_decryption
+        (Window     => Window,
+         Parent     => progress,
+         entry_name => encrypted_entry_name,
+         password   => password,
+         cancelled  => cancelled);
     end Get_password_decrypt_for_Common;
     --
     --  Instanciation of the GUI-agnostic processing
     --
     procedure Archive_processing is
-      new AZip_Common.Operations.Process_Archive (
-        Boxed_Feedback,
-        Get_password_decrypt_for_Common
-      );
+      new AZip_Common.Operations.Process_Archive
+        (Boxed_Feedback,
+         Get_password_decrypt_for_Common);
     --
     function Msg_Name_Error return GString is
     begin
@@ -1016,30 +1010,33 @@ package body AZip_GWin.MDI_Child is
     progress.Cancel_button_permanent.Text (Cross & "   Cancel");
     progress.Cancel_button_permanent.Show;
     progress.Cancel_button_permanent.On_Click_Handler (Abort_clicked'Unrestricted_Access);
-    progress.Center;
+    progress.Center (Window);
     progress.Redraw;
     progress.Show;
     Window.mdi_root.Disable;
     progress.Text (progress.Text & " Operation: " & Img (operation));
+
     begin
-      Archive_processing (
-        zif              => Window.zif,
-        operation        => operation,
-        entry_name       => Expand_Folders (az_names),
-        base_folder      => base_folder,
-        search_pattern   => search_pattern,
-        output_folder    => output_folder,
-        Set_Time_Stamp   => Set_Modification_Time_B'Access,
-        new_temp_name    => new_temp_name,
-        Name_conflict    => Name_conflict_resolution'Unrestricted_Access,
-        password         => Window.current_password,
-        ignore_path      => ignore_path,
-        encrypt          => encrypt,
-        max_code         => Window.last_max_code,
-        return_code      => return_code
-      );
+
+      Archive_processing
+        (zif              => Window.zif,
+         operation        => operation,
+         entry_name       => Expand_Folders (az_names),
+         base_folder      => base_folder,
+         search_pattern   => search_pattern,
+         output_folder    => output_folder,
+         Set_Time_Stamp   => Set_Modification_Time_B'Access,
+         new_temp_name    => new_temp_name,
+         Name_conflict    => Name_conflict_resolution'Unrestricted_Access,
+         password         => Window.current_password,
+         ignore_path      => ignore_path,
+         encrypt          => encrypt,
+         max_code         => Window.last_max_code,
+         return_code      => return_code);
+
       Window.mdi_root.Text (S2G (AZip_GWin.Installation.AZip_Title));  --  Remove progress info.
       Window.last_operation := operation;
+
       case return_code is
         when ok =>
           if operation in Modifying_Operation then
@@ -1065,6 +1062,7 @@ package body AZip_GWin.MDI_Child is
         when aborted =>
           null;
       end case;
+
     exception
       when E : Ada.IO_Exceptions.Name_Error =>
         return_code := aborted;
@@ -1090,6 +1088,7 @@ package body AZip_GWin.MDI_Child is
           Exclamation_Icon
         );
     end;
+
     if Window.mdi_root.Task_bar_gadget_ok then
       Window.mdi_root.Task_bar_gadget.Set_Progress_State (Window.mdi_root.all, No_Progress);
     end if;
@@ -1584,7 +1583,7 @@ package body AZip_GWin.MDI_Child is
     box.Create_Full_Dialog (Window);
     box.Name_to_be_searched.Text (GU2G (Window.name_search));
     box.Content_to_be_searched.Text (GU2G (Window.content_search));
-    box.Center;
+    box.Center (Window);
     box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
     box.Name_to_be_searched.Focus;
     if Show_Dialog (box, Window) = GWindows.Constants.IDOK then

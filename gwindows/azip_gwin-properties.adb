@@ -99,7 +99,7 @@ procedure AZip_GWin.Properties (Window : in out MDI_Child.MDI_Child_Type) is
 begin
   box.Create_Full_Dialog (Window);
   box.Text ("Properties for archive: " & Simple_Name (GU2G (Window.ID.short_name)));
-  box.Center;
+  box.Center (Window);
   box.Stats_list.Insert_Column ("Compression format (""method"")", 0, 180);
   box.Stats_list.Insert_Column ("Entries", 1, 60);
   box.Stats_list.Insert_Column ("% of data", 2, 60);

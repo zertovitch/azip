@@ -107,7 +107,7 @@ package body AZip_GWin.Columns is
     --
   begin
     box.Create_Full_Dialog (Window);
-    box.Center;
+    box.Center (Window);
     box.Dummy_check_box_1.Hide;
     box.Dummy_check_box_2.Hide;
     x  := Left   (box.Dummy_check_box_1);

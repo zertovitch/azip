@@ -54,7 +54,7 @@ package body AZip_GWin.Password_Dialogs is
     else
       box.Show_password_box.State (Unchecked);
     end if;
-    box.Center;
+    box.Center (Window);
     box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
     box.Show_password_box.On_Click_Handler (Show_or_Hide_Password'Unrestricted_Access);
     Show_or_Hide_Password (box);
@@ -72,10 +72,9 @@ package body AZip_GWin.Password_Dialogs is
   --  Dialog: password for *encryption*  --
   -----------------------------------------
 
-  procedure Get_password_for_encryption (
-    Window     : in out MDI_Child.MDI_Child_Type;
-    cancelled  :    out Boolean
-  )
+  procedure Get_password_for_encryption
+    (Window     : in out MDI_Child.MDI_Child_Type;
+     cancelled  :    out Boolean)
   is
     box : AZip_Resource_GUI.Password_encryption_box_Type;
     pwd_candidate : GString_Unbounded := Window.current_password;
@@ -118,7 +117,7 @@ package body AZip_GWin.Password_Dialogs is
       else
         box.Show_password_box.State (Unchecked);
       end if;
-      box.Center;
+      box.Center (Window);
       box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
       box.Show_password_box.On_Click_Handler (Show_or_Hide_Password'Unrestricted_Access);
       Show_or_Hide_Password (box);

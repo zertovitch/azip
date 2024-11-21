@@ -122,9 +122,8 @@ package body AZip_GWin.Installation is
   end Do_Manage_Context_Menu;
 
   procedure Installation_Dialog
-   (Main_Window : in out MDI_Main.MDI_Main_Type;
-    First_Visit : in     Boolean
-   )
+    (Main_Window : in out MDI_Main.MDI_Main_Type;
+     First_Visit : in     Boolean)
   is
     use GWindows.Application, GWindows.Buttons, GWindows.Message_Boxes;
     box : AZip_Resource_GUI.Install_box_Type;
@@ -344,7 +343,7 @@ package body AZip_GWin.Installation is
       box.ID_Install_current_user.Text (Right_Arrow & "  " & box.ID_Install_current_user.Text);
     end if;
     --
-    box.Center;
+    box.Center (Main_Window);
     --
     case Show_Dialog (box, Main_Window) is
       when ID_Install_all_users    => Do_Install (All_Users);

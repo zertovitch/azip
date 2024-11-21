@@ -25,7 +25,7 @@ package body AZip_GWin.Help is
 
    begin
       box.Create_Full_Dialog (Parent);
-      box.Center;
+      box.Center (Parent);
       tab_control.Create (box, 0, 0, box.Client_Area_Width, box.Client_Area_Height);
       --  Any click in the buttons Button_1, Button_2 below
       --  will freeze the application if the following has

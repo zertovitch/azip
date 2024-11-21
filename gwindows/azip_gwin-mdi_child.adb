@@ -814,11 +814,10 @@ package body AZip_GWin.MDI_Child is
 
     if Is_loaded (Window.zif) then
       begin
-        Ada.Directories.Copy_File (
-          To_UTF_8 (GU2G (Window.ID.file_name)),
-          To_UTF_8 (GU2G (New_File_Name)),
-          "encoding=utf8"
-        );
+        Ada.Directories.Copy_File
+          (To_UTF_8 (GU2G (Window.ID.file_name)),
+           To_UTF_8 (GU2G (New_File_Name)),
+           "encoding=utf8");
       exception
         when others =>
           Message_Box (
@@ -830,7 +829,7 @@ package body AZip_GWin.MDI_Child is
           );
           return;
       end;
-    else -- we don't have a file yet
+    else  --  we don't have a file yet
       Create (empty_zip, Out_File, To_UTF_8 (GU2G (New_File_Name)), "encoding=utf8");
       for i in contents'Range loop
         Write (empty_zip, contents (i));
@@ -848,6 +847,7 @@ package body AZip_GWin.MDI_Child is
       end if;
     end loop;
     Window.ID := new_ID;
+    Window.last_operation := bogus_no_display;
     Window.Update_Common_Menus (GU2G (New_File_Name));
     Window.Load_Archive_Catalogue (copy_codes => False);
   end On_Save_As;
@@ -868,7 +868,7 @@ package body AZip_GWin.MDI_Child is
      base_folder    :        GString;
      search_pattern :        GString;
      output_folder  :        Wide_String;
-     ignore_path    :        Boolean;  --  ignore directories upon extraction
+     option_flag    :        Boolean;  --  extraction: ignore directories; recompress: brute-force
      encrypt        :        Boolean;
      new_temp_name  :        String;
      return_code    :    out Operation_return_code)
@@ -1029,7 +1029,7 @@ package body AZip_GWin.MDI_Child is
          new_temp_name    => new_temp_name,
          Name_conflict    => Name_conflict_resolution'Unrestricted_Access,
          password         => Window.current_password,
-         ignore_path      => ignore_path,
+         option_flag      => option_flag,
          encrypt          => encrypt,
          max_code         => Window.last_max_code,
          return_code      => return_code);
@@ -1150,7 +1150,7 @@ package body AZip_GWin.MDI_Child is
       base_folder    => Eventual_folder,
       search_pattern => "",
       output_folder  => "",
-      ignore_path    => False,
+      option_flag    => False,
       encrypt        => Encrypt,
       new_temp_name  => Temp_AZip_Name (Window),
       return_code    => return_code
@@ -1443,7 +1443,7 @@ package body AZip_GWin.MDI_Child is
       base_folder    => "",
       search_pattern => "",
       output_folder  => GU2G (dir),
-      ignore_path    => Window.opt.ignore_extract_path,
+      option_flag    => Window.opt.ignore_extract_path,
       encrypt        => False,
       new_temp_name  => "",
       return_code    => return_code
@@ -1489,7 +1489,7 @@ package body AZip_GWin.MDI_Child is
          base_folder    => "",
          search_pattern => "",
          output_folder  => "",
-         ignore_path    => False,
+         option_flag    => False,
          encrypt        => False,
          new_temp_name  => Temp_AZip_Name (Window),
          return_code    => return_code);
@@ -1594,7 +1594,7 @@ package body AZip_GWin.MDI_Child is
         base_folder    => "",
         search_pattern => GU2G (Window.content_search),
         output_folder  => "",
-        ignore_path    => False,
+        option_flag    => False,
         encrypt        => False,
         new_temp_name  => "",
         return_code    => return_code
@@ -1664,7 +1664,7 @@ package body AZip_GWin.MDI_Child is
       base_folder    => "",
       search_pattern => "",
       output_folder  => "",
-      ignore_path    => False,
+      option_flag    => False,
       encrypt        => False,
       new_temp_name  => "",
       return_code    => return_code
@@ -1735,7 +1735,7 @@ package body AZip_GWin.MDI_Child is
         base_folder    => "",  --  We update the whole archive
         search_pattern => "",
         output_folder  => "",
-        ignore_path    => False,
+        option_flag    => False,
         encrypt        => False,
         new_temp_name  => Temp_AZip_Name (Window),
         return_code    => return_code
@@ -1782,18 +1782,18 @@ package body AZip_GWin.MDI_Child is
 
     Modal_Dialogs.Show_Recompress_Box (Window, answer);
 
-    if answer = ID_Recomp_Single_Pass then
-      Process_Archive_GWin (
-        Window         => Window,
-        operation      => Recompress,
-        file_names     => Empty_Array_Of_File_Names,
-        base_folder    => "", -- We recompress the whole archive
-        search_pattern => "",
-        output_folder  => "",
-        ignore_path    => False,
-        encrypt        => False,
-        new_temp_name  => Temp_AZip_Name (Window),
-        return_code    => return_code);
+    if answer in ID_Recomp_Single_Pass | ID_Recomp_Brute_Force then
+      Process_Archive_GWin
+        (Window         => Window,
+         operation      => Recompress,
+         file_names     => Empty_Array_Of_File_Names,
+         base_folder    => "", -- We recompress the whole archive
+         search_pattern => "",
+         output_folder  => "",
+         option_flag    => answer = ID_Recomp_Brute_Force,
+         encrypt        => False,
+         new_temp_name  => Temp_AZip_Name (Window),
+         return_code    => return_code);
 
       if return_code = aborted then
         null;

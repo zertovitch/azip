@@ -6,10 +6,9 @@ package AZip_Common.Operations is
   -- Blocking, visible processing of an archive --
   ------------------------------------------------
 
-  type Archive_Operation is (
-    Add, Update, Recompress, Remove,
-    Test, Extract, Search
-  );
+  type Archive_Operation is
+    (Add, Update, Recompress, Remove,
+     Test, Extract, Search);
 
   --  Two kinds of operations: those that modify an archive (a copy needs
   --  to be created and replaces the original in the end); those that only
@@ -121,36 +120,35 @@ package AZip_Common.Operations is
   );
 
   generic
-    with procedure Feedback (
-      file_percents_done    : Natural;
-      archive_percents_done : Natural;
-      entry_being_processed : UTF_16_String;
-      operation             : Entry_Operation;
-      comment_1, comment_2  : String; -- e.g. #found so far, time elpased,...
-      skip_hint             : Boolean;
-      user_abort            : out Boolean
-    );
-    with procedure Change_Password (
-      entry_name : in     UTF_16_String;
-      password   : in out UTF_16_Unbounded_String;
-      cancelled  :    out Boolean
-    );
-  procedure Process_Archive (
-    zif             :        Zip.Zip_Info; -- preserved, even after modifying operation
-    operation       :        Archive_Operation;
-    entry_name      :        Name_List;
-    base_folder     :        UTF_16_String;
-    search_pattern  :        UTF_16_String;
-    output_folder   :        UTF_16_String;
-    Set_Time_Stamp  :        UnZip.Set_Time_Stamp_Proc;
-    new_temp_name   :        String;
-    Name_conflict   :        UnZip.Resolve_Conflict_Proc;
-    password        : in out UTF_16_Unbounded_String;
-    ignore_path     :        Boolean; -- ignore directories upon extraction
-    encrypt         :        Boolean;
-    max_code        :    out Integer;
-    return_code     :    out Operation_return_code
-  );
+    with procedure Feedback
+      (file_percents_done    : Natural;
+       archive_percents_done : Natural;
+       entry_being_processed : UTF_16_String;
+       operation             : Entry_Operation;
+       comment_1, comment_2  : String;  --  e.g. #found so far, time elpased,...
+       skip_hint             : Boolean;
+       user_abort            : out Boolean);
+
+    with procedure Change_Password
+      (entry_name : in     UTF_16_String;
+       password   : in out UTF_16_Unbounded_String;
+       cancelled  :    out Boolean);
+
+  procedure Process_Archive
+    (zif             :        Zip.Zip_Info;  --  preserved, even after modifying operation
+     operation       :        Archive_Operation;
+     entry_name      :        Name_List;
+     base_folder     :        UTF_16_String;
+     search_pattern  :        UTF_16_String;
+     output_folder   :        UTF_16_String;
+     Set_Time_Stamp  :        UnZip.Set_Time_Stamp_Proc;
+     new_temp_name   :        String;
+     Name_conflict   :        UnZip.Resolve_Conflict_Proc;
+     password        : in out UTF_16_Unbounded_String;
+     option_flag     :        Boolean;  --  extraction: ignore directories; recompress: brute-force
+     encrypt         :        Boolean;
+     max_code        :    out Integer;
+     return_code     :    out Operation_return_code);
 
   ------------------
   -- Some goodies --

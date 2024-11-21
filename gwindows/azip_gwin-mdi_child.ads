@@ -87,6 +87,8 @@ package AZip_GWin.MDI_Child is
       Y      : in     Integer;
       Keys   : in     GWindows.Windows.Mouse_Key_States);
 
+  bogus_no_display : constant AZip_Common.Operations.Archive_Operation := AZip_Common.Operations.Remove;
+
   type MDI_Child_Type is
     new Office_Applications.Classic_Document_Window_Type with
       record
@@ -112,8 +114,7 @@ package AZip_GWin.MDI_Child is
         content_search      : GString_Unbounded;
         current_password    : GString_Unbounded;
         temp_name_gen       : Ada.Numerics.Float_Random.Generator;
-        last_operation      : AZip_Common.Operations.Archive_Operation :=
-                                AZip_Common.Operations.Remove;
+        last_operation      : AZip_Common.Operations.Archive_Operation := bogus_no_display;
         last_max_code       : Integer;
         any_path_in_zip     : Boolean;
         extract_dir         : GString_Unbounded;

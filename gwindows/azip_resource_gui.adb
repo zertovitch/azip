@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2024/11/21  20:49:43
+--  Transcription time: 2024/11/23  14:21:34
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -2072,7 +2072,7 @@ package body AZip_Resource_GUI is
   is
     x, y, w, h : Integer;
   begin
-    Dlg_to_Scn (0, 0, 260, 90, x, y, w, h);
+    Dlg_to_Scn (0, 0, 260, 115, x, y, w, h);
     if Left   /= Use_Default then x := Left;   end if;
     if Top    /= Use_Default then y := Top;    end if;
     if Width  /= Use_Default then w := Width;  end if;
@@ -2106,7 +2106,7 @@ package body AZip_Resource_GUI is
     x, y, w, h : Integer;
   begin
     if resize then
-    Dlg_to_Scn (0, 0, 260, 90, x, y, w, h);
+    Dlg_to_Scn (0, 0, 260, 115, x, y, w, h);
       Move (Window, x, y);
       Client_Area_Size (Window, w, h);
     end if;
@@ -2117,9 +2117,11 @@ package body AZip_Resource_GUI is
     Create_Label (Window, "but data compression may be better. This operation can take a long time", x, y, w, h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn (18, 32, 240, 8, x, y, w, h);
     Create_Label (Window, "depending on data size, content, and the recompression strength.", x, y, w, h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn (18, 52, 240, 8, x, y, w, h);
-    Create_Label (Window, "Proceed?", x, y, w, h, GWindows.Static_Controls.Left, None);
-    Dlg_to_Scn (18, 70, 80, 19, x, y, w, h);
+    Dlg_to_Scn (18, 47, 240, 19, x, y, w, h);
+    Create (Window.Recomp_Backup_Check_Box, Window, "Keep old archive state as backup", x, y, w, h, ID => Recomp_Backup_Check_Box);
+    Dlg_to_Scn (18, 72, 240, 8, x, y, w, h);
+    Create_Label (Window, "Proceed with recompression?", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn (18, 90, 80, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.
@@ -2130,7 +2132,7 @@ package body AZip_Resource_GUI is
     else  --  Hide the closing button
       Hide (Window.ID_Recomp_Single_Pass);
     end if;
-    Dlg_to_Scn (105, 70, 80, 19, x, y, w, h);
+    Dlg_to_Scn (105, 90, 80, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.
@@ -2141,7 +2143,7 @@ package body AZip_Resource_GUI is
     else  --  Hide the closing button
       Hide (Window.ID_Recomp_Brute_Force);
     end if;
-    Dlg_to_Scn (192, 70, 50, 19, x, y, w, h);
+    Dlg_to_Scn (192, 90, 50, 19, x, y, w, h);
     --  Both versions of the button are created.
     --  The more meaningful one is made visible, but this choice
     --  can be reversed, for instance on a "Browse" button.
@@ -2153,6 +2155,110 @@ package body AZip_Resource_GUI is
       Hide (Window.IDCANCEL);
     end if;
   end Create_Contents;  --  Recompress_Box_Type
+
+  --  Dialog at resource line 536
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out Update_Box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned)
+  is
+    pragma Unmodified (Window);
+    pragma Unmodified (dwExStyle);
+    WS_SYSMENU : constant := 16#0008_0000#;
+  begin
+    dwStyle := dwStyle and not WS_SYSMENU;
+  end On_Pre_Create;
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Update_Box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Archive Update";
+      Left        : in     Integer := Use_Default;  --  Default = as designed
+      Top         : in     Integer := Use_Default;  --  Default = as designed
+      Width       : in     Integer := Use_Default;  --  Default = as designed
+      Height      : in     Integer := Use_Default;  --  Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False)
+  is
+    x, y, w, h : Integer;
+  begin
+    Dlg_to_Scn (0, 0, 250, 115, x, y, w, h);
+    if Left   /= Use_Default then x := Left;   end if;
+    if Top    /= Use_Default then y := Top;    end if;
+    if Width  /= Use_Default then w := Width;  end if;
+    if Height /= Use_Default then h := Height; end if;
+    Create_As_Dialog
+     (Window => Window_Type (Window),
+      Parent => Parent,
+      Title  => Title,
+      Left   => x,
+      Top    => y,
+      Width  => w,
+      Height => h,
+      Help_Button => Help_Button,
+      Is_Dynamic  => Is_Dynamic
+    );
+    if Width = Use_Default then  Client_Area_Width (Window, w); end if;
+    if Height = Use_Default then Client_Area_Height (Window, h); end if;
+    Use_GUI_Font (Window);
+    Create_Contents (Window, True);
+  end Create_Full_Dialog;  --  Update_Box_Type
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+      (Window      : in out Update_Box_Type;
+       for_dialog  : in     Boolean;          --  True: buttons do close the window
+       resize      : in     Boolean := False  --  optionally resize Window as designed
+     )
+  is
+    x, y, w, h : Integer;
+  begin
+    if resize then
+    Dlg_to_Scn (0, 0, 250, 115, x, y, w, h);
+      Move (Window, x, y);
+      Client_Area_Size (Window, w, h);
+    end if;
+    Use_GUI_Font (Window);
+    Dlg_to_Scn (18, 12, 240, 8, x, y, w, h);
+    Create_Label (Window, "You are about to start an archive update.", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn (18, 22, 240, 8, x, y, w, h);
+    Create_Label (Window, "Files that are newer and different (according to", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn (18, 32, 240, 8, x, y, w, h);
+    Create_Label (Window, "their CRC32 code) will replace those in the archive.", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn (18, 47, 240, 19, x, y, w, h);
+    Create (Window.Update_Backup_Check_Box, Window, "Keep old archive state as backup", x, y, w, h, ID => Update_Backup_Check_Box);
+    Dlg_to_Scn (18, 72, 240, 8, x, y, w, h);
+    Create_Label (Window, "Proceed with update?", x, y, w, h, GWindows.Static_Controls.Left, None);
+    Dlg_to_Scn (50, 90, 60, 19, x, y, w, h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDOK, Window, "Yes", x, y, w, h, ID => IDOK);
+    Create (Window.IDOK_permanent, Window, "Yes", x, y, w, h, ID => IDOK);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDOK_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDOK);
+    end if;
+    Dlg_to_Scn (140, 90, 60, 19, x, y, w, h);
+    --  Both versions of the button are created.
+    --  The more meaningful one is made visible, but this choice
+    --  can be reversed, for instance on a "Browse" button.
+    Create (Window.IDCANCEL, Window, "No", x, y, w, h, ID => IDCANCEL);
+    Create (Window.IDCANCEL_permanent, Window, "No", x, y, w, h, ID => IDCANCEL);
+    if for_dialog then  --  Hide the non-closing button
+      Hide (Window.IDCANCEL_permanent);
+    else  --  Hide the closing button
+      Hide (Window.IDCANCEL);
+    end if;
+  end Create_Contents;  --  Update_Box_Type
 
   --  ** Generated code ends here /\ /\ /\.
 
@@ -2263,6 +2369,6 @@ package body AZip_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  --  Last line of resource script file: 644
+  --  Last line of resource script file: 660
 
 end AZip_Resource_GUI;

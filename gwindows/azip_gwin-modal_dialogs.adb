@@ -5,6 +5,7 @@ with AZip_Resource_GUI;
 with Zip;
 
 with GWindows.Application,
+     GWindows.Buttons,
      GWindows.Constants,
      GWindows.Static_Controls.Web,
      GWindows.Types;
@@ -69,15 +70,45 @@ package body AZip_GWin.Modal_Dialogs is
 
   procedure Show_Recompress_Box
     (Window : in out GWindows.Base.Base_Window_Type'Class;
+     backup : in out Boolean;
      Answer :    out Integer)
   is
-    use GWindows.Application, GWindows.Constants, GWindows.Static_Controls.Web;
-    box : AZip_Resource_GUI.Recompress_Box_Type;  --  Possible addition: check box for backup.
+    use GWindows.Application, GWindows.Buttons;
+    box : AZip_Resource_GUI.Recompress_Box_Type;
+
+    procedure Get_Data (dummy : in out GWindows.Base.Base_Window_Type'Class) is
+    begin
+      backup := box.Recomp_Backup_Check_Box.State = Checked;
+    end Get_Data;
+
   begin
     box.Create_Full_Dialog (Window);
     box.Center (Window);
+    box.Recomp_Backup_Check_Box.State (if backup then Checked else Unchecked);
+    box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
     Answer := Show_Dialog (box, Window);
   end Show_Recompress_Box;
+
+  procedure Show_Update_Box
+    (Window : in out GWindows.Base.Base_Window_Type'Class;
+     backup : in out Boolean;
+     Answer :    out Integer)
+  is
+    use GWindows.Application, GWindows.Buttons;
+    box : AZip_Resource_GUI.Update_Box_Type;
+
+    procedure Get_Data (dummy : in out GWindows.Base.Base_Window_Type'Class) is
+    begin
+      backup := box.Update_Backup_Check_Box.State = Checked;
+    end Get_Data;
+
+  begin
+    box.Create_Full_Dialog (Window);
+    box.Center (Window);
+    box.Update_Backup_Check_Box.State (if backup then Checked else Unchecked);
+    box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
+    Answer := Show_Dialog (box, Window);
+  end Show_Update_Box;
 
   procedure Show_Sponsoring_Box
     (Window      : in out GWindows.Base.Base_Window_Type'Class;
@@ -101,13 +132,12 @@ package body AZip_GWin.Modal_Dialogs is
     box.Create_Full_Dialog (Window);
     if First_Visit then
       box.Text ("Important note");
-      box.Sponsoring_label.Text (
-        "Welcome to AZip! This Zip archive manager contains cool, original features " &
-        "such as a built-in search function, an archive updater, and a recompression tool. " &
-        "Moreover, AZip is FREE of charge! If you appreciate this software " &
-        "and would like to support its development, your financial contribution is crucial. " &
-        "Thank you. You can also reach this box later through the Help -> Sponsoring menu."
-      );
+      box.Sponsoring_label.Text
+        ("Welcome to AZip! This Zip archive manager contains cool, original features " &
+         "such as a built-in search function, an archive updater, and a recompression tool. " &
+         "Moreover, AZip is FREE of charge! If you appreciate this software " &
+         "and would like to support its development, your financial contribution is crucial. " &
+         "Thank you. You can also reach this box later through the Help -> Sponsoring menu.");
     end if;
     for c of url loop
       c := Character'Val (160 - Character'Pos (c));

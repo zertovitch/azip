@@ -162,3 +162,5 @@
 #define Temp_Directory_Group_Box                40159
 #define ID_Recomp_Single_Pass                   40160
 #define ID_Recomp_Brute_Force                   40161
+#define Recomp_Backup_Check_Box                 40162
+#define Update_Backup_Check_Box                 40163

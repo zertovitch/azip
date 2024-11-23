@@ -864,13 +864,14 @@ package body AZip_GWin.MDI_Child is
   procedure Process_Archive_GWin
     (Window         : in out MDI_Child_Type;
      operation      :        Archive_Operation;
-     file_names     :        Array_Of_File_Names;
-     base_folder    :        GString;
-     search_pattern :        GString;
-     output_folder  :        Wide_String;
-     option_flag    :        Boolean;  --  extraction: ignore directories; recompress: brute-force
-     encrypt        :        Boolean;
-     new_temp_name  :        String;
+     file_names     :        Array_Of_File_Names := Empty_Array_Of_File_Names;
+     base_folder    :        GString     := "";
+     search_pattern :        GString     := "";
+     output_folder  :        Wide_String := "";
+     option_flag_1  :        Boolean     := False;  --  recompress: brute-force; extraction: ignore directories
+     option_flag_2  :        Boolean     := False;  --  recompress: back-up
+     encrypt        :        Boolean     := False;
+     new_temp_name  :        String      := "";
      return_code    :    out Operation_return_code)
   is
     is_aborted : Boolean := False;
@@ -972,7 +973,7 @@ package body AZip_GWin.MDI_Child is
     --
     --  Instanciation of the GUI-agnostic processing
     --
-    procedure Archive_processing is
+    procedure Archive_Processing_GWindows is
       new AZip_Common.Operations.Process_Archive
         (Boxed_Feedback,
          Get_password_decrypt_for_Common);
@@ -993,13 +994,15 @@ package body AZip_GWin.MDI_Child is
     end Msg_Name_Error;
     --
     az_names : Name_List (file_names'Range);
-    use GWindows.Taskbar, GWin_Util;
+    use Ada.Calendar, GWindows.Taskbar, GWin_Util;
+
   begin  --  Process_archive_GWin
+
     --  Neutral conversion: GStrings (UTF-16) to UTF_16_String
     for i in az_names'Range loop
       az_names (i).str := file_names (i);
     end loop;
-    tick := Ada.Calendar."-" (Ada.Calendar.Clock, 1.0);
+    tick := Clock - 1.0;
     progress.Create_Full_Dialog (Window);
     progress.File_Progress.Position (0);
     progress.Archive_Progress.Position (0);
@@ -1018,21 +1021,22 @@ package body AZip_GWin.MDI_Child is
 
     begin
 
-      Archive_processing
-        (zif              => Window.zif,
-         operation        => operation,
-         entry_name       => Expand_Folders (az_names),
-         base_folder      => base_folder,
-         search_pattern   => search_pattern,
-         output_folder    => output_folder,
-         Set_Time_Stamp   => Set_Modification_Time_B'Access,
-         new_temp_name    => new_temp_name,
-         Name_conflict    => Name_conflict_resolution'Unrestricted_Access,
-         password         => Window.current_password,
-         option_flag      => option_flag,
-         encrypt          => encrypt,
-         max_code         => Window.last_max_code,
-         return_code      => return_code);
+      Archive_Processing_GWindows
+        (zif            => Window.zif,
+         operation      => operation,
+         entry_name     => Expand_Folders (az_names),
+         base_folder    => base_folder,
+         search_pattern => search_pattern,
+         output_folder  => output_folder,
+         Set_Time_Stamp => Set_Modification_Time_B'Access,
+         new_temp_name  => new_temp_name,
+         Name_conflict  => Name_conflict_resolution'Unrestricted_Access,
+         password       => Window.current_password,
+         option_flag_1  => option_flag_1,
+         option_flag_2  => option_flag_2,
+         encrypt        => encrypt,
+         max_code       => Window.last_max_code,
+         return_code    => return_code);
 
       Window.mdi_root.Text (S2G (AZip_GWin.Installation.AZip_Title));  --  Remove progress info.
       Window.last_operation := operation;
@@ -1066,27 +1070,26 @@ package body AZip_GWin.MDI_Child is
     exception
       when E : Ada.IO_Exceptions.Name_Error =>
         return_code := aborted;
-        Message_Box (
-          Window,
-          "Processing failed",
-          Msg_Name_Error &
-          NL & "-----" & NL &
-          S2G (Ada.Exceptions.Exception_Message (E)),
-          OK_Box,
-          Exclamation_Icon
-        );
+        Message_Box
+          (Window,
+           "Processing failed",
+           Msg_Name_Error &
+           NL & "-----" & NL &
+           S2G (Ada.Exceptions.Exception_Message (E)),
+           OK_Box,
+           Exclamation_Icon);
+
       when E : Ada.IO_Exceptions.Use_Error =>
         return_code := aborted;
-        Message_Box (
-          Window,
-          "Processing failed",
-          "Archive cannot be modified (perhaps, is it read-only ?)," & NL &
-          "or a new file cannot be written." &
-          NL & "-----" & NL &
-          S2G (Ada.Exceptions.Exception_Message (E)),
-          OK_Box,
-          Exclamation_Icon
-        );
+        Message_Box
+          (Window,
+           "Processing failed",
+           "Archive cannot be modified (perhaps, is it read-only ?)," & NL &
+           "or a new file cannot be written." &
+           NL & "-----" & NL &
+           S2G (Ada.Exceptions.Exception_Message (E)),
+           OK_Box,
+           Exclamation_Icon);
     end;
 
     if Window.mdi_root.Task_bar_gadget_ok then
@@ -1143,18 +1146,16 @@ package body AZip_GWin.MDI_Child is
     end Eventual_folder;
     return_code : Operation_return_code;
   begin
-    Process_Archive_GWin (
-      Window         => Window,
-      operation      => Add,
-      file_names     => File_Names,
-      base_folder    => Eventual_folder,
-      search_pattern => "",
-      output_folder  => "",
-      option_flag    => False,
-      encrypt        => Encrypt,
-      new_temp_name  => Temp_AZip_Name (Window),
-      return_code    => return_code
-    );
+
+    Process_Archive_GWin
+      (Window        => Window,
+       operation     => Add,
+       file_names    => File_Names,
+       base_folder   => Eventual_folder,
+       encrypt       => Encrypt,
+       new_temp_name => Temp_AZip_Name (Window),
+       return_code   => return_code);
+
   end Go_for_adding;
 
   procedure On_File_Drop (Window     : in out MDI_Child_Type;
@@ -1436,18 +1437,15 @@ package body AZip_GWin.MDI_Child is
           return;
       end case;
     end if;
-    Process_Archive_GWin (
-      Window         => Window,
-      operation      => Extract,
-      file_names     => list,
-      base_folder    => "",
-      search_pattern => "",
-      output_folder  => GU2G (dir),
-      option_flag    => Window.opt.ignore_extract_path,
-      encrypt        => False,
-      new_temp_name  => "",
-      return_code    => return_code
-    );
+
+    Process_Archive_GWin
+      (Window        => Window,
+       operation     => Extract,
+       file_names    => list,
+       output_folder => GU2G (dir),
+       option_flag_1 => Window.opt.ignore_extract_path,
+       return_code   => return_code);
+
     if return_code = ok and not dropped then
       --  Open destination path's folder
       GWin_Util.Start (G2S (GU2G (dir)));  --  !! not unicode
@@ -1481,18 +1479,16 @@ package body AZip_GWin.MDI_Child is
     if Window.Directory_List.Selected_Item_Count = 0 and not is_folder_focused then
       return; -- no item, no folder -> do nothing (different from On_Extract's behaviour)
     end if;
+
     if Message_Box (Window, "Delete", Delete_msg, Yes_No_Box, Question_Icon) = Yes then
+
       Process_Archive_GWin
-        (Window         => Window,
-         operation      => Remove,
-         file_names     => Smart_list,
-         base_folder    => "",
-         search_pattern => "",
-         output_folder  => "",
-         option_flag    => False,
-         encrypt        => False,
-         new_temp_name  => Temp_AZip_Name (Window),
-         return_code    => return_code);
+        (Window        => Window,
+         operation     => Remove,
+         file_names    => Smart_list,
+         new_temp_name => Temp_AZip_Name (Window),
+         return_code   => return_code);
+
     end if;
   end On_Delete;
 
@@ -1586,19 +1582,16 @@ package body AZip_GWin.MDI_Child is
     box.Center (Window);
     box.On_Destroy_Handler (Get_Data'Unrestricted_Access);
     box.Name_to_be_searched.Focus;
+
     if Show_Dialog (box, Window) = GWindows.Constants.IDOK then
-      Process_Archive_GWin (
-        Window         => Window,
-        operation      => Search,
-        file_names     => (1 => Window.name_search),
-        base_folder    => "",
-        search_pattern => GU2G (Window.content_search),
-        output_folder  => "",
-        option_flag    => False,
-        encrypt        => False,
-        new_temp_name  => "",
-        return_code    => return_code
-      );
+
+      Process_Archive_GWin
+        (Window         => Window,
+         operation      => Search,
+         file_names     => (1 => Window.name_search),
+         search_pattern => GU2G (Window.content_search),
+         return_code    => return_code);
+
       no_matches :=
         Index (Window.last_op_comment_1, " 0") > 0
         and Index (Window.last_op_comment_2, " 0") > 0;
@@ -1657,57 +1650,51 @@ package body AZip_GWin.MDI_Child is
     count_ok, count_ko, count_nt : Natural;
     return_code : Operation_return_code;
   begin
-    Process_Archive_GWin (
-      Window         => Window,
-      operation      => Test,
-      file_names     => Empty_Array_Of_File_Names,
-      base_folder    => "",
-      search_pattern => "",
-      output_folder  => "",
-      option_flag    => False,
-      encrypt        => False,
-      new_temp_name  => "",
-      return_code    => return_code
-    );
+
+    Process_Archive_GWin
+      (Window      => Window,
+       operation   => Test,
+       return_code => return_code);
+
     Count_test_totals (Window.zif, count_ok, count_ko, count_nt);
     if count_nt > 0 then
-      null; -- operation cancelled, nothing to say
+      null;  --  operation cancelled, nothing to say
     elsif count_ko = 0 then
-      Message_Box (Window,
-        "Data integrity",
-        "All entries in archive are OK.",
-        Icon => Information_Icon
-      );
+      Message_Box
+        (Window,
+         "Data integrity",
+         "All entries in archive are OK.",
+         Icon => Information_Icon);
     else
-      Message_Box (Window,
-        "Data integrity: at least one failure",
-        Integer'Wide_Image (count_ok) & " entries are OK;" & NL &
-        Integer'Wide_Image (count_ko) &
-        " entries had errors or could not be processed.",
-        Icon => Warning_Icon
-      );
+      Message_Box
+        (Window,
+         "Data integrity: at least one failure",
+         count_ok'Wide_Image & " entries are OK;" & NL &
+         count_ko'Wide_Image &
+         " entries had errors or could not be processed.",
+         Icon => Warning_Icon);
     end if;
   end On_Test;
 
   procedure Stop_msg_on_encrypted_archive (Window : MDI_Child_Type; op_title : GString) is
   begin
-      Message_Box (
-        Window,
-        op_title,
-        "Archives with encryption (even on some entries only) are" & NL &
-        "currently not supported for this operation (" & op_title & ").",
-        OK_Box,
-        Stop_Icon
-      );
+      Message_Box
+        (Window,
+         op_title,
+         "Archives with encryption (even on some entries only) are" & NL &
+         "currently not supported for this operation (" & op_title & ").",
+         OK_Box,
+         Stop_Icon);
   end Stop_msg_on_encrypted_archive;
 
   procedure On_Update (Window : in out MDI_Child_Type) is
     mem_dir : constant String := Ada.Directories.Current_Directory;
     --  !! Not UTF-8 capable
-    new_dir : constant String := Ada.Directories.Containing_Directory (
-      To_UTF_8 (GU2G (Window.ID.file_name))
-    );  --  !! Not UTF-8 capable
+    new_dir : constant String := Ada.Directories.Containing_Directory
+      (To_UTF_8 (GU2G (Window.ID.file_name)));
+       --  !! Not UTF-8 capable
     return_code : Operation_return_code;
+    answer : Integer;
   begin
     if not Is_loaded (Window.zif) then
       return;
@@ -1716,30 +1703,20 @@ package body AZip_GWin.MDI_Child is
       Stop_msg_on_encrypted_archive (Window, "Archive update");
       return;
     end if;
-    if Message_Box (
-      Window,
-      "Archive update",
-      "You are about to start an archive update." & NL & NL &
-      "Files that are newer and different (according to " &
-      "their CRC32 code) will replace those in the archive." & NL & NL &
-      "Proceed ?",
-      Yes_No_Box,
-      Question_Icon
-    ) = Yes
-    then
+
+    Modal_Dialogs.Show_Update_Box (Window, Window.mdi_root.opt.backup_update, answer);
+
+    if answer = GWindows.Constants.IDOK then
+
       Ada.Directories.Set_Directory (new_dir);  --  !! Not UTF-8 capable
-      Process_Archive_GWin (
-        Window         => Window,
-        operation      => Update,
-        file_names     => Empty_Array_Of_File_Names,
-        base_folder    => "",  --  We update the whole archive
-        search_pattern => "",
-        output_folder  => "",
-        option_flag    => False,
-        encrypt        => False,
-        new_temp_name  => Temp_AZip_Name (Window),
-        return_code    => return_code
-      );
+
+      Process_Archive_GWin
+        (Window        => Window,
+         operation     => Update,
+         option_flag_2 => Window.mdi_root.opt.backup_update,
+         new_temp_name => Temp_AZip_Name (Window),
+         return_code   => return_code);
+
       if mem_dir'Length > 0 and then mem_dir (mem_dir'Last) = ':' then
         --  Bug in GNAT up to GPL 2011 - cf issue [L216-021 public], fixed in 2012.
         Ada.Directories.Set_Directory (mem_dir & '\');  --  !! Check if UTF-8 capable
@@ -1780,36 +1757,36 @@ package body AZip_GWin.MDI_Child is
       return;
     end if;
 
-    Modal_Dialogs.Show_Recompress_Box (Window, answer);
+    Modal_Dialogs.Show_Recompress_Box (Window, Window.mdi_root.opt.backup_recomp, answer);
 
     if answer in ID_Recomp_Single_Pass | ID_Recomp_Brute_Force then
+
       Process_Archive_GWin
-        (Window         => Window,
-         operation      => Recompress,
-         file_names     => Empty_Array_Of_File_Names,
-         base_folder    => "", -- We recompress the whole archive
-         search_pattern => "",
-         output_folder  => "",
-         option_flag    => answer = ID_Recomp_Brute_Force,
-         encrypt        => False,
-         new_temp_name  => Temp_AZip_Name (Window),
-         return_code    => return_code);
+        (Window        => Window,
+         operation     => Recompress,
+         option_flag_1 => answer = ID_Recomp_Brute_Force,
+         option_flag_2 => Window.mdi_root.opt.backup_recomp,
+         new_temp_name => Temp_AZip_Name (Window),
+         return_code   => return_code);
 
       if return_code = aborted then
         null;
       elsif Window.last_max_code = nothing then
-        Message_Box (Window,
-        "Archive recompression completed",
-        "Recompression completed." & NL & "No entry could be recompressed to a smaller size.",
-        OK_Box,
-        Information_Icon);
-      elsif Message_Box (Window,
-        "Archive recompression completed",
-        "Recompression completed." & NL & NL &
-        "Do you want to see full results (flat view & result sort) ?",
-        Yes_No_Box,
-        Question_Icon)
-      = Yes
+        Message_Box
+          (Window,
+           "Archive recompression completed",
+           "Recompression completed." & NL & "No entry could be recompressed to a smaller size.",
+           OK_Box,
+           Information_Icon);
+      elsif
+        Message_Box
+          (Window,
+           "Archive recompression completed",
+           "Recompression completed." & NL & NL &
+           "Do you want to see full results (flat view & result sort) ?",
+           Yes_No_Box,
+           Question_Icon)
+        = Yes
       then
         Change_View (Window, Flat, force => False);
         Window.Directory_List.Sort (Window.opt.column_index (Result) - 1, AZip_LV_Ex.Down);
@@ -1969,11 +1946,11 @@ package body AZip_GWin.MDI_Child is
     end if;
   end On_Close;
 
-  procedure On_Mouse_Move (
-        Window : in out MDI_Child_Type;
-        X      : in     Integer;
-        Y      : in     Integer;
-        Keys   : in     Mouse_Key_States)
+  procedure On_Mouse_Move
+    (Window : in out MDI_Child_Type;
+     X      : in     Integer;
+     Y      : in     Integer;
+     Keys   : in     Mouse_Key_States)
   is
   pragma Unreferenced (Keys);
     A : constant GWindows.Types.Point_Type :=
@@ -2000,11 +1977,11 @@ package body AZip_GWin.MDI_Child is
     end if;
   end On_Mouse_Move;
 
-  procedure On_Left_Mouse_Button_Up (
-        Window : in out MDI_Child_Type;
-        X      : in     Integer;
-        Y      : in     Integer;
-        Keys   : in     Mouse_Key_States)
+  procedure On_Left_Mouse_Button_Up
+    (Window : in out MDI_Child_Type;
+     X      : in     Integer;
+     Y      : in     Integer;
+     Keys   : in     Mouse_Key_States)
   is
   pragma Unreferenced (Keys);
     A : constant GWindows.Types.Point_Type :=

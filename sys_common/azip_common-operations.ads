@@ -135,20 +135,21 @@ package AZip_Common.Operations is
        cancelled  :    out Boolean);
 
   procedure Process_Archive
-    (zif             :        Zip.Zip_Info;  --  preserved, even after modifying operation
-     operation       :        Archive_Operation;
-     entry_name      :        Name_List;
-     base_folder     :        UTF_16_String;
-     search_pattern  :        UTF_16_String;
-     output_folder   :        UTF_16_String;
-     Set_Time_Stamp  :        UnZip.Set_Time_Stamp_Proc;
-     new_temp_name   :        String;
-     Name_conflict   :        UnZip.Resolve_Conflict_Proc;
-     password        : in out UTF_16_Unbounded_String;
-     option_flag     :        Boolean;  --  extraction: ignore directories; recompress: brute-force
-     encrypt         :        Boolean;
-     max_code        :    out Integer;
-     return_code     :    out Operation_return_code);
+    (zif            :        Zip.Zip_Info;  --  preserved, even after modifying operation
+     operation      :        Archive_Operation;
+     entry_name     :        Name_List;
+     base_folder    :        UTF_16_String;
+     search_pattern :        UTF_16_String;
+     output_folder  :        UTF_16_String;
+     Set_Time_Stamp :        UnZip.Set_Time_Stamp_Proc;
+     new_temp_name  :        String;
+     Name_conflict  :        UnZip.Resolve_Conflict_Proc;
+     password       : in out UTF_16_Unbounded_String;
+     option_flag_1  :        Boolean := False;  --  recompress: brute-force; extraction: ignore directories
+     option_flag_2  :        Boolean := False;  --  recompress: back-up
+     encrypt        :        Boolean;
+     max_code       :    out Integer;
+     return_code    :    out Operation_return_code);
 
   ------------------
   -- Some goodies --

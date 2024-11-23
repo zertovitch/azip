@@ -256,20 +256,21 @@ package body AZip_Common.Operations is
   ------------------------------------------------
 
   procedure Process_Archive
-    (zif             :        Zip.Zip_Info;  --  preserved, even after modifying operation
-     operation       :        Archive_Operation;
-     entry_name      :        Name_List;
-     base_folder     :        UTF_16_String;
-     search_pattern  :        UTF_16_String;
-     output_folder   :        UTF_16_String;
-     Set_Time_Stamp  :        UnZip.Set_Time_Stamp_Proc;
-     new_temp_name   :        String;
-     Name_conflict   :        UnZip.Resolve_Conflict_Proc;
-     password        : in out UTF_16_Unbounded_String;
-     option_flag     :        Boolean;  --  extraction: ignore directories; recompress: brute-force
-     encrypt         :        Boolean;
-     max_code        :    out Integer;
-     return_code     :    out Operation_return_code)
+    (zif            :        Zip.Zip_Info;  --  preserved, even after modifying operation
+     operation      :        Archive_Operation;
+     entry_name     :        Name_List;
+     base_folder    :        UTF_16_String;
+     search_pattern :        UTF_16_String;
+     output_folder  :        UTF_16_String;
+     Set_Time_Stamp :        UnZip.Set_Time_Stamp_Proc;
+     new_temp_name  :        String;
+     Name_conflict  :        UnZip.Resolve_Conflict_Proc;
+     password       : in out UTF_16_Unbounded_String;
+     option_flag_1  :        Boolean := False;  --  recompress: brute-force; extraction: ignore directories
+     option_flag_2  :        Boolean := False;  --  recompress / update: back-up
+     encrypt        :        Boolean;
+     max_code       :    out Integer;
+     return_code    :    out Operation_return_code)
   is
     new_zip : Zip.Create.Zip_Create_Info;
     new_fzs : aliased Zip_Streams.File_Zipstream;
@@ -304,7 +305,7 @@ package body AZip_Common.Operations is
          current_operation,
          (if operation = Recompress then
             "Recompression approach: " &
-            (if option_flag then "brute force (multiple passes)" else "single pass")
+            (if option_flag_1 then "brute force (multiple passes)" else "single pass")
           else
             ""),
          "",
@@ -625,10 +626,10 @@ package body AZip_Common.Operations is
         type Method_Array is array (Character range <>) of Compression_Method;
 
         compression_approach : constant Method_Array :=
-          (case option_flag is
-             when False =>
+          (case option_flag_1 is
+             when False =>  --  Single-pass
                ('1' => Preselection_Method'Last),
-             when True =>
+             when True =>   --  Brute-force
                ('1' => Preselection_Method'Last,
                 '2' => LZMA_Method'Last,
                 '3' => BZip2_Method'Last,
@@ -862,7 +863,7 @@ package body AZip_Common.Operations is
                  help_the_file_exists => Name_conflict,
                  tell_data            => null,
                  get_pwd              => Get_password_internal'Unrestricted_Access,
-                 options              => (junk_directories => option_flag, others => False),
+                 options              => (junk_directories => option_flag_1, others => False),
                  password             => To_String (S16 (password)),
                  file_system_routines => Extract_FS_routines);
 
@@ -1093,7 +1094,11 @@ package body AZip_Common.Operations is
           Delete_File (new_temp_name);
         else
           --  We move the new archive to the previous one's place.
-          Delete_File (Zip.Zip_Name (zif));
+          if operation in Update .. Recompress and then option_flag_2 then
+            Rename (Zip.Zip_Name (zif), Find_Free_Backup_Name (Zip.Zip_Name (zif)));
+          else
+            Delete_File (Zip.Zip_Name (zif));
+          end if;
           Rename (new_temp_name, Zip.Zip_Name (zif));
         end if;
         if operation in Update .. Recompress then

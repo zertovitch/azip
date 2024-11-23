@@ -17,14 +17,17 @@ package AZip_Common.User_options is
   type Option_Pack_Type is record
     view_mode      : View_Mode_Type := Tree;
     tree_portion   : Float          := 0.25;
-      --  Horizontal portion of the window for the tree, when view_mode = Tree
+      --  ^ Horizontal portion of the window for the tree, when view_mode = Tree
+
     column_width   : Column_Integer_Array :=
       --  Defaults for GWindows. May be scaled for other GUI metrics.
       (Name => 150, Modified => 120, others => 70);
+
     visible_column : Column_Boolean_Array :=
       (others => True);
+
     column_index   : Column_Integer_Array :=
-      (Name       => 1, -- This should never change
+      (Name       => 1,  --  This should never change
        FType      => 2,
        Modified   => 3,
        Attributes => 4,
@@ -35,8 +38,8 @@ package AZip_Common.User_options is
        CRC32      => 9,
        Path       => 10,
        Encoding   => 11,
-       Result     => 12
-      );
+       Result     => 12);
+
     win_left,
     win_top,
     win_width,
@@ -51,6 +54,8 @@ package AZip_Common.User_options is
     suggested_extract_directory : UTF_16_Unbounded_String := Null_UTF_16_Unbounded_String;
     temp_directory              : UTF_16_Unbounded_String := Null_UTF_16_Unbounded_String;
     first_visit                 : Boolean                 := True;
+    backup_recomp               : Boolean                 := False;
+    backup_update               : Boolean                 := False;
   end record;
 
   function Is_Temp_Directory_Valid (opt : Option_Pack_Type) return Boolean;
@@ -98,7 +103,9 @@ package AZip_Common.User_options is
      ignore_extract_path,
      extract_directory,
      temp_directory,
-     first_visit);
+     first_visit,
+     backup_recomp,
+     backup_update);
 
   subtype Col_Width_Key   is Persistence_Key range col_width_name .. col_width_result;
   subtype Col_Visible_Key is Persistence_Key range col_visible_name .. col_visible_result;

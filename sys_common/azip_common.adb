@@ -1,9 +1,10 @@
 with Zip_Streams;
 
-with Ada.Wide_Characters.Handling,
+with Ada.Directories,
      Ada.Strings.UTF_Encoding.Conversions,
      Ada.Strings.Unbounded,
-     Ada.Strings.Wide_Fixed;
+     Ada.Strings.Wide_Fixed,
+     Ada.Wide_Characters.Handling;
 
 package body AZip_Common is
 
@@ -545,7 +546,7 @@ package body AZip_Common is
       --  If Duplicate_name is raised again, well, it is really invalid!
   end Load_insensitive_if_possible;
 
-  function Is_valid_Zip_archive (file_name : String) return Archive_validity is
+  function Is_valid_Zip_archive (file_name : String) return Archive_Validity is
     use Zip;
     info : Zip_Info;
   begin
@@ -603,6 +604,39 @@ package body AZip_Common is
     Scan_Encryption (info);
     return encrypted;
   end Has_Zip_archive_encrypted_entries;
+
+  function Find_Free_Backup_Name (file_name : String) return String is
+    dot : Natural := 0;
+  begin
+
+    for i in reverse file_name'Range loop
+      if file_name (i) = '.' then
+        dot := i;
+        exit;
+      end if;
+    end loop;
+
+    for n in Interfaces.Unsigned_64 loop
+      declare
+        n_img_spc : constant String := n'Image;  --  Has the nasty leading ' '.
+        n_img     : constant String := n_img_spc (n_img_spc'First + 1 .. n_img_spc'Last);
+        bak_name : constant String :=
+          (if dot = 0 then
+             --  x.0
+             file_name & '.' & n_img
+           else
+             --  x.0.zip
+             file_name (file_name'First .. dot) & n_img & file_name (dot .. file_name'Last));
+      begin
+        if not Ada.Directories.Exists (bak_name) then
+          return bak_name;
+        end if;
+      end;
+    end loop;
+
+    --  We have found > 2**64 existing backup names!
+    return file_name & "__unlikely_backup_name!";
+  end Find_Free_Backup_Name;
 
 begin
   Zip_Streams.Form_For_IO_Open_and_Create := To_Unbounded_String ("encoding=utf8");

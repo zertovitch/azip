@@ -10,6 +10,12 @@ package AZip_GWin.Modal_Dialogs is
 
   procedure Show_Recompress_Box
     (Window : in out GWindows.Base.Base_Window_Type'Class;
+     backup : in out Boolean;
+     Answer :    out Integer);
+
+  procedure Show_Update_Box
+    (Window : in out GWindows.Base.Base_Window_Type'Class;
+     backup : in out Boolean;
      Answer :    out Integer);
 
   procedure Show_Sponsoring_Box

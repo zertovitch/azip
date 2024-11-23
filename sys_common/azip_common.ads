@@ -64,17 +64,15 @@ package AZip_Common is
     (Key_Type        => UTF_16_String,
      Element_Type    => Node_ID_Type,
      Hash            => Ada.Strings.Wide_Hash,
-     Equivalent_Keys => "="
-    );
+     Equivalent_Keys => "=");
 
   root_key : constant UTF_16_String := "";
 
   --  Find quickly a path name given a node number.
 
   package Node_Catalogues is new Ada.Containers.Indefinite_Ordered_Maps
-    (Key_Type        => Node_ID_Type,
-     Element_Type    => UTF_16_String
-    );
+    (Key_Type     => Node_ID_Type,
+     Element_Type => UTF_16_String);
 
   --------------------------
   -- Text display helpers --
@@ -107,20 +105,25 @@ package AZip_Common is
 
   procedure Load_insensitive_if_possible (info : out Zip.Zip_Info; from : String);
 
+  type Archive_Validity is
+    (valid,
+     with_case_sensitive_duplicates,
+     invalid,
+     file_doesnt_exist);
+
   --  This function will tell if a file is actually a Zip file.
   --  It is useful for instance when files are dropped onto AZip,
   --  to determine whether AZip has to open the files as archives,
   --  or it is meant to add the files into an archive.
-
-  type Archive_validity is
-    (valid,
-     with_case_sensitive_duplicates,
-     invalid,
-     file_doesnt_exist
-     );
-  function Is_valid_Zip_archive (file_name : String) return Archive_validity;
+  --
+  function Is_valid_Zip_archive (file_name : String) return Archive_Validity;
 
   function Has_Zip_archive_encrypted_entries (info : Zip.Zip_Info) return Boolean;
+
+  --  Turn "x.zip" into "x.0.zip", or "x.1.zip" if "x.0.zip" exists, and so on.
+  --  The naming of backups is a bit VMS-style...
+  --
+  function Find_Free_Backup_Name (file_name : String) return String;
 
   azip_web_page      : constant String := "http://azip.sf.net/";
   azip_news_web_page : constant String := "http://sourceforge.net/p/azip/news/";

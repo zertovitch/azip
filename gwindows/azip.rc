@@ -514,18 +514,34 @@ FONT 8, "Ms Shell Dlg"
 }
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-Recompress_Box DIALOG 0, 0, 260, 90
+Recompress_Box DIALOG 0, 0, 260, 115
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 CAPTION "Archive Recompression"
 FONT 8, "Ms Shell Dlg"
 {
-    LTEXT         "You are about to recompress this archive. Contents will remain identical,", IDC_STATIC, 18,  12, 240, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT         "but data compression may be better. This operation can take a long time",   IDC_STATIC, 18,  22, 240, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT         "depending on data size, content, and the recompression strength.",          IDC_STATIC, 18,  32, 240, 8, SS_LEFT, WS_EX_LEFT
-    LTEXT         "Proceed?",                                                                  IDC_STATIC, 18,  52, 240, 8, SS_LEFT, WS_EX_LEFT
-    DEFPUSHBUTTON "Yes - single pass", ID_Recomp_Single_Pass,  18, 70, 80, 19, 0, WS_EX_LEFT
-    PUSHBUTTON    "Yes - brute force", ID_Recomp_Brute_Force, 105, 70, 80, 19, 0, WS_EX_LEFT
-    PUSHBUTTON    "No",                IDCANCEL,              192, 70, 50, 19, 0, WS_EX_LEFT
+    LTEXT         "You are about to recompress this archive. Contents will remain identical,", IDC_STATIC,              18, 12, 240,  8, SS_LEFT, WS_EX_LEFT
+    LTEXT         "but data compression may be better. This operation can take a long time",   IDC_STATIC,              18, 22, 240,  8, SS_LEFT, WS_EX_LEFT
+    LTEXT         "depending on data size, content, and the recompression strength.",          IDC_STATIC,              18, 32, 240,  8, SS_LEFT, WS_EX_LEFT
+    AUTOCHECKBOX  "Keep old archive state as backup",                                          Recomp_Backup_Check_Box, 18, 47, 240, 19, 0,       WS_EX_LEFT
+    LTEXT         "Proceed with recompression?",                                               IDC_STATIC,              18, 72, 240,  8, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON "Yes - single pass",                                                         ID_Recomp_Single_Pass,   18, 90,  80, 19, 0,       WS_EX_LEFT
+    PUSHBUTTON    "Yes - brute force",                                                         ID_Recomp_Brute_Force,  105, 90,  80, 19, 0,       WS_EX_LEFT
+    PUSHBUTTON    "No",                                                                        IDCANCEL,               192, 90,  50, 19, 0,       WS_EX_LEFT
+}
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+Update_Box DIALOG 0, 0, 250, 115
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+CAPTION "Archive Update"
+FONT 8, "Ms Shell Dlg"
+{
+    LTEXT         "You are about to start an archive update.",            IDC_STATIC,               18, 12, 240,  8, SS_LEFT, WS_EX_LEFT
+    LTEXT         "Files that are newer and different (according to",     IDC_STATIC,               18, 22, 240,  8, SS_LEFT, WS_EX_LEFT
+    LTEXT         "their CRC32 code) will replace those in the archive.", IDC_STATIC,               18, 32, 240,  8, SS_LEFT, WS_EX_LEFT
+    AUTOCHECKBOX  "Keep old archive state as backup",                     Update_Backup_Check_Box,  18, 47, 240, 19, 0,       WS_EX_LEFT
+    LTEXT         "Proceed with update?",                                 IDC_STATIC,               18, 72, 240,  8, SS_LEFT, WS_EX_LEFT
+    DEFPUSHBUTTON "Yes",                                                  IDOK,                     50, 90,  60, 19, 0,       WS_EX_LEFT
+    PUSHBUTTON    "No",                                                   IDCANCEL,                140, 90,  60, 19, 0,       WS_EX_LEFT
 }
 
 

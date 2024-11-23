@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2024/11/21  20:49:43
+--  Transcription time: 2024/11/23  14:21:34
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -867,6 +867,7 @@ package AZip_Resource_GUI is
     --  Label: IDC_STATIC
     --  Label: IDC_STATIC
     --  Label: IDC_STATIC
+    Recomp_Backup_Check_Box : Check_Box_Type;
     --  Label: IDC_STATIC
     ID_Recomp_Single_Pass : Default_Dialog_Button_Type;    --  Closes parent window after click
     ID_Recomp_Single_Pass_permanent : Default_Button_Type;  --  Doesn't close parent window after click
@@ -876,7 +877,7 @@ package AZip_Resource_GUI is
     IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
   end record; -- Recompress_Box_Type
 
-  --  Dialog at resource line 528
+  --  Dialog at resource line 529
 
   --  Pre-Create operation to switch off default styles, or
   --  add ones that are not in usual GWindows Create parameters.
@@ -903,6 +904,50 @@ package AZip_Resource_GUI is
   --
   procedure Create_Contents
       (Window      : in out Recompress_Box_Type;
+       for_dialog  : in     Boolean;          --  True: buttons do close the window
+       resize      : in     Boolean := False  --  optionally resize Window as designed
+     );
+
+  type Update_Box_Type is new Window_Type with record
+
+    --  Label: IDC_STATIC
+    --  Label: IDC_STATIC
+    --  Label: IDC_STATIC
+    Update_Backup_Check_Box : Check_Box_Type;
+    --  Label: IDC_STATIC
+    IDOK : Default_Dialog_Button_Type;    --  Closes parent window after click
+    IDOK_permanent : Default_Button_Type;  --  Doesn't close parent window after click
+    IDCANCEL : Dialog_Button_Type;    --  Closes parent window after click
+    IDCANCEL_permanent : Button_Type;  --  Doesn't close parent window after click
+  end record; -- Update_Box_Type
+
+  --  Dialog at resource line 544
+
+  --  Pre-Create operation to switch off default styles, or
+  --  add ones that are not in usual GWindows Create parameters.
+  --
+  procedure On_Pre_Create (Window    : in out Update_Box_Type;
+                           dwStyle   : in out Interfaces.C.unsigned;
+                           dwExStyle : in out Interfaces.C.unsigned);
+
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Update_Box_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "Archive Update";
+      Left        : in     Integer := Use_Default;  --  Default = as designed
+      Top         : in     Integer := Use_Default;  --  Default = as designed
+      Width       : in     Integer := Use_Default;  --  Default = as designed
+      Height      : in     Integer := Use_Default;  --  Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+      (Window      : in out Update_Box_Type;
        for_dialog  : in     Boolean;          --  True: buttons do close the window
        resize      : in     Boolean := False  --  optionally resize Window as designed
      );
@@ -1084,6 +1129,8 @@ package AZip_Resource_GUI is
   Temp_Directory_Group_Box               : constant :=  40159;
   ID_Recomp_Single_Pass                  : constant :=  40160;
   ID_Recomp_Brute_Force                  : constant :=  40161;
+  Recomp_Backup_Check_Box                : constant :=  40162;
+  Update_Backup_Check_Box                : constant :=  40163;
 
   --  ** Some helper utilities (spec).
 
@@ -1095,6 +1142,6 @@ package AZip_Resource_GUI is
 
   function Num_resource (id : Natural) return GString;  --  Just turn 123 into "#123".
 
-  --  Last line of resource script file: 644
+  --  Last line of resource script file: 660
 
 end AZip_Resource_GUI;

@@ -11,24 +11,24 @@
 --  See "azip_gw_project_tree.gpr" for the other variant.
 
 --  *** External libraries ***
---  * 
+--  *
 --  *     You need to make the following projects' source files visible to this project
 --  *     through the ad-hoc (not GNAT / AdaCore official) GNAT_SOURCE_PATH environment variable:
---  *   
+--  *
 --  *   * GWindows and contributions:
 --  *       [gnavi]\gwindows\framework
 --  *       [gnavi]\gwindows\contrib
 --  *       [gnavi]\gnatcom\framework
 --  *       Project URL: http://sf.net/projects/gnavi/
 --  *       NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
---  *   
+--  *
 --  *   * Ini file manager:
 --  *       Project URL: http://ini-files.sourceforge.net/
---  *   
+--  *
 --  *   * Zip-Ada:
 --  *       [zip-ada]\zip_lib
 --  *       Project URL: http://unzip-ada.sf.net
---  * 
+--  *
 --  *  Example: GNAT_SOURCE_PATH=
 --  *             C:\Ada\gnavi\gwindows\framework;
 --  *             C:\Ada\gnavi\gwindows\contrib;
@@ -44,7 +44,8 @@ project AZip_GWindows is
        "Fast_GPL",
        "Fast_MinGW",
        "Small",
-       "Profiling");
+       "Profiling",
+       "Release");
 
    AZip_Build_Mode : AZip_Build_Mode_Type := external ("AZip_Build_Mode", "Debug_GPL");
 
@@ -62,6 +63,7 @@ project AZip_GWindows is
       when "Fast_MinGW"  => for Object_Dir use "../obj/fast_ming";
       when "Small"       => for Object_Dir use "../obj/small";
       when "Profiling"   => for Object_Dir use "../obj/profiling";
+      when "Release"     => for Object_Dir use "../obj/release";
    end case;
 
    Common_Compiler_Options := (
@@ -96,7 +98,7 @@ project AZip_GWindows is
       ("-O2",
        "-gnatp",
        "-funroll-loops", "-fpeel-loops", "-funswitch-loops",
-       "-ftracer", "-fweb", "-frename-registers", 
+       "-ftracer", "-fweb", "-frename-registers",
        "-fpredictive-commoning", "-fgcse-after-reload",
        "-ftree-vectorize", "-fipa-cp-clone",
        "-ffunction-sections");
@@ -116,14 +118,14 @@ project AZip_GWindows is
             for Local_Configuration_Pragmas use project'Project_Dir & "../obj/debug/debug.pra";
             for Default_Switches ("ada") use Debug_Compiler_Options;
          when "Fast_GPL" | "Fast_MinGW" =>
-            for Local_Configuration_Pragmas use project'Project_Dir & "azip_elim.pra";
             for Default_Switches ("ada") use Fast_Compiler_Options & ("-mfpmath=sse", "-msse3");
          when "Small" =>
-            for Local_Configuration_Pragmas use project'Project_Dir & "azip_elim.pra";
             for Default_Switches ("ada") use Small_Compiler_Options;
          when "Profiling" =>
-            for Local_Configuration_Pragmas use project'Project_Dir & "azip_elim.pra";
             for Default_Switches ("ada") use Fast_Compiler_Options_Inlining_Neutral & ("-fno-inline", "-pg");
+         when "Release" =>
+            for Local_Configuration_Pragmas use project'Project_Dir & "azip_elim.pra";
+            for Default_Switches ("ada") use Fast_Compiler_Options & ("-mfpmath=sse", "-msse3");
       end case;
    end Compiler;
 
@@ -132,10 +134,9 @@ project AZip_GWindows is
    package Binder is
       --  -Es: Store tracebacks in exception occurrences, and enable symbolic tracebacks
       case AZip_Build_Mode is
-         when "Debug_GPL" | "Debug_MinGW" => for Default_Switches ("ada") use ("-Es") & Common_Binder_Options;
-         when "Fast_GPL"  | "Fast_MinGW"  => for Default_Switches ("ada") use           Common_Binder_Options;
-         when "Small"                     => for Default_Switches ("ada") use           Common_Binder_Options;
-         when "Profiling"                 => for Default_Switches ("ada") use           Common_Binder_Options;
+         when "Debug_GPL" | "Debug_MinGW"       => for Default_Switches ("ada") use ("-Es") & Common_Binder_Options;
+         when "Fast_GPL"  | "Fast_MinGW"  |
+              "Small" | "Profiling" | "Release" => for Default_Switches ("ada") use           Common_Binder_Options;
       end case;
    end Binder;
 
@@ -144,8 +145,8 @@ project AZip_GWindows is
    package Linker is
       case AZip_Build_Mode is
          when "Debug_GPL" | "Debug_MinGW" => for Default_Switches ("ada") use ("-g")                                   & Common_Linker_Options;
-         when "Fast_GPL"  | "Fast_MinGW"  => for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections") & Common_Linker_Options;
-         when "Small"                     => for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections") & Common_Linker_Options;
+         when "Fast_GPL"  | "Fast_MinGW" |
+              "Small" | "Release"         => for Default_Switches ("ada") use ("-mwindows", "-s", "-Wl,--gc-sections") & Common_Linker_Options;
          when "Profiling"                 => for Default_Switches ("ada") use ("-mwindows", "-pg")                     & Common_Linker_Options;
       end case;
    end Linker;
@@ -163,4 +164,3 @@ project AZip_GWindows is
    end Pretty_Printer;
 
 end AZip_GWindows;
-

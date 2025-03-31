@@ -24,7 +24,7 @@ del azip.exe
 copy azip.exe AZip_Debug%target%.exe
 
 del azip.exe
-%builder% -P azip_gwindows azip -XAZip_Build_Mode=Fast%target%
+%builder% -P azip_gwindows azip -XAZip_Build_Mode=Release
 ren azip.exe AZip.exe
 copy AZip.exe "AZip (ver) win32%target%.exe"
 rem upx --ultra-brute "AZip (ver) win32.exe"

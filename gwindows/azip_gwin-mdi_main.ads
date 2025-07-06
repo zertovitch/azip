@@ -60,6 +60,8 @@ package AZip_GWin.MDI_Main is
     (Window     : in out MDI_Main_Type;
      File_Names : in     GWindows.Windows.Array_Of_File_Names);
 
+  --  File drop, but don't try to delegate to the active child window
+  --
   procedure On_File_Drop_No_Delegate
     (Window     : in out MDI_Main_Type;
      File_Names : in     GWindows.Windows.Array_Of_File_Names);
@@ -94,7 +96,8 @@ package AZip_GWin.MDI_Main is
   procedure Update_Common_Menus (Window    : in out MDI_Main_Type;
                                  top_entry :        GString := "");
 
-  function All_Zip_files (File_Names : GWindows.Windows.Array_Of_File_Names) return Boolean;
+  function All_Zip_Files
+    (File_Names : GWindows.Windows.Array_Of_File_Names) return Boolean;
 
   function Confirm_archives_if_all_Zip_files
     (Window     : GWindows.Base.Base_Window_Type'Class;

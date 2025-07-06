@@ -88,11 +88,26 @@ package body AZip_GWin.MDI_Main is
     --  Show things in the main status bar - effective only after Thaw!
   end Finish_subwindow_opening;
 
-  procedure Open_Child_Window_And_Load (
-    Window     : in out MDI_Main_Type;
-    File_Name,
-    File_Title :        GWindows.GString_Unbounded
-  )
+  function Confirm_Archive_with_Duplicates
+    (Window    : GWindows.Base.Base_Window_Type'Class;
+     File_Name : GWindows.GString_Unbounded)
+  return Boolean
+  is
+  (Message_Box
+     (Window,
+      "Zip archive with duplicate full names",
+      "Archive " & GU2G (File_Name) & NL &
+      "contains at least one pair of identical entry names." & NL &
+      "This may cause problems." &
+      NL & NL &
+      "Continue opening ?",
+      Yes_No_Box,
+      Warning_Icon) = Yes);
+
+  procedure Open_Child_Window_And_Load
+    (Window     : in out MDI_Main_Type;
+     File_Name,
+     File_Title :        GWindows.GString_Unbounded)
   is
     is_open : Boolean;
   begin
@@ -104,18 +119,9 @@ package body AZip_GWin.MDI_Main is
       when valid =>
         null;
       when with_case_sensitive_duplicates =>
-        --  Added 24-Mar-2016. Some crazenuts use archives with identical entry names...
-        if Message_Box (
-          Window,
-          "Zip archive with duplicate full names",
-          "Archive " & GU2G (File_Name) & NL &
-          "contains at least one case of a pair of identical names; this may cause problems." &
-          NL & NL &
-          "Continue opening ?",
-          Yes_No_Box,
-          Warning_Icon
-        ) = No
-        then
+        --  Added 24-Mar-2016.
+        --  Some crazenuts use archives with identical entry names...
+        if not Confirm_Archive_with_Duplicates (Window, File_Name) then
           return;
         end if;
       when invalid =>
@@ -139,6 +145,7 @@ package body AZip_GWin.MDI_Main is
         );
         return;
     end case;
+
     declare
       New_Window : constant MDI_Child.MDI_Child_Access :=
         new MDI_Child.MDI_Child_Type;
@@ -162,6 +169,7 @@ package body AZip_GWin.MDI_Main is
       Finish_subwindow_opening (Window, New_Window.all);
       New_Window.Focus;
     end;
+
   exception
 --    when E : TC.Input.Load_Error =>
 --      Message_Box(
@@ -178,13 +186,11 @@ package body AZip_GWin.MDI_Main is
     (Window     : in out MDI_Main_Type;
      File_Name  :        GWindows.GString_Unbounded)
   is
-    use Office_Applications;
   begin
-    Open_Child_Window_And_Load (
-      Window,
-      File_Name,
-      G2GU (Shorten_File_Name (GU2G (File_Name), 50))
-    );
+    Open_Child_Window_And_Load
+      (Window,
+       File_Name,
+       G2GU (Office_Applications.Shorten_File_Name (GU2G (File_Name), 50)));
   end Open_Child_Window_And_Load;
 
   procedure Process_Argument
@@ -204,6 +210,7 @@ package body AZip_GWin.MDI_Main is
     Window.bulk_files_list (Position) :=
       G2GU (AZip_Common.To_UTF_16 (Arg, Zip.UTF_8));
     if Position = Total then
+      --  Last argument, now the list is complete.
       --  We simulate a file dropping onto the MDI main window.
       Window.On_File_Drop_No_Delegate (Window.bulk_files_list.all);
       Dispose (Window.bulk_files_list);
@@ -250,8 +257,7 @@ package body AZip_GWin.MDI_Main is
     Window.MRU.ID_Menu :=
       (IDM_MRU_1,       IDM_MRU_2,       IDM_MRU_3,       IDM_MRU_4,
        IDM_MRU_5,       IDM_MRU_6,       IDM_MRU_7,       IDM_MRU_8,
-       IDM_MRU_9
-      );
+       IDM_MRU_9);
 
     --  ** Main tool bar (add / remove / ...) at top left of the main window:
     Toolbars.Init_Main_Tool_Bar (Window.Tool_Bar, Window);
@@ -459,7 +465,7 @@ package body AZip_GWin.MDI_Main is
     --  Files are dropped onto the background
     --  area of the MDI main window.
     --
-    if All_Zip_files (File_Names) then
+    if All_Zip_Files (File_Names) then
       --  All files are Zip archives (even those without .zip extension).
       for i in File_Names'Range loop
         Open_Child_Window_And_Load (Window, File_Names (i));
@@ -634,16 +640,25 @@ package body AZip_GWin.MDI_Main is
     );
   end Update_Common_Menus;
 
-  function All_Zip_files (File_Names : GWindows.Windows.Array_Of_File_Names) return Boolean is
+  function All_Zip_Files (File_Names : GWindows.Windows.Array_Of_File_Names)
+  return Boolean
+  is
     all_valid, empty : Boolean := True;
   begin
     for i in File_Names'Range loop
       empty := False;
-      all_valid := all_valid and
-        Is_valid_Zip_archive (To_UTF_8 (GU2G (File_Names (i)))) = valid;
+      case Is_valid_Zip_archive (To_UTF_8 (GU2G (File_Names (i)))) is
+        when valid =>
+          null;
+        when with_case_sensitive_duplicates =>
+          null;  --  A warning will be shown later on opening the archive.
+        when invalid | file_doesnt_exist =>
+          all_valid := False;
+      end case;
+      exit when not all_valid;
     end loop;
     return all_valid and not empty;
-  end All_Zip_files;
+  end All_Zip_Files;
 
   function Confirm_archives_if_all_Zip_files
     (Window     : GWindows.Base.Base_Window_Type'Class;
@@ -652,29 +667,28 @@ package body AZip_GWin.MDI_Main is
   is
     answer : Message_Box_Result;
   begin
-    if All_Zip_files (File_Names) then
+    if All_Zip_Files (File_Names) then
       if File_Names'Length = 1 then
         answer :=
-          Message_Box (
-            Window,
-            "File is a Zip archive",
-            "Should AZip open this Zip archive individually," & NL &
-            "in a separate window ?" & NL &
-            "If not, it will be added as a file *into* a Zip archive.",
-            Yes_No_Box,
-            Question_Icon
-          );
+          Message_Box
+            (Window,
+             "File is a Zip archive",
+             "Should AZip open this Zip archive individually," & NL &
+             "in a separate window ?" & NL &
+             "If not, it will be added as a file *into* a Zip archive.",
+             Yes_No_Box,
+             Question_Icon);
       else
+        --  Plural.
         answer :=
-          Message_Box (
-            Window,
-            "Files are Zip archives",
-            "Should AZip open these Zip archives individually," & NL &
-            "in separate windows ?" & NL &
-            "If not, they will be added as files *into* a Zip archive.",
-            Yes_No_Box,
-            Question_Icon
-          );
+          Message_Box
+            (Window,
+             "Files are Zip archives",
+             "Should AZip open these Zip archives individually," & NL &
+             "in separate windows ?" & NL &
+             "If not, they will be added as files *into* a Zip archive.",
+             Yes_No_Box,
+             Question_Icon);
       end if;
       if answer = Yes then
         return True;

@@ -1160,7 +1160,8 @@ package body AZip_GWin.MDI_Child is
 
   procedure On_File_Drop (Window     : in out MDI_Child_Type;
                           File_Names : in     Array_Of_File_Names) is
-    function Eventual_folder return GString is
+
+    function Possible_Folder return GString is
       sel_path : constant GString := GU2G (Window.selected_path);
     begin
       case Window.opt.view_mode is
@@ -1173,7 +1174,8 @@ package body AZip_GWin.MDI_Child is
             return NL & NL & "Current folder is: " & sel_path;
           end if;
       end case;
-    end Eventual_folder;
+    end Possible_Folder;
+
     encrypt   : Boolean := False;
     is_yes    : Boolean;
     cancelled : Boolean;
@@ -1194,7 +1196,7 @@ package body AZip_GWin.MDI_Child is
     else
       AZip_GWin.Drop_File_Dialog.Do_Drop_File_Dialog
         (Parent         => Window,
-         archive_name   => GU2G (Window.ID.short_name) & Eventual_folder,
+         archive_name   => GU2G (Window.ID.short_name) & Possible_Folder,
          new_archive    => not Is_loaded (Window.zif),
          encrypt        => encrypt,
          yes            => is_yes);

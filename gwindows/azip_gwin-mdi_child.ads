@@ -146,10 +146,9 @@ package AZip_GWin.MDI_Child is
     Encrypt    : in     Boolean
   );
 
-  overriding procedure On_File_Drop (
-    Window     : in out MDI_Child_Type;
-    File_Names : in    GWindows.Windows. Array_Of_File_Names
-  );
+  overriding procedure On_File_Drop
+    (Window     : in out MDI_Child_Type;
+     File_Names : in     GWindows.Windows. Array_Of_File_Names);
 
   type Update_need is
     (first_display,   -- first display ever, no columns set

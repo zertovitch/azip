@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: AZip.rc
---  Transcription time: 2025/03/26  12:47:27
+--  Transcription time: 2025/07/06  13:27:25
 --  GWenerator project file: azip.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -406,7 +406,7 @@ package body AZip_Resource_GUI is
   procedure Create_Full_Dialog
      (Window      : in out Drop_files_box_Type;
       Parent      : in out GWindows.Base.Base_Window_Type'Class;
-      Title       : in     GString := "File(s) dropped or right-clicked from Explorer";
+      Title       : in     GString := "Non-Zip file(s) dropped, right-clicked, or opened from Explorer";
       Left        : in     Integer := Use_Default;  --  Default = as designed
       Top         : in     Integer := Use_Default;  --  Default = as designed
       Width       : in     Integer := Use_Default;  --  Default = as designed

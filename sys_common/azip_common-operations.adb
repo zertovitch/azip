@@ -205,7 +205,7 @@ package body AZip_Common.Operations is
       uncomp_size      : Zip.Zip_64_Data_Size_Type;
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
-      method           : Zip.PKZip_method;
+      method           : Zip.PKZip_Format;
       name_encoding    : Zip.Zip_Name_Encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption
@@ -485,7 +485,7 @@ package body AZip_Common.Operations is
        uncomp_size      :        Zip.Zip_64_Data_Size_Type;
        crc_32           :        Interfaces.Unsigned_32;
        date_time        :        Zip.Time;
-       method           :        Zip.PKZip_method;
+       method           :        Zip.PKZip_Format;
        name_encoding    :        Zip.Zip_Name_Encoding;
        read_only        :        Boolean;
        encrypted_2_x    :        Boolean;  --  PKZip 2.x encryption
@@ -1235,7 +1235,7 @@ package body AZip_Common.Operations is
       uncomp_size      : Zip.Zip_64_Data_Size_Type;
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Zip.Time;
-      method           : Zip.PKZip_method;
+      method           : Zip.PKZip_Format;
       name_encoding    : Zip.Zip_Name_Encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption

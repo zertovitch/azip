@@ -19,9 +19,9 @@ procedure AZip_GWin.Properties (Window : in out MDI_Child.MDI_Child_Type) is
   total_uncompressed : Zip.Zip_64_Data_Size_Type := 0;
   total_compressed   : Zip.Zip_64_Data_Size_Type := 0;
   --  total_entries: Natural:= 0;
-  files_per_method : array (Zip.PKZip_method) of Natural := (others => 0);
-  uncompressed_per_method : array (Zip.PKZip_method) of Unsigned_64 := (others => 0);
-  compressed_per_method : array (Zip.PKZip_method) of Zip.Zip_64_Data_Size_Type := (others => 0);
+  files_per_method : array (Zip.PKZip_Format) of Natural := (others => 0);
+  uncompressed_per_method : array (Zip.PKZip_Format) of Unsigned_64 := (others => 0);
+  compressed_per_method : array (Zip.PKZip_Format) of Zip.Zip_64_Data_Size_Type := (others => 0);
   sep_str : constant GString := GWindows.Locales.Get_Thousands_Separator;
   sep : constant Wide_Character := sep_str (sep_str'First);
 
@@ -55,9 +55,9 @@ procedure AZip_GWin.Properties (Window : in out MDI_Child.MDI_Child_Type) is
         end if;
         --  Matches statement in UnZip.Decompress, line ~2035:
         case m is
-          when store | shrink | Reduce_Format | implode |
+          when store | shrink_fmt | Reduce_Format | implode |
                deflate | deflate_e |
-               bzip2_meth | lzma_meth =>
+               bzip2_fmt | lzma_fmt =>
             null;
           when others =>
             box.Stats_list.Set_Sub_Item ("unsupported", row, 4);
@@ -78,7 +78,7 @@ procedure AZip_GWin.Properties (Window : in out MDI_Child.MDI_Child_Type) is
       uncomp_size      : Zip_64_Data_Size_Type;
       crc_32           : Unsigned_32;
       date_time        : Time;
-      method           : PKZip_method;
+      method           : PKZip_Format;
       name_encoding    : Zip_Name_Encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption

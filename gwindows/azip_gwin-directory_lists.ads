@@ -20,7 +20,7 @@ package AZip_GWin.Directory_Lists is
     compressed_size      : Interfaces.Integer_64;
     crc_32               : Interfaces.Unsigned_32;
     date_time            : Zip_Streams.Time;
-    format               : Zip.PKZip_method;
+    format               : Zip.PKZip_Format;
     name_encoding        : Zip.Zip_Name_Encoding;
     read_only            : Boolean;
     ratio                : Long_Float;  --  Compressed / Uncompressed ratio

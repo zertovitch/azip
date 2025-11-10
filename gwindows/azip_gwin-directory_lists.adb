@@ -46,8 +46,8 @@ package body AZip_GWin.Directory_Lists is
     a2 : Boolean renames Payload_2.read_only;
     e1 : Zip.Zip_Name_Encoding renames Payload_1.name_encoding;
     e2 : Zip.Zip_Name_Encoding renames Payload_2.name_encoding;
-    f1 : Zip.PKZip_method renames Payload_1.format;
-    f2 : Zip.PKZip_method renames Payload_2.format;
+    f1 : Zip.PKZip_Format renames Payload_1.format;
+    f2 : Zip.PKZip_Format renames Payload_2.format;
     t1 : Integer renames Payload_1.result_code;
     t2 : Integer renames Payload_2.result_code;
     s1 : Integer_64 renames Payload_1.uncompressed_size;

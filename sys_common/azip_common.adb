@@ -586,7 +586,7 @@ package body AZip_Common is
       uncomp_size      : Zip_64_Data_Size_Type;
       crc_32           : Interfaces.Unsigned_32;
       date_time        : Time;
-      method           : PKZip_method;
+      method           : PKZip_Format;
       name_encoding    : Zip_Name_Encoding;
       read_only        : Boolean;
       encrypted_2_x    : Boolean; -- PKZip 2.x encryption

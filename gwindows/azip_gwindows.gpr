@@ -4,30 +4,39 @@
 --      home page:     http://azip.sf.net/
 --      project page:  http://sf.net/projects/azip/
 --      mirror:        https://github.com/zertovitch/azip
+--      Alire crate:   https://alire.ada.dev/crates/azip
 --
 --  Build me with "gnatmake -P azip_gwindows", or open me with GNAT Studio
 --
---  This variant is a "flat" project, which does not refer to other projects.
---  See "azip_gw_project_tree.gpr" for the other variant.
-
---  *** External libraries ***
+--  **********************************************************************************
+--  **  This variant is a single, "flat", .gpr project, which handles all           **
+--  **  sources and does not refer to other projects.                               **
+--  **                                                                              **
+--  **  See "azip_gw_project_tree.gpr" for the other variant.                       **
+--  **********************************************************************************
+--
+--  *** External libraries (of which all sources are grabbed by this project file) ***
 --  *
---  *     You need to make the following projects' source files visible to this project
---  *     through the ad-hoc (not GNAT / AdaCore official) GNAT_SOURCE_PATH environment variable:
+--  *   You need to make the following projects' source files visible to this project
+--  *   through the ad-hoc (not GNAT / AdaCore official) GNAT_SOURCE_PATH environment variable:
 --  *
 --  *   * GWindows and contributions:
 --  *       [gnavi]\gwindows\framework
 --  *       [gnavi]\gwindows\contrib
 --  *       [gnavi]\gnatcom\framework
 --  *       Project URL: http://sf.net/projects/gnavi/
+--  *       Mirror URL: https://github.com/zertovitch/gwindows
 --  *       NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
 --  *
 --  *   * Ini file manager:
+--  *       [ini]
 --  *       Project URL: http://ini-files.sourceforge.net/
+--  *       Mirror URL: https://github.com/zertovitch/ini-files
 --  *
 --  *   * Zip-Ada:
 --  *       [zip-ada]\zip_lib
 --  *       Project URL: http://unzip-ada.sf.net
+--  *       Mirror URL: https://github.com/zertovitch/zip-ada
 --  *
 --  *  Example: GNAT_SOURCE_PATH=
 --  *             C:\Ada\gnavi\gwindows\framework;

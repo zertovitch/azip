@@ -53,15 +53,9 @@ procedure AZip_GWin.Properties (Window : in out MDI_Child.MDI_Child_Type) is
             row, 3
           );
         end if;
-        --  Matches statement in UnZip.Decompress, line ~2035:
-        case m is
-          when store | shrink_fmt | Reduce_Format | implode |
-               deflate | deflate_e |
-               bzip2_fmt | lzma_fmt =>
-            null;
-          when others =>
-            box.Stats_list.Set_Sub_Item ("unsupported", row, 4);
-        end case;
+        if not Zip.Supported_for_Decompression (m) then
+          box.Stats_list.Set_Sub_Item ("unsupported", row, 4);
+        end if;
       end if;
     end loop;
   end Show_List;

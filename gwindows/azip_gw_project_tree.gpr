@@ -11,7 +11,7 @@
 --  **  This variant is a hierarchical .gpr project, which refers to other .gpr projects.               **
 --  **                                                                                                  **
 --  **  For instance, Alire (Ada LIbrary REpository) uses it.                                           **
---  **  The crate https://alire.ada.dev/crates/lea refers to other crates                               **
+--  **  The crate https://alire.ada.dev/crates/azip refers to other crates                              **
 --  **  which contain their own .gpr project files. That way, Alire is able to retrieve all             **
 --  **  resources and build everything automatically.                                                   **
 --  **                                                                                                  **

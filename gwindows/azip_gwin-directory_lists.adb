@@ -15,7 +15,7 @@ package body AZip_GWin.Directory_Lists is
   use AZip_Common;
   use AZip_GWin.MDI_Child, AZip_GWin.MDI_Main;
 
-  procedure On_Item_Changed (Control : in out Directory_list_type) is
+  procedure On_Item_Changed (Control : in out Directory_List_Type) is
   begin
     if Control.refreshing then
       --  Avoid call to Update_Information, item by item, during a full refresh...
@@ -30,7 +30,7 @@ package body AZip_GWin.Directory_Lists is
   end On_Item_Changed;
 
   function On_Compare
-    (Control   : in Directory_list_type;
+    (Control   : in Directory_List_Type;
      Column    : in Natural;
      Payload_1 : in LV_Payload;
      Payload_2 : in LV_Payload) return Integer
@@ -90,7 +90,7 @@ package body AZip_GWin.Directory_Lists is
   end On_Compare;
 
   procedure Sort
-    (Control    : in out Directory_list_type;
+    (Control    : in out Directory_List_Type;
      Column     : in     Natural;
      Direction  : in     AZip_LV_Ex.Sort_Direction_Type;
      Show_Icon  : in     Boolean := True;
@@ -105,7 +105,7 @@ package body AZip_GWin.Directory_Lists is
       t0 := Clock;
     end if;
     --  Get the inverse function of opt.column_index:
-    for t in Entry_topic loop
+    for t in Entry_Topic loop
       Control.curr_col_topic (window.opt.column_index (t) - 1) := t;
     end loop;
     --  Call parent method, but with the `Using_Payloads` comparison technique,
@@ -119,7 +119,7 @@ package body AZip_GWin.Directory_Lists is
     end if;
   end Sort;
 
-  overriding procedure On_Focus (Control : in out Directory_list_type) is
+  overriding procedure On_Focus (Control : in out Directory_List_Type) is
     Child_Window : MDI_Child_Type renames
       MDI_Child_Type (Control.Parent.Parent.Parent.all);
   begin
@@ -128,7 +128,7 @@ package body AZip_GWin.Directory_Lists is
   end On_Focus;
 
   overriding procedure On_Notify
-    (Window       : in out Directory_list_type;
+    (Window       : in out Directory_List_Type;
      Message      : in     GWindows.Base.Pointer_To_Notification;
      Control      : in     GWindows.Base.Pointer_To_Base_Window_Class;
      Return_Value : in out GWindows.Types.Lresult)
@@ -159,7 +159,7 @@ package body AZip_GWin.Directory_Lists is
   end On_Notify;
 
   overriding procedure On_Free_Payload
-    (Control : in out Directory_list_type;
+    (Control : in out Directory_List_Type;
      Payload :    out AZip_LV_Ex.Data_Access)
   is
     procedure Dispose is new Ada.Unchecked_Deallocation (LV_Payload, AZip_LV_Ex.Data_Access);
@@ -167,7 +167,7 @@ package body AZip_GWin.Directory_Lists is
     Dispose (Payload);
   end On_Free_Payload;
 
-  overriding procedure On_Right_Click (Control : in out Directory_list_type) is
+  overriding procedure On_Right_Click (Control : in out Directory_List_Type) is
     Child_Window : MDI_Child_Type renames
       MDI_Child_Type (Control.Parent.Parent.Parent.all);
   begin

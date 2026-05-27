@@ -22,7 +22,7 @@ package AZip_Common is
 
   type View_Mode_Type is (Flat, Tree);
 
-  type Entry_topic is
+  type Entry_Topic is
     (Name, FType, Modified, Attributes,
      Size, Packed, Ratio, Format, CRC32,
      Path, Encoding,
@@ -78,7 +78,7 @@ package AZip_Common is
   -- Text display helpers --
   --------------------------
 
-  function Image (topic : Entry_topic) return UTF_16_String;
+  function Image (topic : Entry_Topic) return UTF_16_String;
   function Hexadecimal_32 (x : Interfaces.Unsigned_32) return UTF_16_String with Inline;
   --  File sizes (in GB, MB, KB or bytes)
   function File_Size_Image (x : Zip.Zip_64_Data_Size_Type) return UTF_16_String;

@@ -1,7 +1,7 @@
 package AZip_Common.User_options is
 
-  type Column_Integer_Array is array (Entry_topic) of Natural;
-  type Column_Boolean_Array is array (Entry_topic) of Boolean;
+  type Column_Integer_Array is array (Entry_Topic) of Natural;
+  type Column_Boolean_Array is array (Entry_Topic) of Boolean;
 
   use_default : constant := -1;
 

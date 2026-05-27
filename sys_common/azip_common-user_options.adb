@@ -38,7 +38,7 @@ package body AZip_Common.User_options is
             case k is
 
               when Col_Width_Key =>
-                for t in Entry_topic loop
+                for t in Entry_Topic loop
                   if Index (k'Image, t'Image) > 0 then
                     opt.column_width (t) := Integer'Wide_Value (s);
                     if opt.column_width (t) = 0 then
@@ -48,7 +48,7 @@ package body AZip_Common.User_options is
                 end loop;
 
               when Col_Visible_Key =>
-                for t in Entry_topic loop
+                for t in Entry_Topic loop
                   if Index (k'Image, t'Image) > 0 then
                     opt.visible_column (t) := Boolean'Wide_Value (s);
                   end if;
@@ -100,14 +100,14 @@ package body AZip_Common.User_options is
           case k is
 
             when Col_Width_Key =>
-              for t in Entry_topic loop
+              for t in Entry_Topic loop
                 if Index (k'Image, t'Image) > 0 then
                   R (opt.column_width (t)'Wide_Image);
                 end if;
               end loop;
 
             when Col_Visible_Key =>
-              for t in Entry_topic loop
+              for t in Entry_Topic loop
                 if Index (k'Image, t'Image) > 0 then
                   R (opt.visible_column (t)'Wide_Image);
                 end if;

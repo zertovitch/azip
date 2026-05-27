@@ -199,7 +199,7 @@ package body AZip_GWin.MDI_Child is
     cidx : Column_Integer_Array renames Window.opt.column_index;
 
     procedure Clear_List_and_Define_Columns is
-      Lst : Directory_list_type renames Window.Directory_List;
+      Lst : Directory_List_Type renames Window.Directory_List;
       --
     begin
       case need is
@@ -209,7 +209,7 @@ package body AZip_GWin.MDI_Child is
           null;
       end case;
       --
-      for topic in Entry_topic loop
+      for topic in Entry_Topic loop
         case need is
           when first_display =>
             Lst.Insert_Column (  --  Insert new column
@@ -233,7 +233,7 @@ package body AZip_GWin.MDI_Child is
     --
     procedure Feed_directory_list (prefix_path : GString) is
       row, last_row : Integer := -1;
-      Lst : Directory_list_type renames Window.Directory_List;
+      Lst : Directory_List_Type renames Window.Directory_List;
       max_entries : constant Natural := Entries (Window.zif);
       --  This includes potential invisible entries (directory names from Info-Zip, WinZip)
       result_code : array (0 .. max_entries - 1) of Integer;
@@ -1625,7 +1625,7 @@ package body AZip_GWin.MDI_Child is
   type Selection_Change_Type is (select_all, unselect_all, invert);
 
   procedure Change_Selection (Window : in out MDI_Child_Type; select_mode : Selection_Change_Type) is
-    DL : Directory_list_type renames Window.Directory_List;
+    DL : Directory_List_Type renames Window.Directory_List;
   begin
     DL.refreshing := True;
     --  NB: LV item index is 0-based.

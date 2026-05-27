@@ -327,8 +327,8 @@ package body AZip_Common is
     return res;
   end To_IBM_437;
 
-  function Image (topic : Entry_topic) return UTF_16_String is
-    u : constant UTF_16_String := Entry_topic'Wide_Image (topic);
+  function Image (topic : Entry_Topic) return UTF_16_String is
+    u : constant UTF_16_String := Entry_Topic'Wide_Image (topic);
     l : constant UTF_16_String := To_Lower (u);
   begin
     case topic is

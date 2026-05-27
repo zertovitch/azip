@@ -100,7 +100,7 @@ package AZip_GWin.MDI_Child is
         context_menu_folder : GWindows.Menus.Menu_Type := GWindows.Menus.Create_Popup;
         Tree_Bar_and_List   : MDI_Child_Packing_Box_Type;
         Bar_and_List        : MDI_Child_Panel_Type;
-        Directory_List      : Directory_Lists.Directory_list_type;
+        Directory_List      : Directory_Lists.Directory_List_Type;
         Splitter            : MDI_Child_GSize_Bar_Type;
         Folder_Tree         : Folder_Trees.Folder_tree_type;
         zif                 : Zip.Zip_Info;

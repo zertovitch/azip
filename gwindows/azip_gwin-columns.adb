@@ -18,7 +18,7 @@ package body AZip_GWin.Columns is
 
   function Get_column_width_from_main_options
     (Window : MDI_Child.MDI_Child_Type;
-     topic  : AZip_Common.Entry_topic) return Natural
+     topic  : AZip_Common.Entry_Topic) return Natural
   is
   begin
     if topic = Path and Window.opt.view_mode = Tree then
@@ -32,7 +32,7 @@ package body AZip_GWin.Columns is
 
   procedure Set_column_width_to_main_options
     (Window    : in out MDI_Child.MDI_Child_Type;
-     topic     :        AZip_Common.Entry_topic;
+     topic     :        AZip_Common.Entry_Topic;
      new_width :        Natural)
   is
   begin
@@ -51,7 +51,7 @@ package body AZip_GWin.Columns is
     (Window : in out MDI_Child.MDI_Child_Type)
   is
   begin
-    for t in Entry_topic'Range loop
+    for t in Entry_Topic'Range loop
       Window.Directory_List.Set_Column_Width (
         Window.opt.column_index (t) - 1,
         Get_column_width_from_main_options (Window, t)
@@ -77,9 +77,9 @@ package body AZip_GWin.Columns is
 
   procedure Set_all_column_widths_to_main_options (Window : in out MDI_Child.MDI_Child_Type) is
   begin
-    for t in Entry_topic'Range loop
+    for t in Entry_Topic'Range loop
       Set_column_width_to_main_options
-        (Window, t, Window.Directory_List.Column_Width (Entry_topic'Pos (t)));
+        (Window, t, Window.Directory_List.Column_Width (Entry_Topic'Pos (t)));
     end loop;
   end Set_all_column_widths_to_main_options;
 
@@ -87,11 +87,11 @@ package body AZip_GWin.Columns is
     box : AZip_Resource_GUI.Select_column_box_Type;
     x, y, dy, w, h : Integer;
     use GWindows.Buttons;
-    check_box_topic : array (Entry_topic) of Check_Box_Type;
+    check_box_topic : array (Entry_Topic) of Check_Box_Type;
     --
     procedure Get_Data (dummy : in out GWindows.Base.Base_Window_Type'Class) is
     begin
-      for t in Entry_topic'Range loop
+      for t in Entry_Topic'Range loop
         case t is
           when Name | Path =>
             null;  --  Do nothing!
@@ -117,7 +117,7 @@ package body AZip_GWin.Columns is
     --
     dy := Top (box.Dummy_check_box_2) - y;
     --
-    for t in Entry_topic loop
+    for t in Entry_Topic loop
       Create (check_box_topic (t), box, Image (t), x, y, w, h);
       y := y + dy;
       case t is

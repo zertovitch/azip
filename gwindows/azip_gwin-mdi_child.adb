@@ -393,7 +393,7 @@ package body AZip_GWin.MDI_Child is
         result_code (row) := entry_user_code;
       end Process_Row;
 
-      procedure Traverse is new Zip.Traverse_verbose (Process_Row);
+      procedure Traverse is new Zip.Traverse_Verbose (Process_Row);
 
       procedure Update_Results_Column is
         az_color : AZip_Common.Operations.RGB_Type;

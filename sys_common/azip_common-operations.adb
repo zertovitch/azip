@@ -220,7 +220,7 @@ package body AZip_Common.Operations is
         null;  --  Nothing bad: 'name' is a directory name that was skipped on recompression.
     end Copy_user_code;
     --
-    procedure Do_it is new Zip.Traverse_verbose (Copy_user_code);
+    procedure Do_it is new Zip.Traverse_Verbose (Copy_user_code);
   begin
     Do_it (from);
   end Copy_user_codes;
@@ -944,7 +944,7 @@ package body AZip_Common.Operations is
       processed_entries := processed_entries + 1;
     end Action_1_Entry;
 
-    procedure Traverse_Archive is new Zip.Traverse_verbose (Action_1_Entry);
+    procedure Traverse_Archive is new Zip.Traverse_Verbose (Action_1_Entry);
 
   begin  --  Process_archive
     max_code := 0;
@@ -1253,7 +1253,7 @@ package body AZip_Common.Operations is
         when others  => count_ko := count_ko + 1;
       end case;
     end Action;
-    procedure Count_Totals is new Zip.Traverse_verbose (Action);
+    procedure Count_Totals is new Zip.Traverse_Verbose (Action);
   begin
     count_ok := 0;
     count_ko := 0;

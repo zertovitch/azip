@@ -599,7 +599,7 @@ package body AZip_Common is
     begin
       encrypted := encrypted or encrypted_2_x;
     end Detect_Encryption;
-    procedure Scan_Encryption is new Traverse_verbose (Detect_Encryption);
+    procedure Scan_Encryption is new Traverse_Verbose (Detect_Encryption);
   begin
     Scan_Encryption (info);
     return encrypted;

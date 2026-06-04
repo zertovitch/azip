@@ -1671,7 +1671,6 @@ pragma Eliminate (Zip.Create, Local_Iterate, Source_Location => "a-cohama.adb:70
 pragma Eliminate (Zip.Headers, Read_and_Check, Source_Location => "zip-headers.ads:291");
 pragma Eliminate (Zip, Zip_Comment, Source_Location => "zip.ads:99");
 pragma Eliminate (Zip, Tree_Stat, Source_Location => "zip.ads:207");
-pragma Eliminate (Zip, Traverse_tree, Source_Location => "zip.adb:512");
 pragma Eliminate (Zip, User_Code, Source_Location => "zip.ads:276");
 pragma Eliminate (Zip, Block_Read, Source_Location => "zip.ads:310");
 pragma Eliminate (Zip, Copy_File, Source_Location => "zip.ads:350");

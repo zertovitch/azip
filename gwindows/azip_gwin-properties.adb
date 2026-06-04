@@ -88,7 +88,7 @@ procedure AZip_GWin.Properties (Window : in out MDI_Child.MDI_Child_Type) is
     files_per_method (method)        := files_per_method (method) + 1;
   end Action;
   --
-  procedure Gather_stats is new Traverse_verbose (Action);
+  procedure Gather_Stats is new Traverse_Verbose (Action);
   --
 begin
   box.Create_Full_Dialog (Window);
@@ -106,7 +106,7 @@ begin
   box.Show_all_Formats.On_Click_Handler (Box_Show_all_Formats_clicked'Unrestricted_Access);
   --
   if Is_loaded (Window.zif) then
-    Gather_stats (Window.zif);
+    Gather_Stats (Window.zif);
     box.Numb_entries.Text (Trim (Natural'Wide_Image (Entries (Window.zif)), Left));
     box.Uncomp_size.Text (Long_file_size_image (total_uncompressed, sep));
     box.Comp_size.Text (Long_file_size_image (total_compressed, sep));

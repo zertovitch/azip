@@ -1,3 +1,7 @@
+pragma Restriction_Warnings (No_Implicit_Dynamic_Code);
+--  Discourage use of nested callback subprograms: they crash under Linux & Winelib.
+--  You can find more information in gwindows/docs/Winelib.txt, Regression guard.
+
 with AZip_Common;
 
 with AZip_GWin.MDI_Child,

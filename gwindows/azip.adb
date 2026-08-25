@@ -3,6 +3,11 @@
 --  The GWindows* packages need to be visible to the compiler.
 --  See installation instructions in the header part of the azip_gwindows.gpr file.
 --
+
+pragma Restriction_Warnings (No_Implicit_Dynamic_Code);
+--  Discourage use of nested callback subprograms: they crash under Linux & Winelib.
+--  You can find more information in gwindows/docs/Winelib.txt, Regression guard.
+
 with AZip_GWin.Installation,
      AZip_GWin.MDI_Main;
 
